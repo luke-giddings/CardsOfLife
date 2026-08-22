@@ -1,0 +1,17 @@
+{
+  "name": "cards-of-life",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "A swipe-to-decide life-simulation card game.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
