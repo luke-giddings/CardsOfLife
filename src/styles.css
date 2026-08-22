@@ -161,84 +161,91 @@ body {
   gap: 16px;
 }
 
+.scene {
+  perspective: 1200px;
+}
+
 .card {
   position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 26px 22px 64px;
-  min-height: 300px;
+  padding: 30px 36px 46px;
+  min-height: 330px;
   display: flex;
   flex-direction: column;
+  transform-origin: center;
   touch-action: none;
   user-select: none;
   cursor: grab;
-  transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.26s ease, box-shadow 0.2s ease;
+  will-change: transform;
 }
-.card:active { cursor: grabbing; }
+.card.dragging { transition: none; cursor: grabbing; }
+.card.flying { pointer-events: none; }
 
-.card-kind {
+.card-age {
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--faint);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .prompt {
-  font-size: 1.32rem;
-  line-height: 1.35;
+  font-size: 1.3rem;
+  line-height: 1.4;
   font-weight: 600;
   margin: 0;
   text-wrap: balance;
+  white-space: pre-line;
 }
 .result {
   font-size: 1.2rem;
   line-height: 1.5;
-  margin: auto 0;
+  margin: auto 0 0;
   color: var(--ink);
 }
 .card-result {
   justify-content: center;
-  padding-bottom: 26px;
   border-style: dashed;
-}
-
-.hint {
-  position: absolute;
-  bottom: 22px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--faint);
-  max-width: 45%;
-}
-.hint-left { left: 22px; text-align: left; }
-.hint-right { right: 22px; text-align: right; }
-.hint-up { top: 22px; left: 50%; transform: translateX(-50%); bottom: auto; }
-.hint-down { left: 50%; transform: translateX(-50%); }
-
-.card.lean-left { box-shadow: -14px 0 40px -20px var(--v-health), var(--shadow); }
-.card.lean-right { box-shadow: 14px 0 40px -20px var(--v-finances), var(--shadow); }
-
-.choices {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.choice {
-  flex: 1 1 40%;
-  padding: 13px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--surface-2);
-  color: var(--ink);
-  font-size: 0.95rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.05s ease;
 }
-.choice:hover { background: var(--surface); }
-.choice:active { transform: translateY(1px); }
+.tap-cue {
+  margin-top: 22px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* choice labels written along the card edges */
+.edge {
+  position: absolute;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--faint);
+  transition: color 0.15s ease;
+  pointer-events: none;
+}
+.edge-left,
+.edge-right {
+  top: 50%;
+  writing-mode: vertical-rl;
+}
+.edge-left { left: 9px; transform: translateY(-50%) rotate(180deg); }
+.edge-right { right: 9px; transform: translateY(-50%); }
+.edge-up { top: 12px; left: 50%; transform: translateX(-50%); }
+.edge-down { bottom: 12px; left: 50%; transform: translateX(-50%); }
+
+.card.lean-left .edge-left,
+.card.lean-right .edge-right,
+.card.lean-up .edge-up,
+.card.lean-down .edge-down {
+  color: var(--baize);
+}
 
 .continue {
   padding: 15px;
