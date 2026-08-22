@@ -289,11 +289,13 @@ model — deferred.
     result resolution, save/load, rendering, swipe input.
   - **Content** — decks and cards as **data files (JSON)**. Adding content =
     adding data, never editing engine code.
-- **BEING DECIDED (toolchain):** vanilla JS with no build step (repo *is* the
-  site, nothing to compile) **vs** TypeScript + a bundler (Vite) auto-deployed to
-  Pages via a GitHub Action (type-checking safety net, valued because the code
-  can't be reviewed line-by-line on mobile). *Leaning:* TypeScript + Vite. To be
-  confirmed before scaffolding.
+- **Toolchain: TypeScript + Vite**, auto-deployed to Pages via a **GitHub
+  Action** (so you still just get a URL). Chosen for the **type-checking safety
+  net** — valued because the code can't be reviewed line-by-line on mobile.
+  - Bonus: because cards/effects/conditions/**Traits** are data, we give them
+    real TS types and a **typed registry** of known Traits & Statuses, so the
+    compiler catches a card referencing a misspelled trait or a non-existent
+    stat *before* the game runs. Content is type-checked, not just the engine.
 
 ---
 
@@ -408,5 +410,6 @@ shape; first-match vs weighted-random outcome selection.
 - **Conditions + Effects + Traits** is the one system behind all gating/unlocks.
 - **Relationships**: hidden per-character Traits unlock branching character decks (v1-light).
 - Static web app on **GitHub Pages**; **localStorage** save + easy reset.
+- **Toolchain: TypeScript + Vite**, deployed via a GitHub Action; content is
+  type-checked against a typed Trait/Status registry.
 - Start small (§13), expand via content.
-- **Toolchain (vanilla vs TypeScript+Vite): being decided.**
