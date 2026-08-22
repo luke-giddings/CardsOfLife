@@ -143,10 +143,22 @@ export class Game {
     const top = document.createElement("header");
     top.className = "topbar";
 
+    const headRow = document.createElement("div");
+    headRow.className = "head-row";
     const age = document.createElement("div");
     age.className = "age";
     age.innerHTML = `<span class="age-num">${this.state.age}</span><span class="age-lbl">years old</span>`;
-    top.appendChild(age);
+    headRow.appendChild(age);
+    const reset = document.createElement("button");
+    reset.className = "reset";
+    reset.textContent = "Reset";
+    reset.title = "Debug: wipe the save and start a new life";
+    reset.addEventListener("click", () => {
+      if (this.busy) return;
+      this.restart();
+    });
+    headRow.appendChild(reset);
+    top.appendChild(headRow);
 
     const vitals = document.createElement("div");
     vitals.className = "vitals";

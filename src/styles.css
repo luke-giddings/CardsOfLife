@@ -66,12 +66,30 @@ body {
 /* --- top bar: age, vitals, statuses --------------------------------------- */
 .topbar { flex: 0 0 auto; }
 
+.head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
 .age {
   display: flex;
   align-items: baseline;
   gap: 6px;
-  margin-bottom: 12px;
 }
+.reset {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--faint);
+  cursor: pointer;
+}
+.reset:hover { color: var(--ink); background: var(--surface); }
+.reset:active { transform: translateY(1px); }
 .age-num {
   font-size: 1.6rem;
   font-weight: 800;
