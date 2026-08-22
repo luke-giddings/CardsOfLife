@@ -32,9 +32,9 @@ const STATUS_LABEL: Record<StatusKind, string> = {
   lifestyle: "Life",
 };
 
-const SWIPE_THRESHOLD = 90; // px of drag == a 90° tilt, the commit point
+const SWIPE_THRESHOLD = 120; // px of drag == a 90° tilt, the commit point
 const DEG_AT_THRESHOLD = 90;
-const FLIP_MS = 380;
+const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
