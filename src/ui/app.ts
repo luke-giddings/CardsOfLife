@@ -322,10 +322,13 @@ export class Game {
       } else {
         flip.style.transform = `rotateX(${clampDeg(-dy)}deg)`;
       }
-      flip.classList.toggle("lean-left", horiz && dx < -10 && !!card.options.left);
-      flip.classList.toggle("lean-right", horiz && dx > 10 && !!card.options.right);
-      flip.classList.toggle("lean-up", !horiz && dy < -10 && !!card.options.up);
-      flip.classList.toggle("lean-down", !horiz && dy > 10 && !!card.options.down);
+      // Highlight only once past the commit point, so a highlighted edge is
+      // exactly the choice that will fire on release.
+      const past = SWIPE_THRESHOLD;
+      flip.classList.toggle("lean-left", horiz && dx <= -past && !!card.options.left);
+      flip.classList.toggle("lean-right", horiz && dx >= past && !!card.options.right);
+      flip.classList.toggle("lean-up", !horiz && dy <= -past && !!card.options.up);
+      flip.classList.toggle("lean-down", !horiz && dy >= past && !!card.options.down);
     };
 
     const settle = (): void => {

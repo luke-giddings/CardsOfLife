@@ -39,32 +39,33 @@ export const content = {
           kind: "milestone",
           priority: 100,
           conditions: { ageMin: 0, ageMax: 0 },
-          prompt:
-            "You have just been born!\n\nSwipe the card left or right to choose. The choice for each direction is written on the edge you swipe towards.\n\nAre you a boy or a girl?",
+          prompt: "You have just been born!\n\nSwipe to choose — are you a boy or a girl?",
           options: {
             left: { label: "Boy", outcomes: [{ result: "A boy. Your story begins.", effects: { setTraits: { gender: "boy" } } }] },
             right: { label: "Girl", outcomes: [{ result: "A girl. Your story begins.", effects: { setTraits: { gender: "girl" } } }] },
           },
         },
         {
-          id: "b_firstword",
+          // Second card: teaches that choices move the bars (each option
+          // trades one vital up for another down), and teaches the up-swipe.
+          id: "b_firststeps",
           kind: "milestone",
           priority: 90,
           conditions: { ageMin: 1, ageMax: 1 },
-          prompt:
-            "You babble your very first word!\n\nEach choice changes your stats — watch the bars at the top move.",
+          prompt: "You take your first wobbly steps!\n\nEvery choice has a cost — watch the bars. Where do you toddle?",
           options: {
-            left: { label: "“Mama”", outcomes: [{ result: "Mum bursts into happy tears. Happiness soars.", effects: { vitals: { happiness: 25 } } }] },
-            right: { label: "“Dada”", outcomes: [{ result: "Dad punches the air. Happiness soars.", effects: { vitals: { happiness: 25 } } }] },
+            left: { label: "To your toys", outcomes: [{ result: "Hours of fun! But you scream the house down when it's time to stop.", effects: { vitals: { happiness: 10, spirit: -25 } } }] },
+            right: { label: "To your parents", outcomes: [{ result: "A proud, happy cuddle — though you'd much rather have kept playing.", effects: { vitals: { spirit: 10, happiness: -25 } } }] },
+            up: { label: "To your cot", outcomes: [{ result: "A good nap does you the world of good, even if it's a bit dull.", effects: { vitals: { health: 10, spirit: -25 } } }] },
           },
         },
         {
-          id: "b_firststeps",
+          id: "b_bath",
           kind: "filler",
-          prompt: "You wobble upright. Your very first steps — but towards whom?",
+          prompt: "Bath time! The tub is a mountain of bubbles.",
           options: {
-            left: { label: "To Mum", outcomes: [{ result: "She scoops you up, beaming.", effects: { vitals: { happiness: 10 } } }] },
-            right: { label: "To Dad", outcomes: [{ result: "He catches you just in time.", effects: { vitals: { happiness: 10 } } }] },
+            left: { label: "Splash everyone", outcomes: [{ result: "Chaos, giggles, a soaked bathroom.", effects: { vitals: { happiness: 10, health: -10 } } }] },
+            right: { label: "Sit nicely", outcomes: [{ result: "Squeaky clean and cosy.", effects: { vitals: { health: 10 } } }] },
           },
         },
         {
