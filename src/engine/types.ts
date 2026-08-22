@@ -15,12 +15,20 @@ export const VITAL_KEYS: VitalKey[] = ["finances", "happiness", "health", "spiri
 export const VITAL_MIN = 0;
 export const VITAL_MAX = 100;
 
-// End-screen framing for whichever vital fell. Only Health's is "death".
-export const VITAL_ENDINGS: Record<VitalKey, { title: string; blurb: string }> = {
+// End-screen framing. The four vital endings (only Health's is "death"), plus
+// named endings triggered by an effect (e.g. reaching adulthood).
+export interface Ending {
+  title: string;
+  blurb: string;
+  survived?: boolean; // true = not a game-over-by-collapse ending
+}
+
+export const ENDINGS: Record<string, Ending> = {
   finances: { title: "Bankrupt", blurb: "The money ran out, and with it your options." },
   happiness: { title: "Despair", blurb: "The joy drained away until there was none left to find." },
   health: { title: "Death", blurb: "Your body gave out. A life reached its end." },
   spirit: { title: "Emptiness", blurb: "The spark went out. You were still here, but not really." },
+  grown_up: { title: "All Grown Up", blurb: "Childhood is behind you. The rest of your story is still to be written…", survived: true },
 };
 
 // --- Statuses: persistent side-states that drift Vitals and gate content. ----
@@ -75,6 +83,7 @@ export interface Effect {
   removeDecks?: string[]; // ids, or a trailing wildcard like "job_*"
   setTraits?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
+  endGame?: string; // ends the run with this ending id (see ENDINGS)
 }
 
 // --- Cards -------------------------------------------------------------------
@@ -154,6 +163,6 @@ export interface GameState {
   usedCards: Record<string, number>; // card id -> times played
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;
-  endReason?: VitalKey;
+  endReason?: string;                 // ENDINGS id (vital key, or a named ending)
   history: string[];                  // brief log for the end-of-run summary
 }

@@ -173,36 +173,46 @@ body {
   padding: 18px 0;
 }
 
-.card-wrap {
+.scene {
+  perspective: 1300px;
+  position: relative;
+}
+
+.holder {
+  transition: transform 0.32s ease, opacity 0.32s ease;
+  will-change: transform, opacity;
+}
+
+.flip {
+  position: relative;
+  height: min(60vh, 500px);
+  transform-style: preserve-3d;
+  transition: transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+.flip.dragging { transition: none; }
+
+.face {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.scene {
-  perspective: 1200px;
-}
-
-.card {
-  position: relative;
+  padding: 28px 42px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 30px 36px 46px;
-  min-height: 330px;
-  display: flex;
-  flex-direction: column;
-  transform-origin: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: auto;
+}
+.front {
+  cursor: grab;
   touch-action: none;
   user-select: none;
-  cursor: grab;
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-    opacity 0.26s ease, box-shadow 0.2s ease;
-  will-change: transform;
 }
-.card.dragging { transition: none; cursor: grabbing; }
-.card.flying { pointer-events: none; }
+.flip.dragging .front { cursor: grabbing; }
+.back { justify-content: center; }
 
 .card-age {
   font-size: 0.68rem;
@@ -213,38 +223,38 @@ body {
 }
 .prompt {
   font-size: 1.3rem;
-  line-height: 1.4;
+  line-height: 1.42;
   font-weight: 600;
   margin: 0;
   text-wrap: balance;
   white-space: pre-line;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
 }
 .result {
-  font-size: 1.2rem;
+  font-size: 1.28rem;
   line-height: 1.5;
-  margin: auto 0 0;
-  color: var(--ink);
-}
-.card-result {
-  justify-content: center;
-  border-style: dashed;
-  cursor: pointer;
+  margin: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
 }
 .tap-cue {
-  margin-top: 22px;
+  margin-top: 16px;
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--faint);
 }
 
-/* choice labels written along the card edges */
+/* choice labels along the edges — big and bold: the key thing to read */
 .edge {
   position: absolute;
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: var(--faint);
+  font-size: 1.18rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--muted);
   transition: color 0.15s ease;
   pointer-events: none;
 }
@@ -253,15 +263,15 @@ body {
   top: 50%;
   writing-mode: vertical-rl;
 }
-.edge-left { left: 9px; transform: translateY(-50%) rotate(180deg); }
-.edge-right { right: 9px; transform: translateY(-50%); }
-.edge-up { top: 12px; left: 50%; transform: translateX(-50%); }
-.edge-down { bottom: 12px; left: 50%; transform: translateX(-50%); }
+.edge-left { left: 10px; transform: translateY(-50%) rotate(180deg); }
+.edge-right { right: 10px; transform: translateY(-50%); }
+.edge-up { top: 14px; left: 50%; transform: translateX(-50%); }
+.edge-down { bottom: 14px; left: 50%; transform: translateX(-50%); }
 
-.card.lean-left .edge-left,
-.card.lean-right .edge-right,
-.card.lean-up .edge-up,
-.card.lean-down .edge-down {
+.flip.lean-left .edge-left,
+.flip.lean-right .edge-right,
+.flip.lean-up .edge-up,
+.flip.lean-down .edge-down {
   color: var(--baize);
 }
 
@@ -309,11 +319,11 @@ body {
 }
 
 button:focus-visible,
-.card:focus-visible {
+.front:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .fill, .choice { transition: none; }
+  .flip, .holder, .fill { transition: none; }
 }

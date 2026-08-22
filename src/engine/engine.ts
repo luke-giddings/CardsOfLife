@@ -169,6 +169,10 @@ function applyEffect(state: GameState, effect: Effect, content: Content): void {
       state.vitals[key] = clampVital(state.vitals[key] + (delta ?? 0));
     }
   }
+  if (effect.endGame) {
+    state.over = true;
+    state.endReason = effect.endGame;
+  }
 }
 
 // Sum of every active status state's per-turn drift.

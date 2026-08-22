@@ -8,8 +8,8 @@ import {
 } from "../engine/engine.ts";
 import { clearSave, loadGame, saveGame } from "../engine/save.ts";
 import {
+  ENDINGS,
   STATUS_KINDS,
-  VITAL_ENDINGS,
   VITAL_KEYS,
   type Card,
   type Direction,
@@ -32,211 +32,233 @@ const STATUS_LABEL: Record<StatusKind, string> = {
   lifestyle: "Life",
 };
 
-const SWIPE_THRESHOLD = 80; // px of drag before a swipe commits
-const ROTATE_PER_PX = 0.18; // degrees of tilt per px dragged
-const MAX_TILT = 80;
-const EXIT_MS = 260;
+const SWIPE_THRESHOLD = 90; // px of drag == a 90° tilt, the commit point
+const DEG_AT_THRESHOLD = 90;
+const FLIP_MS = 380;
+const SLIDE_MS = 320;
 
-const prefersReducedMotion = window.matchMedia(
-  "(prefers-reduced-motion: reduce)",
-).matches;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-type Phase = "front" | "back" | "over";
+const FULL_FLIP: Record<Direction, string> = {
+  left: "rotateY(-180deg)",
+  right: "rotateY(180deg)",
+  up: "rotateX(180deg)",
+  down: "rotateX(-180deg)",
+};
+const LEAVE: Record<Direction, string> = {
+  left: "translateX(-140%) rotate(-8deg)",
+  right: "translateX(140%) rotate(8deg)",
+  up: "translateY(-140%)",
+  down: "translateY(140%)",
+};
 
 export class Game {
   private root: HTMLElement;
   private state!: GameState;
   private card: Card | null = null;
-  private phase: Phase = "front";
-  private result = "";
-  private busy = false; // guards during the exit animation
+  private busy = false;
+  private lastDir: Direction = "right";
+
+  private topbar!: HTMLElement;
+  private scene!: HTMLElement;
+  private holder: HTMLElement | null = null;
+  private flip: HTMLElement | null = null;
 
   constructor(root: HTMLElement) {
     this.root = root;
     setContent(content);
-    const saved = loadGame();
-    this.state = saved ?? initGame(content);
-    if (this.state.over) {
-      this.phase = "over";
-    } else {
-      this.nextTurn();
-    }
-    this.render();
+    this.buildShell();
+    this.state = loadGame() ?? initGame(content);
+    this.updateTop();
+    if (this.state.over) this.showEnd();
+    else this.beginTurn();
     window.addEventListener("keydown", this.onKey);
   }
 
-  // --- flow ------------------------------------------------------------------
+  // --- shell -----------------------------------------------------------------
 
-  private nextTurn(): void {
-    const draw = drawCard(this.state);
-    this.state = draw.state;
-    if (draw.card) {
-      this.card = draw.card;
-      this.phase = "front";
-    } else {
-      const q = quietYear(this.state);
-      this.state = q.state;
-      this.result = q.result;
-      this.card = null;
-      this.phase = this.state.over ? "over" : "back";
-      saveGame(this.state);
-    }
-  }
-
-  private commit(dir: Direction): void {
-    if (this.phase !== "front" || !this.card) return;
-    if (!this.card.options[dir]) return;
-    const res = chooseDirection(this.state, this.card, dir);
-    this.state = res.state;
-    this.result = res.result;
-    this.phase = this.state.over ? "over" : "back";
-    saveGame(this.state);
-    this.render();
-  }
-
-  private cont(): void {
-    if (this.phase !== "back") return;
-    this.nextTurn();
-    this.render();
-  }
-
-  private restart(): void {
-    clearSave();
-    this.state = initGame(content);
-    this.nextTurn();
-    this.render();
-  }
-
-  private onKey = (e: KeyboardEvent): void => {
-    if (this.busy) return;
-    if (this.phase === "front") {
-      const map: Record<string, Direction> = {
-        ArrowLeft: "left",
-        ArrowRight: "right",
-        ArrowUp: "up",
-        ArrowDown: "down",
-      };
-      const dir = map[e.key];
-      if (dir && this.card?.options[dir]) {
-        e.preventDefault();
-        this.commit(dir);
-      }
-    } else if (e.key === "Enter" || e.key === " ") {
-      if (this.phase === "back") this.cont();
-    }
-  };
-
-  // --- rendering -------------------------------------------------------------
-
-  private render(): void {
+  private buildShell(): void {
     this.root.innerHTML = "";
-    this.root.appendChild(this.renderTop());
+    this.topbar = document.createElement("header");
+    this.topbar.className = "topbar";
     const stage = document.createElement("main");
     stage.className = "stage";
-    if (this.phase === "over") stage.appendChild(this.renderEnd());
-    else if (this.phase === "back") stage.appendChild(this.renderResult());
-    else stage.appendChild(this.renderCard());
+    this.scene = document.createElement("div");
+    this.scene.className = "scene";
+    stage.appendChild(this.scene);
+    this.root.appendChild(this.topbar);
     this.root.appendChild(stage);
   }
 
-  private renderTop(): HTMLElement {
-    const top = document.createElement("header");
-    top.className = "topbar";
-
-    const headRow = document.createElement("div");
-    headRow.className = "head-row";
-    const age = document.createElement("div");
-    age.className = "age";
-    age.innerHTML = `<span class="age-num">${this.state.age}</span><span class="age-lbl">years old</span>`;
-    headRow.appendChild(age);
-    const reset = document.createElement("button");
-    reset.className = "reset";
-    reset.textContent = "Reset";
-    reset.title = "Debug: wipe the save and start a new life";
-    reset.addEventListener("click", () => {
-      if (this.busy) return;
-      this.restart();
-    });
-    headRow.appendChild(reset);
-    top.appendChild(headRow);
-
-    const vitals = document.createElement("div");
-    vitals.className = "vitals";
-    for (const key of VITAL_KEYS) {
-      const v = this.state.vitals[key];
-      const cell = document.createElement("div");
-      cell.className = `vital vital-${key}`;
-      cell.innerHTML = `
-        <div class="vital-top"><span>${VITAL_LABEL[key]}</span></div>
-        <div class="track"><div class="fill" style="width:${v}%"></div></div>`;
-      vitals.appendChild(cell);
-    }
-    top.appendChild(vitals);
-
-    const rail = document.createElement("div");
-    rail.className = "statuses";
+  private updateTop(): void {
+    const s = this.state;
+    let statusChips = "";
     for (const kind of STATUS_KINDS) {
-      const value = this.state.statuses[kind];
-      if (value === content.start.statuses[kind]) continue; // hide unchanged
-      const def = content.statuses[kind].states[value];
-      const label = def?.label ?? value;
-      const chip = document.createElement("span");
-      chip.className = "chip";
-      chip.innerHTML = `<b>${STATUS_LABEL[kind]}</b> ${label}`;
-      rail.appendChild(chip);
+      const value = s.statuses[kind];
+      if (value === content.start.statuses[kind]) continue;
+      const label = content.statuses[kind].states[value]?.label ?? value;
+      statusChips += `<span class="chip"><b>${STATUS_LABEL[kind]}</b> ${label}</span>`;
     }
-    top.appendChild(rail);
-    return top;
+    let vitalCells = "";
+    for (const key of VITAL_KEYS) {
+      vitalCells += `<div class="vital vital-${key}">
+        <div class="vital-top"><span>${VITAL_LABEL[key]}</span></div>
+        <div class="track"><div class="fill" style="width:${s.vitals[key]}%"></div></div>
+      </div>`;
+    }
+    this.topbar.innerHTML = `
+      <div class="head-row">
+        <div class="age"><span class="age-num">${s.age}</span><span class="age-lbl">years old</span></div>
+        <button class="reset" title="Debug: wipe the save and start a new life">Reset</button>
+      </div>
+      <div class="vitals">${vitalCells}</div>
+      <div class="statuses">${statusChips}</div>`;
+    this.topbar.querySelector(".reset")!.addEventListener("click", () => {
+      if (!this.busy) this.restart();
+    });
   }
 
-  private renderCard(): HTMLElement {
-    const card = this.card!;
-    const wrap = document.createElement("div");
-    wrap.className = "card-wrap";
+  // --- turn flow -------------------------------------------------------------
 
-    const scene = document.createElement("div");
-    scene.className = "scene";
+  private beginTurn(): void {
+    const draw = drawCard(this.state);
+    this.state = draw.state;
+    if (!draw.card) {
+      const q = quietYear(this.state);
+      this.state = q.state;
+      saveGame(this.state);
+      this.updateTop();
+      if (this.state.over) this.showEnd();
+      else this.beginTurn();
+      return;
+    }
+    this.card = draw.card;
+    this.showFront(draw.card);
+  }
 
-    const el = document.createElement("article");
-    el.className = "card";
+  private showFront(card: Card): void {
+    const holder = document.createElement("div");
+    holder.className = "holder";
+    const flip = document.createElement("div");
+    flip.className = "flip";
+
+    const front = document.createElement("div");
+    front.className = "face front";
     const ageLabel = this.state.age === 0 ? "Newborn" : `Age ${this.state.age}`;
-    el.innerHTML = `
+    front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
       <p class="prompt">${card.prompt}</p>
       ${card.options.left ? `<div class="edge edge-left">${card.options.left.label}</div>` : ""}
       ${card.options.right ? `<div class="edge edge-right">${card.options.right.label}</div>` : ""}
       ${card.options.up ? `<div class="edge edge-up">${card.options.up.label}</div>` : ""}
       ${card.options.down ? `<div class="edge edge-down">${card.options.down.label}</div>` : ""}`;
-    scene.appendChild(el);
-    wrap.appendChild(scene);
-    this.attachDrag(el, card);
-    return wrap;
+
+    const back = document.createElement("div");
+    back.className = "face back";
+    back.innerHTML = `<p class="result"></p><div class="tap-cue">Tap to continue</div>`;
+
+    flip.appendChild(front);
+    flip.appendChild(back);
+    holder.appendChild(flip);
+    this.scene.appendChild(holder);
+    this.holder = holder;
+    this.flip = flip;
+
+    this.attachDrag(flip, card);
+
+    // slide in from below
+    if (!reduceMotion) {
+      holder.style.transform = "translateY(28px)";
+      holder.style.opacity = "0";
+      requestAnimationFrame(() => {
+        holder.style.transform = "";
+        holder.style.opacity = "";
+      });
+    }
   }
 
-  private renderResult(): HTMLElement {
-    const wrap = document.createElement("div");
-    wrap.className = "card-wrap";
-    const scene = document.createElement("div");
-    scene.className = "scene";
-    const el = document.createElement("article");
-    el.className = "card card-result";
-    el.innerHTML = `<p class="result">${this.result}</p><div class="tap-cue">Tap to continue</div>`;
-    el.addEventListener("click", () => this.cont());
-    scene.appendChild(el);
-    wrap.appendChild(scene);
-    return wrap;
+  private choose(dir: Direction): void {
+    if (this.busy || !this.card || !this.flip || !this.holder) return;
+    if (!this.card.options[dir]) return;
+    this.busy = true;
+    this.lastDir = dir;
+
+    const res = chooseDirection(this.state, this.card, dir);
+    this.state = res.state;
+    saveGame(this.state);
+
+    const flip = this.flip;
+    const back = flip.querySelector<HTMLElement>(".back .result")!;
+    const backFace = flip.querySelector<HTMLElement>(".back")!;
+    back.textContent = res.result;
+    backFace.style.transform =
+      dir === "up" || dir === "down" ? "rotateX(180deg)" : "rotateY(180deg)";
+
+    flip.classList.remove("dragging", "lean-left", "lean-right", "lean-up", "lean-down");
+
+    const finishFlip = (): void => {
+      this.updateTop(); // bars animate as the result is revealed
+      this.armAdvance();
+    };
+
+    if (reduceMotion) {
+      finishFlip();
+      return;
+    }
+    // continue the rotation the final 90° to reveal the back
+    flip.style.transform = FULL_FLIP[dir];
+    window.setTimeout(finishFlip, FLIP_MS);
   }
 
-  private renderEnd(): HTMLElement {
+  private armAdvance(): void {
+    this.busy = false;
+    const holder = this.holder;
+    if (!holder) return;
+    holder.style.cursor = "pointer";
+    holder.addEventListener("click", this.onAdvanceClick, { once: true });
+  }
+
+  private onAdvanceClick = (): void => this.advance();
+
+  private advance(): void {
+    if (this.busy) return;
+    const holder = this.holder;
+    if (!holder) return;
+    this.busy = true;
+
+    const done = (): void => {
+      holder.remove();
+      this.holder = null;
+      this.flip = null;
+      this.busy = false;
+      if (this.state.over) this.showEnd();
+      else this.beginTurn();
+    };
+
+    if (reduceMotion) {
+      done();
+      return;
+    }
+    holder.style.transform = LEAVE[this.lastDir];
+    holder.style.opacity = "0";
+    window.setTimeout(done, SLIDE_MS);
+  }
+
+  private showEnd(): void {
+    this.scene.innerHTML = "";
     const reason = this.state.endReason ?? "health";
-    const ending = VITAL_ENDINGS[reason];
+    const ending = ENDINGS[reason] ?? ENDINGS.health;
     const t = this.state.traits;
+
     const wrap = document.createElement("div");
     wrap.className = "end";
+    const ageLine = ending.survived
+      ? ""
+      : `<p class="end-line">You reached <b>${this.state.age}</b> years.</p>`;
     wrap.innerHTML = `
       <div class="end-title">${ending.title}</div>
       <p class="end-blurb">${ending.blurb}</p>
-      <p class="end-line">You reached <b>${this.state.age}</b> years.</p>
+      ${ageLine}
       <ul class="end-recap">
         <li>Born a ${t.gender}</li>
         ${t.knowsMartialArts ? "<li>Learned martial arts</li>" : ""}
@@ -246,54 +268,69 @@ export class Game {
     b.textContent = "New life";
     b.addEventListener("click", () => this.restart());
     wrap.appendChild(b);
-    return wrap;
+    this.scene.appendChild(wrap);
   }
 
-  // --- swipe (3D rotate) -----------------------------------------------------
+  private restart(): void {
+    clearSave();
+    this.state = initGame(content);
+    this.scene.innerHTML = "";
+    this.holder = null;
+    this.flip = null;
+    this.busy = false;
+    this.updateTop();
+    this.beginTurn();
+  }
 
-  private attachDrag(el: HTMLElement, card: Card): void {
+  private onKey = (e: KeyboardEvent): void => {
+    if (this.busy) return;
+    const map: Record<string, Direction> = {
+      ArrowLeft: "left",
+      ArrowRight: "right",
+      ArrowUp: "up",
+      ArrowDown: "down",
+    };
+    if (this.holder && this.flip && this.card && !this.holderIsBack()) {
+      const dir = map[e.key];
+      if (dir && this.card.options[dir]) {
+        e.preventDefault();
+        this.choose(dir);
+      }
+    } else if (e.key === "Enter" || e.key === " ") {
+      this.advance();
+    }
+  };
+
+  private holderIsBack(): boolean {
+    // once armed for advance, the holder has a click-to-continue cursor
+    return this.holder?.style.cursor === "pointer";
+  }
+
+  // --- swipe (3D rotate to 90°, then flip the rest to the back) --------------
+
+  private attachDrag(flip: HTMLElement, card: Card): void {
     let startX = 0;
     let startY = 0;
     let dragging = false;
 
     const tilt = (dx: number, dy: number): void => {
       const horiz = Math.abs(dx) >= Math.abs(dy);
-      const ry = clamp(dx * ROTATE_PER_PX, -MAX_TILT, MAX_TILT);
-      const rx = clamp(-dy * ROTATE_PER_PX, -MAX_TILT, MAX_TILT);
-      el.style.transform = horiz ? `rotateY(${ry}deg)` : `rotateX(${rx}deg)`;
-      el.classList.toggle("lean-left", horiz && dx < -12 && !!card.options.left);
-      el.classList.toggle("lean-right", horiz && dx > 12 && !!card.options.right);
-      el.classList.toggle("lean-up", !horiz && dy < -12 && !!card.options.up);
-      el.classList.toggle("lean-down", !horiz && dy > 12 && !!card.options.down);
+      const clampDeg = (d: number) =>
+        Math.max(-88, Math.min(88, (d / SWIPE_THRESHOLD) * DEG_AT_THRESHOLD));
+      if (horiz) {
+        flip.style.transform = `rotateY(${clampDeg(dx)}deg)`;
+      } else {
+        flip.style.transform = `rotateX(${clampDeg(-dy)}deg)`;
+      }
+      flip.classList.toggle("lean-left", horiz && dx < -10 && !!card.options.left);
+      flip.classList.toggle("lean-right", horiz && dx > 10 && !!card.options.right);
+      flip.classList.toggle("lean-up", !horiz && dy < -10 && !!card.options.up);
+      flip.classList.toggle("lean-down", !horiz && dy > 10 && !!card.options.down);
     };
 
     const settle = (): void => {
-      el.classList.remove("dragging", "lean-left", "lean-right", "lean-up", "lean-down");
-      el.style.transform = "";
-    };
-
-    const fly = (dir: Direction): void => {
-      if (this.busy) return;
-      this.busy = true;
-      const exit: Record<Direction, string> = {
-        left: "rotateY(-115deg)",
-        right: "rotateY(115deg)",
-        up: "rotateX(115deg)",
-        down: "rotateX(-115deg)",
-      };
-      if (prefersReducedMotion) {
-        this.busy = false;
-        this.commit(dir);
-        return;
-      }
-      el.classList.remove("dragging");
-      el.classList.add("flying");
-      el.style.transform = exit[dir];
-      el.style.opacity = "0";
-      window.setTimeout(() => {
-        this.busy = false;
-        this.commit(dir);
-      }, EXIT_MS);
+      flip.classList.remove("dragging", "lean-left", "lean-right", "lean-up", "lean-down");
+      flip.style.transform = "";
     };
 
     const end = (x: number, y: number): void => {
@@ -302,35 +339,34 @@ export class Game {
       const dx = x - startX;
       const dy = y - startY;
       const horiz = Math.abs(dx) >= Math.abs(dy);
+      flip.classList.remove("dragging");
       if (horiz && Math.abs(dx) > SWIPE_THRESHOLD) {
         const dir: Direction = dx < 0 ? "left" : "right";
-        if (card.options[dir]) return fly(dir);
+        if (card.options[dir]) return this.choose(dir);
       } else if (!horiz && Math.abs(dy) > SWIPE_THRESHOLD) {
         const dir: Direction = dy < 0 ? "up" : "down";
-        if (card.options[dir]) return fly(dir);
+        if (card.options[dir]) return this.choose(dir);
       }
       settle();
     };
 
-    el.addEventListener("pointerdown", (e) => {
+    flip.addEventListener("pointerdown", (e) => {
       if (this.busy) return;
       dragging = true;
       startX = e.clientX;
       startY = e.clientY;
-      el.classList.add("dragging");
-      el.setPointerCapture(e.pointerId);
+      flip.classList.add("dragging");
+      flip.setPointerCapture(e.pointerId);
     });
-    el.addEventListener("pointermove", (e) => {
+    flip.addEventListener("pointermove", (e) => {
       if (dragging) tilt(e.clientX - startX, e.clientY - startY);
     });
-    el.addEventListener("pointerup", (e) => end(e.clientX, e.clientY));
-    el.addEventListener("pointercancel", () => {
-      dragging = false;
-      settle();
+    flip.addEventListener("pointerup", (e) => end(e.clientX, e.clientY));
+    flip.addEventListener("pointercancel", () => {
+      if (dragging) {
+        dragging = false;
+        settle();
+      }
     });
   }
-}
-
-function clamp(n: number, lo: number, hi: number): number {
-  return Math.max(lo, Math.min(hi, n));
 }
