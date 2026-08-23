@@ -71,7 +71,7 @@ export const content = {
           prompt: "Your well-off uncle wants to help the little one out.",
           options: {
             left: { label: "A mountain of toys!", outcomes: [{ result: "Christmas comes early. Wrapping paper everywhere.", effects: { vitals: { happiness: 25 } } }] },
-            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: 10 }, setTraits: { uniFund: true } } }] },
+            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: 15 }, setTraits: { uniFund: true } } }] },
             down: { label: "Healthy food & baby classes", outcomes: [{ result: "Organic everything and splashy swim lessons.", effects: { vitals: { health: 25 } } }] },
           },
         },
@@ -80,7 +80,7 @@ export const content = {
           kind: "one_time",
           prompt: "You reach for the same picture book, over and over again.",
           options: {
-            left: { label: "Read together nightly", outcomes: [{ result: "A shared love of stories takes root.", effects: { vitals: { spirit: 10, happiness: 10 }, setTraits: { bookish: true } } }] },
+            left: { label: "Read together nightly", outcomes: [{ result: "A shared love of stories takes root.", effects: { vitals: { spirit: 15 }, setTraits: { bookish: true } } }] },
             right: { label: "Pop the telly on", outcomes: [{ result: "Bright colours and very catchy songs.", effects: { vitals: { happiness: 20 } } }] },
           },
         },
@@ -89,7 +89,7 @@ export const content = {
           kind: "one_time",
           prompt: "You will NOT sit still for one single second.",
           options: {
-            left: { label: "Enrol in tumble-tots", outcomes: [{ result: "Forward rolls and gloriously grazed knees.", effects: { vitals: { health: 15, happiness: 5 }, setTraits: { sporty: true } } }] },
+            left: { label: "Enrol in tumble-tots", outcomes: [{ result: "Forward rolls and gloriously grazed knees.", effects: { vitals: { health: 15 }, setTraits: { sporty: true } } }] },
             right: { label: "Let them wear out", outcomes: [{ result: "You crash out, fast asleep, by 7pm sharp.", effects: { vitals: { health: 20 } } }] },
           },
         },
@@ -108,7 +108,7 @@ export const content = {
           prompt: "The doctor readies a very small needle.",
           options: {
             left: { label: "Brave it", outcomes: [{ result: "One yelp, then a lollipop. Protected for life.", effects: { vitals: { health: 20 }, setTraits: { vaccinated: true } } }] },
-            right: { label: "Squirm free", outcomes: [{ result: "You wriggle away from the needle — this time.", effects: { vitals: { happiness: 10 } } }] },
+            right: { label: "Squirm free", outcomes: [{ result: "You wriggle away from the needle — this time.", effects: { vitals: { happiness: 20 } } }] },
           },
         },
         {
@@ -116,7 +116,7 @@ export const content = {
           kind: "one_time",
           prompt: "Should you start at the local nursery?",
           options: {
-            left: { label: "Off you go!", outcomes: [{ result: "New friends, finger paints and snack time.", effects: { vitals: { happiness: 10, spirit: 10 }, setTraits: { sociable: true } } }] },
+            left: { label: "Off you go!", outcomes: [{ result: "New friends, finger paints and snack time.", effects: { vitals: { spirit: 15 }, setTraits: { sociable: true } } }] },
             right: { label: "Stay home a while", outcomes: [{ result: "Cosy, unhurried days with family.", effects: { vitals: { happiness: 20 } } }] },
           },
         },
@@ -126,7 +126,7 @@ export const content = {
           prompt: "Big news — a baby brother has arrived!",
           options: {
             left: { label: "Adore him", outcomes: [{ result: "You appoint yourself his chief protector.", effects: { vitals: { happiness: 20 }, setTraits: { hasBrother: true }, incTraits: { relBrother: 30 } } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "You are not sharing the spotlight easily.", effects: { vitals: { spirit: 10 }, setTraits: { hasBrother: true }, incTraits: { relBrother: -15 } } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "You keep your distance and your own world.", effects: { vitals: { spirit: 20 }, setTraits: { hasBrother: true }, incTraits: { relBrother: -15 } } }] },
           },
         },
         {
@@ -135,7 +135,7 @@ export const content = {
           prompt: "Big news — a baby sister has arrived!",
           options: {
             left: { label: "Adore her", outcomes: [{ result: "Instant best friend and partner in crime.", effects: { vitals: { happiness: 20 }, setTraits: { hasSister: true }, incTraits: { relSister: 30 } } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "Hmph. You quite liked being the only one.", effects: { vitals: { spirit: 10 }, setTraits: { hasSister: true }, incTraits: { relSister: -15 } } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "You keep to yourself and your own world.", effects: { vitals: { spirit: 20 }, setTraits: { hasSister: true }, incTraits: { relSister: -15 } } }] },
           },
         },
 
