@@ -176,7 +176,8 @@ body {
   width: 0;
   border-radius: 4px;
   background: var(--vc);
-  transition: width 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+  /* slow → fast (ease-in sine) over 2.5s */
+  transition: width 2.5s cubic-bezier(0.12, 0, 0.39, 0);
 }
 /* the changed segment, flashed green (gain) or red (loss) then faded out */
 .flash {
