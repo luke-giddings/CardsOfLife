@@ -45,6 +45,8 @@ const SLIDE_MS = 320;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const LEAN_CLASSES = ["lean-left", "lean-right", "lean-up", "lean-down"];
+
 const FULL_FLIP: Record<Direction, string> = {
   left: "rotateY(-180deg)",
   right: "rotateY(180deg)",
@@ -277,7 +279,7 @@ export class Game {
     backFace.style.transform =
       dir === "up" || dir === "down" ? "rotateX(180deg)" : "rotateY(180deg)";
 
-    flip.classList.remove("dragging", "lean-left", "lean-right", "lean-up", "lean-down");
+    flip.classList.remove("dragging", ...LEAN_CLASSES);
 
     const finishFlip = (): void => {
       this.phase = "back";
@@ -285,12 +287,13 @@ export class Game {
       this.armAdvance();
     };
 
+    // continue the rotation the final 90° to reveal the back (instant when
+    // motion is reduced, since .flip has no transition in that case)
+    flip.style.transform = FULL_FLIP[dir];
     if (reduceMotion) {
       finishFlip();
       return;
     }
-    // continue the rotation the final 90° to reveal the back
-    flip.style.transform = FULL_FLIP[dir];
     window.setTimeout(finishFlip, FLIP_MS);
   }
 
@@ -411,7 +414,7 @@ export class Game {
     };
 
     const settle = (): void => {
-      flip.classList.remove("dragging", "lean-left", "lean-right", "lean-up", "lean-down");
+      flip.classList.remove("dragging", ...LEAN_CLASSES);
       flip.style.transform = "";
     };
 

@@ -20,22 +20,16 @@ import {
 // --- setup -------------------------------------------------------------------
 
 export function initGame(content: Content): GameState {
-  const traits = { ...DEFAULT_TRAITS, ...(content.start.traits ?? {}) };
-  // Gender is set at birth, once, at random.
-  const seed = randomSeed();
-  const roll = nextRandom(seed);
-  traits.gender = roll.value < 0.5 ? "boy" : "girl";
-
+  // Gender starts at the default and is chosen on the birth card.
   return {
     age: 0,
     vitals: { ...content.start.vitals },
     statuses: { ...content.start.statuses },
-    traits,
+    traits: { ...DEFAULT_TRAITS, ...(content.start.traits ?? {}) },
     activeDecks: [...content.start.decks],
     usedCards: {},
-    rng: roll.state,
+    rng: randomSeed(),
     over: false,
-    history: [`Born a ${traits.gender}.`],
   };
 }
 

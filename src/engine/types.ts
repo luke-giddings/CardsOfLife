@@ -164,5 +164,4 @@ export interface GameState {
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;
   endReason?: string;                 // ENDINGS id (vital key, or a named ending)
-  history: string[];                  // brief log for the end-of-run summary
 }
