@@ -121,9 +121,9 @@ export const content = {
         {
           id: "b_vaccine",
           kind: "one_time",
-          prompt: "The doctor readies a very small needle.",
+          prompt: "The vaccinator calls at the door with his lancet — the smallpox jab.",
           options: {
-            left: { label: "Brave it", outcomes: [{ result: "One yelp, then a lollipop. Protected for life.", effects: { vitals: { health: "++" }, setTraits: { vaccinated: true } } }] },
+            left: { label: "Brave the lancet", outcomes: [{ result: "One yelp, and it's done. You're protected against the pox.", effects: { vitals: { health: "+" }, setTraits: { vaccinated: true } } }] },
             right: { label: "Squirm free", outcomes: [{ result: "You wriggle free and dig your heels in — nobody pins you down.", effects: { vitals: { spirit: "++" } } }] },
           },
         },

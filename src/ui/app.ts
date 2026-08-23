@@ -156,6 +156,24 @@ export class Game {
       vitals.append(cell);
       this.fills[key] = fill;
       this.flashes[key] = flash;
+      // Debug: tap a vital to +10, double-tap to +25.
+      let lastTap = 0;
+      let tapTimer: number | undefined;
+      cell.addEventListener("click", () => {
+        if (!this.debug) return;
+        const now = Date.now();
+        if (now - lastTap < 280) {
+          window.clearTimeout(tapTimer);
+          lastTap = 0;
+          this.adjustVital(key, 25);
+        } else {
+          lastTap = now;
+          tapTimer = window.setTimeout(() => {
+            this.adjustVital(key, 10);
+            lastTap = 0;
+          }, 280);
+        }
+      });
     }
     this.statusesEl = el("div", "statuses");
     this.topbar.append(headRow, vitals, this.statusesEl);
@@ -164,10 +182,17 @@ export class Game {
     this.scene = el("div", "scene");
     this.debugPanel = el("div", "debug-panel");
     this.debugPanel.addEventListener("click", (e) => {
-      const hit = (e.target as HTMLElement).closest<HTMLElement>("[data-card]");
+      const hit = (e.target as HTMLElement).closest<HTMLElement>(
+        "[data-card],[data-vital],[data-age],[data-deck],[data-trait]",
+      );
       if (!hit) return;
-      const id = hit.dataset.card!;
-      if (hit.dataset.action === "force") this.forceCard(id);
+      const d = hit.dataset;
+      if (d.vital) return this.adjustVital(d.vital as VitalKey, Number(d.delta));
+      if (d.age) return this.adjustAge(Number(d.age));
+      if (d.deck) return this.toggleDeck(d.deck);
+      if (d.trait) return this.toggleTrait(d.trait);
+      const id = d.card!;
+      if (d.action === "force") this.forceCard(id);
       else {
         this.debugSelectedId = id;
         this.renderDebug();
@@ -247,12 +272,30 @@ export class Game {
       ...gated.map((c) => row(c, "·", "gated", fmtCond(c.conditions))),
     ];
 
-    // Current traits (set ones highlighted).
+    // Current traits (set ones highlighted; tap to toggle/cycle).
     const traitHtml = Object.entries(this.state.traits)
       .map(([k, v]) => {
         const set = typeof v === "boolean" ? v : typeof v === "number" ? v !== 0 : true;
-        return `<span class="dbg-trait ${set ? "set" : ""}">${k}=${v}</span>`;
+        return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
       })
+      .join("");
+
+    // Debug controls: vitals, age, decks, milestone jumps.
+    const vitalCtl = VITAL_KEYS.map(
+      (k) => `<div class="dbg-ctlrow"><span class="dbg-ctllabel">${VITAL_LABEL[k]} ${this.state.vitals[k]}</span>
+        <button data-vital="${k}" data-delta="-25">−−</button>
+        <button data-vital="${k}" data-delta="-10">−</button>
+        <button data-vital="${k}" data-delta="10">+</button>
+        <button data-vital="${k}" data-delta="25">++</button></div>`,
+    ).join("");
+    const ageCtl = `<div class="dbg-ctlrow"><span class="dbg-ctllabel">Age ${this.state.age}</span>
+      <button data-age="-5">−5</button><button data-age="-1">−1</button>
+      <button data-age="1">+1</button><button data-age="5">+5</button></div>`;
+    const deckCtl = content.decks
+      .map((dk) => `<button class="dbg-deck ${this.state.activeDecks.includes(dk.id) ? "on" : ""}" data-deck="${dk.id}">${dk.id}</button>`)
+      .join("");
+    const milestoneCtl = ALL_CARDS.filter((c) => c.kind === "milestone")
+      .map((c) => `<button data-card="${c.id}" data-action="force">${c.id}</button>`)
       .join("");
 
     // Card detail: the selected card (default = the current card), showing
@@ -279,12 +322,24 @@ export class Game {
 
     this.debugPanel.innerHTML = `
       <div class="dbg-sec">
-        <h4>Active decks</h4>
-        <div class="dbg-list">${this.state.activeDecks.join(" · ") || "(none)"}</div>
+        <h4>Vitals</h4>
+        <div class="dbg-ctl">${vitalCtl}</div>
       </div>
       <div class="dbg-sec">
-        <h4>Traits</h4>
+        <h4>Age</h4>
+        <div class="dbg-ctl">${ageCtl}</div>
+      </div>
+      <div class="dbg-sec">
+        <h4>Traits — tap to toggle</h4>
         <div class="dbg-traits">${traitHtml}</div>
+      </div>
+      <div class="dbg-sec">
+        <h4>Decks — tap to add / remove</h4>
+        <div class="dbg-decks">${deckCtl}</div>
+      </div>
+      <div class="dbg-sec">
+        <h4>Skip to milestone</h4>
+        <div class="dbg-decks">${milestoneCtl}</div>
       </div>
       <div class="dbg-sec">
         <h4>Draw pool — age ${this.state.age} · tap a card to inspect</h4>
@@ -310,6 +365,38 @@ export class Game {
     this.card = card;
     this.debugSelectedId = null;
     this.showFront(card);
+  }
+
+  // --- debug state edits -----------------------------------------------------
+  private adjustVital(key: VitalKey, delta: number): void {
+    this.state.vitals[key] = Math.max(0, Math.min(100, this.state.vitals[key] + delta));
+    saveGame(this.state);
+    this.syncTop();
+    this.renderDebug();
+  }
+  private adjustAge(delta: number): void {
+    this.state.age = Math.max(0, this.state.age + delta);
+    saveGame(this.state);
+    this.syncTop();
+    this.renderDebug();
+  }
+  private toggleDeck(id: string): void {
+    const decks = this.state.activeDecks;
+    const i = decks.indexOf(id);
+    if (i >= 0) decks.splice(i, 1);
+    else decks.push(id);
+    this.seenDecks.add(id);
+    saveGame(this.state);
+    this.renderDebug();
+  }
+  private toggleTrait(key: string): void {
+    const t = this.state.traits as unknown as Record<string, unknown>;
+    const v = t[key];
+    if (typeof v === "boolean") t[key] = !v;
+    else if (key === "gender") t[key] = v === "boy" ? "girl" : "boy";
+    else if (typeof v === "number") t[key] = (v as number) + 10;
+    saveGame(this.state);
+    this.renderDebug();
   }
 
   // --- turn flow -------------------------------------------------------------
