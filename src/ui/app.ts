@@ -22,6 +22,8 @@ import {
   type VitalKey,
 } from "../engine/types.ts";
 
+import { APP_VERSION, BUILD_DESC } from "../version.ts";
+
 const DEBUG_KEY = "cardsoflife.debug";
 const DECK_BY_ID = new Map(content.decks.map((d) => [d.id, d]));
 
@@ -156,7 +158,7 @@ export class Game {
     stage.append(this.scene, this.debugPanel);
 
     const version = el("div", "version");
-    version.textContent = `build ${__BUILD__}`;
+    version.innerHTML = `<b>v${APP_VERSION} · ${BUILD_DESC}</b><br>build ${__BUILD__}`;
 
     this.root.append(this.topbar, stage, version);
     this.dbgBtn.classList.toggle("on", this.debug);
