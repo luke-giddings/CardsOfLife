@@ -139,8 +139,18 @@ body {
 .dbg-row .dbg-mark { width: 1ch; color: var(--gold); }
 .dbg-row .dbg-id { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dbg-row .dbg-kind { color: var(--faint); font-size: 0.66rem; }
+.dbg-row .dbg-note { color: var(--gold); font-size: 0.64rem; white-space: nowrap; }
 .dbg-row.gated { color: var(--faint); opacity: 0.7; }
+.dbg-row.gated .dbg-id { flex: 0 1 auto; }
 .dbg-row.due .dbg-id { color: var(--baize); }
+
+.dbg-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.dbg-trait { color: var(--faint); opacity: 0.55; }
+.dbg-trait.set { color: var(--ink); opacity: 1; }
 .dbg-draw {
   font-family: inherit;
   font-size: 0.62rem;

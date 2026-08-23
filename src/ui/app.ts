@@ -232,18 +232,27 @@ export class Game {
       return;
     }
     const { milestone, pool, gated } = eligibleDraw(this.state);
-    const row = (c: Card, mark: string, cls: string): string =>
+    const row = (c: Card, mark: string, cls: string, note = ""): string =>
       `<div class="dbg-row ${cls}" data-card="${c.id}">
         <span class="dbg-mark">${mark}</span>
         <span class="dbg-id">${c.id}</span>
+        ${note ? `<span class="dbg-note">needs ${note}</span>` : ""}
         <span class="dbg-kind">${c.kind}</span>
         <button class="dbg-draw" data-card="${c.id}" data-action="force" title="Force this card next">draw ▶</button>
       </div>`;
     const rows = [
       ...(milestone ? [row(milestone, "★", "due")] : []),
       ...pool.map((c) => row(c, c.id === this.card?.id ? "→" : "·", "pool")),
-      ...gated.map((c) => row(c, "·", "gated")),
+      ...gated.map((c) => row(c, "·", "gated", fmtCond(c.conditions))),
     ];
+
+    // Current traits (set ones highlighted).
+    const traitHtml = Object.entries(this.state.traits)
+      .map(([k, v]) => {
+        const set = typeof v === "boolean" ? v : typeof v === "number" ? v !== 0 : true;
+        return `<span class="dbg-trait ${set ? "set" : ""}">${k}=${v}</span>`;
+      })
+      .join("");
 
     // Card detail: the selected card (default = the current card), showing
     // EVERY option's EVERY outcome — including ones gated by conditions.
@@ -271,6 +280,10 @@ export class Game {
       <div class="dbg-sec">
         <h4>Active decks</h4>
         <div class="dbg-list">${this.state.activeDecks.join(" · ") || "(none)"}</div>
+      </div>
+      <div class="dbg-sec">
+        <h4>Traits</h4>
+        <div class="dbg-traits">${traitHtml}</div>
       </div>
       <div class="dbg-sec">
         <h4>Draw pool — age ${this.state.age} · tap a card to inspect</h4>
