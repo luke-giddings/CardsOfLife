@@ -39,9 +39,9 @@ const STATUS_LABEL: Record<StatusKind, string> = {
   lifestyle: "Life",
 };
 
-const ROTATE_PER_PX = 0.7; // how fast the card tilts as you drag (deg per px)
+const ROTATE_PER_PX = 0.5; // how fast the card tilts as you drag (deg per px)
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit)
-const MAX_TILT = 85;
+const MAX_TILT = 30; // the card only tilts up to 30° during the drag; release flips the rest
 const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
