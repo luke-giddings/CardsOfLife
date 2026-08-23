@@ -498,20 +498,23 @@ export class Game {
 
     const tilt = (dx: number, dy: number): void => {
       const horiz = Math.abs(dx) >= Math.abs(dy);
+      const dir: Direction = horiz ? (dx < 0 ? "left" : "right") : (dy < 0 ? "up" : "down");
+      // Don't rotate toward a direction that has no choice.
+      if (!card.options[dir]) {
+        flip.style.transform = "";
+        flip.classList.remove(...LEAN_CLASSES);
+        return;
+      }
       // Ease-out: rises quickly, then asymptotes toward MAX_TILT near the edge.
       const tiltDeg = (d: number) => (MAX_TILT * d) / (Math.abs(d) + TILT_EASE);
-      if (horiz) {
-        flip.style.transform = `rotateY(${tiltDeg(dx)}deg)`;
-      } else {
-        flip.style.transform = `rotateX(${tiltDeg(-dy)}deg)`;
-      }
+      flip.style.transform = horiz ? `rotateY(${tiltDeg(dx)}deg)` : `rotateX(${tiltDeg(-dy)}deg)`;
       // Highlight only once past the commit point, so a highlighted edge is
       // exactly the choice that will fire on release.
-      const past = SWIPE_THRESHOLD;
-      flip.classList.toggle("lean-left", horiz && dx <= -past && !!card.options.left);
-      flip.classList.toggle("lean-right", horiz && dx >= past && !!card.options.right);
-      flip.classList.toggle("lean-up", !horiz && dy <= -past && !!card.options.up);
-      flip.classList.toggle("lean-down", !horiz && dy >= past && !!card.options.down);
+      const past = Math.abs(horiz ? dx : dy) >= SWIPE_THRESHOLD;
+      flip.classList.toggle("lean-left", dir === "left" && past);
+      flip.classList.toggle("lean-right", dir === "right" && past);
+      flip.classList.toggle("lean-up", dir === "up" && past);
+      flip.classList.toggle("lean-down", dir === "down" && past);
     };
 
     const settle = (): void => {
