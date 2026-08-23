@@ -40,7 +40,7 @@ export const ENDINGS: Record<string, Ending> = {
   happiness: { title: "Despair", blurb: "The joy drained away until there was none left to find." },
   health: { title: "Death", blurb: "Your body gave out. A life reached its end." },
   spirit: { title: "Emptiness", blurb: "The spark went out. You were still here, but not really." },
-  grown_up: { title: "All Grown Up", blurb: "Childhood is behind you. The rest of your story is still to be written…", survived: true },
+  grown_up: { title: "You Survived Childhood", blurb: "Half your street didn't see eighteen — but you did. The rest of your story is still to be written…", survived: true },
 };
 
 // --- Statuses: persistent side-states that drift Vitals and gate content. ----

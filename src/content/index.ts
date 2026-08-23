@@ -23,8 +23,22 @@ export const content = {
   },
 
   statuses: {
-    job: { id: "job", states: { none: {} } },
-    housing: { id: "housing", states: { family: { label: "With family" } } },
+    job: {
+      id: "job",
+      states: {
+        none: {},
+        // Victorian child labour: a few coins, at a steady cost to health,
+        // and it opens the dangerous child_work deck.
+        child_labourer: { label: "Child labourer", drift: { finances: 2, health: -2 }, addDecks: ["child_work"] },
+      },
+    },
+    housing: {
+      id: "housing",
+      states: {
+        family: { label: "With family" },
+        workhouse: { label: "Workhouse", drift: { health: -2, happiness: -2 } },
+      },
+    },
     education: {
       id: "education",
       ordered: true,
@@ -82,7 +96,7 @@ export const content = {
           prompt: "You reach for the same picture book, over and over again.",
           options: {
             left: { label: "Read together nightly", outcomes: [{ result: "A shared love of stories takes root.", effects: { vitals: { spirit: "+" }, setTraits: { bookish: true } } }] },
-            right: { label: "Pop the telly on", outcomes: [{ result: "Bright colours and very catchy songs.", effects: { vitals: { happiness: "++" } } }] },
+            right: { label: "Run wild outside", outcomes: [{ result: "You tear about the yard with the other urchins.", effects: { vitals: { happiness: "++" } } }] },
           },
         },
         {
@@ -142,23 +156,19 @@ export const content = {
         },
 
         {
-          id: "m_school",
+          id: "m_schooling",
           kind: "milestone",
           priority: 20,
           conditions: { ageMin: 5 },
-          prompt: "A satchel, a uniform, and the school gates. Your first day.",
+          prompt: "You're old enough now. Off to school to better yourself — or out to work to help feed the family?",
           options: {
             left: {
-              label: "March in",
-              outcomes: [{ result: "You stride in without looking back.", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
+              label: "Go to school",
+              outcomes: [{ result: "Slate, chalk, and a stern schoolmaster. A chance at something more.", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
             },
             right: {
-              label: "Cling on",
-              outcomes: [{ result: "Peeling you off the railings takes a while, but you settle in.", effects: { vitals: { happiness: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
-            },
-            down: {
-              label: "Pocket the gift money",
-              outcomes: [{ result: "The grandparents slip you some 'big school' money — straight in the piggy bank.", effects: { vitals: { finances: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
+              label: "Out to work",
+              outcomes: [{ result: "Long hours in the din for a few coins in the family pot.", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["child"], removeDecks: ["baby"] } }],
             },
           },
         },
@@ -174,10 +184,10 @@ export const content = {
         {
           id: "c_martialarts",
           kind: "one_time",
-          prompt: "A dojo opens down the road. The instructor waves you in.",
+          prompt: "Old Tom, a retired prizefighter, offers to teach the local lads to box.",
           options: {
-            left: { label: "Sign up", outcomes: [{ result: "Discipline and fitness — though the classes aren't cheap.", effects: { vitals: { spirit: "++", health: "+", finances: "-" }, setTraits: { knowsMartialArts: true } } }] },
-            right: { label: "No thanks", outcomes: [{ result: "You keep your Saturdays and your pocket money — but never learn to stand up for yourself.", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
+            left: { label: "Learn to box", outcomes: [{ result: "Fists up, chin down. You learn to handle yourself — for a few coins.", effects: { vitals: { spirit: "++", health: "+", finances: "-" }, setTraits: { knowsMartialArts: true } } }] },
+            right: { label: "Keep your head down", outcomes: [{ result: "You keep your pennies and your quiet life — but never learn to stand up for yourself.", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
           },
         },
         {
@@ -213,7 +223,7 @@ export const content = {
           prompt: "Your heart does something strange when a certain classmate walks by.",
           options: {
             left: { label: "Say hello", outcomes: [{ result: "They smile back! Butterflies, and not much sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
-            right: { label: "Panic and hide", outcomes: [{ result: "You dive behind a locker. Mortifying — but the panic soon passes.", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
+            right: { label: "Panic and hide", outcomes: [{ result: "You dive behind the coal shed. Mortifying — but the panic soon passes.", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
           },
         },
         {
@@ -237,7 +247,7 @@ export const content = {
         {
           id: "c_sports",
           kind: "filler",
-          prompt: "Sports day. The whole class is picking teams.",
+          prompt: "The lads get up a rough game of football in the muddy street.",
           options: {
             left: { label: "Go all-out", outcomes: [{ result: "Wrecked, grass-stained and fiercely proud.", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
             right: { label: "Take it easy", outcomes: [{ result: "A laugh on the sidelines, but unfit and a bit of a let-down.", effects: { vitals: { happiness: "+", health: "-", spirit: "-" } } }] },
@@ -255,7 +265,7 @@ export const content = {
         {
           id: "c_sweets",
           kind: "filler",
-          prompt: "The corner shop is full of pick-and-mix.",
+          prompt: "The sweet-shop window: humbugs, sherbet and liquorice, a farthing a twist.",
           options: {
             left: {
               label: "Buy a bagful",
@@ -273,15 +283,107 @@ export const content = {
             },
           },
         },
+        // --- Hazards: childhood was deadly. Survival is earned through your
+        //     earlier choices (vaccinated, sporty, health kept up, savings). ---
+        {
+          id: "h_fever",
+          kind: "one_time",
+          conditions: { ageMin: 6 },
+          prompt: "A fever sweeps through the street, and now it is burning through you.",
+          options: {
+            left: {
+              label: "Sweat it out",
+              outcomes: [
+                { if: { traits: { vaccinated: true } }, result: "Your inoculation holds. You pull through, pale but alive.", effects: { vitals: { health: "-" } } },
+                { if: { vitals: { health: { min: 50 } } }, result: "You are strong enough to fight it off.", effects: { vitals: { health: "--" } } },
+                { result: "You are too weak. The fever takes you in the night.", effects: { endGame: "health" } },
+              ],
+            },
+            right: {
+              label: "Send for the doctor",
+              outcomes: [
+                { if: { vitals: { finances: { min: 30 } } }, result: "The doctor's tonic works — dear, but worth every penny.", effects: { vitals: { finances: "--", health: "-" } } },
+                { if: { vitals: { health: { min: 40 } } }, result: "No coin for a doctor, but you are just hardy enough to endure.", effects: { vitals: { health: "--" } } },
+                { result: "No money and no strength. The fever wins.", effects: { endGame: "health" } },
+              ],
+            },
+          },
+        },
+        {
+          id: "h_accident",
+          kind: "one_time",
+          conditions: { ageMin: 5 },
+          prompt: "A runaway cart thunders down the cobbles — straight at you!",
+          options: {
+            left: {
+              label: "Leap clear",
+              outcomes: [
+                { if: { traits: { sporty: true } }, result: "Quick as a cat, you spring aside.", effects: { vitals: { spirit: "+" } } },
+                { if: { vitals: { health: { min: 40 } } }, result: "You dive and roll — bruised, but whole.", effects: { vitals: { health: "--" } } },
+                { result: "You are not quick enough.", effects: { endGame: "health" } },
+              ],
+            },
+            right: {
+              label: "Freeze",
+              outcomes: [
+                { if: { vitals: { health: { min: 60 } } }, result: "It clips you and flings you aside — battered, but breathing.", effects: { vitals: { health: "--", happiness: "-" } } },
+                { result: "You freeze. The wheels do not.", effects: { endGame: "health" } },
+              ],
+            },
+          },
+        },
+        {
+          id: "h_hunger",
+          kind: "one_time",
+          conditions: { ageMin: 6, vitals: { finances: { max: 25 } } },
+          prompt: "The cupboards are bare, and there are too many mouths to feed.",
+          options: {
+            left: { label: "Beg and scavenge", outcomes: [{ result: "You get by on scraps, charity and quick fingers.", effects: { vitals: { finances: "+", health: "-", happiness: "-" } } }] },
+            right: { label: "Into the workhouse", outcomes: [{ result: "Cold gruel and hard labour — but a roof, of sorts.", effects: { vitals: { happiness: "--", health: "-" }, setStatus: { housing: "workhouse" } } }] },
+          },
+        },
+
         {
           id: "m_adult",
           kind: "milestone",
           priority: 100,
           conditions: { ageMin: 18 },
-          prompt: "You turn eighteen. Childhood is officially over.",
+          prompt: "Against the odds, you reach eighteen. So many did not. Childhood is behind you.",
           options: {
-            left: { label: "Look back", outcomes: [{ result: "So much has happened already…", effects: { endGame: "grown_up" } }] },
-            right: { label: "Charge ahead", outcomes: [{ result: "Whatever comes next, you're ready.", effects: { endGame: "grown_up" } }] },
+            left: { label: "Look back", outcomes: [{ result: "You survived. So much has happened already…", effects: { endGame: "grown_up" } }] },
+            right: { label: "Charge ahead", outcomes: [{ result: "You made it this far. Whatever comes next, you're ready.", effects: { endGame: "grown_up" } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Child at work: hazards and events only for the labouring path. ------
+    {
+      id: "child_work",
+      cards: [
+        {
+          id: "hw_machine",
+          kind: "one_time",
+          prompt: "The foreman waves you under the thundering loom to clear a jam.",
+          options: {
+            left: {
+              label: "Reach in",
+              outcomes: [
+                { if: { traits: { sporty: true } }, result: "Deft, nimble fingers — the jam clears, no harm done.", effects: { vitals: { finances: "+", spirit: "+" } } },
+                { if: { vitals: { health: { min: 40 } } }, result: "A nasty gash across your hand, but you manage.", effects: { vitals: { health: "--", finances: "+" } } },
+                { result: "The machine does not stop for anyone.", effects: { endGame: "health" } },
+              ],
+            },
+            right: { label: "Refuse", outcomes: [{ result: "The foreman docks your pay and clips your ear.", effects: { vitals: { finances: "-", happiness: "-", health: "-" } } }] },
+          },
+        },
+        {
+          id: "jw_wages",
+          kind: "filler",
+          prompt: "Friday, and the foreman counts out your wages.",
+          options: {
+            left: { label: "All to the family", outcomes: [{ result: "Every penny to the family pot. They are proud of you.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            right: { label: "Keep a little back", outcomes: [{ result: "A secret farthing for yourself — guilty, but glad.", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
           },
         },
       ],
