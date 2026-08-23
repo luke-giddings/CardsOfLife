@@ -155,7 +155,10 @@ export class Game {
     this.debugPanel = el("div", "debug-panel");
     stage.append(this.scene, this.debugPanel);
 
-    this.root.append(this.topbar, stage);
+    const version = el("div", "version");
+    version.textContent = `build ${__BUILD__}`;
+
+    this.root.append(this.topbar, stage, version);
     this.dbgBtn.classList.toggle("on", this.debug);
   }
 
