@@ -2,10 +2,12 @@ import { meets } from "./conditions.ts";
 import { nextRandom, randomSeed } from "./rng.ts";
 import {
   DEFAULT_TRAITS,
+  MAGNITUDE_POINTS,
   VITAL_MAX,
   VITAL_MIN,
   VITAL_KEYS,
   type Card,
+  type Magnitude,
   type CardOption,
   type Content,
   type Direction,
@@ -185,9 +187,9 @@ function applyEffect(state: GameState, effect: Effect, content: Content): void {
     }
   }
   if (effect.vitals) {
-    for (const [k, delta] of Object.entries(effect.vitals)) {
+    for (const [k, mag] of Object.entries(effect.vitals)) {
       const key = k as VitalKey;
-      state.vitals[key] = clampVital(state.vitals[key] + (delta ?? 0));
+      state.vitals[key] = clampVital(state.vitals[key] + MAGNITUDE_POINTS[mag as Magnitude]);
     }
   }
   if (effect.endGame) {

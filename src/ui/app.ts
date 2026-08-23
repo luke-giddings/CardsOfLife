@@ -571,7 +571,7 @@ function fmtEffect(e?: Effect): string {
   if (!e) return "—";
   const parts: string[] = [];
   if (e.vitals) {
-    for (const [k, v] of Object.entries(e.vitals)) parts.push(`${k} ${v > 0 ? "+" : ""}${v}`);
+    for (const [k, mag] of Object.entries(e.vitals)) parts.push(`${k} ${mag}`);
   }
   if (e.setStatus) for (const [k, v] of Object.entries(e.setStatus)) parts.push(`${k}=${v}`);
   if (e.setTraits) for (const [k, v] of Object.entries(e.setTraits)) parts.push(`${k}=${v}`);

@@ -15,6 +15,18 @@ export const VITAL_KEYS: VitalKey[] = ["finances", "happiness", "health", "spiri
 export const VITAL_MIN = 0;
 export const VITAL_MAX = 100;
 
+// Vital changes are expressed in readable magnitude "steps", not raw numbers,
+// so the player sees a small ("+") vs a large ("++") move rather than muddy
+// in-between values. Tweak the point values here in one place; add more levels
+// (e.g. "+++") later as balancing needs them.
+export type Magnitude = "--" | "-" | "+" | "++";
+export const MAGNITUDE_POINTS: Record<Magnitude, number> = {
+  "++": 25,
+  "+": 10,
+  "-": -10,
+  "--": -25,
+};
+
 // End-screen framing. The four vital endings (only Health's is "death"), plus
 // named endings triggered by an effect (e.g. reaching adulthood).
 export interface Ending {
@@ -97,7 +109,7 @@ export interface Condition {
 
 // --- Effects -----------------------------------------------------------------
 export interface Effect {
-  vitals?: Partial<Record<VitalKey, number>>; // deltas, applied then clamped
+  vitals?: Partial<Record<VitalKey, Magnitude>>; // "+"/"++"/"-"/"--", applied then clamped
   setStatus?: Partial<Record<StatusKind, string>>;
   addDecks?: string[];
   removeDecks?: string[]; // ids, or a trailing wildcard like "job_*"
