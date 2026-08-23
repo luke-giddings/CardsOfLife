@@ -2,8 +2,10 @@ import { gameContent as content } from "../content/index.ts";
 import {
   chooseDirection,
   drawCard,
+  eligibleDraw,
   initGame,
   quietYear,
+  resolveOutcome,
   setContent,
 } from "../engine/engine.ts";
 import { clearSave, loadGame, saveGame } from "../engine/save.ts";
@@ -13,10 +15,13 @@ import {
   VITAL_KEYS,
   type Card,
   type Direction,
+  type Effect,
   type GameState,
   type StatusKind,
   type VitalKey,
 } from "../engine/types.ts";
+
+const DEBUG_KEY = "cardsoflife.debug";
 
 const VITAL_LABEL: Record<VitalKey, string> = {
   finances: "Finances",
@@ -66,58 +71,132 @@ export class Game {
   private holder: HTMLElement | null = null;
   private flip: HTMLElement | null = null;
 
+  private debug = false;
+  private ageNumEl!: HTMLElement;
+  private fills!: Record<VitalKey, HTMLElement>;
+  private statusesEl!: HTMLElement;
+  private dbgBtn!: HTMLButtonElement;
+  private debugPanel!: HTMLElement;
+
   constructor(root: HTMLElement) {
     this.root = root;
     setContent(content);
+    this.debug = loadDebug();
     this.buildShell();
     this.state = loadGame() ?? initGame(content);
-    this.updateTop();
+    this.syncTop();
     if (this.state.over) this.showEnd();
     else this.beginTurn();
     window.addEventListener("keydown", this.onKey);
   }
 
-  // --- shell -----------------------------------------------------------------
+  // --- shell (built once; updated in place so the bars can animate) -----------
 
   private buildShell(): void {
     this.root.innerHTML = "";
-    this.topbar = document.createElement("header");
-    this.topbar.className = "topbar";
-    const stage = document.createElement("main");
-    stage.className = "stage";
-    this.scene = document.createElement("div");
-    this.scene.className = "scene";
-    stage.appendChild(this.scene);
-    this.root.appendChild(this.topbar);
-    this.root.appendChild(stage);
+    this.root.classList.toggle("debug-on", this.debug);
+
+    this.topbar = el("header", "topbar");
+    const headRow = el("div", "head-row");
+    const age = el("div", "age");
+    this.ageNumEl = el("span", "age-num");
+    const ageLbl = el("span", "age-lbl");
+    ageLbl.textContent = "years old";
+    age.append(this.ageNumEl, ageLbl);
+
+    const controls = el("div", "controls");
+    this.dbgBtn = el("button", "dbg") as HTMLButtonElement;
+    this.dbgBtn.textContent = "Debug";
+    this.dbgBtn.title = "Toggle debug info";
+    this.dbgBtn.addEventListener("click", () => this.toggleDebug());
+    const reset = el("button", "reset") as HTMLButtonElement;
+    reset.textContent = "Reset";
+    reset.title = "Debug: wipe the save and start a new life";
+    reset.addEventListener("click", () => {
+      if (!this.busy) this.restart();
+    });
+    controls.append(this.dbgBtn, reset);
+    headRow.append(age, controls);
+
+    const vitals = el("div", "vitals");
+    this.fills = {} as Record<VitalKey, HTMLElement>;
+    for (const key of VITAL_KEYS) {
+      const cell = el("div", `vital vital-${key}`);
+      const top = el("div", "vital-top");
+      const label = el("span");
+      label.textContent = VITAL_LABEL[key];
+      top.append(label);
+      const track = el("div", "track");
+      const fill = el("div", "fill");
+      track.append(fill);
+      cell.append(top, track);
+      vitals.append(cell);
+      this.fills[key] = fill;
+    }
+    this.statusesEl = el("div", "statuses");
+    this.topbar.append(headRow, vitals, this.statusesEl);
+
+    const stage = el("main", "stage");
+    this.scene = el("div", "scene");
+    this.debugPanel = el("div", "debug-panel");
+    stage.append(this.scene, this.debugPanel);
+
+    this.root.append(this.topbar, stage);
+    this.dbgBtn.classList.toggle("on", this.debug);
   }
 
-  private updateTop(): void {
+  private syncTop(): void {
     const s = this.state;
-    let statusChips = "";
+    this.ageNumEl.textContent = String(s.age);
+    for (const key of VITAL_KEYS) this.fills[key].style.width = `${s.vitals[key]}%`;
+    let chips = "";
     for (const kind of STATUS_KINDS) {
       const value = s.statuses[kind];
       if (value === content.start.statuses[kind]) continue;
       const label = content.statuses[kind].states[value]?.label ?? value;
-      statusChips += `<span class="chip"><b>${STATUS_LABEL[kind]}</b> ${label}</span>`;
+      chips += `<span class="chip"><b>${STATUS_LABEL[kind]}</b> ${label}</span>`;
     }
-    let vitalCells = "";
-    for (const key of VITAL_KEYS) {
-      vitalCells += `<div class="vital vital-${key}">
-        <div class="vital-top"><span>${VITAL_LABEL[key]}</span></div>
-        <div class="track"><div class="fill" style="width:${s.vitals[key]}%"></div></div>
-      </div>`;
+    this.statusesEl.innerHTML = chips;
+  }
+
+  // --- debug -----------------------------------------------------------------
+
+  private toggleDebug(): void {
+    this.debug = !this.debug;
+    saveDebug(this.debug);
+    this.root.classList.toggle("debug-on", this.debug);
+    this.dbgBtn.classList.toggle("on", this.debug);
+    this.renderDebug();
+  }
+
+  private renderDebug(): void {
+    if (!this.debug) {
+      this.debugPanel.innerHTML = "";
+      return;
     }
-    this.topbar.innerHTML = `
-      <div class="head-row">
-        <div class="age"><span class="age-num">${s.age}</span><span class="age-lbl">years old</span></div>
-        <button class="reset" title="Debug: wipe the save and start a new life">Reset</button>
+    const { milestone, pool } = eligibleDraw(this.state);
+    const items = [
+      ...(milestone ? [`★ ${milestone.id} — milestone (fires next)`] : []),
+      ...pool.map((c) => `${c.id === this.card?.id ? "→ " : ""}${c.id} (${c.kind})`),
+    ];
+    let choices = "";
+    if (this.card) {
+      for (const dir of ["left", "right", "up", "down"] as Direction[]) {
+        const opt = this.card.options[dir];
+        if (!opt) continue;
+        const outcome = resolveOutcome(opt, this.state, content);
+        choices += `<div class="dbg-choice"><b>${dir} · ${opt.label}</b> → ${fmtEffect(outcome.effects)}<br><i>“${outcome.result}”</i></div>`;
+      }
+    }
+    this.debugPanel.innerHTML = `
+      <div class="dbg-sec">
+        <h4>Draw pool — age ${this.state.age} · ${items.length} card(s)</h4>
+        <div class="dbg-list">${items.map((x) => `<div>${x}</div>`).join("") || "<div>(empty)</div>"}</div>
       </div>
-      <div class="vitals">${vitalCells}</div>
-      <div class="statuses">${statusChips}</div>`;
-    this.topbar.querySelector(".reset")!.addEventListener("click", () => {
-      if (!this.busy) this.restart();
-    });
+      <div class="dbg-sec">
+        <h4>This card's choices → results</h4>
+        ${choices || "<div>(none)</div>"}
+      </div>`;
   }
 
   // --- turn flow -------------------------------------------------------------
@@ -129,7 +208,7 @@ export class Game {
       const q = quietYear(this.state);
       this.state = q.state;
       saveGame(this.state);
-      this.updateTop();
+      this.syncTop();
       if (this.state.over) this.showEnd();
       else this.beginTurn();
       return;
@@ -168,6 +247,7 @@ export class Game {
     this.phase = "front";
 
     this.attachDrag(flip, card);
+    this.renderDebug();
 
     // slide in from below
     if (!reduceMotion) {
@@ -201,7 +281,7 @@ export class Game {
 
     const finishFlip = (): void => {
       this.phase = "back";
-      this.updateTop(); // bars animate as the result is revealed
+      this.syncTop(); // bars animate as the result is revealed
       this.armAdvance();
     };
 
@@ -283,7 +363,7 @@ export class Game {
     this.holder = null;
     this.flip = null;
     this.busy = false;
-    this.updateTop();
+    this.syncTop();
     this.beginTurn();
   }
 
@@ -375,4 +455,44 @@ export class Game {
 
 function clamp(n: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, n));
+}
+
+function el<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  className = "",
+): HTMLElementTagNameMap[K] {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  return node;
+}
+
+// compact one-line summary of an effect, for the debug panel
+function fmtEffect(e?: Effect): string {
+  if (!e) return "—";
+  const parts: string[] = [];
+  if (e.vitals) {
+    for (const [k, v] of Object.entries(e.vitals)) parts.push(`${k} ${v > 0 ? "+" : ""}${v}`);
+  }
+  if (e.setStatus) for (const [k, v] of Object.entries(e.setStatus)) parts.push(`${k}=${v}`);
+  if (e.setTraits) for (const [k, v] of Object.entries(e.setTraits)) parts.push(`${k}=${v}`);
+  if (e.incTraits) for (const [k, v] of Object.entries(e.incTraits)) parts.push(`${k}+=${v}`);
+  if (e.addDecks) parts.push(`+deck ${e.addDecks.join(",")}`);
+  if (e.removeDecks) parts.push(`−deck ${e.removeDecks.join(",")}`);
+  if (e.endGame) parts.push(`END:${e.endGame}`);
+  return parts.join(", ") || "—";
+}
+
+function loadDebug(): boolean {
+  try {
+    return localStorage.getItem(DEBUG_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function saveDebug(on: boolean): void {
+  try {
+    localStorage.setItem(DEBUG_KEY, on ? "1" : "0");
+  } catch {
+    // ignore
+  }
 }

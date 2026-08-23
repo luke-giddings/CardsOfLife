@@ -94,6 +94,15 @@ export function drawCard(
   return { card: pick, state: { ...state, rng: roll.state } };
 }
 
+// Debug helper: the milestone that would fire and the random pool right now.
+export function eligibleDraw(state: GameState): { milestone: Card | null; pool: Card[] } {
+  const content = CONTENT;
+  const cards = allCards(content);
+  const milestone = dueMilestone(cards, state, content);
+  const pool = cards.filter((c) => c.kind !== "milestone" && isEligible(c, state, content));
+  return { milestone, pool };
+}
+
 // --- outcome resolution ------------------------------------------------------
 
 export function resolveOutcome(
