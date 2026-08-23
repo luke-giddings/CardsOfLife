@@ -5,15 +5,16 @@ import {
   eligibleDraw,
   initGame,
   quietYear,
-  resolveOutcome,
   setContent,
 } from "../engine/engine.ts";
+import { meets } from "../engine/conditions.ts";
 import { clearSave, loadGame, saveGame } from "../engine/save.ts";
 import {
   ENDINGS,
   STATUS_KINDS,
   VITAL_KEYS,
   type Card,
+  type Condition,
   type Direction,
   type Effect,
   type GameState,
@@ -26,6 +27,11 @@ import { APP_VERSION, BUILD_DESC } from "../version.ts";
 
 const DEBUG_KEY = "cardsoflife.debug";
 const DECK_BY_ID = new Map(content.decks.map((d) => [d.id, d]));
+const ALL_CARDS: Card[] = content.decks.flatMap((d) =>
+  d.cards.map((c) => ({ ...c, deck: d.id }) as Card),
+);
+const CARD_BY_ID = new Map(ALL_CARDS.map((c) => [c.id, c]));
+const DIRECTIONS: Direction[] = ["left", "right", "up", "down"];
 
 const VITAL_LABEL: Record<VitalKey, string> = {
   finances: "Finances",
@@ -88,6 +94,7 @@ export class Game {
   private prevVitals!: Vitals;
   private seenDecks = new Set<string>();
   private pendingUnlock: { title: string; blurb: string } | null = null;
+  private debugSelectedId: string | null = null;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -155,6 +162,16 @@ export class Game {
     const stage = el("main", "stage");
     this.scene = el("div", "scene");
     this.debugPanel = el("div", "debug-panel");
+    this.debugPanel.addEventListener("click", (e) => {
+      const hit = (e.target as HTMLElement).closest<HTMLElement>("[data-card]");
+      if (!hit) return;
+      const id = hit.dataset.card!;
+      if (hit.dataset.action === "force") this.forceCard(id);
+      else {
+        this.debugSelectedId = id;
+        this.renderDebug();
+      }
+    });
     stage.append(this.scene, this.debugPanel);
 
     const version = el("div", "version");
@@ -215,29 +232,70 @@ export class Game {
       return;
     }
     const { milestone, pool, gated } = eligibleDraw(this.state);
-    const items = [
-      ...(milestone ? [`★ ${milestone.id} — milestone (fires next)`] : []),
-      ...pool.map((c) => `${c.id === this.card?.id ? "→ " : ""}${c.id} (${c.kind})`),
-      ...gated.map((c) => `<span class="gated">· ${c.id} (${c.kind}, gated)</span>`),
+    const row = (c: Card, mark: string, cls: string): string =>
+      `<div class="dbg-row ${cls}" data-card="${c.id}">
+        <span class="dbg-mark">${mark}</span>
+        <span class="dbg-id">${c.id}</span>
+        <span class="dbg-kind">${c.kind}</span>
+        <button class="dbg-draw" data-card="${c.id}" data-action="force" title="Force this card next">draw ▶</button>
+      </div>`;
+    const rows = [
+      ...(milestone ? [row(milestone, "★", "due")] : []),
+      ...pool.map((c) => row(c, c.id === this.card?.id ? "→" : "·", "pool")),
+      ...gated.map((c) => row(c, "·", "gated")),
     ];
-    let choices = "";
-    if (this.card) {
-      for (const dir of ["left", "right", "up", "down"] as Direction[]) {
-        const opt = this.card.options[dir];
+
+    // Card detail: the selected card (default = the current card), showing
+    // EVERY option's EVERY outcome — including ones gated by conditions.
+    const sel = (this.debugSelectedId && CARD_BY_ID.get(this.debugSelectedId)) || this.card;
+    let detail = "<div>(none)</div>";
+    if (sel) {
+      let opts = "";
+      for (const dir of DIRECTIONS) {
+        const opt = sel.options[dir];
         if (!opt) continue;
-        const outcome = resolveOutcome(opt, this.state, content);
-        choices += `<div class="dbg-choice"><b>${dir} · ${opt.label}</b> → ${fmtEffect(outcome.effects)}<br><i>“${outcome.result}”</i></div>`;
+        let outs = "";
+        for (const o of opt.outcomes) {
+          const matches = meets(o.if, this.state, content);
+          const cond = o.if ? `if ${fmtCond(o.if)}` : "default";
+          outs += `<div class="dbg-out ${matches ? "match" : ""}">
+            <span class="dbg-cond">${cond}</span> → ${fmtEffect(o.effects)}
+            <span class="dbg-res">“${o.result}”</span></div>`;
+        }
+        opts += `<div class="dbg-choice"><b>${dir} · ${opt.label}</b>${outs}</div>`;
       }
+      detail = `<div class="dbg-prompt">${sel.prompt.replace(/\n+/g, " ")}</div>${opts}`;
     }
+
     this.debugPanel.innerHTML = `
       <div class="dbg-sec">
-        <h4>Draw pool — age ${this.state.age} · ${items.length} card(s)</h4>
-        <div class="dbg-list">${items.map((x) => `<div>${x}</div>`).join("") || "<div>(empty)</div>"}</div>
+        <h4>Active decks</h4>
+        <div class="dbg-list">${this.state.activeDecks.join(" · ") || "(none)"}</div>
       </div>
       <div class="dbg-sec">
-        <h4>This card's choices → results</h4>
-        ${choices || "<div>(none)</div>"}
+        <h4>Draw pool — age ${this.state.age} · tap a card to inspect</h4>
+        <div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>
+      </div>
+      <div class="dbg-sec">
+        <h4>${sel ? sel.id : "card"} — choices &amp; results</h4>
+        ${detail}
       </div>`;
+  }
+
+  // Debug: drop the current card and show a specific one next (ignores
+  // eligibility). Choosing it then applies its effects normally.
+  private forceCard(id: string): void {
+    if (this.busy) return;
+    const card = CARD_BY_ID.get(id);
+    if (!card) return;
+    if (this.holder) {
+      this.holder.remove();
+      this.holder = null;
+      this.flip = null;
+    }
+    this.card = card;
+    this.debugSelectedId = null;
+    this.showFront(card);
   }
 
   // --- turn flow -------------------------------------------------------------
@@ -583,6 +641,31 @@ function fmtEffect(e?: Effect): string {
   if (e.removeDecks) parts.push(`−deck ${e.removeDecks.join(",")}`);
   if (e.endGame) parts.push(`END:${e.endGame}`);
   return parts.join(", ") || "—";
+}
+
+// compact one-line summary of a condition, for the debug panel
+function fmtCond(c?: Condition): string {
+  if (!c) return "any";
+  const p: string[] = [];
+  if (c.ageMin != null) p.push(`age≥${c.ageMin}`);
+  if (c.ageMax != null) p.push(`age≤${c.ageMax}`);
+  if (c.vitals) {
+    for (const [k, r] of Object.entries(c.vitals)) {
+      if (r.min != null) p.push(`${k}≥${r.min}`);
+      if (r.max != null) p.push(`${k}≤${r.max}`);
+    }
+  }
+  if (c.status) {
+    for (const [k, m] of Object.entries(c.status)) {
+      p.push(typeof m === "string" ? `${k}=${m}` : `${k}≥${m.atLeast}`);
+    }
+  }
+  if (c.traits) {
+    for (const [k, v] of Object.entries(c.traits)) {
+      p.push(typeof v === "object" && v !== null ? `${k}∈range` : `${k}=${v}`);
+    }
+  }
+  return p.join(", ") || "any";
 }
 
 function loadDebug(): boolean {

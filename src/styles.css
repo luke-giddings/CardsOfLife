@@ -128,11 +128,38 @@ body {
   text-transform: uppercase;
   color: var(--gold);
 }
-.dbg-list div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dbg-list .gated { color: var(--faint); opacity: 0.75; }
-.dbg-choice { margin-bottom: 7px; }
-.dbg-choice b { color: var(--ink); }
-.dbg-choice i { color: var(--faint); }
+.dbg-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+.dbg-row:active { color: var(--ink); }
+.dbg-row .dbg-mark { width: 1ch; color: var(--gold); }
+.dbg-row .dbg-id { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dbg-row .dbg-kind { color: var(--faint); font-size: 0.66rem; }
+.dbg-row.gated { color: var(--faint); opacity: 0.7; }
+.dbg-row.due .dbg-id { color: var(--baize); }
+.dbg-draw {
+  font-family: inherit;
+  font-size: 0.62rem;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+}
+.dbg-draw:active { transform: translateY(1px); }
+
+.dbg-prompt { color: var(--faint); margin-bottom: 6px; }
+.dbg-choice { margin-bottom: 8px; }
+.dbg-choice b { color: var(--ink); display: block; margin-bottom: 2px; }
+.dbg-out { padding-left: 10px; opacity: 0.55; }
+.dbg-out.match { opacity: 1; }
+.dbg-out .dbg-cond { color: var(--gold); }
+.dbg-out .dbg-res { color: var(--faint); }
 .age-num {
   font-size: 1.6rem;
   font-weight: 800;
@@ -227,11 +254,13 @@ body {
 .scene {
   perspective: 1300px;
   position: relative;
+  touch-action: none;
 }
 
 .holder {
   transition: transform 0.32s ease, opacity 0.32s ease;
   will-change: transform, opacity;
+  touch-action: none;
 }
 
 .flip {
@@ -240,6 +269,7 @@ body {
   transform-style: preserve-3d;
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   will-change: transform;
+  touch-action: none; /* stop the browser hijacking the drag (edge/back swipe) */
 }
 .flip.dragging { transition: none; }
 
