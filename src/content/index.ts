@@ -176,8 +176,8 @@ export const content = {
           kind: "one_time",
           prompt: "A dojo opens down the road. The instructor waves you in.",
           options: {
-            left: { label: "Sign up", outcomes: [{ result: "You learn to stand your ground. Hi-yah!", effects: { vitals: { spirit: "++", finances: "-" }, setTraits: { knowsMartialArts: true } } }] },
-            right: { label: "No thanks", outcomes: [{ result: "You head home to your cartoons instead.", effects: { vitals: { happiness: "+" } } }] },
+            left: { label: "Sign up", outcomes: [{ result: "Discipline and fitness — though the classes aren't cheap.", effects: { vitals: { spirit: "++", health: "+", finances: "-" }, setTraits: { knowsMartialArts: true } } }] },
+            right: { label: "No thanks", outcomes: [{ result: "You keep your Saturdays and your pocket money — but never learn to stand up for yourself.", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
           },
         },
         {
@@ -189,11 +189,11 @@ export const content = {
             left: {
               label: "Fight back",
               outcomes: [
-                { if: { traits: { knowsMartialArts: true } }, result: "You calmly floor them. The yard goes silent — then cheers.", effects: { vitals: { spirit: "++", health: "-" } } },
-                { result: "You get a bloody nose, but you stood your ground.", effects: { vitals: { spirit: "+", health: "--" } } },
+                { if: { traits: { knowsMartialArts: true } }, result: "You calmly floor them. The yard cheers — bar one scraped knuckle.", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
+                { result: "A bloody nose. You stood your ground, but it really hurt.", effects: { vitals: { spirit: "+", happiness: "-", health: "--" } } },
               ],
             },
-            right: { label: "Walk away", outcomes: [{ result: "You swallow it and leave. It stings for weeks.", effects: { vitals: { happiness: "--", spirit: "-" } } }] },
+            right: { label: "Walk away", outcomes: [{ result: "You avoid the beating, but the humiliation festers for weeks.", effects: { vitals: { happiness: "--", spirit: "-", health: "+" } } }] },
           },
         },
         {
@@ -202,8 +202,8 @@ export const content = {
           conditions: { ageMin: 11 },
           prompt: "Big exams are looming on the horizon.",
           options: {
-            left: { label: "Study hard", outcomes: [{ result: "Late nights, but you ace them.", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
-            right: { label: "Wing it", outcomes: [{ result: "You coast through on charm and luck.", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+            left: { label: "Study hard", outcomes: [{ result: "Top marks — earned with stress and sleepless nights.", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
+            right: { label: "Wing it", outcomes: [{ result: "Relaxed and well-rested, but the results sting.", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
         {
@@ -212,8 +212,8 @@ export const content = {
           conditions: { ageMin: 13 },
           prompt: "Your heart does something strange when a certain classmate walks by.",
           options: {
-            left: { label: "Say hello", outcomes: [{ result: "You manage a squeaky 'hi'. They smile back!", effects: { vitals: { happiness: "++", spirit: "+" } } }] },
-            right: { label: "Panic and hide", outcomes: [{ result: "You duck behind a locker. Smooth.", effects: { vitals: { happiness: "-" } } }] },
+            left: { label: "Say hello", outcomes: [{ result: "They smile back! Butterflies, and not much sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
+            right: { label: "Panic and hide", outcomes: [{ result: "You dive behind a locker. Mortifying — but the panic soon passes.", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
           },
         },
         {
@@ -221,8 +221,8 @@ export const content = {
           kind: "filler",
           prompt: "A scruffy stray cat follows you all the way home.",
           options: {
-            left: { label: "Take it in", outcomes: [{ result: "You have a new best friend.", effects: { vitals: { happiness: "++" } } }] },
-            right: { label: "Shoo it off", outcomes: [{ result: "It slinks off into the hedge.", effects: { vitals: { happiness: "-" } } }] },
+            left: { label: "Take it in", outcomes: [{ result: "A new best friend who gets you outdoors — vet bills and all.", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
+            right: { label: "Shoo it off", outcomes: [{ result: "You save the hassle and the money, but feel a pang.", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
           },
         },
         {
@@ -230,8 +230,8 @@ export const content = {
           kind: "filler",
           prompt: "The new kid at school is looking for someone to sit with.",
           options: {
-            left: { label: "Wave over", outcomes: [{ result: "The start of a great friendship.", effects: { vitals: { happiness: "+", spirit: "+" } } }] },
-            right: { label: "Look away", outcomes: [{ result: "You keep to yourself today.", effects: { vitals: { happiness: "-" } } }] },
+            left: { label: "Wave over", outcomes: [{ result: "A wonderful friend — though you rather lose yourself in them.", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
+            right: { label: "Look away", outcomes: [{ result: "A lonelier term, but you learn to stand on your own two feet.", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
           },
         },
         {
@@ -239,8 +239,8 @@ export const content = {
           kind: "filler",
           prompt: "Sports day. The whole class is picking teams.",
           options: {
-            left: { label: "Dive in", outcomes: [{ result: "Grass stains and grinning.", effects: { vitals: { health: "+", happiness: "+" } } }] },
-            right: { label: "Sit out", outcomes: [{ result: "You cheer from the sidelines.", effects: { vitals: { happiness: "+", health: "-" } } }] },
+            left: { label: "Go all-out", outcomes: [{ result: "Wrecked, grass-stained and fiercely proud.", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
+            right: { label: "Take it easy", outcomes: [{ result: "A laugh on the sidelines, but unfit and a bit of a let-down.", effects: { vitals: { happiness: "+", health: "-", spirit: "-" } } }] },
           },
         },
         {
@@ -248,8 +248,8 @@ export const content = {
           kind: "filler",
           prompt: "Your parents offer pocket money for helping around the house.",
           options: {
-            left: { label: "Do the chores", outcomes: [{ result: "A little jingle in your pocket.", effects: { vitals: { finances: "+", happiness: "-" } } }] },
-            right: { label: "Go play", outcomes: [{ result: "Chores can wait. Fun can't.", effects: { vitals: { happiness: "+" } } }] },
+            left: { label: "Do the chores", outcomes: [{ result: "Money in your pocket and a puffed-out chest — but no play.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            right: { label: "Go play", outcomes: [{ result: "Fun and fresh air, and an empty piggy bank.", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
           },
         },
         {
@@ -257,8 +257,8 @@ export const content = {
           kind: "filler",
           prompt: "The corner shop is full of pick-and-mix.",
           options: {
-            left: { label: "Buy a bagful", outcomes: [{ result: "Sugar heaven, dentist's nightmare.", effects: { vitals: { happiness: "+", health: "-" } } }] },
-            right: { label: "Save your coins", outcomes: [{ result: "The piggy bank thanks you.", effects: { vitals: { finances: "+" } } }] },
+            left: { label: "Buy a bagful", outcomes: [{ result: "Sugar heaven — bad for your teeth and your pocket.", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } }] },
+            right: { label: "Save your coins", outcomes: [{ result: "The piggy bank grows. Willpower of steel.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
           },
         },
         {

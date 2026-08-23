@@ -50,6 +50,7 @@ const STATUS_LABEL: Record<StatusKind, string> = {
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point
 const MAX_TILT = 70; // the tilt asymptotes toward this as you drag to the edge; release flips the rest
 const TILT_EASE = 55; // drag distance (px) at which tilt reaches half of MAX_TILT — higher = gentler
+const TAP_SLOP = 12; // movement (px) under which a pointer-up counts as a tap, not a swipe
 const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
@@ -598,8 +599,15 @@ export class Game {
       dragging = false;
       const dx = x - startX;
       const dy = y - startY;
-      const horiz = Math.abs(dx) >= Math.abs(dy);
       flip.classList.remove("dragging");
+      // A tap (barely moved) selects the option in whichever region you tapped.
+      if (Math.hypot(dx, dy) < TAP_SLOP) {
+        const dir = regionDir(flip, x, y);
+        if (dir && card.options[dir]) return this.choose(dir);
+        settle();
+        return;
+      }
+      const horiz = Math.abs(dx) >= Math.abs(dy);
       if (horiz && Math.abs(dx) > SWIPE_THRESHOLD) {
         const dir: Direction = dx < 0 ? "left" : "right";
         if (card.options[dir]) return this.choose(dir);
@@ -638,6 +646,18 @@ function el<K extends keyof HTMLElementTagNameMap>(
   const node = document.createElement(tag);
   if (className) node.className = className;
   return node;
+}
+
+// Which option-region a tap fell in: left/right thirds, else top/bottom.
+function regionDir(flip: HTMLElement, x: number, y: number): Direction | null {
+  const r = flip.getBoundingClientRect();
+  const px = (x - r.left) / r.width;
+  const py = (y - r.top) / r.height;
+  if (px < 0.34) return "left";
+  if (px > 0.66) return "right";
+  if (py < 0.34) return "up";
+  if (py > 0.66) return "down";
+  return null;
 }
 
 // compact one-line summary of an effect, for the debug panel
