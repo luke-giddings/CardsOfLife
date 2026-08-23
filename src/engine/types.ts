@@ -49,6 +49,9 @@ export interface Traits {
   sociable: boolean;
   hasBrother: boolean;
   hasSister: boolean;
+  // hidden relationship stats (can go negative = rivalry)
+  relBrother: number;
+  relSister: number;
   numTimesChangedJob: number;
   numTimesPlayedLottery: number;
 }
@@ -64,6 +67,8 @@ export const DEFAULT_TRAITS: Traits = {
   sociable: false,
   hasBrother: false,
   hasSister: false,
+  relBrother: 0,
+  relSister: 0,
   numTimesChangedJob: 0,
   numTimesPlayedLottery: 0,
 };

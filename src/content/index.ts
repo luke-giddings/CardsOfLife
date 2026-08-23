@@ -125,8 +125,8 @@ export const content = {
           kind: "one_time",
           prompt: "Big news — a baby brother has arrived!",
           options: {
-            left: { label: "Adore him", outcomes: [{ result: "You appoint yourself his chief protector.", effects: { vitals: { happiness: 20 }, setTraits: { hasBrother: true } } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "You are not sharing the spotlight easily.", effects: { vitals: { spirit: 10 }, setTraits: { hasBrother: true } } }] },
+            left: { label: "Adore him", outcomes: [{ result: "You appoint yourself his chief protector.", effects: { vitals: { happiness: 20 }, setTraits: { hasBrother: true }, incTraits: { relBrother: 30 } } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "You are not sharing the spotlight easily.", effects: { vitals: { spirit: 10 }, setTraits: { hasBrother: true }, incTraits: { relBrother: -15 } } }] },
           },
         },
         {
@@ -134,8 +134,8 @@ export const content = {
           kind: "one_time",
           prompt: "Big news — a baby sister has arrived!",
           options: {
-            left: { label: "Adore her", outcomes: [{ result: "Instant best friend and partner in crime.", effects: { vitals: { happiness: 20 }, setTraits: { hasSister: true } } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "Hmph. You quite liked being the only one.", effects: { vitals: { spirit: 10 }, setTraits: { hasSister: true } } }] },
+            left: { label: "Adore her", outcomes: [{ result: "Instant best friend and partner in crime.", effects: { vitals: { happiness: 20 }, setTraits: { hasSister: true }, incTraits: { relSister: 30 } } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "Hmph. You quite liked being the only one.", effects: { vitals: { spirit: 10 }, setTraits: { hasSister: true }, incTraits: { relSister: -15 } } }] },
           },
         },
 
