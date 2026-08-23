@@ -14,9 +14,9 @@ import type { Content } from "../engine/types.ts";
 
 export const content = {
   start: {
-    // Start low — babyhood is where the meters get built up, ready for the
-    // child deck to start spending them.
-    vitals: { finances: 15, happiness: 20, health: 25, spirit: 15 },
+    // Start low and even — babyhood is where the meters get built up (unevenly,
+    // by your choices), ready for the child deck to start spending them.
+    vitals: { finances: 20, happiness: 20, health: 20, spirit: 20 },
     statuses: { job: "none", housing: "family", education: "none", lifestyle: "default" },
     decks: ["baby"],
     traits: {},
@@ -72,7 +72,7 @@ export const content = {
           prompt: "Your well-off uncle wants to help the little one out.",
           options: {
             left: { label: "A mountain of toys!", outcomes: [{ result: "Christmas comes early. Wrapping paper everywhere.", effects: { vitals: { happiness: "++" } } }] },
-            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: "+" }, setTraits: { uniFund: true } } }] },
+            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: "++" }, setTraits: { uniFund: true } } }] },
             down: { label: "Healthy food & baby classes", outcomes: [{ result: "Organic everything and splashy swim lessons.", effects: { vitals: { health: "++" } } }] },
           },
         },
@@ -100,7 +100,8 @@ export const content = {
           prompt: "Grandma is absolutely determined to spoil you rotten.",
           options: {
             left: { label: "Second helpings of pudding!", outcomes: [{ result: "A lifelong sweet tooth is born.", effects: { vitals: { happiness: "++" }, setTraits: { sweetTooth: true } } }] },
-            right: { label: "Just a little treat", outcomes: [{ result: "A bit of everything, in moderation.", effects: { vitals: { happiness: "+", health: "+" } } }] },
+            right: { label: "Just a little treat", outcomes: [{ result: "A wholesome bit of everything, in moderation.", effects: { vitals: { health: "+" } } }] },
+            down: { label: "Bank it for the future", outcomes: [{ result: "She squirrels the treat money into a savings account for you.", effects: { vitals: { finances: "++" } } }] },
           },
         },
         {
@@ -109,7 +110,7 @@ export const content = {
           prompt: "The doctor readies a very small needle.",
           options: {
             left: { label: "Brave it", outcomes: [{ result: "One yelp, then a lollipop. Protected for life.", effects: { vitals: { health: "++" }, setTraits: { vaccinated: true } } }] },
-            right: { label: "Squirm free", outcomes: [{ result: "You wriggle away from the needle — this time.", effects: { vitals: { happiness: "++" } } }] },
+            right: { label: "Squirm free", outcomes: [{ result: "You wriggle free and dig your heels in — nobody pins you down.", effects: { vitals: { spirit: "++" } } }] },
           },
         },
         {
@@ -118,7 +119,7 @@ export const content = {
           prompt: "Should you start at the local nursery?",
           options: {
             left: { label: "Off you go!", outcomes: [{ result: "New friends, finger paints and snack time.", effects: { vitals: { spirit: "+" }, setTraits: { sociable: true } } }] },
-            right: { label: "Stay home a while", outcomes: [{ result: "Cosy, unhurried days with family.", effects: { vitals: { happiness: "++" } } }] },
+            right: { label: "Stay home a while", outcomes: [{ result: "Cosy, unhurried, well-rested days at home.", effects: { vitals: { health: "+" } } }] },
           },
         },
         {
@@ -154,6 +155,10 @@ export const content = {
             right: {
               label: "Cling on",
               outcomes: [{ result: "Peeling you off the railings takes a while, but you settle in.", effects: { vitals: { happiness: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
+            },
+            down: {
+              label: "Show off your new bag",
+              outcomes: [{ result: "The grandparents slip you some 'big school' money.", effects: { vitals: { finances: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
             },
           },
         },
