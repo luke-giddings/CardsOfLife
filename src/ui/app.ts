@@ -41,9 +41,9 @@ const STATUS_LABEL: Record<StatusKind, string> = {
   lifestyle: "Life",
 };
 
-const ROTATE_PER_PX = 1.0; // how fast the card tilts as you drag (deg per px)
-const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point (~60°)
-const MAX_TILT = 70; // you can keep pushing past the decision point up to this tilt; release flips the rest
+const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point
+const MAX_TILT = 70; // the tilt asymptotes toward this as you drag to the edge; release flips the rest
+const TILT_EASE = 55; // drag distance (px) at which tilt reaches half of MAX_TILT — higher = gentler
 const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
@@ -498,11 +498,12 @@ export class Game {
 
     const tilt = (dx: number, dy: number): void => {
       const horiz = Math.abs(dx) >= Math.abs(dy);
-      const clampDeg = (d: number) => clamp(d * ROTATE_PER_PX, -MAX_TILT, MAX_TILT);
+      // Ease-out: rises quickly, then asymptotes toward MAX_TILT near the edge.
+      const tiltDeg = (d: number) => (MAX_TILT * d) / (Math.abs(d) + TILT_EASE);
       if (horiz) {
-        flip.style.transform = `rotateY(${clampDeg(dx)}deg)`;
+        flip.style.transform = `rotateY(${tiltDeg(dx)}deg)`;
       } else {
-        flip.style.transform = `rotateX(${clampDeg(-dy)}deg)`;
+        flip.style.transform = `rotateX(${tiltDeg(-dy)}deg)`;
       }
       // Highlight only once past the commit point, so a highlighted edge is
       // exactly the choice that will fire on release.
@@ -554,10 +555,6 @@ export class Game {
       }
     });
   }
-}
-
-function clamp(n: number, lo: number, hi: number): number {
-  return Math.max(lo, Math.min(hi, n));
 }
 
 function el<K extends keyof HTMLElementTagNameMap>(
