@@ -126,8 +126,8 @@ export const content = {
           kind: "one_time",
           prompt: "Big news — a baby brother has arrived!",
           options: {
-            left: { label: "Adore him", outcomes: [{ result: "You appoint yourself his chief protector.", effects: { vitals: { happiness: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: 30 } } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "You keep your distance and your own world.", effects: { vitals: { spirit: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: -15 } } }] },
+            left: { label: "Adore him", outcomes: [{ result: "You appoint yourself his chief protector.", effects: { vitals: { happiness: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: 30 }, addDecks: ["sibling"] } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "You keep your distance and your own world.", effects: { vitals: { spirit: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: -15 }, addDecks: ["sibling"] } }] },
           },
         },
         {
@@ -135,8 +135,8 @@ export const content = {
           kind: "one_time",
           prompt: "Big news — a baby sister has arrived!",
           options: {
-            left: { label: "Adore her", outcomes: [{ result: "Instant best friend and partner in crime.", effects: { vitals: { happiness: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: 30 } } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "You keep to yourself and your own world.", effects: { vitals: { spirit: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: -15 } } }] },
+            left: { label: "Adore her", outcomes: [{ result: "Instant best friend and partner in crime.", effects: { vitals: { happiness: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: 30 }, addDecks: ["sibling"] } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "You keep to yourself and your own world.", effects: { vitals: { spirit: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: -15 }, addDecks: ["sibling"] } }] },
           },
         },
 
@@ -265,6 +265,83 @@ export const content = {
           options: {
             left: { label: "Look back", outcomes: [{ result: "So much has happened already…", effects: { endGame: "grown_up" } }] },
             right: { label: "Charge ahead", outcomes: [{ result: "Whatever comes next, you're ready.", effects: { endGame: "grown_up" } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Sibling: one shared deck for now, unlocked by the brother/sister
+    //     cards. Repeatable relationship up/down events. Each option branches
+    //     to whichever sibling you have (brother first, sister as fallback).
+    //     Only the hidden relationship changes direction — the "rival" option
+    //     still gives a vital (independence), so rivalry isn't a worse choice,
+    //     just a different one, and it stays baby-safe (no vital losses).
+    {
+      id: "sibling",
+      title: "Your Sibling",
+      unlock: "You've got a little sidekick now — partner in crime, or thorn in your side. That's up to you.",
+      cards: [
+        {
+          id: "sib_play",
+          kind: "filler",
+          prompt: "Your little sibling is begging you to come and play.",
+          options: {
+            left: {
+              label: "Play along",
+              outcomes: [
+                { if: { traits: { hasBrother: true } }, result: "You build an epic blanket fort together. Best mates.", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: 8 } } },
+                { result: "You build an epic blanket fort together. Best mates.", effects: { vitals: { happiness: "+" }, incTraits: { relSister: 8 } } },
+              ],
+            },
+            right: {
+              label: "Wind them up",
+              outcomes: [
+                { if: { traits: { hasBrother: true } }, result: "You hide their favourite toy. Cue meltdown.", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: -8 } } },
+                { result: "You hide their favourite toy. Cue meltdown.", effects: { vitals: { spirit: "+" }, incTraits: { relSister: -8 } } },
+              ],
+            },
+          },
+        },
+        {
+          id: "sib_blame",
+          kind: "filler",
+          prompt: "Something's broken, and a parent is demanding to know who did it.",
+          options: {
+            left: {
+              label: "Take the blame",
+              outcomes: [
+                { if: { traits: { hasBrother: true } }, result: "You cover for your brother. He never forgets it.", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: 8 } } },
+                { result: "You cover for your sister. She never forgets it.", effects: { vitals: { spirit: "+" }, incTraits: { relSister: 8 } } },
+              ],
+            },
+            right: {
+              label: "Point the finger",
+              outcomes: [
+                { if: { traits: { hasBrother: true } }, result: "You dob your brother in. You're off the hook — he isn't.", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: -8 } } },
+                { result: "You dob your sister in. You're off the hook — she isn't.", effects: { vitals: { happiness: "+" }, incTraits: { relSister: -8 } } },
+              ],
+            },
+          },
+        },
+        {
+          id: "sib_treat",
+          kind: "filler",
+          prompt: "There is exactly one biscuit left in the tin.",
+          options: {
+            left: {
+              label: "Split it fairly",
+              outcomes: [
+                { if: { traits: { hasBrother: true } }, result: "Half each, no arguments. Your brother grins.", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: 8 } } },
+                { result: "Half each, no arguments. Your sister grins.", effects: { vitals: { spirit: "+" }, incTraits: { relSister: 8 } } },
+              ],
+            },
+            right: {
+              label: "Scoff it yourself",
+              outcomes: [
+                { if: { traits: { hasBrother: true } }, result: "Delicious. Your brother is furious.", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: -8 } } },
+                { result: "Delicious. Your sister is furious.", effects: { vitals: { happiness: "+" }, incTraits: { relSister: -8 } } },
+              ],
+            },
           },
         },
       ],
