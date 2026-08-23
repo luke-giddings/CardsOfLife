@@ -32,8 +32,9 @@ const STATUS_LABEL: Record<StatusKind, string> = {
   lifestyle: "Life",
 };
 
-const SWIPE_THRESHOLD = 120; // px of drag == a 90° tilt, the commit point
-const DEG_AT_THRESHOLD = 90;
+const ROTATE_PER_PX = 0.7; // how fast the card tilts as you drag (deg per px)
+const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit)
+const MAX_TILT = 85;
 const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
@@ -57,6 +58,7 @@ export class Game {
   private state!: GameState;
   private card: Card | null = null;
   private busy = false;
+  private phase: "front" | "back" | "over" = "front";
   private lastDir: Direction = "right";
 
   private topbar!: HTMLElement;
@@ -163,6 +165,7 @@ export class Game {
     this.scene.appendChild(holder);
     this.holder = holder;
     this.flip = flip;
+    this.phase = "front";
 
     this.attachDrag(flip, card);
 
@@ -197,6 +200,7 @@ export class Game {
     flip.classList.remove("dragging", "lean-left", "lean-right", "lean-up", "lean-down");
 
     const finishFlip = (): void => {
+      this.phase = "back";
       this.updateTop(); // bars animate as the result is revealed
       this.armAdvance();
     };
@@ -245,6 +249,7 @@ export class Game {
   }
 
   private showEnd(): void {
+    this.phase = "over";
     this.scene.innerHTML = "";
     const reason = this.state.endReason ?? "health";
     const ending = ENDINGS[reason] ?? ENDINGS.health;
@@ -290,21 +295,16 @@ export class Game {
       ArrowUp: "up",
       ArrowDown: "down",
     };
-    if (this.holder && this.flip && this.card && !this.holderIsBack()) {
+    if (this.phase === "front" && this.card) {
       const dir = map[e.key];
       if (dir && this.card.options[dir]) {
         e.preventDefault();
         this.choose(dir);
       }
-    } else if (e.key === "Enter" || e.key === " ") {
+    } else if (this.phase === "back" && (e.key === "Enter" || e.key === " ")) {
       this.advance();
     }
   };
-
-  private holderIsBack(): boolean {
-    // once armed for advance, the holder has a click-to-continue cursor
-    return this.holder?.style.cursor === "pointer";
-  }
 
   // --- swipe (3D rotate to 90°, then flip the rest to the back) --------------
 
@@ -315,8 +315,7 @@ export class Game {
 
     const tilt = (dx: number, dy: number): void => {
       const horiz = Math.abs(dx) >= Math.abs(dy);
-      const clampDeg = (d: number) =>
-        Math.max(-88, Math.min(88, (d / SWIPE_THRESHOLD) * DEG_AT_THRESHOLD));
+      const clampDeg = (d: number) => clamp(d * ROTATE_PER_PX, -MAX_TILT, MAX_TILT);
       if (horiz) {
         flip.style.transform = `rotateY(${clampDeg(dx)}deg)`;
       } else {
@@ -354,7 +353,7 @@ export class Game {
     };
 
     flip.addEventListener("pointerdown", (e) => {
-      if (this.busy) return;
+      if (this.busy || this.phase !== "front") return; // only the front is draggable
       dragging = true;
       startX = e.clientX;
       startY = e.clientY;
@@ -372,4 +371,8 @@ export class Game {
       }
     });
   }
+}
+
+function clamp(n: number, lo: number, hi: number): number {
+  return Math.max(lo, Math.min(hi, n));
 }
