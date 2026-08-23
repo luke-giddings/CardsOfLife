@@ -41,6 +41,14 @@ export interface Traits {
   gender: "boy" | "girl";
   knowsMartialArts: boolean;
   vaccinated: boolean;
+  // baby-deck "setups for the future"
+  uniFund: boolean;
+  bookish: boolean;
+  sporty: boolean;
+  sweetTooth: boolean;
+  sociable: boolean;
+  hasBrother: boolean;
+  hasSister: boolean;
   numTimesChangedJob: number;
   numTimesPlayedLottery: number;
 }
@@ -49,6 +57,13 @@ export const DEFAULT_TRAITS: Traits = {
   gender: "boy",
   knowsMartialArts: false,
   vaccinated: false,
+  uniFund: false,
+  bookish: false,
+  sporty: false,
+  sweetTooth: false,
+  sociable: false,
+  hasBrother: false,
+  hasSister: false,
   numTimesChangedJob: 0,
   numTimesPlayedLottery: 0,
 };
@@ -163,6 +178,7 @@ export interface GameState {
   traits: Traits;
   activeDecks: string[];
   usedCards: Record<string, number>; // card id -> times played
+  lastCardId?: string;                // to avoid drawing the same card twice in a row
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;
   endReason?: string;                 // ENDINGS id (vital key, or a named ending)

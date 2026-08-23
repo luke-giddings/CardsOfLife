@@ -76,16 +76,23 @@ export function drawCard(
   const cards = allCards(content);
 
   const milestone = dueMilestone(cards, state, content);
-  if (milestone) return { card: milestone, state };
+  if (milestone) return { card: milestone, state: { ...state, lastCardId: milestone.id } };
 
   const pool = cards.filter(
     (c) => c.kind !== "milestone" && isEligible(c, state, content),
   );
   if (pool.length === 0) return { card: null, state };
 
+  // Avoid repeating the immediately-previous card when there's a choice.
+  let choices = pool;
+  if (pool.length > 1 && state.lastCardId) {
+    const filtered = pool.filter((c) => c.id !== state.lastCardId);
+    if (filtered.length > 0) choices = filtered;
+  }
+
   const roll = nextRandom(state.rng);
-  const pick = pool[Math.floor(roll.value * pool.length)];
-  return { card: pick, state: { ...state, rng: roll.state } };
+  const pick = choices[Math.floor(roll.value * choices.length)];
+  return { card: pick, state: { ...state, rng: roll.state, lastCardId: pick.id } };
 }
 
 // Debug helper: the milestone that would fire, the random pool, and the cards

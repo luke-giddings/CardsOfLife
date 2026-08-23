@@ -11,7 +11,9 @@ import type { Content } from "../engine/types.ts";
 
 export const content = {
   start: {
-    vitals: { finances: 50, happiness: 70, health: 90, spirit: 70 },
+    // Start low — babyhood is where the meters get built up, ready for the
+    // child deck to start spending them.
+    vitals: { finances: 15, happiness: 20, health: 25, spirit: 15 },
     statuses: { job: "none", housing: "family", education: "none", lifestyle: "default" },
     decks: ["baby"],
     traits: {},
@@ -30,7 +32,9 @@ export const content = {
   },
 
   decks: [
-    // --- Baby: ages 0–4. Tutorial; impossible to lose. ----------------------
+    // --- Baby: ages 0–5. Tutorial + build-up. Every effect is positive, so
+    //     it is impossible to lose here even starting from low vitals. The
+    //     ages 2–4 cards are all one_time "setups for the future".
     {
       id: "baby",
       cards: [
@@ -46,35 +50,56 @@ export const content = {
           },
         },
         {
-          // Second card: teaches that choices move the bars (each option
-          // trades one vital up for another down), and teaches the up-swipe.
+          // Second card: teaches that choices move the bars, and teaches the
+          // down-swipe. Each option boosts a different vital (all positive).
           id: "b_firststeps",
           kind: "milestone",
           priority: 90,
           conditions: { ageMin: 1, ageMax: 1 },
-          prompt: "You take your first wobbly steps!\n\nEvery choice has a cost — watch the bars. Where do you toddle?",
+          prompt: "You take your first wobbly steps!\n\nEach choice boosts a different stat — watch the bars. Where do you toddle?",
           options: {
-            left: { label: "To your toys", outcomes: [{ result: "Hours of fun! But you scream the house down when it's time to stop.", effects: { vitals: { happiness: 10, spirit: -25 } } }] },
-            right: { label: "To your parents", outcomes: [{ result: "A proud, happy cuddle — though you'd much rather have kept playing.", effects: { vitals: { spirit: 10, happiness: -25 } } }] },
-            up: { label: "To your cot", outcomes: [{ result: "A good nap does you the world of good, even if it's a bit dull.", effects: { vitals: { health: 10, spirit: -25 } } }] },
+            left: { label: "To your toys", outcomes: [{ result: "Hours of giggling, gurgling fun.", effects: { vitals: { happiness: 25 } } }] },
+            right: { label: "To your parents", outcomes: [{ result: "A proud, loving cuddle.", effects: { vitals: { spirit: 25 } } }] },
+            down: { label: "To your cot", outcomes: [{ result: "A long nap does you the world of good.", effects: { vitals: { health: 25 } } }] },
+          },
+        },
+
+        // --- ages 2–4: one_time "setups" (you'll see ~3 of these per run) ---
+        {
+          id: "b_uncle",
+          kind: "one_time",
+          prompt: "Your well-off uncle wants to help the little one out.",
+          options: {
+            left: { label: "A mountain of toys!", outcomes: [{ result: "Christmas comes early. Wrapping paper everywhere.", effects: { vitals: { happiness: 25 } } }] },
+            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: 10 }, setTraits: { uniFund: true } } }] },
+            down: { label: "Healthy food & baby classes", outcomes: [{ result: "Organic everything and splashy swim lessons.", effects: { vitals: { health: 25 } } }] },
           },
         },
         {
-          id: "b_bath",
-          kind: "filler",
-          prompt: "Bath time! The tub is a mountain of bubbles.",
+          id: "b_bookworm",
+          kind: "one_time",
+          prompt: "You reach for the same picture book, over and over again.",
           options: {
-            left: { label: "Splash everyone", outcomes: [{ result: "Chaos, giggles, a soaked bathroom.", effects: { vitals: { happiness: 10, health: -10 } } }] },
-            right: { label: "Sit nicely", outcomes: [{ result: "Squeaky clean and cosy.", effects: { vitals: { health: 10 } } }] },
+            left: { label: "Read together nightly", outcomes: [{ result: "A shared love of stories takes root.", effects: { vitals: { spirit: 10, happiness: 10 }, setTraits: { bookish: true } } }] },
+            right: { label: "Pop the telly on", outcomes: [{ result: "Bright colours and very catchy songs.", effects: { vitals: { happiness: 20 } } }] },
           },
         },
         {
-          id: "b_veg",
-          kind: "filler",
-          prompt: "A spoonful of mushed green something approaches your mouth.",
+          id: "b_sporty",
+          kind: "one_time",
+          prompt: "You will NOT sit still for one single second.",
           options: {
-            left: { label: "Eat up", outcomes: [{ result: "Surprisingly tasty. You feel strong.", effects: { vitals: { health: 10 } } }] },
-            right: { label: "Spit it out", outcomes: [{ result: "It ends up on the wall. Worth it.", effects: { vitals: { happiness: 10 } } }] },
+            left: { label: "Enrol in tumble-tots", outcomes: [{ result: "Forward rolls and gloriously grazed knees.", effects: { vitals: { health: 15, happiness: 5 }, setTraits: { sporty: true } } }] },
+            right: { label: "Let them wear out", outcomes: [{ result: "You crash out, fast asleep, by 7pm sharp.", effects: { vitals: { health: 20 } } }] },
+          },
+        },
+        {
+          id: "b_grandma",
+          kind: "one_time",
+          prompt: "Grandma is absolutely determined to spoil you rotten.",
+          options: {
+            left: { label: "Second helpings of pudding!", outcomes: [{ result: "A lifelong sweet tooth is born.", effects: { vitals: { happiness: 20 }, setTraits: { sweetTooth: true } } }] },
+            right: { label: "Just a little treat", outcomes: [{ result: "A bit of everything, in moderation.", effects: { vitals: { happiness: 10, health: 10 } } }] },
           },
         },
         {
@@ -82,10 +107,38 @@ export const content = {
           kind: "one_time",
           prompt: "The doctor readies a very small needle.",
           options: {
-            left: { label: "Brave it", outcomes: [{ result: "One yelp, then a lollipop. Protected.", effects: { vitals: { health: 10 }, setTraits: { vaccinated: true } } }] },
-            right: { label: "Squirm free", outcomes: [{ result: "You escape the needle — for now.", effects: { vitals: { happiness: 10 } } }] },
+            left: { label: "Brave it", outcomes: [{ result: "One yelp, then a lollipop. Protected for life.", effects: { vitals: { health: 20 }, setTraits: { vaccinated: true } } }] },
+            right: { label: "Squirm free", outcomes: [{ result: "You wriggle away from the needle — this time.", effects: { vitals: { happiness: 10 } } }] },
           },
         },
+        {
+          id: "b_nursery",
+          kind: "one_time",
+          prompt: "Should you start at the local nursery?",
+          options: {
+            left: { label: "Off you go!", outcomes: [{ result: "New friends, finger paints and snack time.", effects: { vitals: { happiness: 10, spirit: 10 }, setTraits: { sociable: true } } }] },
+            right: { label: "Stay home a while", outcomes: [{ result: "Cosy, unhurried days with family.", effects: { vitals: { happiness: 20 } } }] },
+          },
+        },
+        {
+          id: "b_brother",
+          kind: "one_time",
+          prompt: "Big news — a baby brother has arrived!",
+          options: {
+            left: { label: "Adore him", outcomes: [{ result: "You appoint yourself his chief protector.", effects: { vitals: { happiness: 20 }, setTraits: { hasBrother: true } } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "You are not sharing the spotlight easily.", effects: { vitals: { spirit: 10 }, setTraits: { hasBrother: true } } }] },
+          },
+        },
+        {
+          id: "b_sister",
+          kind: "one_time",
+          prompt: "Big news — a baby sister has arrived!",
+          options: {
+            left: { label: "Adore her", outcomes: [{ result: "Instant best friend and partner in crime.", effects: { vitals: { happiness: 20 }, setTraits: { hasSister: true } } }] },
+            right: { label: "Cold shoulder", outcomes: [{ result: "Hmph. You quite liked being the only one.", effects: { vitals: { spirit: 10 }, setTraits: { hasSister: true } } }] },
+          },
+        },
+
         {
           id: "m_school",
           kind: "milestone",
@@ -99,7 +152,7 @@ export const content = {
             },
             right: {
               label: "Cling on",
-              outcomes: [{ result: "Peeling you off the railings takes a while.", effects: { vitals: { happiness: -10 }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "Peeling you off the railings takes a while, but you settle in.", effects: { vitals: { happiness: 5 }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
             },
           },
         },

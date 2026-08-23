@@ -43,7 +43,7 @@ const STATUS_LABEL: Record<StatusKind, string> = {
 
 const ROTATE_PER_PX = 1.0; // how fast the card tilts as you drag (deg per px)
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point (~60°)
-const MAX_TILT = 85; // you can keep pushing past the decision point up to this tilt; release flips the rest
+const MAX_TILT = 70; // you can keep pushing past the decision point up to this tilt; release flips the rest
 const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
