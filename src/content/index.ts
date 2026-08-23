@@ -157,8 +157,8 @@ export const content = {
               outcomes: [{ result: "Peeling you off the railings takes a while, but you settle in.", effects: { vitals: { happiness: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
             },
             down: {
-              label: "Show off your new bag",
-              outcomes: [{ result: "The grandparents slip you some 'big school' money.", effects: { vitals: { finances: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
+              label: "Pocket the gift money",
+              outcomes: [{ result: "The grandparents slip you some 'big school' money — straight in the piggy bank.", effects: { vitals: { finances: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
             },
           },
         },
@@ -257,8 +257,20 @@ export const content = {
           kind: "filler",
           prompt: "The corner shop is full of pick-and-mix.",
           options: {
-            left: { label: "Buy a bagful", outcomes: [{ result: "Sugar heaven — bad for your teeth and your pocket.", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } }] },
-            right: { label: "Save your coins", outcomes: [{ result: "The piggy bank grows. Willpower of steel.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            left: {
+              label: "Buy a bagful",
+              outcomes: [
+                { if: { traits: { sweetTooth: true } }, result: "That sweet tooth wins — you buy double and regret nothing (yet).", effects: { vitals: { happiness: "++", health: "--", finances: "-" } } },
+                { result: "Sugar heaven — bad for your teeth and your pocket.", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } },
+              ],
+            },
+            right: {
+              label: "Save your coins",
+              outcomes: [
+                { if: { traits: { sweetTooth: true } }, result: "Walking past the pick-and-mix is agony, but your willpower hardens.", effects: { vitals: { spirit: "++", happiness: "--", finances: "+" } } },
+                { result: "The piggy bank grows. Easy, when you're not that fussed.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
+              ],
+            },
           },
         },
         {
