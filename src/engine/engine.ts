@@ -88,13 +88,24 @@ export function drawCard(
   return { card: pick, state: { ...state, rng: roll.state } };
 }
 
-// Debug helper: the milestone that would fire and the random pool right now.
-export function eligibleDraw(state: GameState): { milestone: Card | null; pool: Card[] } {
+// Debug helper: the milestone that would fire, the random pool, and the cards
+// that are in an active deck but gated out (conditions not yet met).
+export function eligibleDraw(
+  state: GameState,
+): { milestone: Card | null; pool: Card[]; gated: Card[] } {
   const content = CONTENT;
   const cards = allCards(content);
+  const inDeck = cards.filter(
+    (c) => !!c.deck && state.activeDecks.includes(c.deck) && !exhausted(c, state),
+  );
   const milestone = dueMilestone(cards, state, content);
-  const pool = cards.filter((c) => c.kind !== "milestone" && isEligible(c, state, content));
-  return { milestone, pool };
+  const pool = inDeck.filter(
+    (c) => c.kind !== "milestone" && meets(c.conditions, state, content),
+  );
+  const gated = inDeck.filter(
+    (c) => c !== milestone && !meets(c.conditions, state, content),
+  );
+  return { milestone, pool, gated };
 }
 
 // --- outcome resolution ------------------------------------------------------

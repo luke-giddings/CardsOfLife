@@ -123,6 +123,8 @@ export interface Card {
 export interface Deck {
   id: string;
   cards: Card[];
+  title?: string;  // shown when this deck is unlocked for the first time
+  unlock?: string; // blurb for the first-time unlock announcement
 }
 
 // --- Status definitions ------------------------------------------------------

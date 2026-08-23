@@ -15,6 +15,9 @@
   --v-health: #bb443a;
   --v-spirit: #55609f;
 
+  --good: #2f9e5e;
+  --bad: #cf4a3f;
+
   --radius: 16px;
   --shadow: 0 1px 2px rgba(29, 35, 31, 0.06), 0 18px 40px -22px rgba(29, 35, 31, 0.4);
 }
@@ -34,6 +37,8 @@
     --v-happiness: #e0b23c;
     --v-health: #e0685d;
     --v-spirit: #8892d8;
+    --good: #46b279;
+    --bad: #e0685d;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 44px -22px rgba(0, 0, 0, 0.75);
   }
 }
@@ -124,6 +129,7 @@ body {
   color: var(--gold);
 }
 .dbg-list div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dbg-list .gated { color: var(--faint); opacity: 0.75; }
 .dbg-choice { margin-bottom: 7px; }
 .dbg-choice b { color: var(--ink); }
 .dbg-choice i { color: var(--faint); }
@@ -158,12 +164,8 @@ body {
   color: var(--muted);
   margin-bottom: 6px;
 }
-.vnum {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--vc);
-}
 .track {
+  position: relative;
   height: 7px;
   border-radius: 4px;
   background: var(--line);
@@ -176,6 +178,16 @@ body {
   background: var(--vc);
   transition: width 0.75s cubic-bezier(0.4, 0, 0.2, 1);
 }
+/* the changed segment, flashed green (gain) or red (loss) then faded out */
+.flash {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.flash.up { background: var(--good); }
+.flash.down { background: var(--bad); }
 .vital-finances { --vc: var(--v-finances); }
 .vital-happiness { --vc: var(--v-happiness); }
 .vital-health { --vc: var(--v-health); }
@@ -328,6 +340,54 @@ body {
   cursor: pointer;
 }
 .continue:active { transform: translateY(1px); }
+
+/* --- deck-unlock announcement --------------------------------------------- */
+.unlock-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 56px 30px;
+  border-radius: var(--radius);
+  border: 1px solid var(--baize);
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--baize) 22%, var(--surface)), var(--surface));
+  box-shadow: var(--shadow), 0 0 0 1px color-mix(in srgb, var(--baize) 40%, transparent);
+  cursor: pointer;
+}
+.unlock-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, color-mix(in srgb, var(--baize) 30%, transparent) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: shine 1.6s ease-out 0.15s both;
+  pointer-events: none;
+}
+@keyframes shine { to { transform: translateX(120%); } }
+.unlock-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--baize);
+  font-weight: 700;
+}
+.unlock-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.unlock-blurb {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  max-width: 32ch;
+}
 
 /* --- end screen ----------------------------------------------------------- */
 .end {

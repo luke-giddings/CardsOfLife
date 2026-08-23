@@ -109,6 +109,8 @@ export const content = {
     // --- Child: ages 5–17. Ends at 18. --------------------------------------
     {
       id: "child",
+      title: "Childhood",
+      unlock: "You're a child now — a whole world of playgrounds, lessons, scraped knees and best friends awaits.",
       cards: [
         {
           id: "c_martialarts",

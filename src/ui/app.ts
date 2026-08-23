@@ -18,10 +18,12 @@ import {
   type Effect,
   type GameState,
   type StatusKind,
+  type Vitals,
   type VitalKey,
 } from "../engine/types.ts";
 
 const DEBUG_KEY = "cardsoflife.debug";
+const DECK_BY_ID = new Map(content.decks.map((d) => [d.id, d]));
 
 const VITAL_LABEL: Record<VitalKey, string> = {
   finances: "Finances",
@@ -76,9 +78,14 @@ export class Game {
   private debug = false;
   private ageNumEl!: HTMLElement;
   private fills!: Record<VitalKey, HTMLElement>;
+  private flashes!: Record<VitalKey, HTMLElement>;
   private statusesEl!: HTMLElement;
   private dbgBtn!: HTMLButtonElement;
   private debugPanel!: HTMLElement;
+
+  private prevVitals!: Vitals;
+  private seenDecks = new Set<string>();
+  private pendingUnlock: { title: string; blurb: string } | null = null;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -86,6 +93,8 @@ export class Game {
     this.debug = loadDebug();
     this.buildShell();
     this.state = loadGame() ?? initGame(content);
+    this.prevVitals = { ...this.state.vitals };
+    this.seenDecks = new Set(this.state.activeDecks);
     this.syncTop();
     if (this.state.over) this.showEnd();
     else this.beginTurn();
@@ -122,6 +131,7 @@ export class Game {
 
     const vitals = el("div", "vitals");
     this.fills = {} as Record<VitalKey, HTMLElement>;
+    this.flashes = {} as Record<VitalKey, HTMLElement>;
     for (const key of VITAL_KEYS) {
       const cell = el("div", `vital vital-${key}`);
       const top = el("div", "vital-top");
@@ -130,10 +140,12 @@ export class Game {
       top.append(label);
       const track = el("div", "track");
       const fill = el("div", "fill");
-      track.append(fill);
+      const flash = el("div", "flash"); // green/red segment shown on change
+      track.append(fill, flash);
       cell.append(top, track);
       vitals.append(cell);
       this.fills[key] = fill;
+      this.flashes[key] = flash;
     }
     this.statusesEl = el("div", "statuses");
     this.topbar.append(headRow, vitals, this.statusesEl);
@@ -150,7 +162,13 @@ export class Game {
   private syncTop(): void {
     const s = this.state;
     this.ageNumEl.textContent = String(s.age);
-    for (const key of VITAL_KEYS) this.fills[key].style.width = `${s.vitals[key]}%`;
+    for (const key of VITAL_KEYS) {
+      const nv = s.vitals[key];
+      const ov = this.prevVitals[key];
+      this.fills[key].style.width = `${nv}%`;
+      if (nv !== ov) this.flashDelta(key, ov, nv);
+    }
+    this.prevVitals = { ...s.vitals };
     let chips = "";
     for (const kind of STATUS_KINDS) {
       const value = s.statuses[kind];
@@ -159,6 +177,21 @@ export class Game {
       chips += `<span class="chip"><b>${STATUS_LABEL[kind]}</b> ${label}</span>`;
     }
     this.statusesEl.innerHTML = chips;
+  }
+
+  // Flash the changed segment of a bar green (gain) or red (loss).
+  private flashDelta(key: VitalKey, oldV: number, newV: number): void {
+    const flash = this.flashes[key];
+    const lo = Math.min(oldV, newV);
+    const hi = Math.max(oldV, newV);
+    flash.style.transition = "none";
+    flash.style.left = `${lo}%`;
+    flash.style.width = `${hi - lo}%`;
+    flash.className = `flash ${newV > oldV ? "up" : "down"}`;
+    flash.style.opacity = "0.9";
+    void flash.offsetWidth; // reflow so the fade restarts every change
+    flash.style.transition = "opacity 0.8s ease";
+    flash.style.opacity = "0";
   }
 
   // --- debug -----------------------------------------------------------------
@@ -176,10 +209,11 @@ export class Game {
       this.debugPanel.innerHTML = "";
       return;
     }
-    const { milestone, pool } = eligibleDraw(this.state);
+    const { milestone, pool, gated } = eligibleDraw(this.state);
     const items = [
       ...(milestone ? [`★ ${milestone.id} — milestone (fires next)`] : []),
       ...pool.map((c) => `${c.id === this.card?.id ? "→ " : ""}${c.id} (${c.kind})`),
+      ...gated.map((c) => `<span class="gated">· ${c.id} (${c.kind}, gated)</span>`),
     ];
     let choices = "";
     if (this.card) {
@@ -271,6 +305,7 @@ export class Game {
     const res = chooseDirection(this.state, this.card, dir);
     this.state = res.state;
     saveGame(this.state);
+    this.detectUnlocks();
 
     const flip = this.flip;
     const back = flip.querySelector<HTMLElement>(".back .result")!;
@@ -319,6 +354,7 @@ export class Game {
       this.flip = null;
       this.busy = false;
       if (this.state.over) this.showEnd();
+      else if (this.pendingUnlock) this.showUnlock();
       else this.beginTurn();
     };
 
@@ -366,8 +402,67 @@ export class Game {
     this.holder = null;
     this.flip = null;
     this.busy = false;
+    this.pendingUnlock = null;
+    this.prevVitals = { ...this.state.vitals };
+    this.seenDecks = new Set(this.state.activeDecks);
     this.syncTop();
     this.beginTurn();
+  }
+
+  // Note any deck that just became active for the first time this run, so its
+  // unlock can be announced as a proper "new chapter" moment.
+  private detectUnlocks(): void {
+    for (const id of this.state.activeDecks) {
+      if (this.seenDecks.has(id)) continue;
+      this.seenDecks.add(id);
+      const deck = DECK_BY_ID.get(id);
+      if (deck?.title) this.pendingUnlock = { title: deck.title, blurb: deck.unlock ?? "" };
+    }
+  }
+
+  private showUnlock(): void {
+    const u = this.pendingUnlock;
+    this.pendingUnlock = null;
+    if (!u) return this.beginTurn();
+    this.phase = "over"; // not a swipe card; advance by tapping only
+    this.renderDebug();
+
+    const holder = el("div", "holder");
+    const card = el("div", "unlock-card");
+    card.innerHTML = `
+      <div class="unlock-eyebrow">A new chapter</div>
+      <div class="unlock-title">${u.title}</div>
+      <p class="unlock-blurb">${u.blurb}</p>
+      <div class="tap-cue">Tap to begin</div>`;
+    holder.append(card);
+    this.scene.append(holder);
+    this.holder = holder;
+    this.flip = null;
+
+    if (!reduceMotion) {
+      holder.style.transform = "scale(0.92)";
+      holder.style.opacity = "0";
+      requestAnimationFrame(() => {
+        holder.style.transform = "";
+        holder.style.opacity = "";
+      });
+    }
+
+    const go = (): void => {
+      if (this.busy) return;
+      this.busy = true;
+      const done = (): void => {
+        holder.remove();
+        this.holder = null;
+        this.busy = false;
+        this.beginTurn();
+      };
+      if (reduceMotion) return done();
+      holder.style.transform = "scale(1.06)";
+      holder.style.opacity = "0";
+      window.setTimeout(done, SLIDE_MS);
+    };
+    card.addEventListener("click", go);
   }
 
   private onKey = (e: KeyboardEvent): void => {
