@@ -42,8 +42,8 @@ const STATUS_LABEL: Record<StatusKind, string> = {
 };
 
 const ROTATE_PER_PX = 1.0; // how fast the card tilts as you drag (deg per px)
-const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit)
-const MAX_TILT = 60; // the card tilts up to 60° during the drag; release flips the rest
+const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point (~60°)
+const MAX_TILT = 85; // you can keep pushing past the decision point up to this tilt; release flips the rest
 const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
@@ -195,7 +195,7 @@ export class Game {
     flash.className = `flash ${newV > oldV ? "up" : "down"}`;
     flash.style.opacity = "0.9";
     void flash.offsetWidth; // reflow so the fade restarts every change
-    flash.style.transition = "opacity 2.5s ease";
+    flash.style.transition = "opacity 1.5s ease";
     flash.style.opacity = "0";
   }
 
