@@ -134,19 +134,17 @@ body {
   border-color: var(--baize);
 }
 
-/* Easy-mode vital preview, attached under each option's edge label. Forced
-   horizontal (writing-mode) so the symbols read normally even inside the
-   vertical side labels; the left edge is rotated 180°, so its preview is
-   counter-rotated back upright. Up/down edges become flex columns so the
-   preview stacks under (up) or over (down) the label, staying toward centre. */
+/* Easy-mode vital preview, attached to each option's edge label. It inherits
+   the label's writing mode: the vertical side labels get the symbols flowing on
+   down the column; the horizontal up/down labels get them stacked under (up) or
+   over (down) via a flex column, staying toward the card centre. */
 .edge-vitals {
-  writing-mode: horizontal-tb;
-  display: inline-flex;
-  gap: 3px;
-  align-items: center;
-  font-size: 0.78rem;
+  display: inline-block;
+  font-size: 0.82rem;
   font-weight: 700;
 }
+.edge-left .edge-vitals,
+.edge-right .edge-vitals { margin-top: 10px; } /* gap after the vertical label */
 .edge-up,
 .edge-down {
   display: flex;
@@ -155,8 +153,6 @@ body {
 }
 .edge-up { flex-direction: column; }
 .edge-down { flex-direction: column-reverse; }
-.edge-left .edge-vitals { transform: rotate(180deg); margin-bottom: 8px; }
-.edge-right .edge-vitals { margin-top: 8px; }
 .ep-v { display: inline-flex; align-items: center; gap: 1px; }
 .ep-none { color: var(--faint); font-weight: 700; }
 .ep-end { color: var(--bad); }
