@@ -79,10 +79,18 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 
 | Status | States (so far) | Notes |
 |---|---|---|
-| **Job / occupation** | infant · child_labourer | Start = infant (no drain, hidden). Child labourer: finances +5 / health −5 drift, opens `child_work`. |
-| **Housing** | family · workhouse | Start = family (no drain, hidden). Workhouse: health −5 / happiness −5 drift. |
-| **Education** | none · school | Ordered (levels). `school` opens the `studying` deck; a persistent record of schooling for later gating. |
+| **Job / occupation** | infant · child_labourer | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour`. |
+| **Housing** | family · workhouse | Start = family (no drain), opens `home_family`. Workhouse: health −5 / happiness −5 drift, opens `home_workhouse`. |
+| **Education** | none · school | Ordered (levels). `school` opens the `edu_basicschool` deck; a persistent record of schooling for later gating. |
 | **Lifestyle** | default | Reserved. |
+
+**Deck naming:** decks owned by a status are prefixed by that status's kind —
+`edu_*` (education), `home_*` (housing), `job_*` (occupation) — so the growing
+set of small per-status decks stays legible and leaves room for siblings like
+`edu_grammar`. Cross-cutting decks that aren't owned by a status keep plain
+names (`baby`, `childhood`, `sibling`). Changing a status hands its decks over
+automatically (leaving `family` for `workhouse` swaps `home_family` out for
+`home_workhouse`).
 
 Statuses are **ordered or unordered** (Education is ordered for `≥` checks;
 Job/Housing are named states).
@@ -139,19 +147,24 @@ Status **drift** (after effects) → check game-over.
 - **baby** (ages 0–5): tutorial + build-up. **Impossible to lose** (positive
   effects only). Teaches swipe/up/down, the vitals, and seeds Traits. Ends at
   the **school-or-work** milestone.
-- **childhood** (shared, ages 5–17): events any child has — the bully, stray
-  cat, street football, chores, the sweet shop, the **hazards**, and turning 18.
-- **studying** (school path, via `education = school`): exams, first crush, a
-  new friend, prize day.
-- **child_work** (labour path, via `job = child_labourer`): the loom hazard,
-  Friday wages.
+- **childhood** (shared, ages 5–17): events any child has regardless of status —
+  the boxing coach, the bully, street football, the **hazards**, and turning 18.
+- **home_family** (housing = family): home life with a home to have — chores,
+  the sweet shop, a stray cat to take in. Lost on entering the workhouse.
+- **home_workhouse** (housing = workhouse): bleak workhouse daily life — gruel,
+  oakum, a ward friend, the matron — grim trade-offs that let a careful child
+  claw a little back against the health/happiness drift.
+- **edu_basicschool** (education = school): exams, first crush, a new friend,
+  prize day. (Room for `edu_grammar` and other schools later.)
+- **job_labour** (job = child_labourer): the loom hazard, Friday wages.
 - **sibling** (unlocked by the baby brother/sister cards): repeatable
   relationship events; each option branches to whichever sibling you have.
 
-**Deck-per-status:** occupation/education choices pull in the matching deck, so
-what you *are* determines what cards you *see*. First-time deck unlocks show a
-"new chapter" announcement (only the shared `childhood` deck carries one, to
-avoid double interstitials).
+**Deck-per-status:** occupation/education/housing choices pull in the matching
+deck, so what you *are* determines what cards you *see*, and a status change
+hands its decks over. First-time deck unlocks show a "new chapter"
+announcement (the shared `childhood` deck and the `workhouse` carry one; the
+rest are silent to avoid double interstitials).
 
 ## 11. Mortality & hazards
 
@@ -211,9 +224,10 @@ and restarts. A separate **Debug** toggle (persisted) unlocks the debug toolkit.
 ## 16. Current scope (built)
 
 Birth → babyhood (unloseable build-up, trait setups) → **school-or-work** at 5 →
-childhood (shared events + occupation deck + hazards, genuinely failable) →
-**age 18 / "You Survived Childhood"**. Sibling relationship deck. Full debug
-toolkit. Deployed and playable on a phone.
+childhood (shared events + home / education / occupation decks + hazards,
+genuinely failable), the workhouse as a grim fallback → **age 18 / "You
+Survived Childhood"**. Sibling relationship deck. Full debug toolkit. Deployed
+and playable on a phone.
 
 ## 17. Settled decisions (quick reference)
 
@@ -226,7 +240,8 @@ toolkit. Deployed and playable on a phone.
   chosen by condition.
 - Traits drive conditions and results; relationships are Traits.
 - Deck-per-status; neutral no-drain start statuses (infant / with family).
-- Card ids follow `<deck>_<name>`.
+- Per-status decks are prefixed by status kind (`edu_`, `home_`, `job_`);
+  cross-cutting decks keep plain names. Card ids follow `<deck>_<name>`.
 
 ---
 
@@ -239,8 +254,9 @@ Roughly in likely order. None of these are started.
   **adult decks** and job/education gating.
 - **House decks & an "owned" housing status** — renting/buying, home events;
   gives something to *own* (prerequisite for inheritance below).
-- **Workhouse escape** — currently the workhouse only drains with no way out;
-  add events to leave it (find work, a benefactor, run away).
+- **Workhouse escape** — the `home_workhouse` deck now has daily-life cards, but
+  no way *out*; add events to leave it (apprenticed to a trade → `job`, a
+  benefactor, running away → back to `family` or homeless).
 - **Legacy / inheritance across runs** — if you owned a house *and* had an heir,
   the **next run starts in that house** (and maybe with some money/traits).
   Implemented as a shim: on the end screen write an `inheritance` record to

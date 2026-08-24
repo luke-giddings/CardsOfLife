@@ -12,10 +12,19 @@ import type { Content } from "../engine/types.ts";
 // magnitudes are compile errors.
 //
 // CARD ID CONVENTION: every card id is `<deck>_<name>` (e.g. baby_vaccine,
-// child_bully, study_exams, work_machine, sibling_play) so it's obvious at a
-// glance which deck a card belongs to. Card ids are display keys only — nothing
-// references a card by id — so they can be renamed freely; decks are referenced
-// by their own id (baby, childhood, studying, child_work, sibling).
+// child_bully, edu_school_exams, job_labour_machine, sibling_play) so it's
+// obvious at a glance which deck a card belongs to. Card ids are display keys
+// only — nothing references a card by id — so they can be renamed freely.
+//
+// DECK NAMING: decks tied to a status are prefixed by that status's kind, so
+// the growing set of small per-status decks stays legible:
+//   edu_*   education status (edu_basicschool; room for edu_grammar etc. later)
+//   home_*  housing status   (home_family, home_workhouse)
+//   job_*   job status       (job_labour)
+// Cross-cutting decks that aren't owned by a single status keep plain names:
+// baby, childhood (shared child events), sibling. A status state `addDecks` its
+// deck, and changeStatus hands decks over on a status change (leaving `family`
+// for `workhouse` swaps home_family out for home_workhouse automatically).
 // ---------------------------------------------------------------------------
 
 export const content = {
@@ -34,22 +43,26 @@ export const content = {
       states: {
         infant: { label: "None" }, // neutral start; no drain, no employment yet
         // Victorian child labour: a few coins, at a steady cost to health,
-        // and it opens the dangerous child_work deck.
-        child_labourer: { label: "Child labourer", drift: { finances: 5, health: -5 }, addDecks: ["child_work"] },
+        // and it opens the dangerous job_labour deck.
+        child_labourer: { label: "Child labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
       },
     },
     housing: {
       id: "housing",
       states: {
-        family: { label: "With family" },
-        workhouse: { label: "Workhouse", drift: { health: -5, happiness: -5 } },
+        // Home life while living with the family (chores, the sweet shop, a
+        // stray to take in). No drain — home is safe.
+        family: { label: "With family", addDecks: ["home_family"] },
+        // The workhouse: a grinding health/happiness drain, and its own deck of
+        // bleak daily-life events.
+        workhouse: { label: "Workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
       },
     },
     education: {
       id: "education",
       ordered: true,
       levels: ["none", "school"],
-      states: { none: { label: "Illiterate" }, school: { label: "Basic schooling", addDecks: ["studying"] } },
+      states: { none: { label: "Illiterate" }, school: { label: "Basic schooling", addDecks: ["edu_basicschool"] } },
     },
     lifestyle: { id: "lifestyle", states: { default: {} } },
   },
@@ -170,11 +183,11 @@ export const content = {
           options: {
             left: {
               label: "Go to school",
-              outcomes: [{ result: "Slate, chalk, and a stern schoolmaster. A chance at something more.", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["childhood"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "Slate, chalk, and a stern schoolmaster. A chance at something more.", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
             },
             right: {
               label: "Out to work",
-              outcomes: [{ result: "Long hours in the din for a few coins in the family pot.", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["childhood"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "Long hours in the din for a few coins in the family pot.", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
             },
           },
         },
@@ -213,51 +226,12 @@ export const content = {
           },
         },
         {
-          id: "child_pet",
-          kind: "filler",
-          prompt: "A scruffy stray cat follows you all the way home.",
-          options: {
-            left: { label: "Take it in", outcomes: [{ result: "A new best friend who gets you outdoors — vet bills and all.", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
-            right: { label: "Shoo it off", outcomes: [{ result: "You save the hassle and the money, but feel a pang.", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
-          },
-        },
-        {
           id: "child_sports",
           kind: "filler",
           prompt: "The lads get up a rough game of football in the muddy street.",
           options: {
             left: { label: "Go all-out", outcomes: [{ result: "Wrecked, grass-stained and fiercely proud.", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
             right: { label: "Take it easy", outcomes: [{ result: "A laugh on the sidelines, but unfit and a bit of a let-down.", effects: { vitals: { happiness: "+", health: "-", spirit: "-" } } }] },
-          },
-        },
-        {
-          id: "child_chores",
-          kind: "filler",
-          prompt: "Your parents offer pocket money for helping around the house.",
-          options: {
-            left: { label: "Do the chores", outcomes: [{ result: "Money in your pocket and a puffed-out chest — but no play.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
-            right: { label: "Go play", outcomes: [{ result: "Fun and fresh air, and an empty piggy bank.", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
-          },
-        },
-        {
-          id: "child_sweets",
-          kind: "filler",
-          prompt: "The sweet-shop window: humbugs, sherbet and liquorice, a farthing a twist.",
-          options: {
-            left: {
-              label: "Buy a bagful",
-              outcomes: [
-                { if: { traits: { sweetTooth: true } }, result: "That sweet tooth wins — you buy double and regret nothing (yet).", effects: { vitals: { happiness: "++", health: "--", finances: "-" } } },
-                { result: "Sugar heaven — bad for your teeth and your pocket.", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } },
-              ],
-            },
-            right: {
-              label: "Save your coins",
-              outcomes: [
-                { if: { traits: { sweetTooth: true } }, result: "Walking past the pick-and-mix is agony, but your willpower hardens.", effects: { vitals: { spirit: "++", happiness: "--", finances: "+" } } },
-                { result: "The piggy bank grows. Easy, when you're not that fussed.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
-              ],
-            },
           },
         },
         // --- Hazards: childhood was deadly. Survival is earned through your
@@ -334,12 +308,109 @@ export const content = {
       ],
     },
 
-    // --- Studying: school-only events, active while job = studying. ---------
+    // --- Home life with the family: active while housing = family. Chores,
+    //     the sweet shop, a stray to take in — the small freedoms of a child
+    //     with a home. (Lost if you end up in the workhouse.) -----------------
     {
-      id: "studying",
+      id: "home_family",
       cards: [
         {
-          id: "study_exams",
+          id: "home_family_chores",
+          kind: "filler",
+          prompt: "Your parents offer pocket money for helping around the house.",
+          options: {
+            left: { label: "Do the chores", outcomes: [{ result: "Money in your pocket and a puffed-out chest — but no play.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            right: { label: "Go play", outcomes: [{ result: "Fun and fresh air, and an empty piggy bank.", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          id: "home_family_sweets",
+          kind: "filler",
+          prompt: "The sweet-shop window: humbugs, sherbet and liquorice, a farthing a twist.",
+          options: {
+            left: {
+              label: "Buy a bagful",
+              outcomes: [
+                { if: { traits: { sweetTooth: true } }, result: "That sweet tooth wins — you buy double and regret nothing (yet).", effects: { vitals: { happiness: "++", health: "--", finances: "-" } } },
+                { result: "Sugar heaven — bad for your teeth and your pocket.", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } },
+              ],
+            },
+            right: {
+              label: "Save your coins",
+              outcomes: [
+                { if: { traits: { sweetTooth: true } }, result: "Walking past the pick-and-mix is agony, but your willpower hardens.", effects: { vitals: { spirit: "++", happiness: "--", finances: "+" } } },
+                { result: "The piggy bank grows. Easy, when you're not that fussed.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
+              ],
+            },
+          },
+        },
+        {
+          id: "home_family_pet",
+          kind: "filler",
+          prompt: "A scruffy stray cat follows you all the way home.",
+          options: {
+            left: { label: "Take it in", outcomes: [{ result: "A new best friend who gets you outdoors — vet bills and all.", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
+            right: { label: "Shoo it off", outcomes: [{ result: "You save the hassle and the money, but feel a pang.", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- The workhouse: active while housing = workhouse. Bleak daily life on
+    //     top of the health/happiness drift — grim trade-offs that let a
+    //     careful child claw a little back and slow the spiral. -------------
+    {
+      id: "home_workhouse",
+      title: "The Workhouse",
+      unlock: "Cold stone, thin gruel and the endless clatter of labour. This is home now — until you can find a way out.",
+      cards: [
+        {
+          id: "home_workhouse_gruel",
+          kind: "filler",
+          prompt: "Supper is a bowl of thin gruel, and your belly still aches. The pot is not quite empty.",
+          options: {
+            left: { label: "Ask for more", outcomes: [{ result: "The master's face purples — 'MORE?!' — but a kindly server slips you a crust in the scramble.", effects: { vitals: { health: "+", happiness: "--", spirit: "+" } } }] },
+            right: { label: "Go without", outcomes: [{ result: "You swallow your hunger and your pride both. At least no one shouts.", effects: { vitals: { health: "-", spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          id: "home_workhouse_oakum",
+          kind: "filler",
+          prompt: "Twelve hours picking oakum — teasing tarred rope apart until your fingertips are raw.",
+          options: {
+            left: { label: "Hit your quota", outcomes: [{ result: "Bleeding fingers, but the overseer nods and your ration holds.", effects: { vitals: { health: "+", happiness: "-", spirit: "-" } } }] },
+            right: { label: "Botch it in protest", outcomes: [{ result: "A small, secret rebellion — worth the cold cell and the skipped supper.", effects: { vitals: { spirit: "++", happiness: "+", health: "--" } } }] },
+          },
+        },
+        {
+          id: "home_workhouse_friend",
+          kind: "filler",
+          prompt: "In the next cot, a child as wretched as you offers a whispered friendship after lights-out.",
+          options: {
+            left: { label: "Whisper back", outcomes: [{ result: "Two conspirators against the dark. You laugh for the first time in weeks — and lose an hour's sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
+            right: { label: "Keep to yourself", outcomes: [{ result: "Safer, and lonelier. You save your strength and spend your evenings alone.", effects: { vitals: { health: "+", spirit: "+", happiness: "--" } } }] },
+          },
+        },
+        {
+          id: "home_workhouse_matron",
+          kind: "one_time",
+          conditions: { ageMin: 8 },
+          prompt: "The matron, stern as flint, takes an unexpected shine to you.",
+          options: {
+            left: { label: "Play the favourite", outcomes: [{ result: "Extra bread and a warmer corner — bought with a good deal of bowing and scraping.", effects: { vitals: { health: "+", happiness: "+", spirit: "--" } } }] },
+            right: { label: "Keep your dignity", outcomes: [{ result: "You'll not grovel for anyone. She soon tires of you — but you can still look yourself in the eye.", effects: { vitals: { spirit: "++", health: "-", happiness: "-" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Basic school: school-only events, active while education = school.
+    //     (Room for edu_grammar and other schools later.) --------------------
+    {
+      id: "edu_basicschool",
+      cards: [
+        {
+          id: "edu_basicschool_exams",
           kind: "one_time",
           conditions: { ageMin: 11 },
           prompt: "Big examinations loom, and the schoolmaster expects great things.",
@@ -349,7 +420,7 @@ export const content = {
           },
         },
         {
-          id: "study_crush",
+          id: "edu_basicschool_crush",
           kind: "one_time",
           conditions: { ageMin: 13 },
           prompt: "Your heart does something strange when a certain classmate walks by.",
@@ -359,7 +430,7 @@ export const content = {
           },
         },
         {
-          id: "study_friend",
+          id: "edu_basicschool_friend",
           kind: "filler",
           prompt: "The new pupil is looking for someone to share a desk with.",
           options: {
@@ -368,7 +439,7 @@ export const content = {
           },
         },
         {
-          id: "study_prize",
+          id: "edu_basicschool_prize",
           kind: "filler",
           prompt: "Prize-giving day. The medal for best pupil is within your reach.",
           options: {
@@ -381,10 +452,10 @@ export const content = {
 
     // --- Child at work: hazards and events only for the labouring path. ------
     {
-      id: "child_work",
+      id: "job_labour",
       cards: [
         {
-          id: "work_machine",
+          id: "job_labour_machine",
           kind: "one_time",
           prompt: "The foreman waves you under the thundering loom to clear a jam.",
           options: {
@@ -400,7 +471,7 @@ export const content = {
           },
         },
         {
-          id: "work_wages",
+          id: "job_labour_wages",
           kind: "filler",
           prompt: "Friday, and the foreman counts out your wages.",
           options: {
