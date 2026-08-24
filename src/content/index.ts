@@ -32,7 +32,7 @@ export const content = {
     job: {
       id: "job",
       states: {
-        infant: {}, // neutral start; no drain, hidden until it changes
+        infant: { label: "None" }, // neutral start; no drain, no employment yet
         // Victorian child labour: a few coins, at a steady cost to health,
         // and it opens the dangerous child_work deck.
         child_labourer: { label: "Child labourer", drift: { finances: 5, health: -5 }, addDecks: ["child_work"] },
@@ -49,7 +49,7 @@ export const content = {
       id: "education",
       ordered: true,
       levels: ["none", "school"],
-      states: { none: {}, school: { label: "At school", addDecks: ["studying"] } },
+      states: { none: { label: "None" }, school: { label: "At school", addDecks: ["studying"] } },
     },
     lifestyle: { id: "lifestyle", states: { default: {} } },
   },
@@ -92,7 +92,7 @@ export const content = {
           prompt: "Your well-off uncle wants to help the little one out.",
           options: {
             left: { label: "A mountain of toys!", outcomes: [{ result: "Christmas comes early. Wrapping paper everywhere.", effects: { vitals: { happiness: "++" } } }] },
-            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: "++" }, setTraits: { uniFund: true } } }] },
+            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: "+" }, setTraits: { uniFund: true } } }] },
             down: { label: "Healthy food & baby classes", outcomes: [{ result: "Organic everything and splashy swim lessons.", effects: { vitals: { health: "++" } } }] },
           },
         },
@@ -166,7 +166,7 @@ export const content = {
           kind: "milestone",
           priority: 20,
           conditions: { ageMin: 5 },
-          prompt: "You're old enough now. Off to school to better yourself — or out to work to help feed the family?",
+          prompt: "The family has fallen on hard times, and you're old enough to be some use now. Off to school to better yourself — or out to work to help feed the family?",
           options: {
             left: {
               label: "Go to school",

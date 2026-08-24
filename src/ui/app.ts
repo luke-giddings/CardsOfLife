@@ -237,9 +237,19 @@ export class Game {
     }
     this.prevVitals = { ...s.vitals };
     let chips = "";
+    // The three core life statuses (job, housing, education) show together from
+    // the start of childhood, so the player always sees where they stand — even
+    // when a status is still at its neutral start value. During babyhood they
+    // stay hidden (there's nothing meaningful to show yet). Lifestyle is
+    // reserved, so it only appears once it differs from its default.
+    const inChildhood = !s.activeDecks.includes("baby");
     for (const kind of STATUS_KINDS) {
       const value = s.statuses[kind];
-      if (value === content.start.statuses[kind]) continue;
+      if (kind === "lifestyle") {
+        if (value === content.start.statuses[kind]) continue;
+      } else if (!inChildhood) {
+        continue;
+      }
       const state = content.statuses[kind].states[value];
       const label = state?.label ?? value;
       let drift = "";
