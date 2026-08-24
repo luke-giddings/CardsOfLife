@@ -100,7 +100,8 @@ body {
   gap: 8px;
 }
 .reset,
-.dbg {
+.dbg,
+.lang {
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -112,9 +113,11 @@ body {
   cursor: pointer;
 }
 .reset:hover,
-.dbg:hover { color: var(--ink); background: var(--surface); }
+.dbg:hover,
+.lang:hover { color: var(--ink); background: var(--surface); }
 .reset:active,
-.dbg:active { transform: translateY(1px); }
+.dbg:active,
+.lang:active { transform: translateY(1px); }
 .dbg.on {
   color: var(--baize);
   border-color: var(--baize);

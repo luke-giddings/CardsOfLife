@@ -23,6 +23,7 @@ import {
   type Vitals,
   type VitalKey,
 } from "../engine/types.ts";
+import { t, tf, getLocale, setLocale, LOCALES, type StringId } from "../i18n/index.ts";
 
 import { APP_VERSION, BUILD_DESC } from "../version.ts";
 
@@ -34,11 +35,11 @@ const ALL_CARDS: Card[] = content.decks.flatMap((d) =>
 const CARD_BY_ID = new Map(ALL_CARDS.map((c) => [c.id, c]));
 const DIRECTIONS: Direction[] = ["left", "right", "up", "down"];
 
-const VITAL_LABEL: Record<VitalKey, string> = {
-  finances: "Finances",
-  happiness: "Happiness",
-  health: "Health",
-  spirit: "Spirit",
+const VITAL_LABEL: Record<VitalKey, StringId> = {
+  finances: "vital.finances",
+  happiness: "vital.happiness",
+  health: "vital.health",
+  spirit: "vital.spirit",
 };
 
 // A shape/icon per vital (in addition to colour) so statuses can show which
@@ -50,11 +51,11 @@ const VITAL_ICON: Record<VitalKey, string> = {
   spirit: "✦",
 };
 
-const STATUS_LABEL: Record<StatusKind, string> = {
-  job: "Job",
-  housing: "Home",
-  education: "Education",
-  lifestyle: "Life",
+const STATUS_LABEL: Record<StatusKind, StringId> = {
+  job: "statuskind.job",
+  housing: "statuskind.housing",
+  education: "statuskind.education",
+  lifestyle: "statuskind.lifestyle",
 };
 
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point
@@ -105,7 +106,7 @@ export class Game {
 
   private prevVitals!: Vitals;
   private seenDecks = new Set<string>();
-  private pendingUnlock: { title: string; blurb: string } | null = null;
+  private pendingUnlock: { title: StringId; blurb: StringId } | null = null;
   private debugSelectedId: string | null = null;
   private debugOpen = new Set<string>(["pool", "detail"]); // which debug sections are expanded
 
@@ -134,21 +135,27 @@ export class Game {
     const age = el("div", "age");
     this.ageNumEl = el("span", "age-num");
     const ageLbl = el("span", "age-lbl");
-    ageLbl.textContent = "years old";
+    ageLbl.textContent = t("ui.yearsOld");
     age.append(this.ageNumEl, ageLbl);
 
     const controls = el("div", "controls");
+    const lang = el("button", "lang") as HTMLButtonElement;
+    lang.textContent = getLocale().toUpperCase();
+    lang.title = "Language";
+    lang.addEventListener("click", () => {
+      if (!this.busy) this.cycleLocale();
+    });
     this.dbgBtn = el("button", "dbg") as HTMLButtonElement;
-    this.dbgBtn.textContent = "Debug";
-    this.dbgBtn.title = "Toggle debug info";
+    this.dbgBtn.textContent = t("ui.debug");
+    this.dbgBtn.title = t("ui.debugTip");
     this.dbgBtn.addEventListener("click", () => this.toggleDebug());
     const reset = el("button", "reset") as HTMLButtonElement;
-    reset.textContent = "Reset";
-    reset.title = "Debug: wipe the save and start a new life";
+    reset.textContent = t("ui.reset");
+    reset.title = t("ui.resetTip");
     reset.addEventListener("click", () => {
       if (!this.busy) this.restart();
     });
-    controls.append(this.dbgBtn, reset);
+    controls.append(lang, this.dbgBtn, reset);
     headRow.append(age, controls);
 
     const vitals = el("div", "vitals");
@@ -159,7 +166,7 @@ export class Game {
       const cell = el("div", `vital vital-${key}`);
       const top = el("div", "vital-top");
       const label = el("span");
-      label.innerHTML = `<span class="vicon">${VITAL_ICON[key]}</span> ${VITAL_LABEL[key]}`;
+      label.innerHTML = `<span class="vicon">${VITAL_ICON[key]}</span> ${t(VITAL_LABEL[key])}`;
       top.append(label);
       const track = el("div", "track");
       const fill = el("div", "fill");
@@ -270,13 +277,13 @@ export class Game {
         continue;
       }
       const state = content.statuses[kind].states[value];
-      const label = state?.label ?? value;
+      const label = state?.label ? t(state.label) : value;
       let drift = "";
       for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
         if (!dv) continue;
         drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${dv > 0 ? "dgood" : "dbad"}">${dv > 0 ? "+" : "−"}</span></span>`;
       }
-      chips += `<span class="chip"><b>${STATUS_LABEL[kind]}</b> ${label}${drift}</span>`;
+      chips += `<span class="chip"><b>${t(STATUS_LABEL[kind])}</b> ${label}${drift}</span>`;
     }
     this.statusesEl.innerHTML = chips;
   }
@@ -295,6 +302,23 @@ export class Game {
     void flash.offsetWidth; // reflow so the fade restarts every change
     flash.style.transition = "opacity 1.5s ease";
     flash.style.opacity = "0";
+  }
+
+  // --- language --------------------------------------------------------------
+
+  // Switch to the next locale and re-render everything. Guarded to when the
+  // player isn't mid-turn (the lang button only fires while !busy), so we can
+  // safely re-show the current front card / end / unlock without losing state.
+  private cycleLocale(): void {
+    const codes = LOCALES.map((l) => l.code);
+    const next = codes[(codes.indexOf(getLocale()) + 1) % codes.length];
+    setLocale(next);
+    this.buildShell(); // rebuilds the topbar + a fresh scene with new labels
+    this.syncTop();
+    if (this.state.over) this.showEnd();
+    else if (this.pendingUnlock) this.showUnlock();
+    else if (this.card && this.phase === "front") this.showFront(this.card);
+    else this.beginTurn();
   }
 
   // --- debug -----------------------------------------------------------------
@@ -480,18 +504,18 @@ export class Game {
 
     const front = document.createElement("div");
     front.className = "face front";
-    const ageLabel = this.state.age === 0 ? "Newborn" : `Age ${this.state.age}`;
+    const ageLabel = this.state.age === 0 ? t("ui.newborn") : tf("ui.age", { n: this.state.age });
     front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
-      <p class="prompt">${card.prompt}</p>
-      ${card.options.left ? `<div class="edge edge-left">${card.options.left.label}</div>` : ""}
-      ${card.options.right ? `<div class="edge edge-right">${card.options.right.label}</div>` : ""}
-      ${card.options.up ? `<div class="edge edge-up">${card.options.up.label}</div>` : ""}
-      ${card.options.down ? `<div class="edge edge-down">${card.options.down.label}</div>` : ""}`;
+      <p class="prompt">${t(card.prompt)}</p>
+      ${card.options.left ? `<div class="edge edge-left">${t(card.options.left.label)}</div>` : ""}
+      ${card.options.right ? `<div class="edge edge-right">${t(card.options.right.label)}</div>` : ""}
+      ${card.options.up ? `<div class="edge edge-up">${t(card.options.up.label)}</div>` : ""}
+      ${card.options.down ? `<div class="edge edge-down">${t(card.options.down.label)}</div>` : ""}`;
 
     const back = document.createElement("div");
     back.className = "face back";
-    back.innerHTML = `<p class="result"></p><div class="tap-cue">Tap to continue</div>`;
+    back.innerHTML = `<p class="result"></p><div class="tap-cue">${t("ui.tapContinue")}</div>`;
 
     flip.appendChild(front);
     flip.appendChild(back);
@@ -529,7 +553,7 @@ export class Game {
     const flip = this.flip;
     const back = flip.querySelector<HTMLElement>(".back .result")!;
     const backFace = flip.querySelector<HTMLElement>(".back")!;
-    back.textContent = res.result;
+    back.textContent = t(res.result as StringId);
     backFace.style.transform =
       dir === "up" || dir === "down" ? "rotateX(180deg)" : "rotateY(180deg)";
 
@@ -591,24 +615,24 @@ export class Game {
     this.scene.innerHTML = "";
     const reason = this.state.endReason ?? "health";
     const ending = ENDINGS[reason] ?? ENDINGS.health;
-    const t = this.state.traits;
+    const tr = this.state.traits;
 
     const wrap = document.createElement("div");
     wrap.className = "end";
     const ageLine = ending.survived
       ? ""
-      : `<p class="end-line">You reached <b>${this.state.age}</b> years.</p>`;
+      : `<p class="end-line">${tf("ui.reachedYears", { n: this.state.age })}</p>`;
     wrap.innerHTML = `
-      <div class="end-title">${ending.title}</div>
-      <p class="end-blurb">${ending.blurb}</p>
+      <div class="end-title">${t(ending.title)}</div>
+      <p class="end-blurb">${t(ending.blurb)}</p>
       ${ageLine}
       <ul class="end-recap">
-        <li>Born a ${t.gender}</li>
-        ${t.knowsMartialArts ? "<li>Learned martial arts</li>" : ""}
+        <li>${t(tr.gender === "girl" ? "ui.bornGirl" : "ui.bornBoy")}</li>
+        ${tr.knowsMartialArts ? `<li>${t("ui.recapMartial")}</li>` : ""}
       </ul>`;
     const b = document.createElement("button");
     b.className = "continue";
-    b.textContent = "New life";
+    b.textContent = t("ui.newLife");
     b.addEventListener("click", () => this.restart());
     wrap.appendChild(b);
     this.scene.appendChild(wrap);
@@ -635,7 +659,7 @@ export class Game {
       if (this.seenDecks.has(id)) continue;
       this.seenDecks.add(id);
       const deck = DECK_BY_ID.get(id);
-      if (deck?.title) this.pendingUnlock = { title: deck.title, blurb: deck.unlock ?? "" };
+      if (deck?.title) this.pendingUnlock = { title: deck.title, blurb: deck.unlock ?? deck.title };
     }
   }
 
@@ -649,10 +673,10 @@ export class Game {
     const holder = el("div", "holder");
     const card = el("div", "unlock-card");
     card.innerHTML = `
-      <div class="unlock-eyebrow">A new chapter</div>
-      <div class="unlock-title">${u.title}</div>
-      <p class="unlock-blurb">${u.blurb}</p>
-      <div class="tap-cue">Tap to begin</div>`;
+      <div class="unlock-eyebrow">${t("ui.newChapter")}</div>
+      <div class="unlock-title">${t(u.title)}</div>
+      <p class="unlock-blurb">${t(u.blurb)}</p>
+      <div class="tap-cue">${t("ui.tapBegin")}</div>`;
     holder.append(card);
     this.scene.append(holder);
     this.holder = holder;

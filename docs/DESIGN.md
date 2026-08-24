@@ -203,6 +203,15 @@ and restarts. A separate **Debug** toggle (persisted) unlocks the debug toolkit.
   evaluation, Vitals/Statuses/drift, result resolution, save/load, rendering,
   input. Content = decks & cards as **typed data** (`satisfies Content`), so a
   misspelled trait/stat/magnitude is a **compile error**.
+- **Localisation.** No player-facing text is inline in the content: every
+  prompt, option label, outcome result, deck title/blurb and status label is a
+  **string id** looked up per-language in `src/i18n` (`EN` is the master table;
+  `IT` is Italian). The id fields are typed `StringId = keyof typeof EN`, so a
+  card referencing a missing/typo'd id is a compile error, and `IT` (typed
+  `Record<StringId, string>`) must translate every id — a missing translation
+  is a compile error too. `t(id)` resolves the current locale (falling back to
+  English, then the id). A language toggle in the top bar switches live.
+  Locale persists in `localStorage`. Languages so far: **English, Italian**.
 - **Build stamp** (git SHA + time + a short label) shown at the foot of the page
   to confirm which build is loaded.
 - **Debug toolkit** (when enabled): draw pool with gate reasons + force-draw,
@@ -279,5 +288,10 @@ Roughly in likely order. None of these are started.
   to make runs feel distinct and replayable.
 - **Full tone/writing pass** — once the decks are complete, sweep all cards for
   a consistent Victorian voice and a final balance/dominance check.
+- **Italian gender agreement** — Italian forces gender agreement on the player
+  (past participles, adjectives) that English glosses over; the first pass
+  defaults to masculine. A proper fix needs gender-variant strings keyed on the
+  `gender` trait (the sibling cards already split brother/sister results, which
+  is the same mechanism). Also: more languages are now just another table.
 - **Card art / imagery** — currently text-only; add art later.
 - **Design-doc upkeep** — keep this file in sync as systems land.

@@ -8,16 +8,16 @@ import type { Content } from "../engine/types.ts";
 // so balancing is one place and every move is a clearly-perceptible size.
 // Baby is a tutorial + build-up and is impossible to lose (positive only).
 //
-// Authored as typed data (`satisfies Content`) — misspelled traits, stats or
-// magnitudes are compile errors.
+// LOCALISATION: player-facing text is NOT inline here — every prompt, option
+// label, outcome result, deck title/blurb and status label is a STRING ID,
+// looked up per-language in src/i18n. The id fields are typed `StringId`, so a
+// misspelled or missing id is a compile error. Id convention (see src/i18n):
+//   <cardid>.prompt · <cardid>.<dir> (label) · <cardid>.<dir>.r<i> (result).
 //
 // CARD ID CONVENTION: every card id is `<deck>_<name>` (e.g. baby_vaccine,
-// child_bully, edu_school_exams, job_labour_machine, sibling_play) so it's
-// obvious at a glance which deck a card belongs to. Card ids are display keys
-// only — nothing references a card by id — so they can be renamed freely.
+// child_bully, edu_basicschool_exams, job_labour_machine, sibling_play).
 //
-// DECK NAMING: decks tied to a status are prefixed by that status's kind, so
-// the growing set of small per-status decks stays legible:
+// DECK NAMING: decks tied to a status are prefixed by that status's kind:
 //   edu_*   education status (edu_basicschool; room for edu_grammar etc. later)
 //   home_*  housing status   (home_family, home_workhouse)
 //   job_*   job status       (job_labour)
@@ -41,13 +41,13 @@ export const content = {
     job: {
       id: "job",
       states: {
-        infant: { label: "None" }, // neutral start; no drain, no employment yet
+        infant: { label: "status.job.infant" }, // neutral start; no drain, no employment yet
         // Victorian child labour: a few coins, at a steady cost to health,
         // and it opens the dangerous job_labour deck.
-        child_labourer: { label: "Child labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
+        child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
         // Learning a trade under a master: a small stipend and no danger — the
         // best way out of the workhouse. Paired with the "apprentice" housing.
-        apprentice: { label: "Apprentice", drift: { finances: 5 } },
+        apprentice: { label: "status.job.apprentice", drift: { finances: 5 } },
       },
     },
     housing: {
@@ -55,26 +55,25 @@ export const content = {
       states: {
         // Home life while living with the family (chores, the sweet shop, a
         // stray to take in). No drain — home is safe.
-        family: { label: "With family", addDecks: ["home_family"] },
+        family: { label: "status.housing.family", addDecks: ["home_family"] },
         // The workhouse: a grinding health/happiness drain, and its own deck of
         // bleak daily-life events (including three ways out).
-        workhouse: { label: "Workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
+        workhouse: { label: "status.housing.workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
         // Ways out of the workhouse:
-        // — bought your way into modest lodgings (safe, no drain; paid for up
-        //   front with a lump sum).
-        renting: { label: "Renting" },
+        // — bought your way into modest lodgings (safe, no drain; paid up front).
+        renting: { label: "status.housing.renting" },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. (Its own deck & exits are Backlog.)
-        homeless: { label: "Homeless", drift: { health: -5, happiness: -5 } },
+        homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },
         // — taken on by a master tradesman (housed and fed; see job=apprentice).
-        apprentice: { label: "With a master" },
+        apprentice: { label: "status.housing.apprentice" },
       },
     },
     education: {
       id: "education",
       ordered: true,
       levels: ["none", "school"],
-      states: { none: { label: "Illiterate" }, school: { label: "Basic schooling", addDecks: ["edu_basicschool"] } },
+      states: { none: { label: "status.education.none" }, school: { label: "status.education.school", addDecks: ["edu_basicschool"] } },
     },
     lifestyle: { id: "lifestyle", states: { default: {} } },
   },
@@ -89,24 +88,23 @@ export const content = {
           kind: "milestone",
           priority: 100,
           conditions: { ageMin: 0, ageMax: 0 },
-          prompt: "You have just been born!\n\nSwipe to choose — are you a boy or a girl?",
+          prompt: "baby_birth.prompt",
           options: {
-            left: { label: "Boy", outcomes: [{ result: "A boy. Your story begins.", effects: { setTraits: { gender: "boy" } } }] },
-            right: { label: "Girl", outcomes: [{ result: "A girl. Your story begins.", effects: { setTraits: { gender: "girl" } } }] },
+            left: { label: "baby_birth.left", outcomes: [{ result: "baby_birth.left.r0", effects: { setTraits: { gender: "boy" } } }] },
+            right: { label: "baby_birth.right", outcomes: [{ result: "baby_birth.right.r0", effects: { setTraits: { gender: "girl" } } }] },
           },
         },
         {
           // Teaches that choices move the bars, and teaches the down-swipe.
-          // Each option boosts a different vital (all positive).
           id: "baby_firststeps",
           kind: "milestone",
           priority: 90,
           conditions: { ageMin: 1, ageMax: 1 },
-          prompt: "You take your first wobbly steps!\n\nEach choice boosts a different stat — watch the bars. Where do you toddle?",
+          prompt: "baby_firststeps.prompt",
           options: {
-            left: { label: "To your toys", outcomes: [{ result: "Hours of giggling, gurgling fun.", effects: { vitals: { happiness: "++" } } }] },
-            right: { label: "To your parents", outcomes: [{ result: "A proud, loving cuddle.", effects: { vitals: { spirit: "++" } } }] },
-            down: { label: "To your cot", outcomes: [{ result: "A long nap does you the world of good.", effects: { vitals: { health: "++" } } }] },
+            left: { label: "baby_firststeps.left", outcomes: [{ result: "baby_firststeps.left.r0", effects: { vitals: { happiness: "++" } } }] },
+            right: { label: "baby_firststeps.right", outcomes: [{ result: "baby_firststeps.right.r0", effects: { vitals: { spirit: "++" } } }] },
+            down: { label: "baby_firststeps.down", outcomes: [{ result: "baby_firststeps.down.r0", effects: { vitals: { health: "++" } } }] },
           },
         },
 
@@ -114,75 +112,75 @@ export const content = {
         {
           id: "baby_uncle",
           kind: "one_time",
-          prompt: "Your well-off uncle wants to help the little one out.",
+          prompt: "baby_uncle.prompt",
           options: {
-            left: { label: "A mountain of toys!", outcomes: [{ result: "Christmas comes early. Wrapping paper everywhere.", effects: { vitals: { happiness: "++" } } }] },
-            right: { label: "A university trust fund", outcomes: [{ result: "Quietly tucked away for a clever future.", effects: { vitals: { finances: "+" }, setTraits: { uniFund: true } } }] },
-            down: { label: "Healthy food & baby classes", outcomes: [{ result: "Organic everything and splashy swim lessons.", effects: { vitals: { health: "++" } } }] },
+            left: { label: "baby_uncle.left", outcomes: [{ result: "baby_uncle.left.r0", effects: { vitals: { happiness: "++" } } }] },
+            right: { label: "baby_uncle.right", outcomes: [{ result: "baby_uncle.right.r0", effects: { vitals: { finances: "+" }, setTraits: { uniFund: true } } }] },
+            down: { label: "baby_uncle.down", outcomes: [{ result: "baby_uncle.down.r0", effects: { vitals: { health: "++" } } }] },
           },
         },
         {
           id: "baby_bookworm",
           kind: "one_time",
-          prompt: "You reach for the same picture book, over and over again.",
+          prompt: "baby_bookworm.prompt",
           options: {
-            left: { label: "Read together nightly", outcomes: [{ result: "A shared love of stories takes root.", effects: { vitals: { spirit: "+" }, setTraits: { bookish: true } } }] },
-            right: { label: "Run wild outside", outcomes: [{ result: "You tear about the yard with the other urchins.", effects: { vitals: { happiness: "++" } } }] },
+            left: { label: "baby_bookworm.left", outcomes: [{ result: "baby_bookworm.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { bookish: true } } }] },
+            right: { label: "baby_bookworm.right", outcomes: [{ result: "baby_bookworm.right.r0", effects: { vitals: { happiness: "++" } } }] },
           },
         },
         {
           id: "baby_sporty",
           kind: "one_time",
-          prompt: "You will NOT sit still for one single second.",
+          prompt: "baby_sporty.prompt",
           options: {
-            left: { label: "Enrol in tumble-tots", outcomes: [{ result: "Forward rolls and gloriously grazed knees.", effects: { vitals: { health: "+" }, setTraits: { sporty: true } } }] },
-            right: { label: "Let them wear out", outcomes: [{ result: "You crash out, fast asleep, by 7pm sharp.", effects: { vitals: { health: "++" } } }] },
+            left: { label: "baby_sporty.left", outcomes: [{ result: "baby_sporty.left.r0", effects: { vitals: { health: "+" }, setTraits: { sporty: true } } }] },
+            right: { label: "baby_sporty.right", outcomes: [{ result: "baby_sporty.right.r0", effects: { vitals: { health: "++" } } }] },
           },
         },
         {
           id: "baby_grandma",
           kind: "one_time",
-          prompt: "Grandma is absolutely determined to spoil you rotten.",
+          prompt: "baby_grandma.prompt",
           options: {
-            left: { label: "Second helpings of pudding!", outcomes: [{ result: "A lifelong sweet tooth is born.", effects: { vitals: { happiness: "++" }, setTraits: { sweetTooth: true } } }] },
-            right: { label: "Just a little treat", outcomes: [{ result: "A wholesome bit of everything, in moderation.", effects: { vitals: { health: "+" } } }] },
-            down: { label: "Bank it for the future", outcomes: [{ result: "She squirrels the treat money into a savings account for you.", effects: { vitals: { finances: "++" } } }] },
+            left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { sweetTooth: true } } }] },
+            right: { label: "baby_grandma.right", outcomes: [{ result: "baby_grandma.right.r0", effects: { vitals: { health: "+" } } }] },
+            down: { label: "baby_grandma.down", outcomes: [{ result: "baby_grandma.down.r0", effects: { vitals: { finances: "++" } } }] },
           },
         },
         {
           id: "baby_vaccine",
           kind: "one_time",
-          prompt: "The vaccinator calls at the door with his lancet — the smallpox jab.",
+          prompt: "baby_vaccine.prompt",
           options: {
-            left: { label: "Brave the lancet", outcomes: [{ result: "One yelp, and it's done. You're protected against the pox.", effects: { vitals: { health: "+" }, setTraits: { vaccinated: true } } }] },
-            right: { label: "Squirm free", outcomes: [{ result: "You wriggle free and dig your heels in — nobody pins you down.", effects: { vitals: { spirit: "++" } } }] },
+            left: { label: "baby_vaccine.left", outcomes: [{ result: "baby_vaccine.left.r0", effects: { vitals: { health: "+" }, setTraits: { vaccinated: true } } }] },
+            right: { label: "baby_vaccine.right", outcomes: [{ result: "baby_vaccine.right.r0", effects: { vitals: { spirit: "++" } } }] },
           },
         },
         {
           id: "baby_nursery",
           kind: "one_time",
-          prompt: "Should you start at the local nursery?",
+          prompt: "baby_nursery.prompt",
           options: {
-            left: { label: "Off you go!", outcomes: [{ result: "New friends, finger paints and snack time.", effects: { vitals: { spirit: "+" }, setTraits: { sociable: true } } }] },
-            right: { label: "Stay home a while", outcomes: [{ result: "Cosy, unhurried, well-rested days at home.", effects: { vitals: { health: "+" } } }] },
+            left: { label: "baby_nursery.left", outcomes: [{ result: "baby_nursery.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { sociable: true } } }] },
+            right: { label: "baby_nursery.right", outcomes: [{ result: "baby_nursery.right.r0", effects: { vitals: { health: "+" } } }] },
           },
         },
         {
           id: "baby_brother",
           kind: "one_time",
-          prompt: "Big news — a baby brother has arrived!",
+          prompt: "baby_brother.prompt",
           options: {
-            left: { label: "Adore him", outcomes: [{ result: "You appoint yourself his chief protector.", effects: { vitals: { happiness: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: 30 }, addDecks: ["sibling"] } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "You keep your distance and your own world.", effects: { vitals: { spirit: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: -15 }, addDecks: ["sibling"] } }] },
+            left: { label: "baby_brother.left", outcomes: [{ result: "baby_brother.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: 30 }, addDecks: ["sibling"] } }] },
+            right: { label: "baby_brother.right", outcomes: [{ result: "baby_brother.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrother: -15 }, addDecks: ["sibling"] } }] },
           },
         },
         {
           id: "baby_sister",
           kind: "one_time",
-          prompt: "Big news — a baby sister has arrived!",
+          prompt: "baby_sister.prompt",
           options: {
-            left: { label: "Adore her", outcomes: [{ result: "Instant best friend and partner in crime.", effects: { vitals: { happiness: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: 30 }, addDecks: ["sibling"] } }] },
-            right: { label: "Cold shoulder", outcomes: [{ result: "You keep to yourself and your own world.", effects: { vitals: { spirit: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: -15 }, addDecks: ["sibling"] } }] },
+            left: { label: "baby_sister.left", outcomes: [{ result: "baby_sister.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: 30 }, addDecks: ["sibling"] } }] },
+            right: { label: "baby_sister.right", outcomes: [{ result: "baby_sister.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { hasSister: true }, incTraits: { relSister: -15 }, addDecks: ["sibling"] } }] },
           },
         },
 
@@ -191,15 +189,15 @@ export const content = {
           kind: "milestone",
           priority: 20,
           conditions: { ageMin: 5 },
-          prompt: "The family has fallen on hard times, and you're old enough to be some use now. Off to school to better yourself — or out to work to help feed the family?",
+          prompt: "baby_schooling.prompt",
           options: {
             left: {
-              label: "Go to school",
-              outcomes: [{ result: "Slate, chalk, and a stern schoolmaster. A chance at something more.", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
+              label: "baby_schooling.left",
+              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
             },
             right: {
-              label: "Out to work",
-              outcomes: [{ result: "Long hours in the din for a few coins in the family pot.", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
+              label: "baby_schooling.right",
+              outcomes: [{ result: "baby_schooling.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
             },
           },
         },
@@ -209,41 +207,41 @@ export const content = {
     // --- Childhood (shared): events any child has, school or working. -------
     {
       id: "childhood",
-      title: "Childhood",
-      unlock: "You're a child now — a whole world of scraped knees, best friends and hard knocks awaits.",
+      title: "deck.childhood.title",
+      unlock: "deck.childhood.blurb",
       cards: [
         {
           id: "child_martialarts",
           kind: "one_time",
-          prompt: "Old Tom, a retired prizefighter, offers to teach the local lads to box.",
+          prompt: "child_martialarts.prompt",
           options: {
-            left: { label: "Learn to box", outcomes: [{ result: "Fists up, chin down. You learn to handle yourself — for a few coins.", effects: { vitals: { spirit: "++", health: "+", finances: "-" }, setTraits: { knowsMartialArts: true } } }] },
-            right: { label: "Keep your head down", outcomes: [{ result: "You keep your pennies and your quiet life — but never learn to stand up for yourself.", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
+            left: { label: "child_martialarts.left", outcomes: [{ result: "child_martialarts.left.r0", effects: { vitals: { spirit: "++", health: "+", finances: "-" }, setTraits: { knowsMartialArts: true } } }] },
+            right: { label: "child_martialarts.right", outcomes: [{ result: "child_martialarts.right.r0", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
           },
         },
         {
           id: "child_bully",
           kind: "one_time",
           conditions: { ageMin: 7 },
-          prompt: "A bully shoves you hard in the yard. Everyone is watching.",
+          prompt: "child_bully.prompt",
           options: {
             left: {
-              label: "Fight back",
+              label: "child_bully.left",
               outcomes: [
-                { if: { traits: { knowsMartialArts: true } }, result: "You calmly floor them. The yard cheers — bar one scraped knuckle.", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
-                { result: "A bloody nose. You stood your ground, but it really hurt.", effects: { vitals: { spirit: "+", happiness: "-", health: "--" } } },
+                { if: { traits: { knowsMartialArts: true } }, result: "child_bully.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
+                { result: "child_bully.left.r1", effects: { vitals: { spirit: "+", happiness: "-", health: "--" } } },
               ],
             },
-            right: { label: "Walk away", outcomes: [{ result: "You avoid the beating, but the humiliation festers for weeks.", effects: { vitals: { happiness: "--", spirit: "-", health: "+" } } }] },
+            right: { label: "child_bully.right", outcomes: [{ result: "child_bully.right.r0", effects: { vitals: { happiness: "--", spirit: "-", health: "+" } } }] },
           },
         },
         {
           id: "child_sports",
           kind: "filler",
-          prompt: "The lads get up a rough game of football in the muddy street.",
+          prompt: "child_sports.prompt",
           options: {
-            left: { label: "Go all-out", outcomes: [{ result: "Wrecked, grass-stained and fiercely proud.", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
-            right: { label: "Take it easy", outcomes: [{ result: "A laugh on the sidelines, but unfit and a bit of a let-down.", effects: { vitals: { happiness: "+", health: "-", spirit: "-" } } }] },
+            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
+            right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", health: "-", spirit: "-" } } }] },
           },
         },
         // --- Hazards: childhood was deadly. Survival is earned through your
@@ -252,22 +250,22 @@ export const content = {
           id: "child_fever",
           kind: "one_time",
           conditions: { ageMin: 6 },
-          prompt: "A fever sweeps through the street, and now it is burning through you.",
+          prompt: "child_fever.prompt",
           options: {
             left: {
-              label: "Sweat it out",
+              label: "child_fever.left",
               outcomes: [
-                { if: { traits: { vaccinated: true } }, result: "Your inoculation holds. You pull through, pale but alive.", effects: { vitals: { health: "-" } } },
-                { if: { vitals: { health: { min: 50 } } }, result: "You are strong enough to fight it off.", effects: { vitals: { health: "--" } } },
-                { result: "You are too weak. The fever takes you in the night.", effects: { endGame: "health" } },
+                { if: { traits: { vaccinated: true } }, result: "child_fever.left.r0", effects: { vitals: { health: "-" } } },
+                { if: { vitals: { health: { min: 50 } } }, result: "child_fever.left.r1", effects: { vitals: { health: "--" } } },
+                { result: "child_fever.left.r2", effects: { endGame: "health" } },
               ],
             },
             right: {
-              label: "Send for the doctor",
+              label: "child_fever.right",
               outcomes: [
-                { if: { vitals: { finances: { min: 30 } } }, result: "The doctor's tonic works — dear, but worth every penny.", effects: { vitals: { finances: "--", health: "-" } } },
-                { if: { vitals: { health: { min: 40 } } }, result: "No coin for a doctor, but you are just hardy enough to endure.", effects: { vitals: { health: "--" } } },
-                { result: "No money and no strength. The fever wins.", effects: { endGame: "health" } },
+                { if: { vitals: { finances: { min: 30 } } }, result: "child_fever.right.r0", effects: { vitals: { finances: "--", health: "-" } } },
+                { if: { vitals: { health: { min: 40 } } }, result: "child_fever.right.r1", effects: { vitals: { health: "--" } } },
+                { result: "child_fever.right.r2", effects: { endGame: "health" } },
               ],
             },
           },
@@ -276,21 +274,21 @@ export const content = {
           id: "child_accident",
           kind: "one_time",
           conditions: { ageMin: 5 },
-          prompt: "A runaway cart thunders down the cobbles — straight at you!",
+          prompt: "child_accident.prompt",
           options: {
             left: {
-              label: "Leap clear",
+              label: "child_accident.left",
               outcomes: [
-                { if: { traits: { sporty: true } }, result: "Quick as a cat, you spring aside.", effects: { vitals: { spirit: "+" } } },
-                { if: { vitals: { health: { min: 40 } } }, result: "You dive and roll — bruised, but whole.", effects: { vitals: { health: "--" } } },
-                { result: "You are not quick enough.", effects: { endGame: "health" } },
+                { if: { traits: { sporty: true } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
+                { if: { vitals: { health: { min: 40 } } }, result: "child_accident.left.r1", effects: { vitals: { health: "--" } } },
+                { result: "child_accident.left.r2", effects: { endGame: "health" } },
               ],
             },
             right: {
-              label: "Freeze",
+              label: "child_accident.right",
               outcomes: [
-                { if: { vitals: { health: { min: 60 } } }, result: "It clips you and flings you aside — battered, but breathing.", effects: { vitals: { health: "--", happiness: "-" } } },
-                { result: "You freeze. The wheels do not.", effects: { endGame: "health" } },
+                { if: { vitals: { health: { min: 60 } } }, result: "child_accident.right.r0", effects: { vitals: { health: "--", happiness: "-" } } },
+                { result: "child_accident.right.r1", effects: { endGame: "health" } },
               ],
             },
           },
@@ -299,10 +297,10 @@ export const content = {
           id: "child_hunger",
           kind: "one_time",
           conditions: { ageMin: 6, vitals: { finances: { max: 25 } } },
-          prompt: "The cupboards are bare, and there are too many mouths to feed.",
+          prompt: "child_hunger.prompt",
           options: {
-            left: { label: "Take to the streets", outcomes: [{ result: "Better the open road than the workhouse gate. Free, if you can survive it.", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless" } } }] },
-            right: { label: "Into the workhouse", outcomes: [{ result: "You trade your liberty for a roof and a full belly tonight. The grind starts tomorrow.", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse" } } }] },
+            left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless" } } }] },
+            right: { label: "child_hunger.right", outcomes: [{ result: "child_hunger.right.r0", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse" } } }] },
           },
         },
 
@@ -311,47 +309,45 @@ export const content = {
           kind: "milestone",
           priority: 100,
           conditions: { ageMin: 18 },
-          prompt: "Against the odds, you reach eighteen. So many did not. Childhood is behind you.",
+          prompt: "child_adult.prompt",
           options: {
-            left: { label: "Look back", outcomes: [{ result: "You survived. So much has happened already…", effects: { endGame: "grown_up" } }] },
-            right: { label: "Charge ahead", outcomes: [{ result: "You made it this far. Whatever comes next, you're ready.", effects: { endGame: "grown_up" } }] },
+            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { endGame: "grown_up" } }] },
+            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { endGame: "grown_up" } }] },
           },
         },
       ],
     },
 
-    // --- Home life with the family: active while housing = family. Chores,
-    //     the sweet shop, a stray to take in — the small freedoms of a child
-    //     with a home. (Lost if you end up in the workhouse.) -----------------
+    // --- Home life with the family: active while housing = family. ----------
     {
       id: "home_family",
       cards: [
         {
           id: "home_family_chores",
           kind: "filler",
-          prompt: "Your parents offer pocket money for helping around the house.",
+          prompt: "home_family_chores.prompt",
           options: {
-            left: { label: "Do the chores", outcomes: [{ result: "Money in your pocket and a puffed-out chest — but no play.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
-            right: { label: "Go play", outcomes: [{ result: "Fun and fresh air, and an empty piggy bank.", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
+            left: { label: "home_family_chores.left", outcomes: [{ result: "home_family_chores.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            right: { label: "home_family_chores.right", outcomes: [{ result: "home_family_chores.right.r0", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
           },
         },
         {
           id: "home_family_sweets",
           kind: "filler",
-          prompt: "The sweet-shop window: humbugs, sherbet and liquorice, a farthing a twist.",
+          prompt: "home_family_sweets.prompt",
           options: {
             left: {
-              label: "Buy a bagful",
+              label: "home_family_sweets.left",
               outcomes: [
-                { if: { traits: { sweetTooth: true } }, result: "That sweet tooth wins — you buy double and regret nothing (yet).", effects: { vitals: { happiness: "++", health: "--", finances: "-" } } },
-                { result: "Sugar heaven — bad for your teeth and your pocket.", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } },
+                { if: { traits: { sweetTooth: true } }, result: "home_family_sweets.left.r0", effects: { vitals: { happiness: "++", health: "--", finances: "-" } } },
+                { result: "home_family_sweets.left.r1", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } },
               ],
             },
             right: {
-              label: "Save your coins",
+              label: "home_family_sweets.right",
               outcomes: [
-                { if: { traits: { sweetTooth: true } }, result: "Walking past the pick-and-mix is agony, but your willpower hardens.", effects: { vitals: { spirit: "++", happiness: "--", finances: "+" } } },
-                { result: "The piggy bank grows. Easy, when you're not that fussed.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
+                { if: { traits: { sweetTooth: true } }, result: "home_family_sweets.right.r0", effects: { vitals: { spirit: "++", happiness: "--", finances: "+" } } },
+                { result: "home_family_sweets.right.r1", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
               ],
             },
           },
@@ -359,114 +355,106 @@ export const content = {
         {
           id: "home_family_pet",
           kind: "filler",
-          prompt: "A scruffy stray cat follows you all the way home.",
+          prompt: "home_family_pet.prompt",
           options: {
-            left: { label: "Take it in", outcomes: [{ result: "A new best friend who gets you outdoors — vet bills and all.", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
-            right: { label: "Shoo it off", outcomes: [{ result: "You save the hassle and the money, but feel a pang.", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
+            left: { label: "home_family_pet.left", outcomes: [{ result: "home_family_pet.left.r0", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
+            right: { label: "home_family_pet.right", outcomes: [{ result: "home_family_pet.right.r0", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
           },
         },
       ],
     },
 
     // --- The workhouse: active while housing = workhouse. Bleak daily life on
-    //     top of the health/happiness drift — grim trade-offs that let a
-    //     careful child claw a little back and slow the spiral. -------------
+    //     top of the drift, plus three ways out. -----------------------------
     {
       id: "home_workhouse",
-      title: "The Workhouse",
-      unlock: "Cold stone, thin gruel and the endless clatter of labour. This is home now — until you can find a way out.",
+      title: "deck.home_workhouse.title",
+      unlock: "deck.home_workhouse.blurb",
       cards: [
         {
           id: "home_workhouse_gruel",
           kind: "filler",
-          prompt: "Supper is a bowl of thin gruel, and your belly still aches. The pot is not quite empty.",
+          prompt: "home_workhouse_gruel.prompt",
           options: {
-            left: { label: "Ask for more", outcomes: [{ result: "The master's face purples — 'MORE?!' — but a kindly server slips you a crust in the scramble.", effects: { vitals: { health: "+", happiness: "--", spirit: "+" } } }] },
-            right: { label: "Go without", outcomes: [{ result: "You swallow your hunger and your pride both. At least no one shouts.", effects: { vitals: { health: "-", spirit: "+", happiness: "-" } } }] },
+            left: { label: "home_workhouse_gruel.left", outcomes: [{ result: "home_workhouse_gruel.left.r0", effects: { vitals: { health: "+", happiness: "--", spirit: "+" } } }] },
+            right: { label: "home_workhouse_gruel.right", outcomes: [{ result: "home_workhouse_gruel.right.r0", effects: { vitals: { health: "-", spirit: "+", happiness: "-" } } }] },
           },
         },
         {
           id: "home_workhouse_oakum",
           kind: "filler",
-          prompt: "Twelve hours picking oakum — teasing tarred rope apart until your fingertips are raw. There's a penny in it for a full basket.",
+          prompt: "home_workhouse_oakum.prompt",
           options: {
-            left: { label: "Hit your quota", outcomes: [{ result: "Bleeding fingers and an aching back — but a few coins toward buying your way out one day.", effects: { vitals: { finances: "+", health: "-" } } }] },
-            right: { label: "Botch it in protest", outcomes: [{ result: "A small, secret rebellion — worth the cold cell and the skipped supper.", effects: { vitals: { spirit: "++", happiness: "+", health: "--" } } }] },
+            left: { label: "home_workhouse_oakum.left", outcomes: [{ result: "home_workhouse_oakum.left.r0", effects: { vitals: { finances: "+", health: "-" } } }] },
+            right: { label: "home_workhouse_oakum.right", outcomes: [{ result: "home_workhouse_oakum.right.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "--" } } }] },
           },
         },
         {
           id: "home_workhouse_friend",
           kind: "filler",
-          prompt: "In the next cot, a child as wretched as you offers a whispered friendship after lights-out.",
+          prompt: "home_workhouse_friend.prompt",
           options: {
-            left: { label: "Whisper back", outcomes: [{ result: "Two conspirators against the dark. You laugh for the first time in weeks — and lose an hour's sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
-            right: { label: "Keep to yourself", outcomes: [{ result: "Safer, and lonelier. You save your strength and spend your evenings alone.", effects: { vitals: { health: "+", spirit: "+", happiness: "--" } } }] },
+            left: { label: "home_workhouse_friend.left", outcomes: [{ result: "home_workhouse_friend.left.r0", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
+            right: { label: "home_workhouse_friend.right", outcomes: [{ result: "home_workhouse_friend.right.r0", effects: { vitals: { health: "+", spirit: "+", happiness: "--" } } }] },
           },
         },
         {
           id: "home_workhouse_sunday",
           kind: "filler",
-          prompt: "Sunday. An hour of chapel — the one break in the grey week — and a hymn you actually know.",
+          prompt: "home_workhouse_sunday.prompt",
           options: {
-            left: { label: "Sing your heart out", outcomes: [{ result: "For a few minutes the misery lifts and your voice rings off the cold stone.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
-            right: { label: "Doze at the back", outcomes: [{ result: "You steal a little rest in the warm crush of bodies — and feel nothing much at all.", effects: { vitals: { health: "+", happiness: "-", spirit: "-" } } }] },
+            left: { label: "home_workhouse_sunday.left", outcomes: [{ result: "home_workhouse_sunday.left.r0", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
+            right: { label: "home_workhouse_sunday.right", outcomes: [{ result: "home_workhouse_sunday.right.r0", effects: { vitals: { health: "+", happiness: "-", spirit: "-" } } }] },
           },
         },
         {
           id: "home_workhouse_matron",
           kind: "one_time",
           conditions: { ageMin: 8 },
-          prompt: "The matron, stern as flint, takes an unexpected shine to you.",
+          prompt: "home_workhouse_matron.prompt",
           options: {
-            left: { label: "Play the favourite", outcomes: [{ result: "Extra bread and a warmer corner — bought with a good deal of bowing and scraping.", effects: { vitals: { health: "+", happiness: "+", spirit: "--" } } }] },
-            right: { label: "Keep your dignity", outcomes: [{ result: "You'll not grovel for anyone. She soon tires of you — but you can still look yourself in the eye.", effects: { vitals: { spirit: "++", health: "-", happiness: "-" } } }] },
+            left: { label: "home_workhouse_matron.left", outcomes: [{ result: "home_workhouse_matron.left.r0", effects: { vitals: { health: "+", happiness: "+", spirit: "--" } } }] },
+            right: { label: "home_workhouse_matron.right", outcomes: [{ result: "home_workhouse_matron.right.r0", effects: { vitals: { spirit: "++", health: "-", happiness: "-" } } }] },
           },
         },
 
-        // --- Three ways out of the workhouse. Each changes the housing status
-        //     (and the apprenticeship changes your job too), which hands the
-        //     home_workhouse deck away automatically. They're `filler` so
-        //     declining doesn't burn the chance — the offer comes round again
-        //     while its conditions hold; taking it removes the deck. ---------
+        // --- Three ways out. Each changes the housing status (and the
+        //     apprenticeship changes the job too), handing the workhouse deck
+        //     away. `filler` so declining doesn't burn the chance. -----------
         {
-          // Buy your way out — needs a nest egg (saved from oakum, or from
-          // wages if you came in on the labouring path).
           id: "home_workhouse_buyout",
           kind: "filler",
           conditions: { vitals: { finances: { min: 40 } } },
-          prompt: "You've squirrelled away just enough. The master will strike your name off the register — for a price.",
+          prompt: "home_workhouse_buyout.prompt",
           options: {
-            left: { label: "Buy your freedom", outcomes: [{ result: "Coins counted onto the desk, and the gate swings open. A cramped rented room, but it's yours.", effects: { vitals: { finances: "--", happiness: "++", spirit: "+" }, setStatus: { housing: "renting" } } }] },
-            right: { label: "Keep saving", outcomes: [{ result: "Not yet — you tuck the coins away and hold out for a better day.", effects: { vitals: { happiness: "-" } } }] },
+            left: { label: "home_workhouse_buyout.left", outcomes: [{ result: "home_workhouse_buyout.left.r0", effects: { vitals: { finances: "--", happiness: "++", spirit: "+" }, setStatus: { housing: "renting" } } }] },
+            right: { label: "home_workhouse_buyout.right", outcomes: [{ result: "home_workhouse_buyout.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
         {
-          // Run away — the streets are their own trial (homeless drift).
           id: "home_workhouse_runaway",
           kind: "filler",
           conditions: { ageMin: 7 },
-          prompt: "A side gate is left unlatched in the grey before dawn. You could just… go.",
+          prompt: "home_workhouse_runaway.prompt",
           options: {
-            left: { label: "Run for it", outcomes: [{ result: "Heart pounding, you bolt — and don't stop until the workhouse is far behind. Free, and utterly on your own.", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless" } } }] },
-            right: { label: "Stay put", outcomes: [{ result: "The risk is too great, the world outside too cold. You slink back to your cot.", effects: { vitals: { spirit: "-" } } }] },
+            left: { label: "home_workhouse_runaway.left", outcomes: [{ result: "home_workhouse_runaway.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless" } } }] },
+            right: { label: "home_workhouse_runaway.right", outcomes: [{ result: "home_workhouse_runaway.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
         {
-          // Apprenticeship — the good ending; older children only.
           id: "home_workhouse_apprentice",
           kind: "filler",
           conditions: { ageMin: 10 },
-          prompt: "A visiting tradesman needs a willing pair of hands, and will take an apprentice off the parish's books.",
+          prompt: "home_workhouse_apprentice.prompt",
           options: {
-            left: { label: "Take the indenture", outcomes: [{ result: "A trade, a master's roof, and a future you can build. The workhouse gates close behind you for good.", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" } } }] },
-            right: { label: "Let it pass", outcomes: [{ result: "Not this one. You watch the tradesman go, and hope another comes.", effects: { vitals: { happiness: "-" } } }] },
+            left: { label: "home_workhouse_apprentice.left", outcomes: [{ result: "home_workhouse_apprentice.left.r0", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" } } }] },
+            right: { label: "home_workhouse_apprentice.right", outcomes: [{ result: "home_workhouse_apprentice.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
       ],
     },
 
-    // --- Basic school: school-only events, active while education = school.
-    //     (Room for edu_grammar and other schools later.) --------------------
+    // --- Basic school: active while education = school. ----------------------
     {
       id: "edu_basicschool",
       cards: [
@@ -474,38 +462,38 @@ export const content = {
           id: "edu_basicschool_exams",
           kind: "one_time",
           conditions: { ageMin: 11 },
-          prompt: "Big examinations loom, and the schoolmaster expects great things.",
+          prompt: "edu_basicschool_exams.prompt",
           options: {
-            left: { label: "Study hard", outcomes: [{ result: "Top marks — earned with stress and sleepless nights.", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
-            right: { label: "Wing it", outcomes: [{ result: "Relaxed and well-rested, but the results sting.", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
+            left: { label: "edu_basicschool_exams.left", outcomes: [{ result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
+            right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
         {
           id: "edu_basicschool_crush",
           kind: "one_time",
           conditions: { ageMin: 13 },
-          prompt: "Your heart does something strange when a certain classmate walks by.",
+          prompt: "edu_basicschool_crush.prompt",
           options: {
-            left: { label: "Say hello", outcomes: [{ result: "They smile back! Butterflies, and not much sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
-            right: { label: "Panic and hide", outcomes: [{ result: "You dive behind the coal shed. Mortifying — but the panic soon passes.", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
+            left: { label: "edu_basicschool_crush.left", outcomes: [{ result: "edu_basicschool_crush.left.r0", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
+            right: { label: "edu_basicschool_crush.right", outcomes: [{ result: "edu_basicschool_crush.right.r0", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
           },
         },
         {
           id: "edu_basicschool_friend",
           kind: "filler",
-          prompt: "The new pupil is looking for someone to share a desk with.",
+          prompt: "edu_basicschool_friend.prompt",
           options: {
-            left: { label: "Wave over", outcomes: [{ result: "A wonderful friend — though you rather lose yourself in them.", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
-            right: { label: "Look away", outcomes: [{ result: "A lonelier term, but you learn to stand on your own two feet.", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
+            left: { label: "edu_basicschool_friend.left", outcomes: [{ result: "edu_basicschool_friend.left.r0", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
+            right: { label: "edu_basicschool_friend.right", outcomes: [{ result: "edu_basicschool_friend.right.r0", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
           },
         },
         {
           id: "edu_basicschool_prize",
           kind: "filler",
-          prompt: "Prize-giving day. The medal for best pupil is within your reach.",
+          prompt: "edu_basicschool_prize.prompt",
           options: {
-            left: { label: "Swot for it", outcomes: [{ result: "The medal is yours — pinned on to polite applause.", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } }] },
-            right: { label: "Let it go", outcomes: [{ result: "You'd rather be out playing than buried in books.", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
+            left: { label: "edu_basicschool_prize.left", outcomes: [{ result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } }] },
+            right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
       ],
@@ -518,59 +506,55 @@ export const content = {
         {
           id: "job_labour_machine",
           kind: "one_time",
-          prompt: "The foreman waves you under the thundering loom to clear a jam.",
+          prompt: "job_labour_machine.prompt",
           options: {
             left: {
-              label: "Reach in",
+              label: "job_labour_machine.left",
               outcomes: [
-                { if: { traits: { sporty: true } }, result: "Deft, nimble fingers — the jam clears, no harm done.", effects: { vitals: { finances: "+", spirit: "+" } } },
-                { if: { vitals: { health: { min: 40 } } }, result: "A nasty gash across your hand, but you manage.", effects: { vitals: { health: "--", finances: "+" } } },
-                { result: "The machine does not stop for anyone.", effects: { endGame: "health" } },
+                { if: { traits: { sporty: true } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" } } },
+                { if: { vitals: { health: { min: 40 } } }, result: "job_labour_machine.left.r1", effects: { vitals: { health: "--", finances: "+" } } },
+                { result: "job_labour_machine.left.r2", effects: { endGame: "health" } },
               ],
             },
-            right: { label: "Refuse", outcomes: [{ result: "The foreman docks your pay and clips your ear.", effects: { vitals: { finances: "-", happiness: "-", health: "-" } } }] },
+            right: { label: "job_labour_machine.right", outcomes: [{ result: "job_labour_machine.right.r0", effects: { vitals: { finances: "-", happiness: "-", health: "-" } } }] },
           },
         },
         {
           id: "job_labour_wages",
           kind: "filler",
-          prompt: "Friday, and the foreman counts out your wages.",
+          prompt: "job_labour_wages.prompt",
           options: {
-            left: { label: "All to the family", outcomes: [{ result: "Every penny to the family pot. They are proud of you.", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
-            right: { label: "Keep a little back", outcomes: [{ result: "A secret farthing for yourself — guilty, but glad.", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
+            left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            right: { label: "job_labour_wages.right", outcomes: [{ result: "job_labour_wages.right.r0", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
           },
         },
       ],
     },
 
-    // --- Sibling: one shared deck for now, unlocked by the brother/sister
-    //     cards. Repeatable relationship up/down events. Each option branches
-    //     to whichever sibling you have (brother first, sister as fallback).
-    //     Only the hidden relationship changes direction — the "rival" option
-    //     still gives a vital (independence), so rivalry isn't a worse choice,
-    //     just a different one, and it stays baby-safe (no vital losses).
+    // --- Sibling: unlocked by the brother/sister cards. Each option branches
+    //     to whichever sibling you have (brother = r0, sister = r1). ----------
     {
       id: "sibling",
-      title: "Your Sibling",
-      unlock: "You've got a little sidekick now — partner in crime, or thorn in your side. That's up to you.",
+      title: "deck.sibling.title",
+      unlock: "deck.sibling.blurb",
       cards: [
         {
           id: "sibling_play",
           kind: "filler",
-          prompt: "Your little sibling is begging you to come and play.",
+          prompt: "sibling_play.prompt",
           options: {
             left: {
-              label: "Play along",
+              label: "sibling_play.left",
               outcomes: [
-                { if: { traits: { hasBrother: true } }, result: "You build an epic blanket fort together. Best mates.", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: 8 } } },
-                { result: "You build an epic blanket fort together. Best mates.", effects: { vitals: { happiness: "+" }, incTraits: { relSister: 8 } } },
+                { if: { traits: { hasBrother: true } }, result: "sibling_play.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: 8 } } },
+                { result: "sibling_play.left.r1", effects: { vitals: { happiness: "+" }, incTraits: { relSister: 8 } } },
               ],
             },
             right: {
-              label: "Wind them up",
+              label: "sibling_play.right",
               outcomes: [
-                { if: { traits: { hasBrother: true } }, result: "You hide their favourite toy. Cue meltdown.", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: -8 } } },
-                { result: "You hide their favourite toy. Cue meltdown.", effects: { vitals: { spirit: "+" }, incTraits: { relSister: -8 } } },
+                { if: { traits: { hasBrother: true } }, result: "sibling_play.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: -8 } } },
+                { result: "sibling_play.right.r1", effects: { vitals: { spirit: "+" }, incTraits: { relSister: -8 } } },
               ],
             },
           },
@@ -578,20 +562,20 @@ export const content = {
         {
           id: "sibling_blame",
           kind: "filler",
-          prompt: "Something's broken, and a parent is demanding to know who did it.",
+          prompt: "sibling_blame.prompt",
           options: {
             left: {
-              label: "Take the blame",
+              label: "sibling_blame.left",
               outcomes: [
-                { if: { traits: { hasBrother: true } }, result: "You cover for your brother. He never forgets it.", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: 8 } } },
-                { result: "You cover for your sister. She never forgets it.", effects: { vitals: { spirit: "+" }, incTraits: { relSister: 8 } } },
+                { if: { traits: { hasBrother: true } }, result: "sibling_blame.left.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: 8 } } },
+                { result: "sibling_blame.left.r1", effects: { vitals: { spirit: "+" }, incTraits: { relSister: 8 } } },
               ],
             },
             right: {
-              label: "Point the finger",
+              label: "sibling_blame.right",
               outcomes: [
-                { if: { traits: { hasBrother: true } }, result: "You dob your brother in. You're off the hook — he isn't.", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: -8 } } },
-                { result: "You dob your sister in. You're off the hook — she isn't.", effects: { vitals: { happiness: "+" }, incTraits: { relSister: -8 } } },
+                { if: { traits: { hasBrother: true } }, result: "sibling_blame.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: -8 } } },
+                { result: "sibling_blame.right.r1", effects: { vitals: { happiness: "+" }, incTraits: { relSister: -8 } } },
               ],
             },
           },
@@ -599,20 +583,20 @@ export const content = {
         {
           id: "sibling_treat",
           kind: "filler",
-          prompt: "There is exactly one biscuit left in the tin.",
+          prompt: "sibling_treat.prompt",
           options: {
             left: {
-              label: "Split it fairly",
+              label: "sibling_treat.left",
               outcomes: [
-                { if: { traits: { hasBrother: true } }, result: "Half each, no arguments. Your brother grins.", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: 8 } } },
-                { result: "Half each, no arguments. Your sister grins.", effects: { vitals: { spirit: "+" }, incTraits: { relSister: 8 } } },
+                { if: { traits: { hasBrother: true } }, result: "sibling_treat.left.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrother: 8 } } },
+                { result: "sibling_treat.left.r1", effects: { vitals: { spirit: "+" }, incTraits: { relSister: 8 } } },
               ],
             },
             right: {
-              label: "Scoff it yourself",
+              label: "sibling_treat.right",
               outcomes: [
-                { if: { traits: { hasBrother: true } }, result: "Delicious. Your brother is furious.", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: -8 } } },
-                { result: "Delicious. Your sister is furious.", effects: { vitals: { happiness: "+" }, incTraits: { relSister: -8 } } },
+                { if: { traits: { hasBrother: true } }, result: "sibling_treat.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { relBrother: -8 } } },
+                { result: "sibling_treat.right.r1", effects: { vitals: { happiness: "+" }, incTraits: { relSister: -8 } } },
               ],
             },
           },

@@ -7,6 +7,8 @@
 // stat that doesn't exist becomes a compile error, not a runtime surprise.
 // ---------------------------------------------------------------------------
 
+import type { StringId } from "../i18n/index.ts";
+
 // --- Vitals: the four lethal bars (0..100). Any at 0 = game over. ------------
 export type VitalKey = "finances" | "happiness" | "health" | "spirit";
 export type Vitals = Record<VitalKey, number>;
@@ -28,19 +30,20 @@ export const MAGNITUDE_POINTS: Record<Magnitude, number> = {
 };
 
 // End-screen framing. The four vital endings (only Health's is "death"), plus
-// named endings triggered by an effect (e.g. reaching adulthood).
+// named endings triggered by an effect (e.g. reaching adulthood). title/blurb
+// are string ids, looked up per-locale by the UI.
 export interface Ending {
-  title: string;
-  blurb: string;
+  title: StringId;
+  blurb: StringId;
   survived?: boolean; // true = not a game-over-by-collapse ending
 }
 
 export const ENDINGS: Record<string, Ending> = {
-  finances: { title: "Bankrupt", blurb: "The money ran out, and with it your options." },
-  happiness: { title: "Despair", blurb: "The joy drained away until there was none left to find." },
-  health: { title: "Death", blurb: "Your body gave out. A life reached its end." },
-  spirit: { title: "Emptiness", blurb: "The spark went out. You were still here, but not really." },
-  grown_up: { title: "You Survived Childhood", blurb: "Half your street didn't see eighteen — but you did. The rest of your story is still to be written…", survived: true },
+  finances: { title: "ending.finances.title", blurb: "ending.finances.blurb" },
+  happiness: { title: "ending.happiness.title", blurb: "ending.happiness.blurb" },
+  health: { title: "ending.health.title", blurb: "ending.health.blurb" },
+  spirit: { title: "ending.spirit.title", blurb: "ending.spirit.blurb" },
+  grown_up: { title: "ending.grown_up.title", blurb: "ending.grown_up.blurb", survived: true },
 };
 
 // --- Statuses: persistent side-states that drift Vitals and gate content. ----
@@ -126,12 +129,12 @@ export type CardKind = "one_time" | "filler" | "milestone";
 // with no `if`). The chosen outcome supplies the result text and effects.
 export interface Outcome {
   if?: Condition;
-  result: string;
+  result: StringId;
   effects?: Effect;
 }
 
 export interface CardOption {
-  label: string;
+  label: StringId;
   // Resolved top-to-bottom; author the last one unconditional as the fallback.
   outcomes: Outcome[];
 }
@@ -144,7 +147,7 @@ export type CardOptions = { left: CardOption; right: CardOption } & Partial<
 export interface Card {
   id: string;
   kind: CardKind;
-  prompt: string;
+  prompt: StringId;
   options: CardOptions;
   copies?: number;      // one_time / milestone: max occurrences (default 1)
   conditions?: Condition; // eligibility on top of deck membership
@@ -155,13 +158,13 @@ export interface Card {
 export interface Deck {
   id: string;
   cards: Card[];
-  title?: string;  // shown when this deck is unlocked for the first time
-  unlock?: string; // blurb for the first-time unlock announcement
+  title?: StringId;  // shown when this deck is unlocked for the first time
+  unlock?: StringId; // blurb for the first-time unlock announcement
 }
 
 // --- Status definitions ------------------------------------------------------
 export interface StatusStateDef {
-  label?: string;                        // display name (defaults to the key)
+  label?: StringId;                      // display name id (defaults to the key)
   drift?: Partial<Record<VitalKey, number>>;
   addDecks?: string[];                   // decks owned while in this state
 }
