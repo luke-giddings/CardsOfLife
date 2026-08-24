@@ -262,7 +262,8 @@ export class Game {
     this.statusesEl.innerHTML = chips;
   }
 
-  // Flash the changed segment of a bar green (gain) or red (loss).
+  // Flash the changed segment of a bar in a bright tint of its own colour; the
+  // bar growing or shrinking conveys whether it was a gain or a loss.
   private flashDelta(key: VitalKey, oldV: number, newV: number): void {
     const flash = this.flashes[key];
     const lo = Math.min(oldV, newV);
@@ -270,7 +271,7 @@ export class Game {
     flash.style.transition = "none";
     flash.style.left = `${lo}%`;
     flash.style.width = `${hi - lo}%`;
-    flash.className = `flash ${newV > oldV ? "up" : "down"}`;
+    flash.className = "flash";
     flash.style.opacity = "0.9";
     void flash.offsetWidth; // reflow so the fade restarts every change
     flash.style.transition = "opacity 1.5s ease";

@@ -18,10 +18,13 @@
   --good: #2f9e5e;
   --bad: #cf4a3f;
 
-  /* Bright flash highlights — deliberately lighter/more saturated than any bar
-     colour so a gain/loss segment pops on every bar (see .flash). */
-  --flash-up: #8dffb8;
-  --flash-down: #ffb199;
+  /* Flash highlights — a brighter tint of each bar's OWN colour, so a change on
+     the health bar flashes bright red (not green) etc. Direction (gain/loss) is
+     read from the bar growing or shrinking, not from the flash hue. */
+  --vf-finances: #6fd39a;
+  --vf-happiness: #f0c95a;
+  --vf-health: #f0847a;
+  --vf-spirit: #8f99d4;
 
   --radius: 16px;
   --shadow: 0 1px 2px rgba(29, 35, 31, 0.06), 0 18px 40px -22px rgba(29, 35, 31, 0.4);
@@ -44,8 +47,10 @@
     --v-spirit: #8892d8;
     --good: #46b279;
     --bad: #e0685d;
-    --flash-up: #9dffc2;
-    --flash-down: #ffbba6;
+    --vf-finances: #7fe6b0;
+    --vf-happiness: #f5cf6a;
+    --vf-health: #f79b8f;
+    --vf-spirit: #a6afe8;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 44px -22px rgba(0, 0, 0, 0.75);
   }
 }
@@ -271,10 +276,9 @@ body {
   /* slow → fast (ease-in sine) over 1.5s */
   transition: width 1.5s cubic-bezier(0.12, 0, 0.39, 0);
 }
-/* the changed segment, flashed on gain/loss then faded out. Uses bright
-   highlight colours (not the bar's own hue) plus a glow, so the flash reads on
-   every bar — including red loss on the red health bar, where a plain red flash
-   was invisible. */
+/* the changed segment, flashed then faded out. A brighter tint of the bar's
+   own colour (--vcf) plus a glow, so it pops on every bar; the direction of
+   change reads from the bar itself growing or shrinking. */
 .flash {
   position: absolute;
   top: 0;
@@ -282,14 +286,13 @@ body {
   opacity: 0;
   pointer-events: none;
   border-radius: 4px;
+  background: var(--vcf);
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.35);
 }
-.flash.up { background: var(--flash-up); }
-.flash.down { background: var(--flash-down); }
-.vital-finances { --vc: var(--v-finances); }
-.vital-happiness { --vc: var(--v-happiness); }
-.vital-health { --vc: var(--v-health); }
-.vital-spirit { --vc: var(--v-spirit); }
+.vital-finances { --vc: var(--v-finances); --vcf: var(--vf-finances); }
+.vital-happiness { --vc: var(--v-happiness); --vcf: var(--vf-happiness); }
+.vital-health { --vc: var(--v-health); --vcf: var(--vf-health); }
+.vital-spirit { --vc: var(--v-spirit); --vcf: var(--vf-spirit); }
 
 .statuses {
   display: flex;
