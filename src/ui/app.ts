@@ -315,11 +315,13 @@ export class Game {
     const { milestone, pool, gated } = eligibleDraw(this.state);
     const row = (c: Card, mark: string, cls: string, note = ""): string =>
       `<div class="dbg-row ${cls}" data-card="${c.id}">
-        <span class="dbg-mark">${mark}</span>
-        <span class="dbg-id">${c.id}</span>
-        ${note ? `<span class="dbg-note">needs ${note}</span>` : ""}
-        <span class="dbg-kind">${c.kind}</span>
-        <button class="dbg-draw" data-card="${c.id}" data-action="force" title="Force this card next">draw ▶</button>
+        <div class="dbg-line">
+          <span class="dbg-mark">${mark}</span>
+          <span class="dbg-id">${c.id}</span>
+          <span class="dbg-kind">${c.kind}</span>
+          <button class="dbg-draw" data-card="${c.id}" data-action="force" title="Force this card next">draw ▶</button>
+        </div>
+        ${note ? `<div class="dbg-note">needs ${note}</div>` : ""}
       </div>`;
     const rows = [
       ...(milestone ? [row(milestone, "★", "due")] : []),

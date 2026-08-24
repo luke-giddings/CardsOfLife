@@ -148,19 +148,22 @@ body {
 .dbg-sec > summary::before { content: "▸ "; }
 .dbg-sec[open] > summary::before { content: "▾ "; }
 .dbg-row {
-  display: flex;
-  align-items: center;
-  gap: 7px;
   padding: 3px 0;
   cursor: pointer;
 }
 .dbg-row:active { color: var(--ink); }
+.dbg-line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
 .dbg-row .dbg-mark { width: 1ch; color: var(--gold); }
 .dbg-row .dbg-id { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dbg-row .dbg-kind { color: var(--faint); font-size: 0.66rem; }
-.dbg-row .dbg-note { color: var(--gold); font-size: 0.64rem; white-space: nowrap; }
+/* the gate reason sits on its own line under the id, so the id is never
+   truncated by it; indented to line up past the mark column. */
+.dbg-row .dbg-note { color: var(--gold); font-size: 0.64rem; margin-left: calc(1ch + 7px); }
 .dbg-row.gated { color: var(--faint); opacity: 0.7; }
-.dbg-row.gated .dbg-id { flex: 0 1 auto; }
 .dbg-row.due .dbg-id { color: var(--baize); }
 
 .dbg-traits {
