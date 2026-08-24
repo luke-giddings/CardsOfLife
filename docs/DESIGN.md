@@ -155,8 +155,14 @@ Status **drift** (after effects) → check game-over.
   oakum (piecework pennies toward buying out), a ward friend, the matron — plus
   **three exits**: buy your freedom (→ renting, needs ~40 saved), run away
   (→ homeless), or take an apprenticeship (→ apprentice housing + job, age 10+).
-- **edu_basicschool** (education = school): exams, first crush, a new friend,
-  prize day. (Room for `edu_grammar` and other schools later.)
+- **edu_basicschool** (job = studying): exams, first crush, a friend, prize
+  day, and after-school **errands** (a money route for the school path). The
+  **credential** (`education = school`) is earned by *studying hard* (exams /
+  prize), not just by attending — drop out for work before then and it doesn't
+  count. (Room for `edu_grammar` later.)
+- **home_renting** (housing = renting): flat life on top of the rent/spirit
+  drift — a **lodger** for income, the **landlord**, doing the place up,
+  neighbours, a quiet night. First-pass mock-up.
 - **job_labour** (job = child_labourer): the loom hazard, Friday wages.
 - **sibling** (unlocked by the baby brother/sister cards): repeatable
   relationship events; each option branches to whichever sibling you have.
@@ -275,11 +281,11 @@ Roughly in likely order. None of these are started.
   it a `home_homeless` deck (begging for coins, finding shelter, a soup kitchen)
   and exits (a benefactor, a doss-house job → renting/apprentice), mirroring
   what the workhouse now has.
-- **Renting deck** — `renting` (from moving out of the family home, or the
-  workhouse buyout) has rent/spirit drift but **no deck of its own** yet: flat
-  events, neighbours, the landlord, and the step up to buying a place (toward
-  the inheritance thread). The apprentice/master life likewise wants a deck.
-  Part of the broader **house decks** work below.
+- **Renting deck** — first-pass `home_renting` deck is in (lodger, landlord,
+  furnish, neighbour, quiet). Still wants: the step up to **buying** a place
+  (toward the inheritance thread), and possibly a lodger as a persistent income
+  status. The **apprentice/master** life still wants its own deck. Part of the
+  broader **house decks** work below.
 - **Legacy / inheritance across runs** — if you owned a house *and* had an heir,
   the **next run starts in that house** (and maybe with some money/traits).
   Implemented as a shim: on the end screen write an `inheritance` record to

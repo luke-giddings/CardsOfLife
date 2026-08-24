@@ -70,8 +70,9 @@ export const content = {
         workhouse: { label: "status.housing.workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
         // A place of your own (from the workhouse buyout, or moving out of the
         // family home): rent to pay every year, but the independence lifts your
-        // spirit. (Its own deck is Backlog.)
-        renting: { label: "status.housing.renting", drift: { finances: -5, spirit: 5 } },
+        // spirit. Owns the home_renting deck (flat life, the landlord, a lodger
+        // for income, saving toward a place of your own).
+        renting: { label: "status.housing.renting", drift: { finances: -5, spirit: 5 }, addDecks: ["home_renting"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. (Its own deck & exits are Backlog.)
         homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },
@@ -212,7 +213,7 @@ export const content = {
           options: {
             left: {
               label: "baby_schooling.left",
-              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school", job: "studying" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "studying" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
             },
             right: {
               label: "baby_schooling.right",
@@ -260,7 +261,7 @@ export const content = {
           prompt: "child_sports.prompt",
           options: {
             left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
-            right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", health: "-", spirit: "-" } } }] },
+            right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", spirit: "+", health: "-" } } }] },
           },
         },
         // --- Hazards: childhood was deadly. Survival is earned through your
@@ -275,7 +276,7 @@ export const content = {
               label: "child_fever.left",
               outcomes: [
                 { if: { traits: { vaccinated: true } }, result: "child_fever.left.r0", effects: { vitals: { health: "-" } } },
-                { if: { vitals: { health: { min: 50 } } }, result: "child_fever.left.r1", effects: { vitals: { health: "--" } } },
+                { if: { vitals: { health: { min: 30 } } }, result: "child_fever.left.r1", effects: { vitals: { health: "--" } } },
                 { result: "child_fever.left.r2", effects: { endGame: "health" } },
               ],
             },
@@ -283,7 +284,7 @@ export const content = {
               label: "child_fever.right",
               outcomes: [
                 { if: { vitals: { finances: { min: 30 } } }, result: "child_fever.right.r0", effects: { vitals: { finances: "--", health: "-" } } },
-                { if: { vitals: { health: { min: 40 } } }, result: "child_fever.right.r1", effects: { vitals: { health: "--" } } },
+                { if: { vitals: { health: { min: 30 } } }, result: "child_fever.right.r1", effects: { vitals: { health: "--" } } },
                 { result: "child_fever.right.r2", effects: { endGame: "health" } },
               ],
             },
@@ -349,7 +350,7 @@ export const content = {
           kind: "filler",
           prompt: "home_family_chores.prompt",
           options: {
-            left: { label: "home_family_chores.left", outcomes: [{ result: "home_family_chores.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            left: { label: "home_family_chores.left", outcomes: [{ result: "home_family_chores.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" } } }] },
             right: { label: "home_family_chores.right", outcomes: [{ result: "home_family_chores.right.r0", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
           },
         },
@@ -380,7 +381,7 @@ export const content = {
           prompt: "home_family_pet.prompt",
           options: {
             left: { label: "home_family_pet.left", outcomes: [{ result: "home_family_pet.left.r0", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
-            right: { label: "home_family_pet.right", outcomes: [{ result: "home_family_pet.right.r0", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
+            right: { label: "home_family_pet.right", outcomes: [{ result: "home_family_pet.right.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
           },
         },
         {
@@ -390,11 +391,67 @@ export const content = {
           // can afford it.
           id: "home_family_moveout",
           kind: "filler",
-          conditions: { ageMin: 14, vitals: { finances: { min: 60 } } },
+          conditions: { ageMin: 14, vitals: { finances: { min: 50 } } },
           prompt: "home_family_moveout.prompt",
           options: {
             left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "--", happiness: "+" }, setStatus: { housing: "renting" } } }] },
             right: { label: "home_family_moveout.right", outcomes: [{ result: "home_family_moveout.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- A place of your own: active while housing = renting. Flat life on top
+    //     of the rent/spirit drift — a lodger for income, the landlord, doing
+    //     the place up, neighbours. (First pass / mock-up.) ------------------
+    {
+      id: "home_renting",
+      title: "deck.home_renting.title",
+      unlock: "deck.home_renting.blurb",
+      cards: [
+        {
+          id: "home_renting_lodger",
+          kind: "filler",
+          prompt: "home_renting_lodger.prompt",
+          options: {
+            left: { label: "home_renting_lodger.left", outcomes: [{ result: "home_renting_lodger.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" } } }] },
+            right: { label: "home_renting_lodger.right", outcomes: [{ result: "home_renting_lodger.right.r0", effects: { vitals: { spirit: "++", happiness: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          id: "home_renting_landlord",
+          kind: "filler",
+          prompt: "home_renting_landlord.prompt",
+          options: {
+            left: { label: "home_renting_landlord.left", outcomes: [{ result: "home_renting_landlord.left.r0", effects: { vitals: { finances: "--", spirit: "+" } } }] },
+            right: { label: "home_renting_landlord.right", outcomes: [{ result: "home_renting_landlord.right.r0", effects: { vitals: { finances: "+", happiness: "-", health: "-" } } }] },
+          },
+        },
+        {
+          id: "home_renting_furnish",
+          kind: "filler",
+          prompt: "home_renting_furnish.prompt",
+          options: {
+            left: { label: "home_renting_furnish.left", outcomes: [{ result: "home_renting_furnish.left.r0", effects: { vitals: { happiness: "++", spirit: "+", finances: "-" } } }] },
+            right: { label: "home_renting_furnish.right", outcomes: [{ result: "home_renting_furnish.right.r0", effects: { vitals: { finances: "+", happiness: "-", health: "-" } } }] },
+          },
+        },
+        {
+          id: "home_renting_neighbour",
+          kind: "filler",
+          prompt: "home_renting_neighbour.prompt",
+          options: {
+            left: { label: "home_renting_neighbour.left", outcomes: [{ result: "home_renting_neighbour.left.r0", effects: { vitals: { happiness: "++", spirit: "+", finances: "-" } } }] },
+            right: { label: "home_renting_neighbour.right", outcomes: [{ result: "home_renting_neighbour.right.r0", effects: { vitals: { finances: "+", health: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          id: "home_renting_quiet",
+          kind: "filler",
+          prompt: "home_renting_quiet.prompt",
+          options: {
+            left: { label: "home_renting_quiet.left", outcomes: [{ result: "home_renting_quiet.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
+            right: { label: "home_renting_quiet.right", outcomes: [{ result: "home_renting_quiet.right.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },
           },
         },
       ],
@@ -500,7 +557,10 @@ export const content = {
           conditions: { ageMin: 11 },
           prompt: "edu_basicschool_exams.prompt",
           options: {
-            left: { label: "edu_basicschool_exams.left", outcomes: [{ result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
+            // Studying hard is how you actually earn the credential (education
+            // -> school). Just attending doesn't count — so dropping out for
+            // work/the workhouse before this leaves you "Illiterate".
+            left: { label: "edu_basicschool_exams.left", outcomes: [{ result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "school" } } }] },
             right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
@@ -511,7 +571,7 @@ export const content = {
           prompt: "edu_basicschool_crush.prompt",
           options: {
             left: { label: "edu_basicschool_crush.left", outcomes: [{ result: "edu_basicschool_crush.left.r0", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
-            right: { label: "edu_basicschool_crush.right", outcomes: [{ result: "edu_basicschool_crush.right.r0", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
+            right: { label: "edu_basicschool_crush.right", outcomes: [{ result: "edu_basicschool_crush.right.r0", effects: { vitals: { happiness: "-", spirit: "+", health: "+" } } }] },
           },
         },
         {
@@ -528,8 +588,21 @@ export const content = {
           kind: "filler",
           prompt: "edu_basicschool_prize.prompt",
           options: {
-            left: { label: "edu_basicschool_prize.left", outcomes: [{ result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } }] },
+            // Swotting for the prize also earns the credential (a diligent route
+            // for a pupil who winged the exams).
+            left: { label: "edu_basicschool_prize.left", outcomes: [{ result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "school" } } }] },
             right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // A money route for the school path (no wages otherwise), so the
+          // family living cost is survivable while studying.
+          id: "edu_basicschool_errands",
+          kind: "filler",
+          prompt: "edu_basicschool_errands.prompt",
+          options: {
+            left: { label: "edu_basicschool_errands.left", outcomes: [{ result: "edu_basicschool_errands.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
+            right: { label: "edu_basicschool_errands.right", outcomes: [{ result: "edu_basicschool_errands.right.r0", effects: { vitals: { spirit: "+", health: "+", finances: "-" } } }] },
           },
         },
       ],
@@ -560,8 +633,8 @@ export const content = {
           kind: "filler",
           prompt: "job_labour_wages.prompt",
           options: {
-            left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
-            right: { label: "job_labour_wages.right", outcomes: [{ result: "job_labour_wages.right.r0", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
+            left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" } } }] },
+            right: { label: "job_labour_wages.right", outcomes: [{ result: "job_labour_wages.right.r0", effects: { vitals: { happiness: "+", finances: "++", spirit: "-" } } }] },
           },
         },
       ],

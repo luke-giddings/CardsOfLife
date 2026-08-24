@@ -181,6 +181,40 @@ export const EN = {
   "home_family_moveout.right": "Stay home",
   "home_family_moveout.right.r0": "The nest egg stays put, and so do you. For now.",
 
+  // ---- HOME: RENTING ----------------------------------------------------
+  "deck.home_renting.title": "Your Own Place",
+  "deck.home_renting.blurb": "A key of your own and a rent book to fill. No one to answer to — as long as you can cover the rent.",
+
+  "home_renting_lodger.prompt": "Rent day again, and the box room sits empty. You could take in a lodger.",
+  "home_renting_lodger.left": "Take a lodger",
+  "home_renting_lodger.left.r0": "The rent's halved, but so is your peace and quiet.",
+  "home_renting_lodger.right": "Keep it to yourself",
+  "home_renting_lodger.right.r0": "Your own four walls, undisturbed — and the whole rent on you.",
+
+  "home_renting_landlord.prompt": "The landlord raps at the door: the rent's going up, he says, times being what they are.",
+  "home_renting_landlord.left": "Pay the increase",
+  "home_renting_landlord.left.r0": "You grit your teeth and pay. At least the roof stays over your head.",
+  "home_renting_landlord.right": "Threaten to leave",
+  "home_renting_landlord.right.r0": "You call his bluff — and he backs down. Nerve-wracking, but the rent holds.",
+
+  "home_renting_furnish.prompt": "The flat echoes, bare. A barrow in the market has second-hand furniture going cheap.",
+  "home_renting_furnish.left": "Do the place up",
+  "home_renting_furnish.left.r0": "A rug, a lamp, a decent chair — it finally feels like home.",
+  "home_renting_furnish.right": "Make do with crates",
+  "home_renting_furnish.right.r0": "An orange box for a table and a nail for your coat. Cheap, and cheerless.",
+
+  "home_renting_neighbour.prompt": "The couple across the landing knock round with an invitation to supper.",
+  "home_renting_neighbour.left": "Join them",
+  "home_renting_neighbour.left.r0": "A warm evening of stew and gossip — you bring a little something along.",
+  "home_renting_neighbour.right": "Beg off",
+  "home_renting_neighbour.right.r0": "An early night and an untouched purse — but you feel the cold shoulder.",
+
+  "home_renting_quiet.prompt": "A rare free evening, with nothing but your own four walls and the fire.",
+  "home_renting_quiet.left": "Rest by the fire",
+  "home_renting_quiet.left.r0": "You mend, you doze, you breathe — quiet, if a little lonely.",
+  "home_renting_quiet.right": "Out on the town",
+  "home_renting_quiet.right.r0": "Gin, songs and bad decisions. A grand night — you'll pay for it tomorrow.",
+
   // ---- HOME: WORKHOUSE --------------------------------------------------
   "home_workhouse_gruel.prompt": "Supper is a bowl of thin gruel, and your belly still aches. The pot is not quite empty.",
   "home_workhouse_gruel.left": "Ask for more",
@@ -254,6 +288,12 @@ export const EN = {
   "edu_basicschool_prize.left.r0": "The medal is yours — pinned on to polite applause.",
   "edu_basicschool_prize.right": "Let it go",
   "edu_basicschool_prize.right.r0": "You'd rather be out playing than buried in books.",
+
+  "edu_basicschool_errands.prompt": "A shopkeeper will pay a child to run deliveries after lessons.",
+  "edu_basicschool_errands.left": "Take the round",
+  "edu_basicschool_errands.left.r0": "Aching legs and homework left undone — but coins in your pocket.",
+  "edu_basicschool_errands.right": "Straight home",
+  "edu_basicschool_errands.right.r0": "You keep your evenings for rest and your books — and stay skint.",
 
   // ---- JOB: LABOUR ------------------------------------------------------
   "job_labour_machine.prompt": "The foreman waves you under the thundering loom to clear a jam.",
@@ -515,6 +555,40 @@ export const IT: Record<StringId, string> = {
   "home_family_moveout.right": "Restare a casa",
   "home_family_moveout.right.r0": "Il gruzzolo resta dov'è, e anche tu. Per ora.",
 
+  // ---- HOME: RENTING ----------------------------------------------------
+  "deck.home_renting.title": "Casa tua",
+  "deck.home_renting.blurb": "Una chiave tutta tua e un libretto d'affitto da riempire. Nessuno a cui rendere conto — finché paghi la pigione.",
+
+  "home_renting_lodger.prompt": "Di nuovo il giorno dell'affitto, e la stanzetta è vuota. Potresti prendere un inquilino.",
+  "home_renting_lodger.left": "Prendere un inquilino",
+  "home_renting_lodger.left.r0": "L'affitto si dimezza, ma anche la tua pace e tranquillità.",
+  "home_renting_lodger.right": "Tenerla per te",
+  "home_renting_lodger.right.r0": "Le tue quattro mura, indisturbate — e tutto l'affitto sulle tue spalle.",
+
+  "home_renting_landlord.prompt": "Il padrone di casa bussa: l'affitto aumenta, dice, coi tempi che corrono.",
+  "home_renting_landlord.left": "Pagare l'aumento",
+  "home_renting_landlord.left.r0": "Stringi i denti e paghi. Almeno il tetto resta sopra la testa.",
+  "home_renting_landlord.right": "Minacciare di andartene",
+  "home_renting_landlord.right.r0": "Bluffi — e lui cede. Da batticuore, ma l'affitto tiene.",
+
+  "home_renting_furnish.prompt": "L'appartamento è spoglio e rimbomba. Un carretto al mercato ha mobili usati a poco prezzo.",
+  "home_renting_furnish.left": "Sistemare la casa",
+  "home_renting_furnish.left.r0": "Un tappeto, una lampada, una sedia decente — finalmente sembra casa.",
+  "home_renting_furnish.right": "Arrangiarti con le casse",
+  "home_renting_furnish.right.r0": "Una cassetta per tavolo e un chiodo per il cappotto. Economico, e squallido.",
+
+  "home_renting_neighbour.prompt": "La coppia sul pianerottolo passa a invitarti a cena.",
+  "home_renting_neighbour.left": "Unirti a loro",
+  "home_renting_neighbour.left.r0": "Una serata calda di stufato e chiacchiere — porti qualcosina anche tu.",
+  "home_renting_neighbour.right": "Declinare",
+  "home_renting_neighbour.right.r0": "Una serata presto a letto e un borsellino intatto — ma senti l'aria fredda.",
+
+  "home_renting_quiet.prompt": "Una rara sera libera, con nient'altro che le tue quattro mura e il fuoco.",
+  "home_renting_quiet.left": "Riposare accanto al fuoco",
+  "home_renting_quiet.left.r0": "Ti rimetti, sonnecchi, respiri — tranquillo, se un po' solo.",
+  "home_renting_quiet.right": "Fuori in città",
+  "home_renting_quiet.right.r0": "Gin, canzoni e cattive decisioni. Una gran serata — la pagherai domani.",
+
   // ---- HOME: WORKHOUSE --------------------------------------------------
   "home_workhouse_gruel.prompt": "La cena è una scodella di brodaglia, e la pancia ti fa ancora male. Il pentolone non è del tutto vuoto.",
   "home_workhouse_gruel.left": "Chiederne ancora",
@@ -588,6 +662,12 @@ export const IT: Record<StringId, string> = {
   "edu_basicschool_prize.left.r0": "La medaglia è tua — appuntata tra educati applausi.",
   "edu_basicschool_prize.right": "Lasciar stare",
   "edu_basicschool_prize.right.r0": "Preferisci giocare all'aperto che stare sepolto tra i libri.",
+
+  "edu_basicschool_errands.prompt": "Un bottegaio paga un bambino per fare le consegne dopo le lezioni.",
+  "edu_basicschool_errands.left": "Fare il giro",
+  "edu_basicschool_errands.left.r0": "Gambe stanche e compiti non fatti — ma monete in tasca.",
+  "edu_basicschool_errands.right": "Dritto a casa",
+  "edu_basicschool_errands.right.r0": "Ti tieni le sere per il riposo e i libri — e resti al verde.",
 
   // ---- JOB: LABOUR ------------------------------------------------------
   "job_labour_machine.prompt": "Il capoccia ti fa cenno di infilarti sotto il telaio rombante per liberare un inceppo.",
