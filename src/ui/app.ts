@@ -6,6 +6,7 @@ import {
   initGame,
   quietYear,
   setContent,
+  totalDrift,
 } from "../engine/engine.ts";
 import { meets } from "../engine/conditions.ts";
 import { clearSave, loadGame, saveGame } from "../engine/save.ts";
@@ -52,7 +53,7 @@ const VITAL_ICON: Record<VitalKey, string> = {
 const STATUS_LABEL: Record<StatusKind, string> = {
   job: "Job",
   housing: "Home",
-  education: "Study",
+  education: "Education",
   lifestyle: "Life",
 };
 
@@ -97,6 +98,7 @@ export class Game {
   private ageNumEl!: HTMLElement;
   private fills!: Record<VitalKey, HTMLElement>;
   private flashes!: Record<VitalKey, HTMLElement>;
+  private drains!: Record<VitalKey, HTMLElement>;
   private statusesEl!: HTMLElement;
   private dbgBtn!: HTMLButtonElement;
   private debugPanel!: HTMLElement;
@@ -152,6 +154,7 @@ export class Game {
     const vitals = el("div", "vitals");
     this.fills = {} as Record<VitalKey, HTMLElement>;
     this.flashes = {} as Record<VitalKey, HTMLElement>;
+    this.drains = {} as Record<VitalKey, HTMLElement>;
     for (const key of VITAL_KEYS) {
       const cell = el("div", `vital vital-${key}`);
       const top = el("div", "vital-top");
@@ -160,12 +163,14 @@ export class Game {
       top.append(label);
       const track = el("div", "track");
       const fill = el("div", "fill");
-      const flash = el("div", "flash"); // green/red segment shown on change
-      track.append(fill, flash);
+      const drain = el("div", "drain"); // marks the tip a status drift will remove
+      const flash = el("div", "flash"); // bright segment shown on change
+      track.append(fill, drain, flash);
       cell.append(top, track);
       vitals.append(cell);
       this.fills[key] = fill;
       this.flashes[key] = flash;
+      this.drains[key] = drain;
       // Debug: tap a vital to +10, double-tap to +25.
       let lastTap = 0;
       let tapTimer: number | undefined;
@@ -229,11 +234,25 @@ export class Game {
   private syncTop(): void {
     const s = this.state;
     this.ageNumEl.textContent = String(s.age);
+    // Preview each active status's drain: the tip of the bar that next turn's
+    // drift will strip off is marked, so a passive loss is visible before it
+    // happens. Only losses (negative drift) are previewed.
+    const drift = totalDrift(s, content);
     for (const key of VITAL_KEYS) {
       const nv = s.vitals[key];
       const ov = this.prevVitals[key];
       this.fills[key].style.width = `${nv}%`;
       if (nv !== ov) this.flashDelta(key, ov, nv);
+      const d = drift[key] ?? 0;
+      const drain = this.drains[key];
+      if (d < 0 && nv > 0) {
+        const loss = Math.min(-d, nv); // can't strip more than the bar holds
+        drain.style.left = `${nv - loss}%`;
+        drain.style.width = `${loss}%`;
+        drain.style.opacity = "1";
+      } else {
+        drain.style.opacity = "0";
+      }
     }
     this.prevVitals = { ...s.vitals };
     let chips = "";

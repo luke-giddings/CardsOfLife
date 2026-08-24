@@ -49,7 +49,7 @@ export const content = {
       id: "education",
       ordered: true,
       levels: ["none", "school"],
-      states: { none: { label: "None" }, school: { label: "At school", addDecks: ["studying"] } },
+      states: { none: { label: "Illiterate" }, school: { label: "Basic schooling", addDecks: ["studying"] } },
     },
     lifestyle: { id: "lifestyle", states: { default: {} } },
   },
