@@ -160,6 +160,7 @@ export interface Deck {
   cards: Card[];
   title?: StringId;  // shown when this deck is unlocked for the first time
   unlock?: StringId; // blurb for the first-time unlock announcement
+  noDrift?: boolean; // while active, status drift is suspended (unloseable grace, e.g. babyhood)
 }
 
 // --- Status definitions ------------------------------------------------------

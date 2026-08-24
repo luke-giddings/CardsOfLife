@@ -175,6 +175,12 @@ export const EN = {
   "home_family_pet.right": "Shoo it off",
   "home_family_pet.right.r0": "You save the hassle and the money, but feel a pang.",
 
+  "home_family_moveout.prompt": "You've squirrelled away enough to put down for lodgings of your own. Time to fly the nest?",
+  "home_family_moveout.left": "Move out",
+  "home_family_moveout.left.r0": "A cramped rented flat, a key of your own, and no one to answer to. It cost you nearly everything — worth it.",
+  "home_family_moveout.right": "Stay home",
+  "home_family_moveout.right.r0": "The nest egg stays put, and so do you. For now.",
+
   // ---- HOME: WORKHOUSE --------------------------------------------------
   "home_workhouse_gruel.prompt": "Supper is a bowl of thin gruel, and your belly still aches. The pot is not quite empty.",
   "home_workhouse_gruel.left": "Ask for more",
@@ -502,6 +508,12 @@ export const IT: Record<StringId, string> = {
   "home_family_pet.left.r0": "Un nuovo migliore amico che ti fa uscire all'aria aperta — spese del veterinario comprese.",
   "home_family_pet.right": "Scacciarlo",
   "home_family_pet.right.r0": "Ti risparmi la seccatura e i soldi, ma senti una fitta.",
+
+  "home_family_moveout.prompt": "Hai messo da parte abbastanza per l'anticipo di un alloggio tutto tuo. È ora di lasciare il nido?",
+  "home_family_moveout.left": "Andare via",
+  "home_family_moveout.left.r0": "Un appartamentino angusto in affitto, una chiave tutta tua e nessuno a cui rendere conto. Ti è costato quasi tutto — ne è valsa la pena.",
+  "home_family_moveout.right": "Restare a casa",
+  "home_family_moveout.right.r0": "Il gruzzolo resta dov'è, e anche tu. Per ora.",
 
   // ---- HOME: WORKHOUSE --------------------------------------------------
   "home_workhouse_gruel.prompt": "La cena è una scodella di brodaglia, e la pancia ti fa ancora male. Il pentolone non è del tutto vuoto.",

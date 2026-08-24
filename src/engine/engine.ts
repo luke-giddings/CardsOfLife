@@ -200,6 +200,11 @@ function applyEffect(state: GameState, effect: Effect, content: Content): void {
 
 // Sum of every active status state's per-turn drift.
 export function totalDrift(state: GameState, content: Content): Partial<Vitals> {
+  // While a `noDrift` deck is active (babyhood — the unloseable grace period),
+  // status drift is suspended, so living costs etc. don't bite before the game
+  // proper begins. Keeps totalDrift the single source of truth for the UI's
+  // drain preview too.
+  if (content.decks.some((d) => d.noDrift && state.activeDecks.includes(d.id))) return {};
   const drift: Partial<Vitals> = {};
   for (const kind of Object.keys(state.statuses) as StatusKind[]) {
     const def = content.statuses[kind];

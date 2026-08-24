@@ -47,10 +47,11 @@ export const content = {
         // and it opens the dangerous job_labour deck.
         child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
         // While at school your "occupation" is studying: no wages and a grind on
-        // the spirit (the counterpart to the labourer's pay-for-health trade).
-        // It owns the school-events deck; the education status just records the
-        // level reached, and outlives this once you stop attending.
-        studying: { label: "status.job.studying", drift: { spirit: -5, finances: -5 }, addDecks: ["edu_basicschool"] },
+        // the spirit. (The money side of the school/work trade lives on the
+        // housing status — living with family costs money; the labourer's wage
+        // offsets it, the pupil's doesn't.) Owns the school-events deck; the
+        // education status just records the level reached.
+        studying: { label: "status.job.studying", drift: { spirit: -5 }, addDecks: ["edu_basicschool"] },
         // Learning a trade under a master: a small stipend and no danger — the
         // best way out of the workhouse. Paired with the "apprentice" housing.
         apprentice: { label: "status.job.apprentice", drift: { finances: 5 } },
@@ -59,15 +60,18 @@ export const content = {
     housing: {
       id: "housing",
       states: {
-        // Home life while living with the family (chores, the sweet shop, a
-        // stray to take in). No drain — home is safe.
-        family: { label: "status.housing.family", addDecks: ["home_family"] },
+        // Home life while living with the family. Costs money — your keep /
+        // your share of the household — which the labourer's wage offsets but
+        // the pupil's doesn't. (Suspended in babyhood by the baby deck's
+        // noDrift.) Owns the home-life deck.
+        family: { label: "status.housing.family", drift: { finances: -5 }, addDecks: ["home_family"] },
         // The workhouse: a grinding health/happiness drain, and its own deck of
         // bleak daily-life events (including three ways out).
         workhouse: { label: "status.housing.workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
-        // Ways out of the workhouse:
-        // — bought your way into modest lodgings (safe, no drain; paid up front).
-        renting: { label: "status.housing.renting" },
+        // A place of your own (from the workhouse buyout, or moving out of the
+        // family home): rent to pay every year, but the independence lifts your
+        // spirit. (Its own deck is Backlog.)
+        renting: { label: "status.housing.renting", drift: { finances: -5, spirit: 5 } },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. (Its own deck & exits are Backlog.)
         homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },
@@ -92,9 +96,11 @@ export const content = {
   },
 
   decks: [
-    // --- Baby: ages 0–5. Tutorial + build-up; impossible to lose. -----------
+    // --- Baby: ages 0–5. Tutorial + build-up; impossible to lose. noDrift
+    //     suspends status drift (e.g. family living costs) through babyhood. --
     {
       id: "baby",
+      noDrift: true,
       cards: [
         {
           id: "baby_birth",
@@ -375,6 +381,20 @@ export const content = {
           options: {
             left: { label: "home_family_pet.left", outcomes: [{ result: "home_family_pet.left.r0", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
             right: { label: "home_family_pet.right", outcomes: [{ result: "home_family_pet.right.r0", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
+          },
+        },
+        {
+          // A well-off older child can strike out on their own: a big up-front
+          // cost, then housing=renting (its own rent/spirit drift), which hands
+          // the home_family deck away. `filler` so the offer recurs while you
+          // can afford it.
+          id: "home_family_moveout",
+          kind: "filler",
+          conditions: { ageMin: 14, vitals: { finances: { min: 60 } } },
+          prompt: "home_family_moveout.prompt",
+          options: {
+            left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "--", happiness: "+" }, setStatus: { housing: "renting" } } }] },
+            right: { label: "home_family_moveout.right", outcomes: [{ result: "home_family_moveout.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
       ],
