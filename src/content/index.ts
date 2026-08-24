@@ -289,8 +289,8 @@ export const content = {
           conditions: { ageMin: 6, vitals: { finances: { max: 25 } } },
           prompt: "The cupboards are bare, and there are too many mouths to feed.",
           options: {
-            left: { label: "Beg and scavenge", outcomes: [{ result: "You get by on scraps, charity and quick fingers.", effects: { vitals: { finances: "+", health: "-", happiness: "-" } } }] },
-            right: { label: "Into the workhouse", outcomes: [{ result: "Cold gruel and hard labour — but a roof, of sorts.", effects: { vitals: { happiness: "--", health: "-" }, setStatus: { housing: "workhouse" } } }] },
+            left: { label: "Beg and scavenge", outcomes: [{ result: "Cold, hungry and half-starved — but free, and nobody's servant.", effects: { vitals: { health: "--", happiness: "-", spirit: "+" } } }] },
+            right: { label: "Into the workhouse", outcomes: [{ result: "You trade your liberty for a roof and a full belly tonight. The grind starts tomorrow.", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse" } } }] },
           },
         },
 
