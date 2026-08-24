@@ -390,7 +390,7 @@ export const content = {
           kind: "filler",
           prompt: "Twelve hours picking oakum — teasing tarred rope apart until your fingertips are raw. There's a penny in it for a full basket.",
           options: {
-            left: { label: "Hit your quota", outcomes: [{ result: "Bleeding fingers and an aching back — but a few coins toward buying your way out one day.", effects: { vitals: { finances: "+", health: "-", happiness: "-" } } }] },
+            left: { label: "Hit your quota", outcomes: [{ result: "Bleeding fingers and an aching back — but a few coins toward buying your way out one day.", effects: { vitals: { finances: "+", health: "-" } } }] },
             right: { label: "Botch it in protest", outcomes: [{ result: "A small, secret rebellion — worth the cold cell and the skipped supper.", effects: { vitals: { spirit: "++", happiness: "+", health: "--" } } }] },
           },
         },
@@ -401,6 +401,15 @@ export const content = {
           options: {
             left: { label: "Whisper back", outcomes: [{ result: "Two conspirators against the dark. You laugh for the first time in weeks — and lose an hour's sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
             right: { label: "Keep to yourself", outcomes: [{ result: "Safer, and lonelier. You save your strength and spend your evenings alone.", effects: { vitals: { health: "+", spirit: "+", happiness: "--" } } }] },
+          },
+        },
+        {
+          id: "home_workhouse_sunday",
+          kind: "filler",
+          prompt: "Sunday. An hour of chapel — the one break in the grey week — and a hymn you actually know.",
+          options: {
+            left: { label: "Sing your heart out", outcomes: [{ result: "For a few minutes the misery lifts and your voice rings off the cold stone.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
+            right: { label: "Doze at the back", outcomes: [{ result: "You steal a little rest in the warm crush of bodies — and feel nothing much at all.", effects: { vitals: { health: "+", happiness: "-", spirit: "-" } } }] },
           },
         },
         {
@@ -416,38 +425,41 @@ export const content = {
 
         // --- Three ways out of the workhouse. Each changes the housing status
         //     (and the apprenticeship changes your job too), which hands the
-        //     home_workhouse deck away automatically. ------------------------
+        //     home_workhouse deck away automatically. They're `filler` so
+        //     declining doesn't burn the chance — the offer comes round again
+        //     while its conditions hold; taking it removes the deck. ---------
         {
-          // Buy your way out — needs a nest egg saved from oakum piecework.
+          // Buy your way out — needs a nest egg (saved from oakum, or from
+          // wages if you came in on the labouring path).
           id: "home_workhouse_buyout",
-          kind: "one_time",
+          kind: "filler",
           conditions: { vitals: { finances: { min: 40 } } },
           prompt: "You've squirrelled away just enough. The master will strike your name off the register — for a price.",
           options: {
             left: { label: "Buy your freedom", outcomes: [{ result: "Coins counted onto the desk, and the gate swings open. A cramped rented room, but it's yours.", effects: { vitals: { finances: "--", happiness: "++", spirit: "+" }, setStatus: { housing: "renting" } } }] },
-            right: { label: "Hold onto your savings", outcomes: [{ result: "You can't quite bring yourself to part with every last penny. Not yet.", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+            right: { label: "Keep saving", outcomes: [{ result: "Not yet — you tuck the coins away and hold out for a better day.", effects: { vitals: { happiness: "-" } } }] },
           },
         },
         {
-          // Run away — always available, but the streets are their own trial.
+          // Run away — the streets are their own trial (homeless drift).
           id: "home_workhouse_runaway",
-          kind: "one_time",
+          kind: "filler",
           conditions: { ageMin: 7 },
           prompt: "A side gate is left unlatched in the grey before dawn. You could just… go.",
           options: {
             left: { label: "Run for it", outcomes: [{ result: "Heart pounding, you bolt — and don't stop until the workhouse is far behind. Free, and utterly on your own.", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless" } } }] },
-            right: { label: "Stay put", outcomes: [{ result: "The risk is too great, the world outside too cold. You slink back to your cot.", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+            right: { label: "Stay put", outcomes: [{ result: "The risk is too great, the world outside too cold. You slink back to your cot.", effects: { vitals: { spirit: "-" } } }] },
           },
         },
         {
           // Apprenticeship — the good ending; older children only.
           id: "home_workhouse_apprentice",
-          kind: "one_time",
+          kind: "filler",
           conditions: { ageMin: 10 },
           prompt: "A visiting tradesman needs a willing pair of hands, and will take an apprentice off the parish's books.",
           options: {
             left: { label: "Take the indenture", outcomes: [{ result: "A trade, a master's roof, and a future you can build. The workhouse gates close behind you for good.", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" } } }] },
-            right: { label: "Stay in the workhouse", outcomes: [{ result: "Better the devil you know, you tell yourself — and wonder if you'll regret it.", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+            right: { label: "Let it pass", outcomes: [{ result: "Not this one. You watch the tradesman go, and hope another comes.", effects: { vitals: { happiness: "-" } } }] },
           },
         },
       ],
