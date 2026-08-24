@@ -40,6 +40,15 @@ const VITAL_LABEL: Record<VitalKey, string> = {
   spirit: "Spirit",
 };
 
+// A shape/icon per vital (in addition to colour) so statuses can show which
+// vitals they affect, and for colour-blind legibility.
+const VITAL_ICON: Record<VitalKey, string> = {
+  finances: "£",
+  happiness: "☺",
+  health: "♥",
+  spirit: "✦",
+};
+
 const STATUS_LABEL: Record<StatusKind, string> = {
   job: "Job",
   housing: "Home",
@@ -146,7 +155,7 @@ export class Game {
       const cell = el("div", `vital vital-${key}`);
       const top = el("div", "vital-top");
       const label = el("span");
-      label.textContent = VITAL_LABEL[key];
+      label.innerHTML = `<span class="vicon">${VITAL_ICON[key]}</span> ${VITAL_LABEL[key]}`;
       top.append(label);
       const track = el("div", "track");
       const fill = el("div", "fill");
@@ -190,7 +199,7 @@ export class Game {
       if (d.vital) return this.adjustVital(d.vital as VitalKey, Number(d.delta));
       if (d.age) return this.adjustAge(Number(d.age));
       if (d.deck) return this.toggleDeck(d.deck);
-      if (d.trait) return this.toggleTrait(d.trait);
+      if (d.trait) return this.toggleTrait(d.trait, d.tdelta ? Number(d.tdelta) : undefined);
       const id = d.card!;
       if (d.action === "force") this.forceCard(id);
       else {
@@ -221,8 +230,14 @@ export class Game {
     for (const kind of STATUS_KINDS) {
       const value = s.statuses[kind];
       if (value === content.start.statuses[kind]) continue;
-      const label = content.statuses[kind].states[value]?.label ?? value;
-      chips += `<span class="chip"><b>${STATUS_LABEL[kind]}</b> ${label}</span>`;
+      const state = content.statuses[kind].states[value];
+      const label = state?.label ?? value;
+      let drift = "";
+      for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
+        if (!dv) continue;
+        drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${dv > 0 ? "dgood" : "dbad"}">${dv > 0 ? "+" : "−"}</span></span>`;
+      }
+      chips += `<span class="chip"><b>${STATUS_LABEL[kind]}</b> ${label}${drift}</span>`;
     }
     this.statusesEl.innerHTML = chips;
   }
@@ -272,10 +287,15 @@ export class Game {
       ...gated.map((c) => row(c, "·", "gated", fmtCond(c.conditions))),
     ];
 
-    // Current traits (set ones highlighted; tap to toggle/cycle).
+    // Current traits: booleans/gender tap to toggle; numbers get −/+ buttons.
     const traitHtml = Object.entries(this.state.traits)
       .map(([k, v]) => {
-        const set = typeof v === "boolean" ? v : typeof v === "number" ? v !== 0 : true;
+        if (typeof v === "number") {
+          return `<span class="dbg-trait ${v !== 0 ? "set" : ""}">${k}=${v}
+            <button data-trait="${k}" data-tdelta="-10">−</button>
+            <button data-trait="${k}" data-tdelta="10">+</button></span>`;
+        }
+        const set = typeof v === "boolean" ? v : true;
         return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
       })
       .join("");
@@ -362,6 +382,14 @@ export class Game {
       this.holder = null;
       this.flip = null;
     }
+    // Milestones (and gated cards) happen at fixed ages — jump the age too.
+    const target = card.conditions?.ageMin ?? card.conditions?.ageMax;
+    if (target != null) {
+      this.state.age = target;
+      this.prevVitals = { ...this.state.vitals };
+      saveGame(this.state);
+      this.syncTop();
+    }
     this.card = card;
     this.debugSelectedId = null;
     this.showFront(card);
@@ -389,12 +417,12 @@ export class Game {
     saveGame(this.state);
     this.renderDebug();
   }
-  private toggleTrait(key: string): void {
+  private toggleTrait(key: string, delta?: number): void {
     const t = this.state.traits as unknown as Record<string, unknown>;
     const v = t[key];
-    if (typeof v === "boolean") t[key] = !v;
+    if (typeof v === "number") t[key] = v + (delta ?? 10);
+    else if (typeof v === "boolean") t[key] = !v;
     else if (key === "gender") t[key] = v === "boy" ? "girl" : "boy";
-    else if (typeof v === "number") t[key] = (v as number) + 10;
     saveGame(this.state);
     this.renderDebug();
   }

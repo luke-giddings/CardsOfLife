@@ -29,14 +29,14 @@ export const content = {
         none: {},
         // Victorian child labour: a few coins, at a steady cost to health,
         // and it opens the dangerous child_work deck.
-        child_labourer: { label: "Child labourer", drift: { finances: 2, health: -2 }, addDecks: ["child_work"] },
+        child_labourer: { label: "Child labourer", drift: { finances: 5, health: -5 }, addDecks: ["child_work"] },
       },
     },
     housing: {
       id: "housing",
       states: {
         family: { label: "With family" },
-        workhouse: { label: "Workhouse", drift: { health: -2, happiness: -2 } },
+        workhouse: { label: "Workhouse", drift: { health: -5, happiness: -5 } },
       },
     },
     education: {
