@@ -368,7 +368,7 @@ export class Game {
 
     // Debug controls: vitals, age, decks, milestone jumps.
     const vitalCtl = VITAL_KEYS.map(
-      (k) => `<div class="dbg-ctlrow"><span class="dbg-ctllabel">${VITAL_LABEL[k]} ${this.state.vitals[k]}</span>
+      (k) => `<div class="dbg-ctlrow"><span class="dbg-ctllabel">${t(VITAL_LABEL[k])} ${this.state.vitals[k]}</span>
         <button data-vital="${k}" data-delta="-25">−−</button>
         <button data-vital="${k}" data-delta="-10">−</button>
         <button data-vital="${k}" data-delta="10">+</button>
@@ -399,11 +399,11 @@ export class Game {
           const cond = o.if ? `if ${fmtCond(o.if)}` : "default";
           outs += `<div class="dbg-out ${matches ? "match" : ""}">
             <span class="dbg-cond">${cond}</span> → ${fmtEffect(o.effects)}
-            <span class="dbg-res">“${o.result}”</span></div>`;
+            <span class="dbg-res">“${t(o.result)}”</span></div>`;
         }
-        opts += `<div class="dbg-choice"><b>${dir} · ${opt.label}</b>${outs}</div>`;
+        opts += `<div class="dbg-choice"><b>${dir} · ${t(opt.label)}</b>${outs}</div>`;
       }
-      detail = `<div class="dbg-prompt">${sel.prompt.replace(/\n+/g, " ")}</div>${opts}`;
+      detail = `<div class="dbg-prompt">${t(sel.prompt).replace(/\n+/g, " ")}</div>${opts}`;
     }
 
     const sec = (id: string, title: string, body: string): string =>
