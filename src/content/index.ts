@@ -17,7 +17,7 @@ export const content = {
     // Start low and even — babyhood is where the meters get built up (unevenly,
     // by your choices), ready for the child deck to start spending them.
     vitals: { finances: 20, happiness: 20, health: 20, spirit: 20 },
-    statuses: { job: "none", housing: "family", education: "none", lifestyle: "default" },
+    statuses: { job: "infant", housing: "family", education: "none", lifestyle: "default" },
     decks: ["baby"],
     traits: {},
   },
@@ -26,7 +26,7 @@ export const content = {
     job: {
       id: "job",
       states: {
-        none: {},
+        infant: {}, // neutral start; no drain, hidden until it changes
         // Victorian child labour: a few coins, at a steady cost to health,
         // and it opens the dangerous child_work deck.
         child_labourer: { label: "Child labourer", drift: { finances: 5, health: -5 }, addDecks: ["child_work"] },
@@ -43,7 +43,7 @@ export const content = {
       id: "education",
       ordered: true,
       levels: ["none", "school"],
-      states: { none: {}, school: { label: "At school" } },
+      states: { none: {}, school: { label: "At school", addDecks: ["studying"] } },
     },
     lifestyle: { id: "lifestyle", states: { default: {} } },
   },
@@ -164,22 +164,22 @@ export const content = {
           options: {
             left: {
               label: "Go to school",
-              outcomes: [{ result: "Slate, chalk, and a stern schoolmaster. A chance at something more.", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["child"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "Slate, chalk, and a stern schoolmaster. A chance at something more.", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["childhood"], removeDecks: ["baby"] } }],
             },
             right: {
               label: "Out to work",
-              outcomes: [{ result: "Long hours in the din for a few coins in the family pot.", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["child"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "Long hours in the din for a few coins in the family pot.", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["childhood"], removeDecks: ["baby"] } }],
             },
           },
         },
       ],
     },
 
-    // --- Child: ages 5–17. Ends at 18. The balancing game begins. -----------
+    // --- Childhood (shared): events any child has, school or working. -------
     {
-      id: "child",
+      id: "childhood",
       title: "Childhood",
-      unlock: "You're a child now — a whole world of playgrounds, lessons, scraped knees and best friends awaits.",
+      unlock: "You're a child now — a whole world of scraped knees, best friends and hard knocks awaits.",
       cards: [
         {
           id: "c_martialarts",
@@ -207,41 +207,12 @@ export const content = {
           },
         },
         {
-          id: "c_exams",
-          kind: "one_time",
-          conditions: { ageMin: 11 },
-          prompt: "Big exams are looming on the horizon.",
-          options: {
-            left: { label: "Study hard", outcomes: [{ result: "Top marks — earned with stress and sleepless nights.", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
-            right: { label: "Wing it", outcomes: [{ result: "Relaxed and well-rested, but the results sting.", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
-          },
-        },
-        {
-          id: "c_firstcrush",
-          kind: "one_time",
-          conditions: { ageMin: 13 },
-          prompt: "Your heart does something strange when a certain classmate walks by.",
-          options: {
-            left: { label: "Say hello", outcomes: [{ result: "They smile back! Butterflies, and not much sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
-            right: { label: "Panic and hide", outcomes: [{ result: "You dive behind the coal shed. Mortifying — but the panic soon passes.", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
-          },
-        },
-        {
           id: "c_pet",
           kind: "filler",
           prompt: "A scruffy stray cat follows you all the way home.",
           options: {
             left: { label: "Take it in", outcomes: [{ result: "A new best friend who gets you outdoors — vet bills and all.", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
             right: { label: "Shoo it off", outcomes: [{ result: "You save the hassle and the money, but feel a pang.", effects: { vitals: { happiness: "-", spirit: "-", finances: "+" } } }] },
-          },
-        },
-        {
-          id: "c_friend",
-          kind: "filler",
-          prompt: "The new kid at school is looking for someone to sit with.",
-          options: {
-            left: { label: "Wave over", outcomes: [{ result: "A wonderful friend — though you rather lose yourself in them.", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
-            right: { label: "Look away", outcomes: [{ result: "A lonelier term, but you learn to stand on your own two feet.", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
           },
         },
         {
@@ -352,6 +323,51 @@ export const content = {
           options: {
             left: { label: "Look back", outcomes: [{ result: "You survived. So much has happened already…", effects: { endGame: "grown_up" } }] },
             right: { label: "Charge ahead", outcomes: [{ result: "You made it this far. Whatever comes next, you're ready.", effects: { endGame: "grown_up" } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Studying: school-only events, active while job = studying. ---------
+    {
+      id: "studying",
+      cards: [
+        {
+          id: "c_exams",
+          kind: "one_time",
+          conditions: { ageMin: 11 },
+          prompt: "Big examinations loom, and the schoolmaster expects great things.",
+          options: {
+            left: { label: "Study hard", outcomes: [{ result: "Top marks — earned with stress and sleepless nights.", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
+            right: { label: "Wing it", outcomes: [{ result: "Relaxed and well-rested, but the results sting.", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "c_firstcrush",
+          kind: "one_time",
+          conditions: { ageMin: 13 },
+          prompt: "Your heart does something strange when a certain classmate walks by.",
+          options: {
+            left: { label: "Say hello", outcomes: [{ result: "They smile back! Butterflies, and not much sleep.", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
+            right: { label: "Panic and hide", outcomes: [{ result: "You dive behind the coal shed. Mortifying — but the panic soon passes.", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
+          },
+        },
+        {
+          id: "c_friend",
+          kind: "filler",
+          prompt: "The new pupil is looking for someone to share a desk with.",
+          options: {
+            left: { label: "Wave over", outcomes: [{ result: "A wonderful friend — though you rather lose yourself in them.", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
+            right: { label: "Look away", outcomes: [{ result: "A lonelier term, but you learn to stand on your own two feet.", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
+          },
+        },
+        {
+          id: "s_prize",
+          kind: "filler",
+          prompt: "Prize-giving day. The medal for best pupil is within your reach.",
+          options: {
+            left: { label: "Swot for it", outcomes: [{ result: "The medal is yours — pinned on to polite applause.", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } }] },
+            right: { label: "Let it go", outcomes: [{ result: "You'd rather be out playing than buried in books.", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
       ],
