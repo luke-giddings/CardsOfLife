@@ -105,6 +105,7 @@ export class Game {
   private seenDecks = new Set<string>();
   private pendingUnlock: { title: string; blurb: string } | null = null;
   private debugSelectedId: string | null = null;
+  private debugOpen = new Set<string>(["pool", "detail"]); // which debug sections are expanded
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -191,7 +192,16 @@ export class Game {
     this.scene = el("div", "scene");
     this.debugPanel = el("div", "debug-panel");
     this.debugPanel.addEventListener("click", (e) => {
-      const hit = (e.target as HTMLElement).closest<HTMLElement>(
+      const target = e.target as HTMLElement;
+      // Collapsible sections: track open/closed so re-renders preserve it.
+      const summary = target.closest<HTMLElement>("summary[data-sec]");
+      if (summary) {
+        const id = summary.dataset.sec!;
+        if (this.debugOpen.has(id)) this.debugOpen.delete(id);
+        else this.debugOpen.add(id);
+        return; // let <details> toggle natively
+      }
+      const hit = target.closest<HTMLElement>(
         "[data-card],[data-vital],[data-age],[data-deck],[data-trait]",
       );
       if (!hit) return;
@@ -340,35 +350,20 @@ export class Game {
       detail = `<div class="dbg-prompt">${sel.prompt.replace(/\n+/g, " ")}</div>${opts}`;
     }
 
-    this.debugPanel.innerHTML = `
-      <div class="dbg-sec">
-        <h4>Vitals</h4>
-        <div class="dbg-ctl">${vitalCtl}</div>
-      </div>
-      <div class="dbg-sec">
-        <h4>Age</h4>
-        <div class="dbg-ctl">${ageCtl}</div>
-      </div>
-      <div class="dbg-sec">
-        <h4>Traits — tap to toggle</h4>
-        <div class="dbg-traits">${traitHtml}</div>
-      </div>
-      <div class="dbg-sec">
-        <h4>Decks — tap to add / remove</h4>
-        <div class="dbg-decks">${deckCtl}</div>
-      </div>
-      <div class="dbg-sec">
-        <h4>Skip to milestone</h4>
-        <div class="dbg-decks">${milestoneCtl}</div>
-      </div>
-      <div class="dbg-sec">
-        <h4>Draw pool — age ${this.state.age} · tap a card to inspect</h4>
-        <div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>
-      </div>
-      <div class="dbg-sec">
-        <h4>${sel ? sel.id : "card"} — choices &amp; results</h4>
-        ${detail}
-      </div>`;
+    const sec = (id: string, title: string, body: string): string =>
+      `<details class="dbg-sec" ${this.debugOpen.has(id) ? "open" : ""}>
+        <summary data-sec="${id}">${title}</summary>
+        ${body}
+      </details>`;
+
+    this.debugPanel.innerHTML =
+      sec("vitals", "Vitals", `<div class="dbg-ctl">${vitalCtl}</div>`) +
+      sec("age", "Age", `<div class="dbg-ctl">${ageCtl}</div>`) +
+      sec("traits", "Traits — tap to toggle", `<div class="dbg-traits">${traitHtml}</div>`) +
+      sec("decks", "Decks — tap to add / remove", `<div class="dbg-decks">${deckCtl}</div>`) +
+      sec("milestones", "Skip to milestone", `<div class="dbg-decks">${milestoneCtl}</div>`) +
+      sec("pool", `Draw pool — age ${this.state.age} · tap a card to inspect`, `<div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`) +
+      sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail);
   }
 
   // Debug: drop the current card and show a specific one next (ignores

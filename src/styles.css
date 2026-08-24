@@ -120,14 +120,21 @@ body {
 }
 .debug-on .stage { justify-content: flex-start; }
 .debug-on .flip { height: min(38vh, 320px); }
-.dbg-sec { margin-bottom: 12px; }
-.dbg-sec h4 {
-  margin: 0 0 5px;
+.dbg-sec { margin-bottom: 10px; }
+.dbg-sec > summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  padding: 3px 0;
+  margin-bottom: 5px;
   font-size: 0.64rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold);
 }
+.dbg-sec > summary::-webkit-details-marker { display: none; }
+.dbg-sec > summary::before { content: "▸ "; }
+.dbg-sec[open] > summary::before { content: "▾ "; }
 .dbg-row {
   display: flex;
   align-items: center;
