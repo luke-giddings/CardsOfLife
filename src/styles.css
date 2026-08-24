@@ -134,17 +134,18 @@ body {
   border-color: var(--baize);
 }
 
-/* Easy-mode vital preview, attached to each option's edge label. It inherits
-   the label's writing mode: the vertical side labels get the symbols flowing on
-   down the column; the horizontal up/down labels get them stacked under (up) or
-   over (down) via a flex column, staying toward the card centre. */
+/* Easy-mode vital preview, attached to each option's edge label. Each chip
+   (icon + magnitude) stays horizontal and upright so "♥++" reads cleanly; the
+   chips are laid out to follow the label — a horizontal row under the up/down
+   labels, and a vertical stack running on down the vertical side labels. The
+   left label is rotated 180°, so its preview is counter-rotated back upright. */
 .edge-vitals {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 0.82rem;
   font-weight: 700;
 }
-.edge-left .edge-vitals,
-.edge-right .edge-vitals { margin-top: 10px; } /* gap after the vertical label */
 .edge-up,
 .edge-down {
   display: flex;
@@ -153,6 +154,14 @@ body {
 }
 .edge-up { flex-direction: column; }
 .edge-down { flex-direction: column-reverse; }
+.edge-left .edge-vitals,
+.edge-right .edge-vitals {
+  writing-mode: horizontal-tb; /* keep each chip upright inside the vertical label */
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px; /* gap after the label, down the column */
+}
+.edge-left .edge-vitals { transform: rotate(180deg); }
 .ep-v { display: inline-flex; align-items: center; gap: 1px; }
 .ep-none { color: var(--faint); font-weight: 700; }
 .ep-end { color: var(--bad); }
