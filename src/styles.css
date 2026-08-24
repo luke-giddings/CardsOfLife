@@ -134,25 +134,31 @@ body {
   border-color: var(--baize);
 }
 
-/* Easy-mode consequences strip on the card: one row per swipe direction,
-   showing the vital symbols and the size/direction of each change. */
-.easy-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+/* Easy-mode vital preview, attached under each option's edge label. Forced
+   horizontal (writing-mode) so the symbols read normally even inside the
+   vertical side labels; the left edge is rotated 180°, so its preview is
+   counter-rotated back upright. Up/down edges become flex columns so the
+   preview stacks under (up) or over (down) the label, staying toward centre. */
+.edge-vitals {
+  writing-mode: horizontal-tb;
+  display: inline-flex;
+  gap: 3px;
   align-items: center;
-  margin: 4px auto 0;
-}
-.ep-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
 }
-.ep-dir { color: var(--faint); width: 1em; text-align: center; }
+.edge-up,
+.edge-down {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.edge-up { flex-direction: column; }
+.edge-down { flex-direction: column-reverse; }
+.edge-left .edge-vitals { transform: rotate(180deg); margin-bottom: 8px; }
+.edge-right .edge-vitals { margin-top: 8px; }
 .ep-v { display: inline-flex; align-items: center; gap: 1px; }
-.ep-none { color: var(--faint); }
+.ep-none { color: var(--faint); font-weight: 700; }
 .ep-end { color: var(--bad); }
 
 /* debug panel under the card */

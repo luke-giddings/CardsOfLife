@@ -195,10 +195,10 @@ epitaph/scoring model is Backlog.
 Autosave to `localStorage` every turn; resume on load; a **Reset** control wipes
 and restarts. A separate **Debug** toggle (persisted) unlocks the debug toolkit.
 An **Easy** toggle (persisted, player-facing) previews each choice's vital
-changes on the card — a row per swipe direction showing the vital symbols
-(£ ☺ ♥ ✦) and the magnitude, computed from the outcome that would actually fire
-given the current state (a ☠ marks a choice that can end the run). A **language**
-toggle switches English/Italian live.
+changes on the card — the vital symbols (£ ☺ ♥ ✦) and magnitude shown right
+under each option's edge label, computed from the outcome that would actually
+fire given the current state (a ☠ marks a choice that can end the run). A
+**language** toggle switches English/Italian live.
 
 ## 14. Tech & architecture
 

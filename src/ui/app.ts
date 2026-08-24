@@ -338,10 +338,9 @@ export class Game {
 
   // --- easy mode -------------------------------------------------------------
 
-  // One consequences row for a choice: a direction arrow + the vital-symbol
-  // deltas of the outcome that would actually fire given the current state.
-  private easyRow(dir: Direction, opt: CardOption): string {
-    const arrow = { left: "◀", right: "▶", up: "▲", down: "▼" }[dir];
+  // The vital-symbol deltas of the outcome that would actually fire for a
+  // choice given the current state (used by easy mode under each edge label).
+  private vitalChips(opt: CardOption): string {
     const outcome = resolveOutcome(opt, this.state, content);
     let chips = "";
     for (const key of VITAL_KEYS) {
@@ -353,7 +352,7 @@ export class Game {
     }
     if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
     if (!chips) chips = `<span class="ep-none">—</span>`;
-    return `<div class="ep-row"><span class="ep-dir">${arrow}</span>${chips}</div>`;
+    return chips;
   }
 
   private toggleEasy(): void {
@@ -556,19 +555,17 @@ export class Game {
     const front = document.createElement("div");
     front.className = "face front";
     const ageLabel = this.state.age === 0 ? t("ui.newborn") : tf("ui.age", { n: this.state.age });
-    const easyStrip = this.easy
-      ? `<div class="easy-preview">${DIRECTIONS.filter((d) => card.options[d])
-          .map((d) => this.easyRow(d, card.options[d]!))
-          .join("")}</div>`
-      : "";
+    // Easy mode: attach each option's vital preview right under its edge label.
+    const ev = (opt: CardOption): string =>
+      this.easy ? `<span class="edge-vitals">${this.vitalChips(opt)}</span>` : "";
+    const o = card.options;
     front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
       <p class="prompt">${t(card.prompt)}</p>
-      ${easyStrip}
-      ${card.options.left ? `<div class="edge edge-left">${t(card.options.left.label)}</div>` : ""}
-      ${card.options.right ? `<div class="edge edge-right">${t(card.options.right.label)}</div>` : ""}
-      ${card.options.up ? `<div class="edge edge-up">${t(card.options.up.label)}</div>` : ""}
-      ${card.options.down ? `<div class="edge edge-down">${t(card.options.down.label)}</div>` : ""}`;
+      ${o.left ? `<div class="edge edge-left">${t(o.left.label)}${ev(o.left)}</div>` : ""}
+      ${o.right ? `<div class="edge edge-right">${t(o.right.label)}${ev(o.right)}</div>` : ""}
+      ${o.up ? `<div class="edge edge-up">${t(o.up.label)}${ev(o.up)}</div>` : ""}
+      ${o.down ? `<div class="edge edge-down">${t(o.down.label)}${ev(o.down)}</div>` : ""}`;
 
     const back = document.createElement("div");
     back.className = "face back";
