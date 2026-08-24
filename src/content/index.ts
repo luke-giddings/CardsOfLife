@@ -10,6 +10,12 @@ import type { Content } from "../engine/types.ts";
 //
 // Authored as typed data (`satisfies Content`) — misspelled traits, stats or
 // magnitudes are compile errors.
+//
+// CARD ID CONVENTION: every card id is `<deck>_<name>` (e.g. baby_vaccine,
+// child_bully, study_exams, work_machine, sibling_play) so it's obvious at a
+// glance which deck a card belongs to. Card ids are display keys only — nothing
+// references a card by id — so they can be renamed freely; decks are referenced
+// by their own id (baby, childhood, studying, child_work, sibling).
 // ---------------------------------------------------------------------------
 
 export const content = {
@@ -54,7 +60,7 @@ export const content = {
       id: "baby",
       cards: [
         {
-          id: "b_birth",
+          id: "baby_birth",
           kind: "milestone",
           priority: 100,
           conditions: { ageMin: 0, ageMax: 0 },
@@ -67,7 +73,7 @@ export const content = {
         {
           // Teaches that choices move the bars, and teaches the down-swipe.
           // Each option boosts a different vital (all positive).
-          id: "b_firststeps",
+          id: "baby_firststeps",
           kind: "milestone",
           priority: 90,
           conditions: { ageMin: 1, ageMax: 1 },
@@ -81,7 +87,7 @@ export const content = {
 
         // --- ages 2–4: one_time "setups" (you'll see ~3 of these per run) ---
         {
-          id: "b_uncle",
+          id: "baby_uncle",
           kind: "one_time",
           prompt: "Your well-off uncle wants to help the little one out.",
           options: {
@@ -91,7 +97,7 @@ export const content = {
           },
         },
         {
-          id: "b_bookworm",
+          id: "baby_bookworm",
           kind: "one_time",
           prompt: "You reach for the same picture book, over and over again.",
           options: {
@@ -100,7 +106,7 @@ export const content = {
           },
         },
         {
-          id: "b_sporty",
+          id: "baby_sporty",
           kind: "one_time",
           prompt: "You will NOT sit still for one single second.",
           options: {
@@ -109,7 +115,7 @@ export const content = {
           },
         },
         {
-          id: "b_grandma",
+          id: "baby_grandma",
           kind: "one_time",
           prompt: "Grandma is absolutely determined to spoil you rotten.",
           options: {
@@ -119,7 +125,7 @@ export const content = {
           },
         },
         {
-          id: "b_vaccine",
+          id: "baby_vaccine",
           kind: "one_time",
           prompt: "The vaccinator calls at the door with his lancet — the smallpox jab.",
           options: {
@@ -128,7 +134,7 @@ export const content = {
           },
         },
         {
-          id: "b_nursery",
+          id: "baby_nursery",
           kind: "one_time",
           prompt: "Should you start at the local nursery?",
           options: {
@@ -137,7 +143,7 @@ export const content = {
           },
         },
         {
-          id: "b_brother",
+          id: "baby_brother",
           kind: "one_time",
           prompt: "Big news — a baby brother has arrived!",
           options: {
@@ -146,7 +152,7 @@ export const content = {
           },
         },
         {
-          id: "b_sister",
+          id: "baby_sister",
           kind: "one_time",
           prompt: "Big news — a baby sister has arrived!",
           options: {
@@ -156,7 +162,7 @@ export const content = {
         },
 
         {
-          id: "m_schooling",
+          id: "baby_schooling",
           kind: "milestone",
           priority: 20,
           conditions: { ageMin: 5 },
@@ -182,7 +188,7 @@ export const content = {
       unlock: "You're a child now — a whole world of scraped knees, best friends and hard knocks awaits.",
       cards: [
         {
-          id: "c_martialarts",
+          id: "child_martialarts",
           kind: "one_time",
           prompt: "Old Tom, a retired prizefighter, offers to teach the local lads to box.",
           options: {
@@ -191,7 +197,7 @@ export const content = {
           },
         },
         {
-          id: "c_bully",
+          id: "child_bully",
           kind: "one_time",
           conditions: { ageMin: 7 },
           prompt: "A bully shoves you hard in the yard. Everyone is watching.",
@@ -207,7 +213,7 @@ export const content = {
           },
         },
         {
-          id: "c_pet",
+          id: "child_pet",
           kind: "filler",
           prompt: "A scruffy stray cat follows you all the way home.",
           options: {
@@ -216,7 +222,7 @@ export const content = {
           },
         },
         {
-          id: "c_sports",
+          id: "child_sports",
           kind: "filler",
           prompt: "The lads get up a rough game of football in the muddy street.",
           options: {
@@ -225,7 +231,7 @@ export const content = {
           },
         },
         {
-          id: "c_chores",
+          id: "child_chores",
           kind: "filler",
           prompt: "Your parents offer pocket money for helping around the house.",
           options: {
@@ -234,7 +240,7 @@ export const content = {
           },
         },
         {
-          id: "c_sweets",
+          id: "child_sweets",
           kind: "filler",
           prompt: "The sweet-shop window: humbugs, sherbet and liquorice, a farthing a twist.",
           options: {
@@ -257,7 +263,7 @@ export const content = {
         // --- Hazards: childhood was deadly. Survival is earned through your
         //     earlier choices (vaccinated, sporty, health kept up, savings). ---
         {
-          id: "h_fever",
+          id: "child_fever",
           kind: "one_time",
           conditions: { ageMin: 6 },
           prompt: "A fever sweeps through the street, and now it is burning through you.",
@@ -281,7 +287,7 @@ export const content = {
           },
         },
         {
-          id: "h_accident",
+          id: "child_accident",
           kind: "one_time",
           conditions: { ageMin: 5 },
           prompt: "A runaway cart thunders down the cobbles — straight at you!",
@@ -304,7 +310,7 @@ export const content = {
           },
         },
         {
-          id: "h_hunger",
+          id: "child_hunger",
           kind: "one_time",
           conditions: { ageMin: 6, vitals: { finances: { max: 25 } } },
           prompt: "The cupboards are bare, and there are too many mouths to feed.",
@@ -315,7 +321,7 @@ export const content = {
         },
 
         {
-          id: "m_adult",
+          id: "child_adult",
           kind: "milestone",
           priority: 100,
           conditions: { ageMin: 18 },
@@ -333,7 +339,7 @@ export const content = {
       id: "studying",
       cards: [
         {
-          id: "c_exams",
+          id: "study_exams",
           kind: "one_time",
           conditions: { ageMin: 11 },
           prompt: "Big examinations loom, and the schoolmaster expects great things.",
@@ -343,7 +349,7 @@ export const content = {
           },
         },
         {
-          id: "c_firstcrush",
+          id: "study_crush",
           kind: "one_time",
           conditions: { ageMin: 13 },
           prompt: "Your heart does something strange when a certain classmate walks by.",
@@ -353,7 +359,7 @@ export const content = {
           },
         },
         {
-          id: "c_friend",
+          id: "study_friend",
           kind: "filler",
           prompt: "The new pupil is looking for someone to share a desk with.",
           options: {
@@ -362,7 +368,7 @@ export const content = {
           },
         },
         {
-          id: "s_prize",
+          id: "study_prize",
           kind: "filler",
           prompt: "Prize-giving day. The medal for best pupil is within your reach.",
           options: {
@@ -378,7 +384,7 @@ export const content = {
       id: "child_work",
       cards: [
         {
-          id: "hw_machine",
+          id: "work_machine",
           kind: "one_time",
           prompt: "The foreman waves you under the thundering loom to clear a jam.",
           options: {
@@ -394,7 +400,7 @@ export const content = {
           },
         },
         {
-          id: "jw_wages",
+          id: "work_wages",
           kind: "filler",
           prompt: "Friday, and the foreman counts out your wages.",
           options: {
@@ -417,7 +423,7 @@ export const content = {
       unlock: "You've got a little sidekick now — partner in crime, or thorn in your side. That's up to you.",
       cards: [
         {
-          id: "sib_play",
+          id: "sibling_play",
           kind: "filler",
           prompt: "Your little sibling is begging you to come and play.",
           options: {
@@ -438,7 +444,7 @@ export const content = {
           },
         },
         {
-          id: "sib_blame",
+          id: "sibling_blame",
           kind: "filler",
           prompt: "Something's broken, and a parent is demanding to know who did it.",
           options: {
@@ -459,7 +465,7 @@ export const content = {
           },
         },
         {
-          id: "sib_treat",
+          id: "sibling_treat",
           kind: "filler",
           prompt: "There is exactly one biscuit left in the tin.",
           options: {
