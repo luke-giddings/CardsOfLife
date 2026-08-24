@@ -45,6 +45,9 @@ export const content = {
         // Victorian child labour: a few coins, at a steady cost to health,
         // and it opens the dangerous job_labour deck.
         child_labourer: { label: "Child labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
+        // Learning a trade under a master: a small stipend and no danger — the
+        // best way out of the workhouse. Paired with the "apprentice" housing.
+        apprentice: { label: "Apprentice", drift: { finances: 5 } },
       },
     },
     housing: {
@@ -54,8 +57,17 @@ export const content = {
         // stray to take in). No drain — home is safe.
         family: { label: "With family", addDecks: ["home_family"] },
         // The workhouse: a grinding health/happiness drain, and its own deck of
-        // bleak daily-life events.
+        // bleak daily-life events (including three ways out).
         workhouse: { label: "Workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
+        // Ways out of the workhouse:
+        // — bought your way into modest lodgings (safe, no drain; paid for up
+        //   front with a lump sum).
+        renting: { label: "Renting" },
+        // — ran away / turned out onto the streets: free, but the hardest grind
+        //   of all. (Its own deck & exits are Backlog.)
+        homeless: { label: "Homeless", drift: { health: -5, happiness: -5 } },
+        // — taken on by a master tradesman (housed and fed; see job=apprentice).
+        apprentice: { label: "With a master" },
       },
     },
     education: {
@@ -289,7 +301,7 @@ export const content = {
           conditions: { ageMin: 6, vitals: { finances: { max: 25 } } },
           prompt: "The cupboards are bare, and there are too many mouths to feed.",
           options: {
-            left: { label: "Beg and scavenge", outcomes: [{ result: "Cold, hungry and half-starved — but free, and nobody's servant.", effects: { vitals: { health: "--", happiness: "-", spirit: "+" } } }] },
+            left: { label: "Take to the streets", outcomes: [{ result: "Better the open road than the workhouse gate. Free, if you can survive it.", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless" } } }] },
             right: { label: "Into the workhouse", outcomes: [{ result: "You trade your liberty for a roof and a full belly tonight. The grind starts tomorrow.", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse" } } }] },
           },
         },
@@ -376,9 +388,9 @@ export const content = {
         {
           id: "home_workhouse_oakum",
           kind: "filler",
-          prompt: "Twelve hours picking oakum — teasing tarred rope apart until your fingertips are raw.",
+          prompt: "Twelve hours picking oakum — teasing tarred rope apart until your fingertips are raw. There's a penny in it for a full basket.",
           options: {
-            left: { label: "Hit your quota", outcomes: [{ result: "Bleeding fingers, but the overseer nods and your ration holds.", effects: { vitals: { health: "+", happiness: "-", spirit: "-" } } }] },
+            left: { label: "Hit your quota", outcomes: [{ result: "Bleeding fingers and an aching back — but a few coins toward buying your way out one day.", effects: { vitals: { finances: "+", health: "-", happiness: "-" } } }] },
             right: { label: "Botch it in protest", outcomes: [{ result: "A small, secret rebellion — worth the cold cell and the skipped supper.", effects: { vitals: { spirit: "++", happiness: "+", health: "--" } } }] },
           },
         },
@@ -399,6 +411,43 @@ export const content = {
           options: {
             left: { label: "Play the favourite", outcomes: [{ result: "Extra bread and a warmer corner — bought with a good deal of bowing and scraping.", effects: { vitals: { health: "+", happiness: "+", spirit: "--" } } }] },
             right: { label: "Keep your dignity", outcomes: [{ result: "You'll not grovel for anyone. She soon tires of you — but you can still look yourself in the eye.", effects: { vitals: { spirit: "++", health: "-", happiness: "-" } } }] },
+          },
+        },
+
+        // --- Three ways out of the workhouse. Each changes the housing status
+        //     (and the apprenticeship changes your job too), which hands the
+        //     home_workhouse deck away automatically. ------------------------
+        {
+          // Buy your way out — needs a nest egg saved from oakum piecework.
+          id: "home_workhouse_buyout",
+          kind: "one_time",
+          conditions: { vitals: { finances: { min: 40 } } },
+          prompt: "You've squirrelled away just enough. The master will strike your name off the register — for a price.",
+          options: {
+            left: { label: "Buy your freedom", outcomes: [{ result: "Coins counted onto the desk, and the gate swings open. A cramped rented room, but it's yours.", effects: { vitals: { finances: "--", happiness: "++", spirit: "+" }, setStatus: { housing: "renting" } } }] },
+            right: { label: "Hold onto your savings", outcomes: [{ result: "You can't quite bring yourself to part with every last penny. Not yet.", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+          },
+        },
+        {
+          // Run away — always available, but the streets are their own trial.
+          id: "home_workhouse_runaway",
+          kind: "one_time",
+          conditions: { ageMin: 7 },
+          prompt: "A side gate is left unlatched in the grey before dawn. You could just… go.",
+          options: {
+            left: { label: "Run for it", outcomes: [{ result: "Heart pounding, you bolt — and don't stop until the workhouse is far behind. Free, and utterly on your own.", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless" } } }] },
+            right: { label: "Stay put", outcomes: [{ result: "The risk is too great, the world outside too cold. You slink back to your cot.", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+          },
+        },
+        {
+          // Apprenticeship — the good ending; older children only.
+          id: "home_workhouse_apprentice",
+          kind: "one_time",
+          conditions: { ageMin: 10 },
+          prompt: "A visiting tradesman needs a willing pair of hands, and will take an apprentice off the parish's books.",
+          options: {
+            left: { label: "Take the indenture", outcomes: [{ result: "A trade, a master's roof, and a future you can build. The workhouse gates close behind you for good.", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" } } }] },
+            right: { label: "Stay in the workhouse", outcomes: [{ result: "Better the devil you know, you tell yourself — and wonder if you'll regret it.", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
           },
         },
       ],

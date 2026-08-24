@@ -79,8 +79,8 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 
 | Status | States (so far) | Notes |
 |---|---|---|
-| **Job / occupation** | infant · child_labourer | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour`. |
-| **Housing** | family · workhouse | Start = family (no drain), opens `home_family`. Workhouse: health −5 / happiness −5 drift, opens `home_workhouse`. |
+| **Job / occupation** | infant · child_labourer · apprentice | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour`. Apprentice: finances +5 drift (a trade, no danger) — the workhouse's best exit. |
+| **Housing** | family · workhouse · renting · homeless · apprentice | Start = family (no drain), opens `home_family`. Workhouse: health −5 / happiness −5 drift, opens `home_workhouse`. Three ways out: **renting** (bought out — safe, no drain), **homeless** (ran away — health −5 / happiness −5, no deck yet), **apprentice** ("with a master" — safe, paired with job=apprentice). |
 | **Education** | none · school | Ordered (levels). `school` opens the `edu_basicschool` deck; a persistent record of schooling for later gating. |
 | **Lifestyle** | default | Reserved. |
 
@@ -152,8 +152,9 @@ Status **drift** (after effects) → check game-over.
 - **home_family** (housing = family): home life with a home to have — chores,
   the sweet shop, a stray cat to take in. Lost on entering the workhouse.
 - **home_workhouse** (housing = workhouse): bleak workhouse daily life — gruel,
-  oakum, a ward friend, the matron — grim trade-offs that let a careful child
-  claw a little back against the health/happiness drift.
+  oakum (piecework pennies toward buying out), a ward friend, the matron — plus
+  **three exits**: buy your freedom (→ renting, needs ~40 saved), run away
+  (→ homeless), or take an apprenticeship (→ apprentice housing + job, age 10+).
 - **edu_basicschool** (education = school): exams, first crush, a new friend,
   prize day. (Room for `edu_grammar` and other schools later.)
 - **job_labour** (job = child_labourer): the loom hazard, Friday wages.
@@ -254,9 +255,15 @@ Roughly in likely order. None of these are started.
   **adult decks** and job/education gating.
 - **House decks & an "owned" housing status** — renting/buying, home events;
   gives something to *own* (prerequisite for inheritance below).
-- **Workhouse escape** — the `home_workhouse` deck now has daily-life cards, but
-  no way *out*; add events to leave it (apprenticed to a trade → `job`, a
-  benefactor, running away → back to `family` or homeless).
+- **Homeless deck & exits** — `homeless` housing (reached by begging off the
+  hunger card, or running away from the workhouse) now has its own health/
+  happiness drift but **no deck and no way out** — a pure hardship spiral. Give
+  it a `home_homeless` deck (begging for coins, finding shelter, a soup kitchen)
+  and exits (a benefactor, a doss-house job → renting/apprentice), mirroring
+  what the workhouse now has.
+- **Renting / apprentice life** — the two "good" workhouse exits currently have
+  no decks of their own (`home_renting`, a master's-workshop deck). Part of the
+  broader **house decks** work below.
 - **Legacy / inheritance across runs** — if you owned a house *and* had an heir,
   the **next run starts in that house** (and maybe with some money/traits).
   Implemented as a shim: on the end screen write an `inheritance` record to
