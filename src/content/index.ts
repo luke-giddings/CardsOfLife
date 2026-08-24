@@ -298,9 +298,12 @@ export const content = {
               ],
             },
             right: {
+              // A clumsier, toughness-based dodge: survives from a lower health
+              // floor than the leap, but always costs you — the safer call when
+              // you're not sporty, while the leap stays best for the agile.
               label: "child_accident.right",
               outcomes: [
-                { if: { vitals: { health: { min: 60 } } }, result: "child_accident.right.r0", effects: { vitals: { health: "--", happiness: "-" } } },
+                { if: { vitals: { health: { min: 30 } } }, result: "child_accident.right.r0", effects: { vitals: { health: "-", happiness: "-" } } },
                 { result: "child_accident.right.r1", effects: { endGame: "health" } },
               ],
             },
