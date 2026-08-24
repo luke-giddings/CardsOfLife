@@ -166,8 +166,12 @@ export class Game {
     reset.addEventListener("click", () => {
       if (!this.busy) this.restart();
     });
-    controls.append(lang, this.easyBtn, this.dbgBtn, reset);
-    headRow.append(age, controls);
+    // Debug lives on the far left (with the age) so it's clearly separate from
+    // the three player-facing controls (Language / Easy / Reset) on the right.
+    controls.append(lang, this.easyBtn, reset);
+    const headLeft = el("div", "head-left");
+    headLeft.append(age, this.dbgBtn);
+    headRow.append(headLeft, controls);
 
     const vitals = el("div", "vitals");
     this.fills = {} as Record<VitalKey, HTMLElement>;

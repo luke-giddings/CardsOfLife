@@ -89,6 +89,11 @@ body {
   justify-content: space-between;
   margin-bottom: 12px;
 }
+.head-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 .age {
   display: flex;
   align-items: baseline;
