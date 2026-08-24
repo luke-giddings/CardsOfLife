@@ -5,6 +5,7 @@ import {
   eligibleDraw,
   initGame,
   quietYear,
+  resolveOutcome,
   setContent,
   totalDrift,
 } from "../engine/engine.ts";
@@ -15,6 +16,7 @@ import {
   STATUS_KINDS,
   VITAL_KEYS,
   type Card,
+  type CardOption,
   type Condition,
   type Direction,
   type Effect,
@@ -28,6 +30,7 @@ import { t, tf, getLocale, setLocale, LOCALES, type StringId } from "../i18n/ind
 import { APP_VERSION, BUILD_DESC } from "../version.ts";
 
 const DEBUG_KEY = "cardsoflife.debug";
+const EASY_KEY = "cardsoflife.easy";
 const DECK_BY_ID = new Map(content.decks.map((d) => [d.id, d]));
 const ALL_CARDS: Card[] = content.decks.flatMap((d) =>
   d.cards.map((c) => ({ ...c, deck: d.id }) as Card),
@@ -96,6 +99,8 @@ export class Game {
   private flip: HTMLElement | null = null;
 
   private debug = false;
+  private easy = false; // "easy mode": preview each choice's vital changes on the card
+  private easyBtn!: HTMLButtonElement;
   private ageNumEl!: HTMLElement;
   private fills!: Record<VitalKey, HTMLElement>;
   private flashes!: Record<VitalKey, HTMLElement>;
@@ -114,6 +119,7 @@ export class Game {
     this.root = root;
     setContent(content);
     this.debug = loadDebug();
+    this.easy = loadEasy();
     this.buildShell();
     this.state = loadGame() ?? initGame(content);
     this.prevVitals = { ...this.state.vitals };
@@ -145,6 +151,11 @@ export class Game {
     lang.addEventListener("click", () => {
       if (!this.busy) this.cycleLocale();
     });
+    this.easyBtn = el("button", "easy") as HTMLButtonElement;
+    this.easyBtn.textContent = t("ui.easy");
+    this.easyBtn.title = t("ui.easyTip");
+    this.easyBtn.classList.toggle("on", this.easy);
+    this.easyBtn.addEventListener("click", () => this.toggleEasy());
     this.dbgBtn = el("button", "dbg") as HTMLButtonElement;
     this.dbgBtn.textContent = t("ui.debug");
     this.dbgBtn.title = t("ui.debugTip");
@@ -155,7 +166,7 @@ export class Game {
     reset.addEventListener("click", () => {
       if (!this.busy) this.restart();
     });
-    controls.append(lang, this.dbgBtn, reset);
+    controls.append(lang, this.easyBtn, this.dbgBtn, reset);
     headRow.append(age, controls);
 
     const vitals = el("div", "vitals");
@@ -319,6 +330,42 @@ export class Game {
     else if (this.pendingUnlock) this.showUnlock();
     else if (this.card && this.phase === "front") this.showFront(this.card);
     else this.beginTurn();
+  }
+
+  // --- easy mode -------------------------------------------------------------
+
+  // One consequences row for a choice: a direction arrow + the vital-symbol
+  // deltas of the outcome that would actually fire given the current state.
+  private easyRow(dir: Direction, opt: CardOption): string {
+    const arrow = { left: "◀", right: "▶", up: "▲", down: "▼" }[dir];
+    const outcome = resolveOutcome(opt, this.state, content);
+    let chips = "";
+    for (const key of VITAL_KEYS) {
+      const mag = outcome.effects?.vitals?.[key];
+      if (!mag) continue;
+      const pos = mag.startsWith("+");
+      const token = mag.split("-").join("−"); // proper minus glyphs
+      chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span><span class="${pos ? "dgood" : "dbad"}">${token}</span></span>`;
+    }
+    if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
+    if (!chips) chips = `<span class="ep-none">—</span>`;
+    return `<div class="ep-row"><span class="ep-dir">${arrow}</span>${chips}</div>`;
+  }
+
+  private toggleEasy(): void {
+    if (this.busy) return;
+    this.easy = !this.easy;
+    saveEasy(this.easy);
+    this.easyBtn.classList.toggle("on", this.easy);
+    // Re-render the current front card so the preview appears/disappears.
+    if (this.phase === "front" && this.card) {
+      if (this.holder) {
+        this.holder.remove();
+        this.holder = null;
+        this.flip = null;
+      }
+      this.showFront(this.card);
+    }
   }
 
   // --- debug -----------------------------------------------------------------
@@ -505,9 +552,15 @@ export class Game {
     const front = document.createElement("div");
     front.className = "face front";
     const ageLabel = this.state.age === 0 ? t("ui.newborn") : tf("ui.age", { n: this.state.age });
+    const easyStrip = this.easy
+      ? `<div class="easy-preview">${DIRECTIONS.filter((d) => card.options[d])
+          .map((d) => this.easyRow(d, card.options[d]!))
+          .join("")}</div>`
+      : "";
     front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
       <p class="prompt">${t(card.prompt)}</p>
+      ${easyStrip}
       ${card.options.left ? `<div class="edge edge-left">${t(card.options.left.label)}</div>` : ""}
       ${card.options.right ? `<div class="edge edge-right">${t(card.options.right.label)}</div>` : ""}
       ${card.options.up ? `<div class="edge edge-up">${t(card.options.up.label)}</div>` : ""}
@@ -877,6 +930,21 @@ function loadDebug(): boolean {
 function saveDebug(on: boolean): void {
   try {
     localStorage.setItem(DEBUG_KEY, on ? "1" : "0");
+  } catch {
+    // ignore
+  }
+}
+
+function loadEasy(): boolean {
+  try {
+    return localStorage.getItem(EASY_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function saveEasy(on: boolean): void {
+  try {
+    localStorage.setItem(EASY_KEY, on ? "1" : "0");
   } catch {
     // ignore
   }

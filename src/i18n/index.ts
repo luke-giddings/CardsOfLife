@@ -300,6 +300,7 @@ export const EN = {
   // ---- STATUS state labels ---------------------------------------------
   "status.job.infant": "None",
   "status.job.child_labourer": "Child labourer",
+  "status.job.studying": "Pupil",
   "status.job.apprentice": "Apprentice",
   "status.housing.family": "With family",
   "status.housing.workhouse": "Workhouse",
@@ -335,6 +336,8 @@ export const EN = {
 
   // ---- UI chrome --------------------------------------------------------
   "ui.yearsOld": "years old",
+  "ui.easy": "Easy",
+  "ui.easyTip": "Easy mode: preview each choice's effect on your vitals",
   "ui.debug": "Debug",
   "ui.debugTip": "Toggle debug info",
   "ui.reset": "Reset",
@@ -625,6 +628,7 @@ export const IT: Record<StringId, string> = {
   // ---- STATUS state labels ---------------------------------------------
   "status.job.infant": "Nessuno",
   "status.job.child_labourer": "Bambino operaio",
+  "status.job.studying": "Scolaro",
   "status.job.apprentice": "Apprendista",
   "status.housing.family": "In famiglia",
   "status.housing.workhouse": "Casa di lavoro",
@@ -660,6 +664,8 @@ export const IT: Record<StringId, string> = {
 
   // ---- UI chrome --------------------------------------------------------
   "ui.yearsOld": "anni",
+  "ui.easy": "Facile",
+  "ui.easyTip": "Modalità facile: mostra l'effetto di ogni scelta sulle statistiche",
   "ui.debug": "Debug",
   "ui.debugTip": "Attiva/disattiva le info di debug",
   "ui.reset": "Azzera",

@@ -79,9 +79,9 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 
 | Status | States (so far) | Notes |
 |---|---|---|
-| **Job / occupation** | infant · child_labourer · apprentice | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour`. Apprentice: finances +5 drift (a trade, no danger) — the workhouse's best exit. |
+| **Job / occupation** | infant · child_labourer · studying · apprentice | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour`. Studying (the school path): spirit −5 / finances −5 drift (no wages, a grind — the trade for a better job later), opens `edu_basicschool`. Apprentice: finances +5 drift (a trade, no danger) — the workhouse's best exit. |
 | **Housing** | family · workhouse · renting · homeless · apprentice | Start = family (no drain), opens `home_family`. Workhouse: health −5 / happiness −5 drift, opens `home_workhouse`. Three ways out: **renting** (bought out — safe, no drain), **homeless** (ran away — health −5 / happiness −5, no deck yet), **apprentice** ("with a master" — safe, paired with job=apprentice). |
-| **Education** | none · school | Ordered (levels). `school` opens the `edu_basicschool` deck; a persistent record of schooling for later gating. |
+| **Education** | none · school | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying — its deck and drift — lives on `job = studying`, so the pressure ends when you stop attending but the credential remains. |
 | **Lifestyle** | default | Reserved. |
 
 **Deck naming:** decks owned by a status are prefixed by that status's kind —
@@ -194,6 +194,11 @@ epitaph/scoring model is Backlog.
 
 Autosave to `localStorage` every turn; resume on load; a **Reset** control wipes
 and restarts. A separate **Debug** toggle (persisted) unlocks the debug toolkit.
+An **Easy** toggle (persisted, player-facing) previews each choice's vital
+changes on the card — a row per swipe direction showing the vital symbols
+(£ ☺ ♥ ✦) and the magnitude, computed from the outcome that would actually fire
+given the current state (a ☠ marks a choice that can end the run). A **language**
+toggle switches English/Italian live.
 
 ## 14. Tech & architecture
 

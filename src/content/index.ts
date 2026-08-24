@@ -17,8 +17,9 @@ import type { Content } from "../engine/types.ts";
 // CARD ID CONVENTION: every card id is `<deck>_<name>` (e.g. baby_vaccine,
 // child_bully, edu_basicschool_exams, job_labour_machine, sibling_play).
 //
-// DECK NAMING: decks tied to a status are prefixed by that status's kind:
-//   edu_*   education status (edu_basicschool; room for edu_grammar etc. later)
+// DECK NAMING: status-driven decks are prefixed by their life-area:
+//   edu_*   the school path  (edu_basicschool — activated by job=studying;
+//           room for edu_grammar etc. later)
 //   home_*  housing status   (home_family, home_workhouse)
 //   job_*   job status       (job_labour)
 // Cross-cutting decks that aren't owned by a single status keep plain names:
@@ -45,6 +46,11 @@ export const content = {
         // Victorian child labour: a few coins, at a steady cost to health,
         // and it opens the dangerous job_labour deck.
         child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
+        // While at school your "occupation" is studying: no wages and a grind on
+        // the spirit (the counterpart to the labourer's pay-for-health trade).
+        // It owns the school-events deck; the education status just records the
+        // level reached, and outlives this once you stop attending.
+        studying: { label: "status.job.studying", drift: { spirit: -5, finances: -5 }, addDecks: ["edu_basicschool"] },
         // Learning a trade under a master: a small stipend and no danger — the
         // best way out of the workhouse. Paired with the "apprentice" housing.
         apprentice: { label: "status.job.apprentice", drift: { finances: 5 } },
@@ -73,7 +79,14 @@ export const content = {
       id: "education",
       ordered: true,
       levels: ["none", "school"],
-      states: { none: { label: "status.education.none" }, school: { label: "status.education.school", addDecks: ["edu_basicschool"] } },
+      states: {
+        none: { label: "status.education.none" },
+        // A persisting record of the level reached, for later `atLeast` gating
+        // (e.g. grammar school). The *activity* of studying — its deck and its
+        // drift — lives on the job status (job=studying), so the pressure stops
+        // when you stop attending but the credential remains.
+        school: { label: "status.education.school" },
+      },
     },
     lifestyle: { id: "lifestyle", states: { default: {} } },
   },
@@ -193,7 +206,7 @@ export const content = {
           options: {
             left: {
               label: "baby_schooling.left",
-              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school", job: "studying" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
             },
             right: {
               label: "baby_schooling.right",
