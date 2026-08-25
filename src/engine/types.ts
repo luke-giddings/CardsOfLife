@@ -21,13 +21,21 @@ export const VITAL_MAX = 100;
 // so the player sees a small ("+") vs a large ("++") move rather than muddy
 // in-between values. Tweak the point values here in one place; add more levels
 // (e.g. "+++") later as balancing needs them.
-export type Magnitude = "--" | "-" | "+" | "++";
-export const MAGNITUDE_POINTS: Record<Magnitude, number> = {
+export type Magnitude = "---" | "--" | "-" | "+" | "++";
+// Flat point steps for the fixed magnitudes.
+export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "---">, number> = {
   "++": 25,
   "+": 10,
   "-": -10,
   "--": -25,
 };
+// Apply a magnitude to a value (unclamped). Most are flat steps; "---" is a
+// proportional "lose about half" — a big cost that can never reach 0 from a
+// positive value, so a card gated behind a floor condition can't game-over.
+export function applyMagnitude(value: number, mag: Magnitude): number {
+  if (mag === "---") return Math.round(value / 2);
+  return value + MAGNITUDE_POINTS[mag];
+}
 
 // End-screen framing. The four vital endings (only Health's is "death"), plus
 // named endings triggered by an effect (e.g. reaching adulthood). title/blurb

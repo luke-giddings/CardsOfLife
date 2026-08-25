@@ -13,7 +13,7 @@ import { meets } from "../engine/conditions.ts";
 import { clearSave, loadGame, saveGame } from "../engine/save.ts";
 import {
   ENDINGS,
-  MAGNITUDE_POINTS,
+  applyMagnitude,
   STATUS_KINDS,
   VITAL_KEYS,
   VITAL_MIN,
@@ -361,7 +361,7 @@ export class Game {
       // If this stat would reach 0 (after this change plus the turn's drift),
       // it's lethal — show the death symbol on it instead of the magnitude.
       const lethal =
-        this.state.vitals[key] + MAGNITUDE_POINTS[mag] + (drift[key] ?? 0) <= VITAL_MIN;
+        applyMagnitude(this.state.vitals[key], mag) + (drift[key] ?? 0) <= VITAL_MIN;
       const body = lethal
         ? `<span class="dbad ep-end" title="This would be fatal">☠</span>`
         : `<span class="${pos ? "dgood" : "dbad"}">${mag.split("-").join("−")}</span>`;

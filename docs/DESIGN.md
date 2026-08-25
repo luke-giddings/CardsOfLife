@@ -66,6 +66,7 @@ so every bar move is a clearly-perceptible size (no muddy +10-vs-+15):
 | `+` | +10 |
 | `-` | −10 |
 | `--` | −25 |
+| `---` | **−50%** (proportional — halves the vital; can't reach 0 from a positive value, so a floor-gated card can't game-over) |
 
 Point values live in one place (`MAGNITUDE_POINTS`, `types.ts`) — balancing is a
 single table, and more levels (e.g. `+++`) can be added later. Relationship

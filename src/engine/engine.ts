@@ -2,7 +2,7 @@ import { meets } from "./conditions.ts";
 import { nextRandom, randomSeed } from "./rng.ts";
 import {
   DEFAULT_TRAITS,
-  MAGNITUDE_POINTS,
+  applyMagnitude,
   VITAL_MAX,
   VITAL_MIN,
   VITAL_KEYS,
@@ -189,7 +189,7 @@ function applyEffect(state: GameState, effect: Effect, content: Content): void {
   if (effect.vitals) {
     for (const [k, mag] of Object.entries(effect.vitals)) {
       const key = k as VitalKey;
-      state.vitals[key] = clampVital(state.vitals[key] + MAGNITUDE_POINTS[mag as Magnitude]);
+      state.vitals[key] = clampVital(applyMagnitude(state.vitals[key], mag as Magnitude));
     }
   }
   if (effect.endGame) {
