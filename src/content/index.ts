@@ -614,11 +614,14 @@ export const content = {
           prompt: "edu_basicschool_exams.prompt",
           options: {
             left: {
+              // Studying hard earns the credential (education -> school) — you
+              // know your stuff, even if you leave school early afterwards. (The
+              // leaver card is the fallback for those who did neither this nor
+              // the prize.) A bookish child finds it a pleasure, not a grind.
               label: "edu_basicschool_exams.left",
               outcomes: [
-                // A bookish child finds studying a pleasure, not a grind.
-                { if: { traits: { bookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
-                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } },
+                { if: { traits: { bookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "school" } } },
+                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "school" } } },
               ],
             },
             right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
@@ -649,11 +652,12 @@ export const content = {
           prompt: "edu_basicschool_prize.prompt",
           options: {
             left: {
+              // Winning the prize also earns the credential. A bookish child has
+              // already half-read the syllabus for fun — an easy win.
               label: "edu_basicschool_prize.left",
               outcomes: [
-                // Already read half the syllabus for fun — an easy win.
-                { if: { traits: { bookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" } } },
-                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
+                { if: { traits: { bookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "school" } } },
+                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "school" } } },
               ],
             },
             right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },

@@ -82,7 +82,7 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 |---|---|---|
 | **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour` — the wage offsets the family living cost, so labour breaks even at a cost to health. Studying (school path): spirit −5 drift, opens `edu_basicschool`. Apprentice: finances +5 (the workhouse's best exit). **Leaving school** → unemployed (no drift; family cost bites) which opens `job_unemployed` (a recurring job offer); take a first job → **shophand** (finances +5, safe) or **factory** (finances +10 / health −5, better pay, harder). |
 | **Housing** | family · workhouse · renting · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): finances −5 rent but spirit +5 (independence); own deck is Backlog. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
-| **Education** | none · school | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is granted **only at the end-of-basic-school leaver card** (age 14), so dropping out for work/the workhouse before then leaves you `none` (Illiterate). |
+| **Education** | none · school | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
 | **Lifestyle** | default | Reserved. |
 
 **Deck naming:** decks owned by a status are prefixed by that status's kind —
@@ -158,9 +158,10 @@ Status **drift** (after effects) → check game-over.
   (→ homeless), or take an apprenticeship (→ apprentice housing + job, age 10+).
 - **edu_basicschool** (job = studying): exams, first crush, a friend, prize
   day, after-school **errands** (money route), and the **leaver** milestone at
-  14 — both choices grant the `school` credential, then you either stay on to
-  study (toward a future grammar tier) or leave for work (→ unemployed). (Room
-  for `edu_grammar` → `university` later.)
+  14. The credential is earned by effort (study hard / win the prize); the
+  leaver grants it as a fallback and is the branch point — stay on to study
+  (toward a future grammar tier) or leave for work (→ unemployed). (Room for
+  `edu_grammar` → `university` later.)
 - **job_unemployed** (job = unemployed): a school-leaver hunting for work. A
   recurring job offer (shop vs factory, or hold out) plus an idle-day card; the
   family cost bites until you take a job, which hands this deck away. First pass.
