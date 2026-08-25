@@ -13,8 +13,10 @@ import { meets } from "../engine/conditions.ts";
 import { clearSave, loadGame, saveGame } from "../engine/save.ts";
 import {
   ENDINGS,
+  MAGNITUDE_POINTS,
   STATUS_KINDS,
   VITAL_KEYS,
+  VITAL_MIN,
   type Card,
   type CardOption,
   type Condition,
@@ -347,8 +349,13 @@ export class Game {
       const mag = outcome.effects?.vitals?.[key];
       if (!mag) continue;
       const pos = mag.startsWith("+");
-      const token = mag.split("-").join("−"); // proper minus glyphs
-      chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span><span class="${pos ? "dgood" : "dbad"}">${token}</span></span>`;
+      // If this drop would take the vital to 0, it's lethal — show the death
+      // symbol on that stat instead of the magnitude.
+      const lethal = !pos && this.state.vitals[key] + MAGNITUDE_POINTS[mag] <= VITAL_MIN;
+      const body = lethal
+        ? `<span class="dbad ep-end" title="This would be fatal">☠</span>`
+        : `<span class="${pos ? "dgood" : "dbad"}">${mag.split("-").join("−")}</span>`;
+      chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
     if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
     if (!chips) chips = `<span class="ep-none">—</span>`;
