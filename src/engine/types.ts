@@ -77,6 +77,9 @@ export interface Traits {
   relSister: number;
   numTimesChangedJob: number;
   numTimesPlayedLottery: number;
+  // Years served in the current job. Ticked by each work-event card; a
+  // promotion card gates on it and resets it to 0 on the step up.
+  experience: number;
 }
 
 export const DEFAULT_TRAITS: Traits = {
@@ -94,6 +97,7 @@ export const DEFAULT_TRAITS: Traits = {
   relSister: 0,
   numTimesChangedJob: 0,
   numTimesPlayedLottery: 0,
+  experience: 0,
 };
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.

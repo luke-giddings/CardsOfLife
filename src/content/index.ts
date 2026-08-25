@@ -66,6 +66,18 @@ export const content = {
         shophand: { label: "status.job.shophand", drift: { finances: 5 }, addDecks: ["job_shop"] },
         factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
         pickpocket: { label: "status.job.pickpocket", drift: { finances: 10, spirit: -5 }, addDecks: ["job_criminal"] },
+        // Second-tier jobs (reached by a promotion card once you have enough
+        // `experience` in the tier-1 job). Each pays better but bites harder,
+        // and owns its own deck (work events + a job-loss card → unemployed).
+        // Educated ladder: shophand → clerk (a respectable desk, more pay but
+        // dull, soul-sapping work).
+        clerk: { label: "status.job.clerk", drift: { finances: 10, happiness: -5 }, addDecks: ["job_clerk"] },
+        // Manual ladder: factory → foreman (off the line, better wage, still
+        // wearing on the body).
+        foreman: { label: "status.job.foreman", drift: { finances: 15, health: -5 }, addDecks: ["job_foreman"] },
+        // Criminal ladder: pickpocket → burglar (bigger scores, a heavier toll
+        // on the spirit and worse if you are caught).
+        burglar: { label: "status.job.burglar", drift: { finances: 15, spirit: -10 }, addDecks: ["job_burglar"] },
       },
     },
     housing: {
@@ -815,6 +827,30 @@ export const content = {
       id: "job_shop",
       cards: [
         {
+          // A day behind the counter. Flavour + a tick of experience toward
+          // promotion; the choice trades a little of one vital for another.
+          id: "job_shop_day",
+          kind: "filler",
+          prompt: "job_shop_day.prompt",
+          options: {
+            left: { label: "job_shop_day.left", outcomes: [{ result: "job_shop_day.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_shop_day.right", outcomes: [{ result: "job_shop_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // Promotion to clerk. Eligible once you have served your time
+          // (experience >= 3). Accept → clerk (reset experience for the next
+          // rung); decline → keep your place, a small knock to the spirit.
+          id: "job_shop_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_shop_promote.prompt",
+          options: {
+            left: { label: "job_shop_promote.left", outcomes: [{ result: "job_shop_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_shop_promote.right", outcomes: [{ result: "job_shop_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+        {
           id: "job_shop_sacked",
           kind: "filler",
           prompt: "job_shop_sacked.prompt",
@@ -828,6 +864,28 @@ export const content = {
     {
       id: "job_factory",
       cards: [
+        {
+          // A shift on the floor. Ticks experience; push hard for pay at a cost
+          // to health, or pace yourself and keep your strength.
+          id: "job_factory_day",
+          kind: "filler",
+          prompt: "job_factory_day.prompt",
+          options: {
+            left: { label: "job_factory_day.left", outcomes: [{ result: "job_factory_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_factory_day.right", outcomes: [{ result: "job_factory_day.right.r0", effects: { vitals: { health: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // Promotion to foreman once experienced enough (>= 3).
+          id: "job_factory_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_factory_promote.prompt",
+          options: {
+            left: { label: "job_factory_promote.left", outcomes: [{ result: "job_factory_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "foreman" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_factory_promote.right", outcomes: [{ result: "job_factory_promote.right.r0", effects: { vitals: { happiness: "+" } } }] },
+          },
+        },
         {
           id: "job_factory_sacked",
           kind: "filler",
@@ -857,6 +915,28 @@ export const content = {
       id: "job_criminal",
       cards: [
         {
+          // A lift on the street. Ticks experience; take a fat purse (money, a
+          // knock to the spirit) or keep to small, safe pickings.
+          id: "job_criminal_job",
+          kind: "filler",
+          prompt: "job_criminal_job.prompt",
+          options: {
+            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_criminal_job.right", outcomes: [{ result: "job_criminal_job.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // Promotion to burglar once experienced enough (>= 3): the big time.
+          id: "job_criminal_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_criminal_promote.prompt",
+          options: {
+            left: { label: "job_criminal_promote.left", outcomes: [{ result: "job_criminal_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "burglar" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_criminal_promote.right", outcomes: [{ result: "job_criminal_promote.right.r0", effects: { vitals: { spirit: "+", finances: "-" } } }] },
+          },
+        },
+        {
           // Arrest is rougher than an honest sacking (a real prison status is
           // Backlog); for now it dumps you back to unemployed with a penalty.
           id: "job_criminal_nicked",
@@ -865,6 +945,81 @@ export const content = {
           options: {
             left: { label: "job_criminal_nicked.left", outcomes: [{ result: "job_criminal_nicked.left.r0", effects: { vitals: { finances: "--", health: "-" }, setStatus: { job: "unemployed" } } }] },
             right: { label: "job_criminal_nicked.right", outcomes: [{ result: "job_criminal_nicked.right.r0", effects: { vitals: { health: "-", happiness: "-", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Second-tier job decks. Reached by the promotion cards above; each has
+    //     a work-event card and its own job-loss card (→ unemployed). Tier-3
+    //     promotions from here are Backlog (need the education tiers). ---------
+    {
+      id: "job_clerk",
+      cards: [
+        {
+          id: "job_clerk_day",
+          kind: "filler",
+          prompt: "job_clerk_day.prompt",
+          options: {
+            left: { label: "job_clerk_day.left", outcomes: [{ result: "job_clerk_day.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_clerk_day.right", outcomes: [{ result: "job_clerk_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_clerk_sacked",
+          kind: "filler",
+          prompt: "job_clerk_sacked.prompt",
+          options: {
+            left: { label: "job_clerk_sacked.left", outcomes: [{ result: "job_clerk_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_clerk_sacked.right", outcomes: [{ result: "job_clerk_sacked.right.r0", effects: { vitals: { spirit: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_foreman",
+      cards: [
+        {
+          id: "job_foreman_day",
+          kind: "filler",
+          prompt: "job_foreman_day.prompt",
+          options: {
+            left: { label: "job_foreman_day.left", outcomes: [{ result: "job_foreman_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_foreman_day.right", outcomes: [{ result: "job_foreman_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_foreman_sacked",
+          kind: "filler",
+          prompt: "job_foreman_sacked.prompt",
+          options: {
+            left: { label: "job_foreman_sacked.left", outcomes: [{ result: "job_foreman_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_foreman_sacked.right", outcomes: [{ result: "job_foreman_sacked.right.r0", effects: { vitals: { health: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_burglar",
+      cards: [
+        {
+          id: "job_burglar_job",
+          kind: "filler",
+          prompt: "job_burglar_job.prompt",
+          options: {
+            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_burglar_job.right", outcomes: [{ result: "job_burglar_job.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // Caught on a job: worse than a pickpocket's nicking (a real prison
+          // status is Backlog) — dumped back to unemployed, badly shaken.
+          id: "job_burglar_nicked",
+          kind: "filler",
+          prompt: "job_burglar_nicked.prompt",
+          options: {
+            left: { label: "job_burglar_nicked.left", outcomes: [{ result: "job_burglar_nicked.left.r0", effects: { vitals: { finances: "--", health: "--" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_burglar_nicked.right", outcomes: [{ result: "job_burglar_nicked.right.r0", effects: { vitals: { health: "-", spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
