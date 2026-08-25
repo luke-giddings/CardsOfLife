@@ -193,15 +193,26 @@ appears at random, but **survival depends on prior preparation**:
 - **Factory loom** (workers only) → survive if `sporty`/hardy; refusing is safe
   but costs pay.
 
-**Finances safety net (the workhouse).** Money is *not* directly lethal the
-first time. A card can carry `rescue: <vital>`; when that vital would hit 0 the
-engine floors it (to 1) and forces the rescue card instead of a game-over —
-one-shot, so a *second* collapse of that vital is fatal. `child_hunger` is the
-finances rescue: run out of money and you fall into the **workhouse** (the safe
-landing — no money drain, its own exits) or take to the **streets** (free but
-harsher). Rescue cards are never drawn normally, only fired by this mechanism.
-This makes health/happiness/spirit the directly-lethal vitals; poverty routes
-you through the workhouse instead — thematically, the Victorian safety net.
+**The `rescue` mechanism (safety nets).** A first-class engine feature: a card
+can carry `rescue: <vital>`. When that vital would hit 0, instead of a game-over
+the engine floors the vital to **1** and force-draws the rescue card (it jumps
+the queue, bypassing normal eligibility). A rescue is eligible only while its
+**deck is active** and it is **not exhausted**, and rescue cards are *never*
+drawn normally — only fired by this mechanism. Because only one rescue per vital
+can be active at once, deck-gating lets different life stages provide different
+nets for the *same* vital (childhood workhouse vs. adult house-sale, below).
+
+**Finances net #1 — the workhouse (childhood only, once).** `child_hunger` is
+the childhood finances rescue and is a **`one_time` card**, so it fires **at most
+once** — a *second* penniless collapse in childhood is fatal. Run out of money
+and you fall into the **workhouse** (safe landing — no money drain, its own
+exits) or take to the **streets** (free but harsher). It lives in the childhood
+deck, so once adult decks replace it it cannot fire in adult life — the workhouse
+catches you *once, as a child*, and never again.
+
+This makes health/happiness/spirit the directly-lethal vitals; poverty routes you
+through a net instead — thematically the Victorian safety net. (Adult life has
+its own finances net — selling the house — designed in §17b.)
 
 **Target:** a *thoughtful, prepared* player reaches 18 roughly **70%** of the
 time; careless/random play dies far more. The **work path** is a deliberate
@@ -359,18 +370,27 @@ yet?" moment, and a bigger job is how you clear it. After purchase, only small
 | Large house | Finances ≥ 65 | `---` | −5 | ♥ +5, ✦ +4, ☺ +2 |
 | Estate | Finances ≥ 80 | `---` | −8 | ♥ +7, ✦ +6, ☺ +3 |
 
-**Selling to survive — the house is a bankruptcy backstop (reuses `rescue`).**
-The house is stored wealth. If **Finances would hit 0 while you own a house
-(tier ≥ small)**, instead of game over a forced **"sell up"** rescue card fires
-(one-shot, jumps the queue — the adult mirror of the `child_hunger` → workhouse
-net). It **drops you down one housing tier** (estate → large → small → renting),
-**restores Finances** by the sale proceeds (floored well clear of 0 — the mirror
-of the `---` purchase), and costs **☺ + ✦** (the mark of shame). It is a **ladder
-down**, not a single save: a failing life can sell estate → large → small →
-renting, one rescue per rung. Once you are back to renting with nothing left to
-sell, the childhood nets (workhouse / homeless) catch you, or bankruptcy finally
-ends the run. Set a hidden **"sold up"** flag so the epitaph can record the
-disgrace (*"…though you were forced to sell the family home."*).
+**Finances net #2 — selling the house (adult; reuses `rescue`).** The house is
+stored wealth and the adult finances net. If **Finances would hit 0 while you own
+a house (tier ≥ small)**, a forced **"sell up"** rescue fires. It **crashes you
+all the way down to renting in one step** — you liquidate *everything*, not one
+rung — restores Finances from the sale proceeds (a **bigger house sells for more**,
+so an estate floors you higher than a small house), and costs **☺ + ✦** (the mark
+of shame). Set a hidden **"sold up"** flag so the epitaph can record the disgrace
+(*"…though you were forced to sell the family home."*).
+
+Crashing straight to renting (rather than one rung) is deliberate: dropping a
+single tier would just let a good job bounce you back next year, so you must lose
+*all* accumulated housing wealth and re-climb the whole ladder — the shame hit may
+well be what finishes you even though you survived the bankruptcy. Implemented as
+**one sell-up rescue card per owned-house deck** (small/large/estate), each with
+its own proceeds and text, all setting `housing → renting`. Because the card is
+eligible only while its house deck is active, it is **repeatable only if you
+rebuild**: the moment it fires you are renting and it can't fire again until you
+have clawed back up to owning property — losing everything *is* the limiter, no
+one-shot flag needed. **Below renting there is no adult net**, so Finances → 0
+while renting is game over (nothing left to sell) — the adult mirror of the
+workhouse catching you only once.
 
 ### Lifestyle — unlocked out of childhood; costs money *and* vitals
 
