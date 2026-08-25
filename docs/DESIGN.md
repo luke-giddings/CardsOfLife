@@ -354,6 +354,19 @@ costs ♥, criminal costs ✦, educated costs ☺/✦): floor 0 · tier 1 ≈ �
 - **Criminal** risk is **arrest → prison** (see below).
 - **Educated** tiers gate on the new higher education levels (grammar, university).
 
+**Criminal path plays differently — no wage, big scores (built, tier 1).** Unlike
+the wage-drift paths, the criminal tier has **0 drift**: no passive income at all.
+Money comes *only* from pulling **"score" cards** in the deck — each a big one-off
+haul (finances `++`) at a cost to the spirit — and **only a score grants
+experience** toward promotion. It is feast-or-famine: between scores you earn
+nothing while the rent (housing drift) bleeds you, so you must keep taking jobs,
+each one corroding the spirit and risking arrest. Backing off a score costs
+nothing but a clear conscience. (The £ figures in the table above are the
+*wage-equivalent* for balancing against the other paths; the criminal earns it in
+lumps, not drift.) Currently applied to tier-1 pickpocket; whether tier-2 burglar
+keeps a drift or also goes score-only is open. Score size is capped at `++` (+25)
+until/unless a `+++` magnitude is added.
+
 ### Houses — a `---` purchase behind a rising gate, then cheap upkeep
 
 Buying a house reuses the existing **`---` (halve current Finances)** magnitude,

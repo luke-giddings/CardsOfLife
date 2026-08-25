@@ -65,7 +65,11 @@ export const content = {
         // the criminal life — quick money at a steady cost to the spirit.
         shophand: { label: "status.job.shophand", drift: { finances: 5 }, addDecks: ["job_shop"] },
         factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
-        pickpocket: { label: "status.job.pickpocket", drift: { finances: 10, spirit: -5 }, addDecks: ["job_criminal"] },
+        // The criminal life has NO steady wage — 0 drift. Money (and the only
+        // experience toward promotion) comes solely from pulling "score" cards
+        // in the deck, each a big one-off haul at a cost to the spirit. Feast
+        // or famine: idle between scores and the rent (housing drift) bleeds you.
+        pickpocket: { label: "status.job.pickpocket", addDecks: ["job_criminal"] },
         // Second-tier jobs (reached by a promotion card once you have enough
         // `experience` in the tier-1 job). Each pays better but bites harder,
         // and owns its own deck (work events + a job-loss card → unemployed).
@@ -915,14 +919,27 @@ export const content = {
       id: "job_criminal",
       cards: [
         {
-          // A lift on the street. Ticks experience; take a fat purse (money, a
-          // knock to the spirit) or keep to small, safe pickings.
+          // A SCORE card. Pulling the job is the only way to earn (there is no
+          // wage) and the only thing that grants experience: a big one-off haul
+          // (finances "++") at a cost to the spirit. Backing off gains nothing
+          // but a clear conscience — and the rent still bites.
           id: "job_criminal_job",
           kind: "filler",
           prompt: "job_criminal_job.prompt",
           options: {
-            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { experience: 1 } } }] },
-            right: { label: "job_criminal_job.right", outcomes: [{ result: "job_criminal_job.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_criminal_job.right", outcomes: [{ result: "job_criminal_job.right.r0", effects: { vitals: { spirit: "+" } } }] },
+          },
+        },
+        {
+          // A second SCORE — a riskier, richer mark. Big haul + experience, a
+          // heavier spirit cost; walking away leaves you empty-handed but calm.
+          id: "job_criminal_score",
+          kind: "filler",
+          prompt: "job_criminal_score.prompt",
+          options: {
+            left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "++", spirit: "--" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_criminal_score.right", outcomes: [{ result: "job_criminal_score.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
         {
