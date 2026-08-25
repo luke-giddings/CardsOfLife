@@ -33,7 +33,7 @@ export const content = {
     // Start low and even — babyhood is where the meters get built up (unevenly,
     // by your choices), ready for the child deck to start spending them.
     vitals: { finances: 20, happiness: 20, health: 20, spirit: 20 },
-    statuses: { job: "infant", housing: "family", education: "none", lifestyle: "default" },
+    statuses: { job: "infant", housing: "family", education: "illiterate", lifestyle: "default" },
     decks: ["baby"],
     traits: {},
   },
@@ -43,45 +43,50 @@ export const content = {
       id: "job",
       states: {
         infant: { label: "status.job.infant" }, // neutral start; no drain, no employment yet
-        // Victorian child labour: a few coins, at a steady cost to health,
-        // and it opens the dangerous job_labour deck.
-        child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
         // While at school your "occupation" is studying: no wages and a grind on
-        // the spirit. (The money side of the school/work trade lives on the
-        // housing status — living with family costs money; the labourer's wage
-        // offsets it, the pupil's doesn't.) Owns the school-events deck; the
-        // education status just records the level reached.
+        // the spirit. (The money side lives on the housing status — living with
+        // family costs money; the labourer's wage offsets it, the pupil's
+        // doesn't.) Owns the school-events deck; education records the level.
         studying: { label: "status.job.studying", drift: { spirit: -5 }, addDecks: ["edu_basicschool"] },
-        // Learning a trade under a master: a small stipend and no danger — the
-        // best way out of the workhouse. Paired with the "apprentice" housing.
-        apprentice: { label: "status.job.apprentice", drift: { finances: 5 }, addDecks: ["job_apprentice"] },
-        // Left school, no work: a grim state with a heavy happiness/spirit
-        // drain (on top of the family living cost) — you want out fast. Opens
-        // the job-offer deck.
+        // Left school / lost a job, no work: a grim state with a heavy happiness/
+        // spirit drain — you want out fast. Opens the job-offer deck.
         unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, addDecks: ["job_unemployed"] },
-        // First jobs. Each opens its own deck (job events + a job-loss card
-        // that returns you to unemployed): shop = steady & safe (needs basic
-        // schooling); factory = better pay, harder on the body; pickpocket =
-        // the criminal life — quick money at a steady cost to the spirit.
-        shophand: { label: "status.job.shophand", drift: { finances: 5 }, addDecks: ["job_shop"] },
+
+        // === FOUR CAREER PATHS ==========================================
+        // Progression is by an `experience` counter (ticked by work cards); a
+        // promotion card fires at a threshold. Which path you can climb is
+        // separated by the `education` credential (see the education status).
+
+        // --- UNSKILLED (no credential; grinds health; caps at tier 2) -----
+        // Dangerous child labour → factory hand → gang-master. Decent money
+        // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
+        // crosses you onto the skilled ladder.
+        child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
         factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
-        // The criminal life has NO steady wage — 0 drift. Money (and the only
-        // experience toward promotion) comes solely from pulling "score" cards
-        // in the deck, each a big one-off haul at a cost to the spirit. Feast
-        // or famine: idle between scores and the rent (housing drift) bleeds you.
-        pickpocket: { label: "status.job.pickpocket", addDecks: ["job_criminal"] },
-        // Second-tier jobs (reached by a promotion card once you have enough
-        // `experience` in the tier-1 job). Each pays better but bites harder,
-        // and owns its own deck (work events + a job-loss card → unemployed).
-        // Educated ladder: shophand → clerk (a respectable desk, more pay but
-        // dull, soul-sapping work).
+        gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, addDecks: ["job_gangmaster"] },
+
+        // --- SKILLED (credential: journeyman → master; safe; high ceiling) -
+        // Apprentice is a low-stipend, TIME-LIMITED indenture entered by a
+        // lucky break; completing it grants the `journeyman` education
+        // credential and the journeyman job. Failing it → unemployed.
+        apprentice: { label: "status.job.apprentice", drift: { finances: 5 }, addDecks: ["job_apprentice"] },
+        journeyman: { label: "status.job.journeyman", drift: { finances: 15 }, addDecks: ["job_journeyman"] },
+        master: { label: "status.job.master", drift: { finances: 25 }, addDecks: ["job_master"] },
+
+        // --- EDUCATED (credential: basic/grammar/university; safe; top pay) -
+        // Shophand → clerk → solicitor. Entry needs basic schooling; the higher
+        // rungs want grammar/university (future schooling content), so for now
+        // the path tops out at clerk in normal play.
+        shophand: { label: "status.job.shophand", drift: { finances: 5 }, addDecks: ["job_shop"] },
         clerk: { label: "status.job.clerk", drift: { finances: 10, happiness: -5 }, addDecks: ["job_clerk"] },
-        // Manual ladder: factory → foreman (off the line, better wage, still
-        // wearing on the body).
-        foreman: { label: "status.job.foreman", drift: { finances: 15, health: -5 }, addDecks: ["job_foreman"] },
-        // Criminal ladder: pickpocket → burglar (bigger scores, a heavier toll
-        // on the spirit and worse if you are caught).
-        burglar: { label: "status.job.burglar", drift: { finances: 15, spirit: -10 }, addDecks: ["job_burglar"] },
+        solicitor: { label: "status.job.solicitor", drift: { finances: 20, happiness: -5, spirit: -5 }, addDecks: ["job_solicitor"] },
+
+        // --- CRIMINAL (no credential; earn-now via big scores; arrest risk) -
+        // Pickpocket has NO wage (0 drift) — money & experience come only from
+        // "score" cards. Burglar and fence add a small wage on top of the scores.
+        pickpocket: { label: "status.job.pickpocket", addDecks: ["job_criminal"] },
+        burglar: { label: "status.job.burglar", drift: { finances: 5, spirit: -5 }, addDecks: ["job_burglar"] },
+        fence: { label: "status.job.fence", drift: { finances: 10, spirit: -5 }, addDecks: ["job_fence"] },
       },
     },
     housing: {
@@ -110,14 +115,24 @@ export const content = {
     education: {
       id: "education",
       ordered: true,
-      levels: ["none", "school"],
+      // The credential that separates the four career paths. Only the ACADEMIC
+      // ladder is ordered (for `atLeast` gating of the educated path). The TRADE
+      // credentials (journeyman, master) are deliberately NOT in `levels`: they
+      // gate the skilled path by EXACT match, and because they are off the
+      // ordered list a tradesman correctly fails any academic `atLeast` test
+      // (and vice versa). You hold one credential at a time — trade OR academic.
+      levels: ["illiterate", "basic", "grammar", "university"],
       states: {
-        none: { label: "status.education.none" },
-        // A persisting record of the level reached, for later `atLeast` gating
-        // (e.g. grammar school). The *activity* of studying — its deck and its
-        // drift — lives on the job status (job=studying), so the pressure stops
-        // when you stop attending but the credential remains.
-        school: { label: "status.education.school" },
+        // Academic (educated path): earned at school; higher tiers (grammar,
+        // university) are future schooling content.
+        illiterate: { label: "status.education.illiterate" },
+        basic: { label: "status.education.basic" },
+        grammar: { label: "status.education.grammar" },
+        university: { label: "status.education.university" },
+        // Trade (skilled path): journeyman is earned by completing the
+        // apprenticeship; master by rising to the top of the trade.
+        journeyman: { label: "status.education.journeyman" },
+        master: { label: "status.education.master" },
       },
     },
     lifestyle: { id: "lifestyle", states: { default: {} } },
@@ -643,8 +658,8 @@ export const content = {
               // the prize.) A bookish child finds it a pleasure, not a grind.
               label: "edu_basicschool_exams.left",
               outcomes: [
-                { if: { traits: { bookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "school" } } },
-                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "school" } } },
+                { if: { traits: { bookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
+                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
             right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
@@ -679,8 +694,8 @@ export const content = {
               // already half-read the syllabus for fun — an easy win.
               label: "edu_basicschool_prize.left",
               outcomes: [
-                { if: { traits: { bookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "school" } } },
-                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "school" } } },
+                { if: { traits: { bookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "basic" } } },
+                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
             right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
@@ -708,8 +723,8 @@ export const content = {
           conditions: { ageMin: 14 },
           prompt: "edu_basicschool_leaver.prompt",
           options: {
-            left: { label: "edu_basicschool_leaver.left", outcomes: [{ result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" } } }] },
-            right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school", job: "unemployed" } } }] },
+            left: { label: "edu_basicschool_leaver.left", outcomes: [{ result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic" } } }] },
+            right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "unemployed" } } }] },
           },
         },
       ],
@@ -734,7 +749,7 @@ export const content = {
             left: {
               label: "job_unemployed_offer.left",
               outcomes: [
-                { if: { status: { education: { atLeast: "school" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
+                { if: { status: { education: { atLeast: "basic" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
                 { result: "job_unemployed_offer.left.r1", effects: { vitals: { spirit: "-", happiness: "-" } } },
               ],
             },
@@ -806,12 +821,40 @@ export const content = {
           },
         },
         {
+          // Payday. Ticks experience toward the step up to a proper factory job.
           id: "job_labour_wages",
           kind: "filler",
           prompt: "job_labour_wages.prompt",
           options: {
-            left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" } } }] },
-            right: { label: "job_labour_wages.right", outcomes: [{ result: "job_labour_wages.right.r0", effects: { vitals: { happiness: "+", finances: "++", spirit: "-" } } }] },
+            left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_labour_wages.right", outcomes: [{ result: "job_labour_wages.right.r0", effects: { vitals: { happiness: "+", finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // The ordinary escape up the UNSKILLED ladder: a steady factory job.
+          // Experience-gated; resets experience for the next rung (gang-master).
+          id: "job_labour_factory",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_labour_factory.prompt",
+          options: {
+            left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_labour_factory.right", outcomes: [{ result: "job_labour_factory.right.r0", effects: { vitals: { happiness: "+" } } }] },
+          },
+        },
+        {
+          // The LUCKY BREAK: a master offers to take you on as an apprentice —
+          // the crossover from the capped unskilled floor onto the high-ceiling
+          // SKILLED ladder. Uncommon (gated on keeping your health/spirit up, so
+          // it feels earned) and one_time (a break you take or miss). Accept →
+          // apprentice (housed & fed); decline → stay a labourer.
+          id: "job_labour_apprenticeship",
+          kind: "one_time",
+          conditions: { ageMin: 12, vitals: { health: { min: 45 }, spirit: { min: 45 } } },
+          prompt: "job_labour_apprenticeship.prompt",
+          options: {
+            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_labour_apprenticeship.right", outcomes: [{ result: "job_labour_apprenticeship.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
           },
         },
         {
@@ -883,13 +926,14 @@ export const content = {
           },
         },
         {
-          // Promotion to foreman once experienced enough (>= 3).
+          // Promotion to gang-master (the UNSKILLED ceiling — no tier 3) once
+          // experienced enough (>= 3).
           id: "job_factory_promote",
           kind: "filler",
           conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_factory_promote.prompt",
           options: {
-            left: { label: "job_factory_promote.left", outcomes: [{ result: "job_factory_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "foreman" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_factory_promote.left", outcomes: [{ result: "job_factory_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "gang_master" }, setTraits: { experience: 0 } } }] },
             right: { label: "job_factory_promote.right", outcomes: [{ result: "job_factory_promote.right.r0", effects: { vitals: { happiness: "+" } } }] },
           },
         },
@@ -908,6 +952,42 @@ export const content = {
       id: "job_apprentice",
       cards: [
         {
+          // Learning the trade at the bench. Low stipend; ticks experience
+          // toward qualifying. Graft hard (spirit cost, faster learning) or take
+          // it steady.
+          id: "job_apprentice_day",
+          kind: "filler",
+          prompt: "job_apprentice_day.prompt",
+          options: {
+            left: { label: "job_apprentice_day.left", outcomes: [{ result: "job_apprentice_day.left.r0", effects: { vitals: { spirit: "-", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_apprentice_day.right", outcomes: [{ result: "job_apprentice_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // TIME-LIMIT: the indenture is up (experience >= 4). A MILESTONE, so it
+          // jumps the queue and forces a resolution — you can't apprentice
+          // forever. Sit the trial (left): PASS if you kept your health up
+          // through the graft → journeyman job + `journeyman` credential
+          // (experience reset for the climb to master); FAIL if run-down → back
+          // to unemployed, no credential. Or walk away (right) → unemployed.
+          id: "job_apprentice_qualify",
+          kind: "milestone",
+          priority: 50,
+          conditions: { traits: { experience: { min: 4 } } },
+          prompt: "job_apprentice_qualify.prompt",
+          options: {
+            left: {
+              label: "job_apprentice_qualify.left",
+              outcomes: [
+                { if: { vitals: { health: { min: 35 } } }, result: "job_apprentice_qualify.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "journeyman", education: "journeyman" }, setTraits: { experience: 0 } } },
+                { result: "job_apprentice_qualify.left.r1", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" }, setTraits: { experience: 0 } } },
+              ],
+            },
+            right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" }, setTraits: { experience: 0 } } }] },
+          },
+        },
+        {
+          // Early failure: the master's workshop closes before you qualify.
           id: "job_apprentice_end",
           kind: "filler",
           prompt: "job_apprentice_end.prompt",
@@ -970,9 +1050,12 @@ export const content = {
       ],
     },
 
-    // --- Second-tier job decks. Reached by the promotion cards above; each has
-    //     a work-event card and its own job-loss card (→ unemployed). Tier-3
-    //     promotions from here are Backlog (need the education tiers). ---------
+    // === UPPER-TIER JOB DECKS ============================================
+    // Each has a work-event card (ticks experience) and a job-loss card
+    // (→ unemployed); climbable tiers add a promotion card.
+
+    // --- Educated: clerk (tier 2). Promotion to solicitor needs GRAMMAR
+    //     schooling (future content), so in normal play this is the ceiling. ---
     {
       id: "job_clerk",
       cards: [
@@ -983,6 +1066,19 @@ export const content = {
           options: {
             left: { label: "job_clerk_day.left", outcomes: [{ result: "job_clerk_day.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
             right: { label: "job_clerk_day.right", outcomes: [{ result: "job_clerk_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // Promotion to solicitor: needs both experience AND grammar-school
+          // education (an academic `atLeast` gate). Dormant until grammar/
+          // university schooling exists — the educated path's high ceiling.
+          id: "job_clerk_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } }, status: { education: { atLeast: "grammar" } } },
+          prompt: "job_clerk_promote.prompt",
+          options: {
+            left: { label: "job_clerk_promote.left", outcomes: [{ result: "job_clerk_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "solicitor" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_clerk_promote.right", outcomes: [{ result: "job_clerk_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
         {
@@ -997,28 +1093,115 @@ export const content = {
       ],
     },
     {
-      id: "job_foreman",
+      id: "job_solicitor",
       cards: [
         {
-          id: "job_foreman_day",
+          id: "job_solicitor_day",
           kind: "filler",
-          prompt: "job_foreman_day.prompt",
+          prompt: "job_solicitor_day.prompt",
           options: {
-            left: { label: "job_foreman_day.left", outcomes: [{ result: "job_foreman_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
-            right: { label: "job_foreman_day.right", outcomes: [{ result: "job_foreman_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_solicitor_day.left", outcomes: [{ result: "job_solicitor_day.left.r0", effects: { vitals: { finances: "++", happiness: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_solicitor_day.right", outcomes: [{ result: "job_solicitor_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
           },
         },
         {
-          id: "job_foreman_sacked",
+          id: "job_solicitor_ruin",
           kind: "filler",
-          prompt: "job_foreman_sacked.prompt",
+          prompt: "job_solicitor_ruin.prompt",
           options: {
-            left: { label: "job_foreman_sacked.left", outcomes: [{ result: "job_foreman_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_foreman_sacked.right", outcomes: [{ result: "job_foreman_sacked.right.r0", effects: { vitals: { health: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            left: { label: "job_solicitor_ruin.left", outcomes: [{ result: "job_solicitor_ruin.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_solicitor_ruin.right", outcomes: [{ result: "job_solicitor_ruin.right.r0", effects: { vitals: { happiness: "--", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
     },
+
+    // --- Unskilled ceiling: gang-master (tier 2, no promotion). --------------
+    {
+      id: "job_gangmaster",
+      cards: [
+        {
+          id: "job_gangmaster_day",
+          kind: "filler",
+          prompt: "job_gangmaster_day.prompt",
+          options: {
+            left: { label: "job_gangmaster_day.left", outcomes: [{ result: "job_gangmaster_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_gangmaster_day.right", outcomes: [{ result: "job_gangmaster_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_gangmaster_sacked",
+          kind: "filler",
+          prompt: "job_gangmaster_sacked.prompt",
+          options: {
+            left: { label: "job_gangmaster_sacked.left", outcomes: [{ result: "job_gangmaster_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_gangmaster_sacked.right", outcomes: [{ result: "job_gangmaster_sacked.right.r0", effects: { vitals: { health: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Skilled: journeyman (tier 2) → master (tier 3). --------------------
+    {
+      id: "job_journeyman",
+      cards: [
+        {
+          id: "job_journeyman_day",
+          kind: "filler",
+          prompt: "job_journeyman_day.prompt",
+          options: {
+            left: { label: "job_journeyman_day.left", outcomes: [{ result: "job_journeyman_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_journeyman_day.right", outcomes: [{ result: "job_journeyman_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // Promotion to master (skilled tier 3): experience-gated; also records
+          // the `master` trade credential.
+          id: "job_journeyman_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 4 } } },
+          prompt: "job_journeyman_promote.prompt",
+          options: {
+            left: { label: "job_journeyman_promote.left", outcomes: [{ result: "job_journeyman_promote.left.r0", effects: { vitals: { spirit: "++", finances: "+" }, setStatus: { job: "master", education: "master" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_journeyman_promote.right", outcomes: [{ result: "job_journeyman_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "job_journeyman_sacked",
+          kind: "filler",
+          prompt: "job_journeyman_sacked.prompt",
+          options: {
+            left: { label: "job_journeyman_sacked.left", outcomes: [{ result: "job_journeyman_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_journeyman_sacked.right", outcomes: [{ result: "job_journeyman_sacked.right.r0", effects: { vitals: { health: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_master",
+      cards: [
+        {
+          id: "job_master_day",
+          kind: "filler",
+          prompt: "job_master_day.prompt",
+          options: {
+            left: { label: "job_master_day.left", outcomes: [{ result: "job_master_day.left.r0", effects: { vitals: { finances: "++", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_master_day.right", outcomes: [{ result: "job_master_day.right.r0", effects: { vitals: { spirit: "+", happiness: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_master_ruin",
+          kind: "filler",
+          prompt: "job_master_ruin.prompt",
+          options: {
+            left: { label: "job_master_ruin.left", outcomes: [{ result: "job_master_ruin.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_master_ruin.right", outcomes: [{ result: "job_master_ruin.right.r0", effects: { vitals: { happiness: "--", health: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Criminal: burglar (tier 2, small wage + scores) → fence (tier 3). ---
     {
       id: "job_burglar",
       cards: [
@@ -1032,6 +1215,18 @@ export const content = {
           },
         },
         {
+          // Promotion to fence (criminal tier 3): run the trade rather than the
+          // risk. Experience-gated.
+          id: "job_burglar_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_burglar_promote.prompt",
+          options: {
+            left: { label: "job_burglar_promote.left", outcomes: [{ result: "job_burglar_promote.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "fence" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_burglar_promote.right", outcomes: [{ result: "job_burglar_promote.right.r0", effects: { vitals: { spirit: "+" } } }] },
+          },
+        },
+        {
           // Caught on a job: worse than a pickpocket's nicking (a real prison
           // status is Backlog) — dumped back to unemployed, badly shaken.
           id: "job_burglar_nicked",
@@ -1040,6 +1235,32 @@ export const content = {
           options: {
             left: { label: "job_burglar_nicked.left", outcomes: [{ result: "job_burglar_nicked.left.r0", effects: { vitals: { finances: "--", health: "--" }, setStatus: { job: "unemployed" } } }] },
             right: { label: "job_burglar_nicked.right", outcomes: [{ result: "job_burglar_nicked.right.r0", effects: { vitals: { health: "-", spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_fence",
+      cards: [
+        {
+          // The fence deals in others' loot: a big score at a spirit cost, or
+          // lie low. Small wage from the status drift on top.
+          id: "job_fence_deal",
+          kind: "filler",
+          prompt: "job_fence_deal.prompt",
+          options: {
+            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_fence_deal.right", outcomes: [{ result: "job_fence_deal.right.r0", effects: { vitals: { spirit: "+" } } }] },
+          },
+        },
+        {
+          // A raid on the receiving-house: the law finally comes for the fence.
+          id: "job_fence_raid",
+          kind: "filler",
+          prompt: "job_fence_raid.prompt",
+          options: {
+            left: { label: "job_fence_raid.left", outcomes: [{ result: "job_fence_raid.left.r0", effects: { vitals: { finances: "--", health: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_fence_raid.right", outcomes: [{ result: "job_fence_raid.right.r0", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],

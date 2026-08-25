@@ -374,10 +374,16 @@ flavour by path): floor 0 · tier 1 ≈ −5 · tier 2 ≈ −10 · tier 3 ≈ �
 - **Criminal** risk is **arrest → prison** (see below).
 - **Educated** tiers gate on the new higher education levels (grammar, university).
 
-> Not yet built: the split is still the old 3-path code (shophand/factory/
-> pickpocket + tier-2 clerk/foreman/burglar). Reworking into four paths with the
-> apprenticeship bridge, its time-limit, and the fail branch is the next content
-> job once the current build is playtested.
+> **Built.** The four paths are implemented and gated by the `education`
+> credential (academic `illiterate→basic→grammar→university` ordered ladder +
+> trade `journeyman`/`master` off-ladder credentials). Unskilled: child labour →
+> factory → gang-master (ceiling). Skilled: lucky-break apprenticeship (from the
+> labour deck, gated on health/spirit) → **time-limited qualifying milestone**
+> (experience ≥ 4; pass on health → journeyman job + credential, fail → back to
+> unemployed) → journeyman → master. Criminal: pickpocket (no wage) → burglar
+> (small wage) → fence. Educated: shophand → clerk → solicitor, the clerk→
+> solicitor step gated on `grammar` schooling (dormant until grammar/university
+> school content exists, so educated currently tops out at clerk).
 
 **Criminal path plays differently — no wage, big scores (built, tier 1).** Unlike
 the wage-drift paths, the criminal tier has **0 drift**: no passive income at all.
