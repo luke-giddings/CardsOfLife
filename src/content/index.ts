@@ -467,6 +467,9 @@ export const content = {
           // can afford it.
           id: "home_family_moveout",
           kind: "filler",
+          // Forced when money maxes out (so full coffers always surface the
+          // chance to spend), and available in the pool from finances >= 50.
+          force: "finances",
           conditions: { ageMin: 14, vitals: { finances: { min: 50 } } },
           prompt: "home_family_moveout.prompt",
           options: {

@@ -169,6 +169,11 @@ export interface Card {
   // would hit 0 — the engine floors the vital and forces this card next (a
   // one-shot rescue; once played it's used up, so a second collapse is fatal).
   rescue?: VitalKey;
+  // The opposite of rescue: when this vital is at its MAX and the card is
+  // otherwise eligible, force it to jump the queue — so a capped resource (e.g.
+  // full money with nowhere to go) always surfaces the chance to spend it. The
+  // card still appears normally in the pool below the cap.
+  force?: VitalKey;
 }
 
 export interface Deck {

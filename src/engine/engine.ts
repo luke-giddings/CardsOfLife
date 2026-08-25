@@ -88,6 +88,15 @@ export function drawCard(
   const milestone = dueMilestone(cards, state, content);
   if (milestone) return { card: milestone, state: { ...state, lastCardId: milestone.id } };
 
+  // A "force at max" card jumps the queue when its vital is capped and the card
+  // is otherwise eligible, so a maxed-out resource always surfaces its spend
+  // opportunity (e.g. move out once you're rich) instead of relying on the
+  // random draw. Ranks below milestones, above the random pool.
+  const forced = cards.find(
+    (c) => c.force !== undefined && state.vitals[c.force] >= VITAL_MAX && isEligible(c, state, content),
+  );
+  if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };
+
   // Rescue cards are never drawn normally — only via the pending-rescue path.
   const pool = cards.filter(
     (c) => c.kind !== "milestone" && !c.rescue && isEligible(c, state, content),
