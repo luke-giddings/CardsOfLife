@@ -55,13 +55,16 @@ export const content = {
         // Learning a trade under a master: a small stipend and no danger — the
         // best way out of the workhouse. Paired with the "apprentice" housing.
         apprentice: { label: "status.job.apprentice", drift: { finances: 5 } },
-        // Left school, looking for work: no wages, so the family living cost
-        // bites. Opens the job-offer deck.
-        unemployed: { label: "status.job.unemployed", addDecks: ["job_unemployed"] },
-        // Two first jobs offered on leaving school (their own decks are future):
-        // shop = steady & safe; factory = better pay, harder on the body.
+        // Left school, no work: a grim state with a heavy happiness/spirit
+        // drain (on top of the family living cost) — you want out fast. Opens
+        // the job-offer deck.
+        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, addDecks: ["job_unemployed"] },
+        // First jobs (their own decks are future): shop = steady & safe (needs
+        // basic schooling); factory = better pay, harder on the body; pickpocket
+        // = the criminal life — quick money at a steady cost to the spirit.
         shophand: { label: "status.job.shophand", drift: { finances: 5 } },
         factory: { label: "status.job.factory", drift: { finances: 10, health: -5 } },
+        pickpocket: { label: "status.job.pickpocket", drift: { finances: 10, spirit: -5 } },
       },
     },
     housing: {
@@ -692,32 +695,71 @@ export const content = {
       ],
     },
 
-    // --- Unemployed: active while job = unemployed (school-leaver looking for
-    //     work). No wages, so the family living cost bites — find a job. A job
-    //     offer recurs (filler) until you take one; taking it hands this deck
-    //     away. (First pass.) -------------------------------------------------
+    // --- Unemployed: active while job = unemployed. A grim state you want out
+    //     of fast (heavy happiness/spirit drift). Mostly painful one_time cards
+    //     (the deck shrinks toward the exits), plus recurring (filler) job
+    //     offers — honest work, or the criminal life. -------------------------
     {
       id: "job_unemployed",
       title: "deck.job_unemployed.title",
       unlock: "deck.job_unemployed.blurb",
       cards: [
         {
+          // Honest work. The shop counter needs your letters and figures
+          // (education >= school); the factory floor takes anyone.
           id: "job_unemployed_offer",
           kind: "filler",
           prompt: "job_unemployed_offer.prompt",
           options: {
-            left: { label: "job_unemployed_offer.left", outcomes: [{ result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } }] },
+            left: {
+              label: "job_unemployed_offer.left",
+              outcomes: [
+                { if: { status: { education: { atLeast: "school" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
+                { result: "job_unemployed_offer.left.r1", effects: { vitals: { spirit: "-", happiness: "-" } } },
+              ],
+            },
             right: { label: "job_unemployed_offer.right", outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
             down: { label: "job_unemployed_offer.down", outcomes: [{ result: "job_unemployed_offer.down.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
         {
-          id: "job_unemployed_idle",
+          // The criminal offer (Oliver Twist): quick money, at a price.
+          id: "job_unemployed_fagin",
           kind: "filler",
-          prompt: "job_unemployed_idle.prompt",
+          prompt: "job_unemployed_fagin.prompt",
           options: {
-            left: { label: "job_unemployed_idle.left", outcomes: [{ result: "job_unemployed_idle.left.r0", effects: { vitals: { spirit: "+", finances: "-" } } }] },
-            right: { label: "job_unemployed_idle.right", outcomes: [{ result: "job_unemployed_idle.right.r0", effects: { vitals: { happiness: "-", health: "+" } } }] },
+            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" } } }] },
+            right: { label: "job_unemployed_fagin.right", outcomes: [{ result: "job_unemployed_fagin.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // Painful: pawn your good clothes for a little cash.
+          id: "job_unemployed_pawn",
+          kind: "one_time",
+          prompt: "job_unemployed_pawn.prompt",
+          options: {
+            left: { label: "job_unemployed_pawn.left", outcomes: [{ result: "job_unemployed_pawn.left.r0", effects: { vitals: { finances: "+", spirit: "-", happiness: "-" } } }] },
+            right: { label: "job_unemployed_pawn.right", outcomes: [{ result: "job_unemployed_pawn.right.r0", effects: { vitals: { spirit: "+", health: "-", happiness: "-" } } }] },
+          },
+        },
+        {
+          // Painful: the family's patience wears thin.
+          id: "job_unemployed_family",
+          kind: "one_time",
+          prompt: "job_unemployed_family.prompt",
+          options: {
+            left: { label: "job_unemployed_family.left", outcomes: [{ result: "job_unemployed_family.left.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+            right: { label: "job_unemployed_family.right", outcomes: [{ result: "job_unemployed_family.right.r0", effects: { vitals: { happiness: "--", health: "-", spirit: "+" } } }] },
+          },
+        },
+        {
+          // Painful: the long, empty, hopeless days.
+          id: "job_unemployed_despair",
+          kind: "one_time",
+          prompt: "job_unemployed_despair.prompt",
+          options: {
+            left: { label: "job_unemployed_despair.left", outcomes: [{ result: "job_unemployed_despair.left.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
+            right: { label: "job_unemployed_despair.right", outcomes: [{ result: "job_unemployed_despair.right.r0", effects: { vitals: { happiness: "-", spirit: "-", health: "+" } } }] },
           },
         },
       ],
