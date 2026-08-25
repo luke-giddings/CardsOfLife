@@ -91,9 +91,15 @@ export function drawCard(
   // A "force at max" card jumps the queue when its vital is capped and the card
   // is otherwise eligible, so a maxed-out resource always surfaces its spend
   // opportunity (e.g. move out once you're rich) instead of relying on the
-  // random draw. Ranks below milestones, above the random pool.
+  // random draw. Ranks below milestones, above the random pool. Skipped if it
+  // was the immediately-previous card, so declining it doesn't lock you into
+  // the same card every year while you stay capped — normal cards interleave.
   const forced = cards.find(
-    (c) => c.force !== undefined && state.vitals[c.force] >= VITAL_MAX && isEligible(c, state, content),
+    (c) =>
+      c.force !== undefined &&
+      c.id !== state.lastCardId &&
+      state.vitals[c.force] >= VITAL_MAX &&
+      isEligible(c, state, content),
   );
   if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };
 
@@ -170,13 +176,19 @@ function changeStatus(
   content: Content,
 ): void {
   const def = content.statuses[kind];
-  const oldState = def?.states[state.statuses[kind]];
+  const previous = state.statuses[kind];
+  const oldState = def?.states[previous];
   const newState = def?.states[value];
   let decks = state.activeDecks;
   for (const d of oldState?.addDecks ?? []) decks = decks.filter((x) => x !== d);
   for (const d of newState?.addDecks ?? []) if (!decks.includes(d)) decks = [...decks, d];
   state.activeDecks = decks;
   state.statuses[kind] = value;
+  // `experience` is time-in-the-current-job: reset it whenever the job actually
+  // changes (promotion, demotion, sacking, a new job), so the counter always
+  // starts fresh. Content therefore does NOT scatter `setTraits: {experience:0}`
+  // on job changes — this is the single place it happens.
+  if (kind === "job" && value !== previous) state.traits.experience = 0;
 }
 
 function applyEffect(state: GameState, effect: Effect, content: Content): void {

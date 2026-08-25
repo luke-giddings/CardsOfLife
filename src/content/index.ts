@@ -838,7 +838,7 @@ export const content = {
           conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_labour_factory.prompt",
           options: {
-            left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
             right: { label: "job_labour_factory.right", outcomes: [{ result: "job_labour_factory.right.r0", effects: { vitals: { happiness: "+" } } }] },
           },
         },
@@ -853,7 +853,7 @@ export const content = {
           conditions: { ageMin: 12, vitals: { health: { min: 45 }, spirit: { min: 45 } } },
           prompt: "job_labour_apprenticeship.prompt",
           options: {
-            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
             right: { label: "job_labour_apprenticeship.right", outcomes: [{ result: "job_labour_apprenticeship.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
           },
         },
@@ -896,7 +896,7 @@ export const content = {
           conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_shop_promote.prompt",
           options: {
-            left: { label: "job_shop_promote.left", outcomes: [{ result: "job_shop_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_shop_promote.left", outcomes: [{ result: "job_shop_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" } } }] },
             right: { label: "job_shop_promote.right", outcomes: [{ result: "job_shop_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -933,7 +933,7 @@ export const content = {
           conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_factory_promote.prompt",
           options: {
-            left: { label: "job_factory_promote.left", outcomes: [{ result: "job_factory_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "gang_master" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_factory_promote.left", outcomes: [{ result: "job_factory_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "gang_master" } } }] },
             right: { label: "job_factory_promote.right", outcomes: [{ result: "job_factory_promote.right.r0", effects: { vitals: { happiness: "+" } } }] },
           },
         },
@@ -973,28 +973,35 @@ export const content = {
           id: "job_apprentice_qualify",
           kind: "milestone",
           priority: 50,
+          // Repeatable: you may serve more than one apprenticeship in a life
+          // (e.g. after a first one fails), and each must reach its own trial.
+          copies: 99,
           conditions: { traits: { experience: { min: 4 } } },
           prompt: "job_apprentice_qualify.prompt",
+          // Leaving the master's roof (pass or fail) moves you out of the
+          // `apprentice` housing to `renting` — a place of your own — so the
+          // skilled ladder pays rent and gets home-life cards like everyone else.
           options: {
             left: {
               label: "job_apprentice_qualify.left",
               outcomes: [
-                { if: { vitals: { health: { min: 35 } } }, result: "job_apprentice_qualify.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "journeyman", education: "journeyman" }, setTraits: { experience: 0 } } },
-                { result: "job_apprentice_qualify.left.r1", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" }, setTraits: { experience: 0 } } },
+                { if: { vitals: { health: { min: 35 } } }, result: "job_apprentice_qualify.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "journeyman", education: "journeyman", housing: "renting" } } },
+                { result: "job_apprentice_qualify.left.r1", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed", housing: "renting" } } },
               ],
             },
-            right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" }, setTraits: { experience: 0 } } }] },
+            right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
           },
         },
         {
-          // Early failure: the master's workshop closes before you qualify.
+          // Early failure: the master's workshop closes before you qualify —
+          // out of the master's house (→ renting) and out of work.
           id: "job_apprentice_end",
           kind: "filler",
-          prompt: "job_apprentice_end.prompt",
           options: {
-            left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { happiness: "-", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
+            left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
+            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { happiness: "-", spirit: "-" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
           },
+          prompt: "job_apprentice_end.prompt",
         },
       ],
     },
@@ -1032,7 +1039,7 @@ export const content = {
           conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_criminal_promote.prompt",
           options: {
-            left: { label: "job_criminal_promote.left", outcomes: [{ result: "job_criminal_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "burglar" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_criminal_promote.left", outcomes: [{ result: "job_criminal_promote.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "burglar" } } }] },
             right: { label: "job_criminal_promote.right", outcomes: [{ result: "job_criminal_promote.right.r0", effects: { vitals: { spirit: "+", finances: "-" } } }] },
           },
         },
@@ -1077,7 +1084,7 @@ export const content = {
           conditions: { traits: { experience: { min: 3 } }, status: { education: { atLeast: "grammar" } } },
           prompt: "job_clerk_promote.prompt",
           options: {
-            left: { label: "job_clerk_promote.left", outcomes: [{ result: "job_clerk_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "solicitor" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_clerk_promote.left", outcomes: [{ result: "job_clerk_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "solicitor" } } }] },
             right: { label: "job_clerk_promote.right", outcomes: [{ result: "job_clerk_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -1162,7 +1169,7 @@ export const content = {
           conditions: { traits: { experience: { min: 4 } } },
           prompt: "job_journeyman_promote.prompt",
           options: {
-            left: { label: "job_journeyman_promote.left", outcomes: [{ result: "job_journeyman_promote.left.r0", effects: { vitals: { spirit: "++", finances: "+" }, setStatus: { job: "master", education: "master" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_journeyman_promote.left", outcomes: [{ result: "job_journeyman_promote.left.r0", effects: { vitals: { spirit: "++", finances: "+" }, setStatus: { job: "master", education: "master" } } }] },
             right: { label: "job_journeyman_promote.right", outcomes: [{ result: "job_journeyman_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -1222,7 +1229,7 @@ export const content = {
           conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_burglar_promote.prompt",
           options: {
-            left: { label: "job_burglar_promote.left", outcomes: [{ result: "job_burglar_promote.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "fence" }, setTraits: { experience: 0 } } }] },
+            left: { label: "job_burglar_promote.left", outcomes: [{ result: "job_burglar_promote.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "fence" } } }] },
             right: { label: "job_burglar_promote.right", outcomes: [{ result: "job_burglar_promote.right.r0", effects: { vitals: { spirit: "+" } } }] },
           },
         },
