@@ -359,6 +359,19 @@ yet?" moment, and a bigger job is how you clear it. After purchase, only small
 | Large house | Finances ≥ 65 | `---` | −5 | ♥ +5, ✦ +4, ☺ +2 |
 | Estate | Finances ≥ 80 | `---` | −8 | ♥ +7, ✦ +6, ☺ +3 |
 
+**Selling to survive — the house is a bankruptcy backstop (reuses `rescue`).**
+The house is stored wealth. If **Finances would hit 0 while you own a house
+(tier ≥ small)**, instead of game over a forced **"sell up"** rescue card fires
+(one-shot, jumps the queue — the adult mirror of the `child_hunger` → workhouse
+net). It **drops you down one housing tier** (estate → large → small → renting),
+**restores Finances** by the sale proceeds (floored well clear of 0 — the mirror
+of the `---` purchase), and costs **☺ + ✦** (the mark of shame). It is a **ladder
+down**, not a single save: a failing life can sell estate → large → small →
+renting, one rescue per rung. Once you are back to renting with nothing left to
+sell, the childhood nets (workhouse / homeless) catch you, or bankruptcy finally
+ends the run. Set a hidden **"sold up"** flag so the epitaph can record the
+disgrace (*"…though you were forced to sell the family home."*).
+
 ### Lifestyle — unlocked out of childhood; costs money *and* vitals
 
 Lifestyle is the main **Happiness** source and the main **Money/Health** sink, so
