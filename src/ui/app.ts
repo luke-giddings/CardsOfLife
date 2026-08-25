@@ -116,6 +116,9 @@ export class Game {
   private pendingUnlock: { title: StringId; blurb: StringId } | null = null;
   private debugSelectedId: string | null = null;
   private debugOpen = new Set<string>(["pool", "detail"]); // which debug sections are expanded
+  // Debug history: the pre-choice snapshot at each played card, so we can list
+  // what was drawn/chosen and rewind to try a different choice.
+  private history: { age: number; cardId: string; choice: string; before: GameState }[] = [];
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -231,16 +234,18 @@ export class Game {
         return; // let <details> toggle natively
       }
       const hit = target.closest<HTMLElement>(
-        "[data-card],[data-vital],[data-age],[data-deck],[data-trait]",
+        "[data-card],[data-vital],[data-age],[data-deck],[data-trait],[data-hist]",
       );
       if (!hit) return;
       const d = hit.dataset;
+      if (d.hist != null) return this.rewind(Number(d.hist));
       if (d.vital) return this.adjustVital(d.vital as VitalKey, Number(d.delta));
       if (d.age) return this.adjustAge(Number(d.age));
       if (d.deck) return this.toggleDeck(d.deck);
       if (d.trait) return this.toggleTrait(d.trait, d.tdelta ? Number(d.tdelta) : undefined);
       const id = d.card!;
-      if (d.action === "force") this.forceCard(id);
+      if (d.action === "force") this.forceCard(id); // pool draw ▶ — no age change
+      else if (d.action === "skip") this.forceCard(id, true); // skip to milestone — jump age
       else {
         this.debugSelectedId = id;
         this.renderDebug();
@@ -443,7 +448,7 @@ export class Game {
       .map((dk) => `<button class="dbg-deck ${this.state.activeDecks.includes(dk.id) ? "on" : ""}" data-deck="${dk.id}">${dk.id}</button>`)
       .join("");
     const milestoneCtl = ALL_CARDS.filter((c) => c.kind === "milestone")
-      .map((c) => `<button data-card="${c.id}" data-action="force">${c.id}</button>`)
+      .map((c) => `<button data-card="${c.id}" data-action="skip">${c.id}</button>`)
       .join("");
 
     // Card detail: the selected card (default = the current card), showing
@@ -468,6 +473,22 @@ export class Game {
       detail = `<div class="dbg-prompt">${t(sel.prompt).replace(/\n+/g, " ")}</div>${opts}`;
     }
 
+    // History: each played card + the choice taken, newest first. Tap a row to
+    // rewind to just before it (restores vitals/traits/status/age and un-uses
+    // one_time cards) and re-face that card to try a different choice.
+    const histRows = this.history
+      .map(
+        (h, i) =>
+          `<div class="dbg-hist" data-hist="${i}" title="Rewind to here">
+            <span class="dbg-hist-age">${h.age}</span>
+            <span class="dbg-hist-card">${h.cardId}</span>
+            <span class="dbg-hist-choice">${h.choice}</span>
+            <span class="dbg-hist-rw">⟲</span>
+          </div>`,
+      )
+      .reverse()
+      .join("");
+
     const sec = (id: string, title: string, body: string): string =>
       `<details class="dbg-sec" ${this.debugOpen.has(id) ? "open" : ""}>
         <summary data-sec="${id}">${title}</summary>
@@ -481,12 +502,17 @@ export class Game {
       sec("decks", "Decks — tap to add / remove", `<div class="dbg-decks">${deckCtl}</div>`) +
       sec("milestones", "Skip to milestone", `<div class="dbg-decks">${milestoneCtl}</div>`) +
       sec("pool", `Draw pool — age ${this.state.age} · tap a card to inspect`, `<div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`) +
-      sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail);
+      sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail) +
+      sec("history", `History — tap to rewind (${this.history.length})`, `<div class="dbg-list">${histRows || "<div>(nothing played yet)</div>"}</div>`);
   }
 
   // Debug: drop the current card and show a specific one next (ignores
   // eligibility). Choosing it then applies its effects normally.
-  private forceCard(id: string): void {
+  // Show a specific card next (ignoring eligibility). setAge is only true for
+  // "skip to milestone" — a plain force-draw never changes your age (dropping it
+  // would gate out other cards and make them look consumed). Even skip only
+  // raises the age up to the milestone's minimum, never lowers it.
+  private forceCard(id: string, setAge = false): void {
     if (this.busy) return;
     const card = CARD_BY_ID.get(id);
     if (!card) return;
@@ -495,10 +521,9 @@ export class Game {
       this.holder = null;
       this.flip = null;
     }
-    // Milestones (and gated cards) happen at fixed ages — jump the age too.
-    const target = card.conditions?.ageMin ?? card.conditions?.ageMax;
-    if (target != null) {
-      this.state.age = target;
+    const min = card.conditions?.ageMin;
+    if (setAge && min != null && this.state.age < min) {
+      this.state.age = min;
       this.prevVitals = { ...this.state.vitals };
       saveGame(this.state);
       this.syncTop();
@@ -514,12 +539,14 @@ export class Game {
     saveGame(this.state);
     this.syncTop();
     this.renderDebug();
+    this.refreshFront(); // vitals affect easy-mode symbols / which outcome resolves
   }
   private adjustAge(delta: number): void {
     this.state.age = Math.max(0, this.state.age + delta);
     saveGame(this.state);
     this.syncTop();
     this.renderDebug();
+    this.refreshFront();
   }
   private toggleDeck(id: string): void {
     const decks = this.state.activeDecks;
@@ -529,6 +556,7 @@ export class Game {
     this.seenDecks.add(id);
     saveGame(this.state);
     this.renderDebug();
+    this.refreshFront(); // drift changes → easy-mode fatality may change
   }
   private toggleTrait(key: string, delta?: number): void {
     const t = this.state.traits as unknown as Record<string, unknown>;
@@ -538,6 +566,7 @@ export class Game {
     else if (key === "gender") t[key] = v === "boy" ? "girl" : "boy";
     saveGame(this.state);
     this.renderDebug();
+    this.refreshFront(); // traits gate which outcome resolves
   }
 
   // --- turn flow -------------------------------------------------------------
@@ -558,7 +587,7 @@ export class Game {
     this.showFront(draw.card);
   }
 
-  private showFront(card: Card): void {
+  private showFront(card: Card, animate = true): void {
     const holder = document.createElement("div");
     holder.className = "holder";
     const flip = document.createElement("div");
@@ -594,8 +623,8 @@ export class Game {
     this.attachDrag(flip, card);
     this.renderDebug();
 
-    // slide in from below
-    if (!reduceMotion) {
+    // slide in from below (skipped on a debug re-render so it doesn't replay)
+    if (animate && !reduceMotion) {
       holder.style.transform = "translateY(28px)";
       holder.style.opacity = "0";
       requestAnimationFrame(() => {
@@ -605,11 +634,54 @@ export class Game {
     }
   }
 
+  // Debug: re-render the current front card in place (no entrance animation) so
+  // its easy-mode symbols / resolved outcomes reflect edited vitals, age, etc.
+  private refreshFront(): void {
+    if (this.busy || this.phase !== "front" || !this.card) return;
+    if (this.holder) {
+      this.holder.remove();
+      this.holder = null;
+      this.flip = null;
+    }
+    this.showFront(this.card, false);
+  }
+
+  // Debug: restore the pre-choice snapshot at a history entry (un-consuming any
+  // one_time cards, since the whole state is restored) and re-show that card so
+  // a different choice can be tried.
+  private rewind(index: number): void {
+    const entry = this.history[index];
+    if (!entry) return;
+    this.history = this.history.slice(0, index);
+    this.state = structuredClone(entry.before);
+    saveGame(this.state);
+    this.prevVitals = { ...this.state.vitals };
+    this.seenDecks = new Set(this.state.activeDecks);
+    this.pendingUnlock = null;
+    this.busy = false;
+    this.holder = null;
+    this.flip = null;
+    this.scene.innerHTML = ""; // clear any current card / end screen / unlock
+    this.card = CARD_BY_ID.get(entry.cardId) ?? null;
+    this.syncTop();
+    if (this.card) this.showFront(this.card, false);
+    else this.beginTurn();
+  }
+
   private choose(dir: Direction): void {
     if (this.busy || !this.card || !this.flip || !this.holder) return;
-    if (!this.card.options[dir]) return;
+    const opt = this.card.options[dir];
+    if (!opt) return;
     this.busy = true;
     this.lastDir = dir;
+
+    // Record a pre-choice snapshot for the debug history / rewind.
+    this.history.push({
+      age: this.state.age,
+      cardId: this.card.id,
+      choice: t(opt.label),
+      before: structuredClone(this.state),
+    });
 
     const res = chooseDirection(this.state, this.card, dir);
     this.state = res.state;
@@ -712,6 +784,7 @@ export class Game {
     this.flip = null;
     this.busy = false;
     this.pendingUnlock = null;
+    this.history = [];
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
     this.syncTop();

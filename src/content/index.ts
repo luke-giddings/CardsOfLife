@@ -511,7 +511,7 @@ export const content = {
       cards: [
         {
           id: "home_workhouse_gruel",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_workhouse_gruel.prompt",
           options: {
             left: { label: "home_workhouse_gruel.left", outcomes: [{ result: "home_workhouse_gruel.left.r0", effects: { vitals: { health: "+", happiness: "--", spirit: "+" } } }] },
@@ -520,7 +520,7 @@ export const content = {
         },
         {
           id: "home_workhouse_oakum",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_workhouse_oakum.prompt",
           options: {
             left: { label: "home_workhouse_oakum.left", outcomes: [{ result: "home_workhouse_oakum.left.r0", effects: { vitals: { finances: "+", health: "-" } } }] },
@@ -529,7 +529,7 @@ export const content = {
         },
         {
           id: "home_workhouse_friend",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_workhouse_friend.prompt",
           options: {
             left: { label: "home_workhouse_friend.left", outcomes: [{ result: "home_workhouse_friend.left.r0", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
@@ -538,7 +538,7 @@ export const content = {
         },
         {
           id: "home_workhouse_sunday",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_workhouse_sunday.prompt",
           options: {
             left: { label: "home_workhouse_sunday.left", outcomes: [{ result: "home_workhouse_sunday.left.r0", effects: { vitals: { happiness: "++", spirit: "+", health: "-" } } }] },
