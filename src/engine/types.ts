@@ -161,6 +161,10 @@ export interface Card {
   conditions?: Condition; // eligibility on top of deck membership
   priority?: number;    // milestone tie-break; higher wins (default 0)
   deck?: string;        // filled in by the deck loader
+  // A safety-net card: instead of drawing normally, it fires when this vital
+  // would hit 0 — the engine floors the vital and forces this card next (a
+  // one-shot rescue; once played it's used up, so a second collapse is fatal).
+  rescue?: VitalKey;
 }
 
 export interface Deck {
@@ -208,6 +212,7 @@ export interface GameState {
   activeDecks: string[];
   usedCards: Record<string, number>; // card id -> times played
   lastCardId?: string;                // to avoid drawing the same card twice in a row
+  pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;
   endReason?: string;                 // ENDINGS id (vital key, or a named ending)

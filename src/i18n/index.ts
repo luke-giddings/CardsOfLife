@@ -142,7 +142,7 @@ export const EN = {
   "child_accident.right.r0": "Scraped raw and winded in the gutter — but you scramble up alive.",
   "child_accident.right.r1": "You don't get clear in time. The wheels do not stop.",
 
-  "child_hunger.prompt": "The cupboards are bare, and there are too many mouths to feed.",
+  "child_hunger.prompt": "The last coin is spent, the cupboards are bare, and there's nowhere left to turn.",
   "child_hunger.left": "Take to the streets",
   "child_hunger.left.r0": "Better the open road than the workhouse gate. Free, if you can survive it.",
   "child_hunger.right": "Into the workhouse",
@@ -571,7 +571,7 @@ export const IT: Record<StringId, string> = {
   "child_accident.right.r0": "Sbucciato a vivo e senza fiato nel rigagnolo — ma ti rialzi vivo.",
   "child_accident.right.r1": "Non ti scansi in tempo. Le ruote non si fermano.",
 
-  "child_hunger.prompt": "La dispensa è vuota, e ci sono troppe bocche da sfamare.",
+  "child_hunger.prompt": "L'ultima moneta è spesa, la dispensa è vuota, e non c'è più nessun posto dove rivolgersi.",
   "child_hunger.left": "Buttarti in strada",
   "child_hunger.left.r0": "Meglio la strada aperta che il cancello della casa di lavoro. Libero, se riesci a sopravvivere.",
   "child_hunger.right": "Entrare nella casa di lavoro",

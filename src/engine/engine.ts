@@ -77,11 +77,20 @@ export function drawCard(
   const content = CONTENT;
   const cards = allCards(content);
 
+  // A pending safety-net rescue jumps the queue (bypassing eligibility).
+  if (state.pendingRescue) {
+    const rescue = cards.find((c) => c.id === state.pendingRescue);
+    if (rescue) {
+      return { card: rescue, state: { ...state, pendingRescue: undefined, lastCardId: rescue.id } };
+    }
+  }
+
   const milestone = dueMilestone(cards, state, content);
   if (milestone) return { card: milestone, state: { ...state, lastCardId: milestone.id } };
 
+  // Rescue cards are never drawn normally — only via the pending-rescue path.
   const pool = cards.filter(
-    (c) => c.kind !== "milestone" && isEligible(c, state, content),
+    (c) => c.kind !== "milestone" && !c.rescue && isEligible(c, state, content),
   );
   if (pool.length === 0) return { card: null, state };
 
@@ -105,7 +114,7 @@ export function eligibleDraw(
   const content = CONTENT;
   const cards = allCards(content);
   const inDeck = cards.filter(
-    (c) => !!c.deck && state.activeDecks.includes(c.deck) && !exhausted(c, state),
+    (c) => !!c.deck && !c.rescue && state.activeDecks.includes(c.deck) && !exhausted(c, state),
   );
   const milestone = dueMilestone(cards, state, content);
   const pool = inDeck.filter(
@@ -225,13 +234,33 @@ function applyDrift(state: GameState, content: Content): void {
   }
 }
 
-function checkGameOver(state: GameState): void {
+const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
+
+// A one-shot safety-net card for a vital: `rescue === vital`, not yet used, and
+// in an active deck. (Rescue cards are never drawn normally — see drawCard.)
+function findRescue(state: GameState, content: Content, key: VitalKey): Card | null {
+  for (const card of allCards(content)) {
+    if (card.rescue !== key) continue;
+    if (exhausted(card, state)) continue;
+    if (!card.deck || !state.activeDecks.includes(card.deck)) continue;
+    return card;
+  }
+  return null;
+}
+
+function checkGameOver(state: GameState, content: Content): void {
   for (const key of VITAL_KEYS) {
-    if (state.vitals[key] <= VITAL_MIN) {
-      state.over = true;
-      state.endReason = key;
-      return;
+    if (state.vitals[key] > VITAL_MIN) continue;
+    const rescue = findRescue(state, content, key);
+    if (rescue) {
+      // Caught by the safety net: floor the vital and force the rescue card.
+      state.vitals[key] = RESCUE_FLOOR;
+      state.pendingRescue = rescue.id;
+      continue;
     }
+    state.over = true;
+    state.endReason = key;
+    return;
   }
 }
 
@@ -258,7 +287,7 @@ export function chooseDirection(
 
   state.age += 1;
   applyDrift(state, content);
-  checkGameOver(state);
+  checkGameOver(state, content);
   return { state, result: outcome.result };
 }
 
@@ -267,7 +296,7 @@ export function quietYear(prev: GameState): { state: GameState; result: string }
   const state = structuredClone(prev);
   state.age += 1;
   applyDrift(state, CONTENT);
-  checkGameOver(state);
+  checkGameOver(state, CONTENT);
   return { state, result: "A quiet, uneventful year passes." };
 }
 

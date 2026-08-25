@@ -184,9 +184,18 @@ appears at random, but **survival depends on prior preparation**:
 - **Fever** → survive if `vaccinated`, or health-hardy, or you can afford a
   doctor; else `endGame` (death).
 - **Runaway cart** → survive if `sporty`, or health-hardy.
-- **Hunger** (only if poor) → beg, or enter the **workhouse**.
 - **Factory loom** (workers only) → survive if `sporty`/hardy; refusing is safe
   but costs pay.
+
+**Finances safety net (the workhouse).** Money is *not* directly lethal the
+first time. A card can carry `rescue: <vital>`; when that vital would hit 0 the
+engine floors it (to 1) and forces the rescue card instead of a game-over —
+one-shot, so a *second* collapse of that vital is fatal. `child_hunger` is the
+finances rescue: run out of money and you fall into the **workhouse** (the safe
+landing — no money drain, its own exits) or take to the **streets** (free but
+harsher). Rescue cards are never drawn normally, only fired by this mechanism.
+This makes health/happiness/spirit the directly-lethal vitals; poverty routes
+you through the workhouse instead — thematically, the Victorian safety net.
 
 **Target:** a *thoughtful, prepared* player reaches 18 roughly **70%** of the
 time; careless/random play dies far more. The **work path** is a deliberate

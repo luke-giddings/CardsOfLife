@@ -324,9 +324,13 @@ export const content = {
           },
         },
         {
+          // The finances safety net: not drawn normally — it fires (once) the
+          // moment you would go bankrupt, catching you before a game-over. The
+          // workhouse is the safe landing (no money drain, its own exits); the
+          // streets are the free-but-harsh alternative.
           id: "child_hunger",
           kind: "one_time",
-          conditions: { ageMin: 6, vitals: { finances: { max: 25 } } },
+          rescue: "finances",
           prompt: "child_hunger.prompt",
           options: {
             left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless" } } }] },
