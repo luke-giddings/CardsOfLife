@@ -212,8 +212,10 @@ high-risk/high-reward gamble (money via drift, but a real chance it kills you);
 
 The run ends when any Vital hits 0, or a hazard's `endGame` fires. The end
 screen names the ending and shows a short recap. Reaching 18 is its own ending —
-**"You Survived Childhood"** — reframing adulthood as an achievement. A richer
-epitaph/scoring model is Backlog.
+**"You Survived Childhood"** — reframing adulthood as an achievement. **For now
+the game ends here.** The adult run, its ageing-drift/natural-death model, and the
+qualitative epitaph are designed in §17b and will replace "Survived Childhood" as
+the terminal ending once adult content is built.
 
 ## 13. Save / resume / reset
 
@@ -285,64 +287,135 @@ and playable on a phone.
 
 ---
 
-## 17b. Adult career paths (paper design)
+## 17b. The adult economy (paper design — NOT yet built)
 
-Three broad ladders open up after the age-14 school-leaver (or from childhood
-work/crime). Each is a `job` status with its own deck; you climb tiers, and any
-job can end (→ unemployed). **Built so far:** the entry tier of each path, the
-`unemployed` hub, and a job-loss card per job. **Designed, not built:** the
-higher tiers, promotions, and the prison branch.
+> **Status.** This whole section is an agreed paper design for adult life. It is
+> **not implemented** and, by decision, **the game still ends at the close of the
+> childhood deck** ("You Survived Childhood") until we have the childhood content
+> written and balanced. All numbers below are **provisional** — expect to tweak
+> them during playtest once we actually build this. **Built so far:** the entry
+> tier of each path, the `unemployed` hub, and a job-loss card per job.
 
-**1. Respectable / educated** — *gated by education, safe, steady.*
-| Tier | Job | Drift | Needs |
+### The core loop (hedonic treadmill)
+
+Money flows in **one channel only** and is converted into the other three vitals,
+so a good life is an *equilibrium* you sustain, not a pile of cash:
+
+- **Money (£):** the **only** source is your **job**. The **only** things that
+  spend it are **houses** (buy + upkeep) and **lifestyle** (ongoing).
+- **Happiness ☺:** fed mainly by **lifestyle** (a little by the house); **work
+  drains it**. Living too frugally *starves* happiness — a slow death by misery,
+  so frugality is **not** the safe long-life option.
+- **Health ♥ / Spirit ✦:** fed by the **house** (rest, security); drained by
+  **work** and by **lavish lifestyle**.
+
+Two ways to die at the top are symmetric — neither is "be boring":
+- *Rich miser* (top job + estate + frugal): happiness bleeds out → dies unhappy.
+- *Rich hedonist* (top job + estate + lavish): health/spirit bleed out → dies worn out.
+The sweet spot is the lifestyle your job + house can **sustain**, and that spot
+rises as you earn more — the treadmill.
+
+### Job ladders — paths pay differently; education pays most
+
+Four education levels: **illiterate → basic → grammar → university**. Illiterate
+is the shared floor. Each path then has **3 tiers** above the floor (matched
+across paths). Education out-earns the others per tier because it is gated behind
+~10 childhood years of £0 study — the higher pay compensates the lost earning
+years. Criminal earns nearly as much but risks prison; manual is the reliable
+middle that grinds health.
+
+Job income is £/yr drift; jobs also carry a non-financial **cost** that rises
+with tier.
+
+| Tier | Manual | Criminal | Educated |
 |---|---|---|---|
-| 1 | **Shop assistant** *(built)* | £ +5 | education ≥ school |
-| 2 | Clerk / counting-house | £ +10, ✦ +5 | school + experience |
-| 3 | Professional (solicitor's clerk, schoolmaster, manager) | £ +15, ✦ +5 | **grammar/university** (future edu tiers) |
+| Floor | **Apprentice** / odd-jobs / unemployed — £ +6 | (same floor) | (same floor) |
+| 1 | Labourer £ +12 | Pickpocket £ +14 | Clerk £ +16 |
+| 2 | Foreman £ +18 | Burglar £ +22 | Bookkeeper £ +26 |
+| 3 | Master tradesman £ +26 | Fence / gang boss £ +34 | Solicitor £ +40 |
 
-Low physical risk; the ceiling is gated by education. Main risk = redundancy
-(firm fails) → unemployed. This is the "study pays off" payoff.
+Per-tier non-financial job cost (spread across ♥/✦/☺, flavour by path — manual
+costs ♥, criminal costs ✦, educated costs ☺/✦): floor 0 · tier 1 ≈ −5 · tier 2 ≈
+−10 · tier 3 ≈ −15.
 
-**2. Manual labour** — *no education, decent early money, grinds health, low ceiling.*
-| Tier | Job | Drift | Needs |
+- **Manual** entry is now **`apprentice`** (unifies the old `child_labourer` with
+  the workhouse-exit apprentice — one state, the shared bottom rung of the trade).
+- **Criminal** risk is **arrest → prison** (see below).
+- **Educated** tiers gate on the new higher education levels (grammar, university).
+
+### Houses — a `---` purchase behind a rising gate, then cheap upkeep
+
+Buying a house reuses the existing **`---` (halve current Finances)** magnitude,
+gated behind a **rising Finances threshold**. Each purchase is therefore a huge,
+felt hit (≥50% of your money) but self-scaling (halving always leaves headroom;
+you re-accumulate toward the next gate). The rising gate is the "have I made it
+yet?" moment, and a bigger job is how you clear it. After purchase, only small
+**upkeep** and a permanent **vital bonus**:
+
+| House | Gate | Cost | Upkeep/yr | Gives |
+|---|---|---|---|---|
+| Rented room | — | — | −4 (rent) | ☺ +1 |
+| Small house | Finances ≥ 50 | `---` | −3 | ♥ +3, ✦ +2 |
+| Large house | Finances ≥ 65 | `---` | −5 | ♥ +5, ✦ +4, ☺ +2 |
+| Estate | Finances ≥ 80 | `---` | −8 | ♥ +7, ✦ +6, ☺ +3 |
+
+### Lifestyle — unlocked out of childhood; costs money *and* vitals
+
+Lifestyle is the main **Happiness** source and the main **Money/Health** sink, so
+it is the lever of the treadmill. Upgrading a lifestyle tier can be a one-time
+`---` "move up in the world"; then an ongoing per-year drain:
+
+| Lifestyle | £/yr | ☺ | ♥ / ✦ |
 |---|---|---|---|
-| 1 | **Factory hand** *(built)* | £ +10, ♥ −5 | — |
-| 2 | Skilled hand / foreman | £ +15, ♥ −5, ✦ +5 | experience |
+| Frugal | 0 | **−4** (joyless) | — |
+| Modest | −4 | +2 | ♥ −1 |
+| Comfortable | −10 | +6 | ♥ −2 |
+| Lavish | −22 | +12 | ♥ −6, ✦ −2 |
 
-Risks: industrial **injury** (a hazard, like the loom) and **layoffs** →
-unemployed. Never gets rich, but reliable while your body holds.
+Frugal being a *happiness drain* is deliberate: it removes "play boring, live
+longest". You must spend **up to** your means to stay content, but not beyond.
 
-**3. Criminal** — *illicit, fastest money, corrodes spirit, catastrophic risk.*
-| Tier | Job | Drift | Needs |
-|---|---|---|---|
-| 1 | **Pickpocket** *(built)* | £ +10, ✦ −5 | — |
-| 2 | Burglar / footpad | £ +15, ✦ −5, ♥ −5 | nerve |
-| 3 | Fence / gang boss | £ +20, ✦ −10 | reputation |
+### Ending the run (when adulthood ships)
 
-The big risk is **arrest → prison** (a new brutal status, or `endGame` via the
-gallows/transportation for serious crime). The `rescue` mechanism could make a
-petty first arrest "prison, then out" rather than fatal. Highest reward, highest
-ruin.
+Death stays **choice-driven first** (a vital → 0, at any age). On top of that:
+1. **Ageing drift** that grows after ~50 (extra −1 then −2 ♥/✦ per year) — rides
+   the existing drift system, no special "death deck".
+2. A **hard natural-death ending** around age 75–80 regardless of vitals, so every
+   run terminates and reaches the epitaph.
+3. A later **twilight/old-age deck** as *flavour* only (illness, a child marries,
+   a funeral, retirement) — richer text and bigger swings, but **not** the
+   executioner.
 
-**Cross-cutting mechanics still to design:**
-- **Promotion** up a tier — a card that fires after N years in a job
-  (age/experience gate), offering the next rung; the respectable ladder also
-  gates on the next education tier.
-- **Job loss** *(built, first pass)* — sacked / firm bankrupt / injured /
-  arrested → unemployed; if it also bankrupts you, the workhouse net still
-  catches your finances.
-- **Prison** — the criminal path's downside state (heavy drains + a release/
-  escape), and the trigger for the education gate to bite on release.
-- **Experience trait** — a counter incremented each year in a job, so promotions
-  can require "time served".
+**Scoring = a qualitative epitaph**, not a number: the death card states, in
+words, the tier of each ladder you reached — e.g. *"Died a solicitor, in your own
+estate, having lived comfortably, aged 71."* No arithmetic.
+
+### Cross-cutting mechanics (deferred — decide when we build this)
+
+- **Promotion** up a tier — leaning toward an **experience** counter trait (+1/yr
+  in the same job) that fires a promotion milestone at a threshold, so climbing
+  costs real game-years. (Alternative considered: promotion offered as an
+  untimed choice card. Not yet decided.)
+- **Prison** (criminal only) — a survivable heavy-drain status, released to the
+  illiterate floor; the `rescue` mechanism can make a first petty arrest "prison,
+  then out" rather than fatal. Serious crime could still `endGame` (gallows /
+  transportation).
+- **Experience trait** — the per-job year counter that drives promotion.
+- **Cross-run persistence** (own the house on a later run) — **explicitly out of
+  scope for now**; the single-run loop closes without it. Possible future
+  meta-progression, related to the legacy/inheritance backlog item.
 
 ## 18. Backlog (agreed future work)
 
 Roughly in likely order. None of these are started.
 
-- **Age-18 leaver branch** — the next milestone: choose a first job /
-  apprenticeship / (if `education ≥ school`) further study; introduces the first
-  **adult decks** and job/education gating.
+- **Adult economy (§17b)** — the whole post-childhood game: job ladders (4
+  education levels; matched 3-tier manual/criminal/educated paths), houses as
+  `---` purchases behind rising Finances gates, lifestyle tiers, and the
+  ageing-drift + natural-death ending with a qualitative epitaph. Fully paper-
+  designed; **deliberately deferred** so childhood content is written and
+  balanced first. Starts with the **age-18 leaver branch** (choose first job /
+  apprenticeship / further study).
 - **House decks & an "owned" housing status** — renting/buying, home events;
   gives something to *own* (prerequisite for inheritance below).
 - **Homeless deck & exits** — `homeless` housing (reached by begging off the
