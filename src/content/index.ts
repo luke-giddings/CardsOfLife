@@ -385,6 +385,51 @@ export const content = {
           },
         },
         {
+          id: "home_family_market",
+          kind: "filler",
+          prompt: "home_family_market.prompt",
+          options: {
+            left: { label: "home_family_market.left", outcomes: [{ result: "home_family_market.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            right: { label: "home_family_market.right", outcomes: [{ result: "home_family_market.right.r0", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          id: "home_family_fair",
+          kind: "filler",
+          prompt: "home_family_fair.prompt",
+          options: {
+            left: { label: "home_family_fair.left", outcomes: [{ result: "home_family_fair.left.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },
+            right: { label: "home_family_fair.right", outcomes: [{ result: "home_family_fair.right.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          id: "home_family_church",
+          kind: "filler",
+          prompt: "home_family_church.prompt",
+          options: {
+            left: { label: "home_family_church.left", outcomes: [{ result: "home_family_church.left.r0", effects: { vitals: { spirit: "++", happiness: "-" } } }] },
+            right: { label: "home_family_church.right", outcomes: [{ result: "home_family_church.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "home_family_relative",
+          kind: "filler",
+          prompt: "home_family_relative.prompt",
+          options: {
+            left: { label: "home_family_relative.left", outcomes: [{ result: "home_family_relative.left.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
+            right: { label: "home_family_relative.right", outcomes: [{ result: "home_family_relative.right.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          id: "home_family_scrump",
+          kind: "filler",
+          prompt: "home_family_scrump.prompt",
+          options: {
+            left: { label: "home_family_scrump.left", outcomes: [{ result: "home_family_scrump.left.r0", effects: { vitals: { happiness: "++", finances: "+", health: "-" } } }] },
+            right: { label: "home_family_scrump.right", outcomes: [{ result: "home_family_scrump.right.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "+" } } }] },
+          },
+        },
+        {
           // A well-off older child can strike out on their own: a big up-front
           // cost, then housing=renting (its own rent/spirit drift), which hands
           // the home_family deck away. `filler` so the offer recurs while you

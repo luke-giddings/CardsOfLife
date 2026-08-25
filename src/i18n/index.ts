@@ -175,6 +175,36 @@ export const EN = {
   "home_family_pet.right": "Shoo it off",
   "home_family_pet.right.r0": "You save the hassle and the money, but feel a pang.",
 
+  "home_family_market.prompt": "Mother sends you to market with the week's pennies and a long list.",
+  "home_family_market.left": "Haggle for every penny",
+  "home_family_market.left.r0": "You drive a hard bargain and bring change home. Mother is impressed; your feet are sore.",
+  "home_family_market.right": "Treat yourself on the way",
+  "home_family_market.right.r0": "A hot pie eaten in a doorway — blissful, and a farthing short.",
+
+  "home_family_fair.prompt": "A travelling fair sets up on the common: swingboats, a coconut shy, toffee apples.",
+  "home_family_fair.left": "Spend your pennies",
+  "home_family_fair.left.r0": "Rides, sweets and a stomach-ache to remember. Worth every coin.",
+  "home_family_fair.right": "Just watch the crowds",
+  "home_family_fair.right.r0": "You keep your coppers and take it all in from the fence. A quiet sort of pride.",
+
+  "home_family_church.prompt": "Sunday, and the whole family files into the pew in its Sunday best.",
+  "home_family_church.left": "Sit still and sing",
+  "home_family_church.left.r0": "You lose yourself in the hymns. An hour of stillness does the soul good.",
+  "home_family_church.right": "Fidget and daydream",
+  "home_family_church.right.r0": "You count the rafters and pull faces at the baby behind — but the sermon drags.",
+
+  "home_family_relative.prompt": "A well-to-do aunt is visiting, full of opinions and, perhaps, a spare shilling.",
+  "home_family_relative.left": "Play the charmer",
+  "home_family_relative.left.r0": "A shilling pressed into your palm — earned with a good deal of 'yes, Auntie'.",
+  "home_family_relative.right": "Speak your mind",
+  "home_family_relative.right.r0": "You say what you think. No shilling, but Mother hides a smile and you feel ten feet tall.",
+
+  "home_family_scrump.prompt": "The orchard wall is low, the apples are ripe, and the farmer's dog is asleep.",
+  "home_family_scrump.left": "Over the wall",
+  "home_family_scrump.left.r0": "Pockets full of stolen apples and a torn sleeve — a glorious, guilty feast.",
+  "home_family_scrump.right": "Resist temptation",
+  "home_family_scrump.right.r0": "You walk on by. Hungrier and a touch smug, but with a clear conscience.",
+
   "home_family_moveout.prompt": "You've squirrelled away enough to put down for lodgings of your own. Time to fly the nest?",
   "home_family_moveout.left": "Move out",
   "home_family_moveout.left.r0": "A cramped rented flat, a key of your own, and no one to answer to. It cost you nearly everything — worth it.",
@@ -548,6 +578,36 @@ export const IT: Record<StringId, string> = {
   "home_family_pet.left.r0": "Un nuovo migliore amico che ti fa uscire all'aria aperta — spese del veterinario comprese.",
   "home_family_pet.right": "Scacciarlo",
   "home_family_pet.right.r0": "Ti risparmi la seccatura e i soldi, ma senti una fitta.",
+
+  "home_family_market.prompt": "La mamma ti manda al mercato con gli spiccioli della settimana e una lunga lista.",
+  "home_family_market.left": "Contrattare su ogni centesimo",
+  "home_family_market.left.r0": "Tiri sul prezzo e torni a casa col resto. La mamma è colpita; i tuoi piedi sono a pezzi.",
+  "home_family_market.right": "Concederti qualcosa per strada",
+  "home_family_market.right.r0": "Un pasticcio caldo mangiato in un portone — una delizia, e un quattrino in meno.",
+
+  "home_family_fair.prompt": "Una fiera ambulante si installa sul prato: altalene, tiro al cocco, mele caramellate.",
+  "home_family_fair.left": "Spendere i tuoi spiccioli",
+  "home_family_fair.left.r0": "Giostre, dolci e un mal di pancia memorabile. Vale ogni moneta.",
+  "home_family_fair.right": "Guardare solo la folla",
+  "home_family_fair.right.r0": "Ti tieni i soldi e ti godi tutto da dietro lo steccato. Una quieta soddisfazione.",
+
+  "home_family_church.prompt": "Domenica, e tutta la famiglia entra nel banco col vestito buono.",
+  "home_family_church.left": "Stare composto e cantare",
+  "home_family_church.left.r0": "Ti perdi negli inni. Un'ora di quiete fa bene all'anima.",
+  "home_family_church.right": "Agitarti e sognare a occhi aperti",
+  "home_family_church.right.r0": "Conti le travi e fai le boccacce al bimbo dietro — ma la predica non finisce mai.",
+
+  "home_family_relative.prompt": "È in visita una zia benestante, piena di opinioni e, forse, di uno scellino di troppo.",
+  "home_family_relative.left": "Fare il lecchino",
+  "home_family_relative.left.r0": "Uno scellino ti finisce in mano — guadagnato con parecchi 'sì, zia'.",
+  "home_family_relative.right": "Dire la tua",
+  "home_family_relative.right.r0": "Dici quel che pensi. Niente scellino, ma la mamma nasconde un sorriso e ti senti alto un metro e ottanta.",
+
+  "home_family_scrump.prompt": "Il muro del frutteto è basso, le mele sono mature e il cane del contadino dorme.",
+  "home_family_scrump.left": "Scavalcare il muro",
+  "home_family_scrump.left.r0": "Tasche piene di mele rubate e una manica strappata — un banchetto glorioso e colpevole.",
+  "home_family_scrump.right": "Resistere alla tentazione",
+  "home_family_scrump.right.r0": "Tiri dritto. Più affamato e un po' compiaciuto, ma con la coscienza pulita.",
 
   "home_family_moveout.prompt": "Hai messo da parte abbastanza per l'anticipo di un alloggio tutto tuo. È ora di lasciare il nido?",
   "home_family_moveout.left": "Andare via",

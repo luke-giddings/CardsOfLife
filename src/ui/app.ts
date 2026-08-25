@@ -344,14 +344,19 @@ export class Game {
   // choice given the current state (used by easy mode under each edge label).
   private vitalChips(opt: CardOption): string {
     const outcome = resolveOutcome(opt, this.state, content);
+    // The turn also applies status drift after the card's effects, so fold it
+    // into the fatal check — a small card loss can still be lethal once the
+    // per-turn drain lands.
+    const drift = totalDrift(this.state, content);
     let chips = "";
     for (const key of VITAL_KEYS) {
       const mag = outcome.effects?.vitals?.[key];
       if (!mag) continue;
       const pos = mag.startsWith("+");
-      // If this drop would take the vital to 0, it's lethal — show the death
-      // symbol on that stat instead of the magnitude.
-      const lethal = !pos && this.state.vitals[key] + MAGNITUDE_POINTS[mag] <= VITAL_MIN;
+      // If this stat would reach 0 (after this change plus the turn's drift),
+      // it's lethal — show the death symbol on it instead of the magnitude.
+      const lethal =
+        this.state.vitals[key] + MAGNITUDE_POINTS[mag] + (drift[key] ?? 0) <= VITAL_MIN;
       const body = lethal
         ? `<span class="dbad ep-end" title="This would be fatal">☠</span>`
         : `<span class="${pos ? "dgood" : "dbad"}">${mag.split("-").join("−")}</span>`;
