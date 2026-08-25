@@ -335,24 +335,49 @@ across paths). Education out-earns the others per tier because it is gated behin
 years. Criminal earns nearly as much but risks prison; manual is the reliable
 middle that grinds health.
 
-Job income is £/yr drift; jobs also carry a non-financial **cost** that rises
-with tier.
+**FOUR paths, framed as a 2×2 of "invest early vs earn now".** The old "manual"
+ladder is split into **skilled** (trade) and **unskilled** (labour), giving four
+distinct identities:
 
-| Tier | Manual | Criminal | Educated |
-|---|---|---|---|
-| Floor | **Apprentice** / odd-jobs / unemployed — £ +6 | (same floor) | (same floor) |
-| 1 | Labourer £ +12 | Pickpocket £ +14 | Clerk £ +16 |
-| 2 | Foreman £ +18 | Burglar £ +22 | Bookkeeper £ +26 |
-| 3 | Master tradesman £ +26 | Fence / gang boss £ +34 | Solicitor £ +40 |
+|              | Safe / high ceiling            | Dangerous / capped                         |
+|--------------|--------------------------------|--------------------------------------------|
+| **Invest early** | **Educated** (study years) | **Skilled** (lucky-break apprenticeship)   |
+| **Earn now**     | —                          | **Unskilled** (labour) · **Criminal** (scores) |
 
-Per-tier non-financial job cost (spread across ♥/✦/☺, flavour by path — manual
-costs ♥, criminal costs ✦, educated costs ☺/✦): floor 0 · tier 1 ≈ −5 · tier 2 ≈
-−10 · tier 3 ≈ −15.
+Educated and Skilled are the *delayed-gratification* paths — you pay in years up
+front (school / a low-paid, time-limited apprenticeship) and reap a high ceiling.
+Skilled is "education for the working class": the apprenticeship is the manual
+world's equivalent of school. Unskilled and Criminal are *money-now*.
 
-- **Manual** entry is now **`apprentice`** (unifies the old `child_labourer` with
-  the workhouse-exit apprentice — one state, the shared bottom rung of the trade).
+Job income is £/yr drift (except criminal — see below); jobs also carry a
+non-financial **cost** that rises with tier. Per-tier cost (spread across ♥/✦/☺,
+flavour by path): floor 0 · tier 1 ≈ −5 · tier 2 ≈ −10 · tier 3 ≈ −15.
+
+| Tier | Unskilled | Skilled | Criminal | Educated |
+|---|---|---|---|---|
+| Floor | **Dangerous child labour** | — | odd-jobs / unemployed | (shared floor) |
+| 1 | Factory hand £ +12 | **Apprentice** (time-limited) | Pickpocket £ +14 | Clerk £ +16 |
+| 2 | Gang-master £ +18 *(ceiling)* | Foreman £ +18 | Burglar £ +22 | Bookkeeper £ +26 |
+| 3 | — *(no tier 3)* | Master tradesman £ +26 | Fence / gang boss £ +34 | Solicitor £ +40 |
+
+- **Unskilled caps at tier 2** — the quietly-tragic honest lot: decent money
+  early, but no master-equivalent to rise to. Its identity *is* the low ceiling.
+- **Skilled** is entered by a **lucky-break apprenticeship** that crosses you over
+  from the unskilled floor (dangerous child labour) onto the high-ceiling ladder.
+  The apprenticeship is **strictly time-limited** (a few years, then it forces you
+  onward to the trade — its own progression mechanic, not the experience grind),
+  and it **can be *failed*** → thrown back to unskilled / unemployed. So the break
+  is a real gamble, not a free lift.
+- **Dangerous child labour is never a dead-end** — always has exits: the lucky
+  apprenticeship (→ skilled), a steady factory job (→ up within unskilled), or
+  unemployed / crime. You can't get *stuck* there, but you *can* stay if unlucky.
 - **Criminal** risk is **arrest → prison** (see below).
 - **Educated** tiers gate on the new higher education levels (grammar, university).
+
+> Not yet built: the split is still the old 3-path code (shophand/factory/
+> pickpocket + tier-2 clerk/foreman/burglar). Reworking into four paths with the
+> apprenticeship bridge, its time-limit, and the fail branch is the next content
+> job once the current build is playtested.
 
 **Criminal path plays differently — no wage, big scores (built, tier 1).** Unlike
 the wage-drift paths, the criminal tier has **0 drift**: no passive income at all.

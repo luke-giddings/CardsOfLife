@@ -284,7 +284,7 @@ export const content = {
         },
         {
           id: "child_sports",
-          kind: "filler",
+          kind: "one_time",
           prompt: "child_sports.prompt",
           options: {
             left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
@@ -378,7 +378,7 @@ export const content = {
       cards: [
         {
           id: "home_family_chores",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_chores.prompt",
           options: {
             left: { label: "home_family_chores.left", outcomes: [{ result: "home_family_chores.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" } } }] },
@@ -387,7 +387,7 @@ export const content = {
         },
         {
           id: "home_family_sweets",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_sweets.prompt",
           options: {
             left: {
@@ -408,7 +408,7 @@ export const content = {
         },
         {
           id: "home_family_pet",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_pet.prompt",
           options: {
             left: { label: "home_family_pet.left", outcomes: [{ result: "home_family_pet.left.r0", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
@@ -417,7 +417,7 @@ export const content = {
         },
         {
           id: "home_family_market",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_market.prompt",
           options: {
             left: { label: "home_family_market.left", outcomes: [{ result: "home_family_market.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
@@ -426,7 +426,7 @@ export const content = {
         },
         {
           id: "home_family_fair",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_fair.prompt",
           options: {
             left: { label: "home_family_fair.left", outcomes: [{ result: "home_family_fair.left.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },
@@ -435,7 +435,7 @@ export const content = {
         },
         {
           id: "home_family_church",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_church.prompt",
           options: {
             left: { label: "home_family_church.left", outcomes: [{ result: "home_family_church.left.r0", effects: { vitals: { spirit: "++", happiness: "-" } } }] },
@@ -444,7 +444,7 @@ export const content = {
         },
         {
           id: "home_family_relative",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_relative.prompt",
           options: {
             left: { label: "home_family_relative.left", outcomes: [{ result: "home_family_relative.left.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
@@ -453,7 +453,7 @@ export const content = {
         },
         {
           id: "home_family_scrump",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_family_scrump.prompt",
           options: {
             left: { label: "home_family_scrump.left", outcomes: [{ result: "home_family_scrump.left.r0", effects: { vitals: { happiness: "++", finances: "+", health: "-" } } }] },
@@ -487,7 +487,7 @@ export const content = {
       cards: [
         {
           id: "home_renting_lodger",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_renting_lodger.prompt",
           options: {
             left: { label: "home_renting_lodger.left", outcomes: [{ result: "home_renting_lodger.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" } } }] },
@@ -496,7 +496,7 @@ export const content = {
         },
         {
           id: "home_renting_landlord",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_renting_landlord.prompt",
           options: {
             left: { label: "home_renting_landlord.left", outcomes: [{ result: "home_renting_landlord.left.r0", effects: { vitals: { finances: "--", spirit: "+" } } }] },
@@ -505,7 +505,7 @@ export const content = {
         },
         {
           id: "home_renting_furnish",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_renting_furnish.prompt",
           options: {
             left: { label: "home_renting_furnish.left", outcomes: [{ result: "home_renting_furnish.left.r0", effects: { vitals: { happiness: "++", spirit: "+", finances: "-" } } }] },
@@ -514,7 +514,7 @@ export const content = {
         },
         {
           id: "home_renting_neighbour",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_renting_neighbour.prompt",
           options: {
             left: { label: "home_renting_neighbour.left", outcomes: [{ result: "home_renting_neighbour.left.r0", effects: { vitals: { happiness: "++", spirit: "+", finances: "-" } } }] },
@@ -523,7 +523,7 @@ export const content = {
         },
         {
           id: "home_renting_quiet",
-          kind: "filler",
+          kind: "one_time",
           prompt: "home_renting_quiet.prompt",
           options: {
             left: { label: "home_renting_quiet.left", outcomes: [{ result: "home_renting_quiet.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
@@ -659,7 +659,7 @@ export const content = {
         },
         {
           id: "edu_basicschool_friend",
-          kind: "filler",
+          kind: "one_time",
           prompt: "edu_basicschool_friend.prompt",
           options: {
             left: { label: "edu_basicschool_friend.left", outcomes: [{ result: "edu_basicschool_friend.left.r0", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
@@ -668,7 +668,7 @@ export const content = {
         },
         {
           id: "edu_basicschool_prize",
-          kind: "filler",
+          kind: "one_time",
           prompt: "edu_basicschool_prize.prompt",
           options: {
             left: {
@@ -1051,7 +1051,7 @@ export const content = {
       cards: [
         {
           id: "sibling_play",
-          kind: "filler",
+          kind: "one_time",
           prompt: "sibling_play.prompt",
           options: {
             left: {
@@ -1072,7 +1072,7 @@ export const content = {
         },
         {
           id: "sibling_blame",
-          kind: "filler",
+          kind: "one_time",
           prompt: "sibling_blame.prompt",
           options: {
             left: {
@@ -1093,7 +1093,7 @@ export const content = {
         },
         {
           id: "sibling_treat",
-          kind: "filler",
+          kind: "one_time",
           prompt: "sibling_treat.prompt",
           options: {
             left: {
