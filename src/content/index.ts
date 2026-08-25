@@ -55,6 +55,13 @@ export const content = {
         // Learning a trade under a master: a small stipend and no danger — the
         // best way out of the workhouse. Paired with the "apprentice" housing.
         apprentice: { label: "status.job.apprentice", drift: { finances: 5 } },
+        // Left school, looking for work: no wages, so the family living cost
+        // bites. Opens the job-offer deck.
+        unemployed: { label: "status.job.unemployed", addDecks: ["job_unemployed"] },
+        // Two first jobs offered on leaving school (their own decks are future):
+        // shop = steady & safe; factory = better pay, harder on the body.
+        shophand: { label: "status.job.shophand", drift: { finances: 5 } },
+        factory: { label: "status.job.factory", drift: { finances: 10, health: -5 } },
       },
     },
     housing: {
@@ -602,10 +609,7 @@ export const content = {
           conditions: { ageMin: 11 },
           prompt: "edu_basicschool_exams.prompt",
           options: {
-            // Studying hard is how you actually earn the credential (education
-            // -> school). Just attending doesn't count — so dropping out for
-            // work/the workhouse before this leaves you "Illiterate".
-            left: { label: "edu_basicschool_exams.left", outcomes: [{ result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "school" } } }] },
+            left: { label: "edu_basicschool_exams.left", outcomes: [{ result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
             right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
@@ -633,9 +637,7 @@ export const content = {
           kind: "filler",
           prompt: "edu_basicschool_prize.prompt",
           options: {
-            // Swotting for the prize also earns the credential (a diligent route
-            // for a pupil who winged the exams).
-            left: { label: "edu_basicschool_prize.left", outcomes: [{ result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "school" } } }] },
+            left: { label: "edu_basicschool_prize.left", outcomes: [{ result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } }] },
             right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
@@ -648,6 +650,52 @@ export const content = {
           options: {
             left: { label: "edu_basicschool_errands.left", outcomes: [{ result: "edu_basicschool_errands.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
             right: { label: "edu_basicschool_errands.right", outcomes: [{ result: "edu_basicschool_errands.right.r0", effects: { vitals: { spirit: "+", health: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          // End of basic school. BOTH choices earn the credential (education ->
+          // school); only reaching this counts, so dropping out earlier (for
+          // work / the workhouse) leaves you "Illiterate". Then either continue
+          // studying, or leave to look for work (job -> unemployed).
+          id: "edu_basicschool_leaver",
+          kind: "milestone",
+          priority: 60,
+          conditions: { ageMin: 14 },
+          prompt: "edu_basicschool_leaver.prompt",
+          options: {
+            left: { label: "edu_basicschool_leaver.left", outcomes: [{ result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school" } } }] },
+            right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "school", job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Unemployed: active while job = unemployed (school-leaver looking for
+    //     work). No wages, so the family living cost bites — find a job. A job
+    //     offer recurs (filler) until you take one; taking it hands this deck
+    //     away. (First pass.) -------------------------------------------------
+    {
+      id: "job_unemployed",
+      title: "deck.job_unemployed.title",
+      unlock: "deck.job_unemployed.blurb",
+      cards: [
+        {
+          id: "job_unemployed_offer",
+          kind: "filler",
+          prompt: "job_unemployed_offer.prompt",
+          options: {
+            left: { label: "job_unemployed_offer.left", outcomes: [{ result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } }] },
+            right: { label: "job_unemployed_offer.right", outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
+            down: { label: "job_unemployed_offer.down", outcomes: [{ result: "job_unemployed_offer.down.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "job_unemployed_idle",
+          kind: "filler",
+          prompt: "job_unemployed_idle.prompt",
+          options: {
+            left: { label: "job_unemployed_idle.left", outcomes: [{ result: "job_unemployed_idle.left.r0", effects: { vitals: { spirit: "+", finances: "-" } } }] },
+            right: { label: "job_unemployed_idle.right", outcomes: [{ result: "job_unemployed_idle.right.r0", effects: { vitals: { happiness: "-", health: "+" } } }] },
           },
         },
       ],

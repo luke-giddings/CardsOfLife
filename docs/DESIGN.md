@@ -80,9 +80,9 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 
 | Status | States (so far) | Notes |
 |---|---|---|
-| **Job / occupation** | infant · child_labourer · studying · apprentice | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour` — the wage offsets the family living cost (below), so labour breaks even on money at a cost to health. Studying (the school path): spirit −5 drift (a grind, no wages), opens `edu_basicschool`. Apprentice: finances +5 drift (a trade, no danger) — the workhouse's best exit. |
+| **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory | Start = infant (no drain). Child labourer: finances +5 / health −5 drift, opens `job_labour` — the wage offsets the family living cost, so labour breaks even at a cost to health. Studying (school path): spirit −5 drift, opens `edu_basicschool`. Apprentice: finances +5 (the workhouse's best exit). **Leaving school** → unemployed (no drift; family cost bites) which opens `job_unemployed` (a recurring job offer); take a first job → **shophand** (finances +5, safe) or **factory** (finances +10 / health −5, better pay, harder). |
 | **Housing** | family · workhouse · renting · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): finances −5 rent but spirit +5 (independence); own deck is Backlog. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
-| **Education** | none · school | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying — its deck and drift — lives on `job = studying`, so the pressure ends when you stop attending but the credential remains. |
+| **Education** | none · school | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is granted **only at the end-of-basic-school leaver card** (age 14), so dropping out for work/the workhouse before then leaves you `none` (Illiterate). |
 | **Lifestyle** | default | Reserved. |
 
 **Deck naming:** decks owned by a status are prefixed by that status's kind —
@@ -157,10 +157,13 @@ Status **drift** (after effects) → check game-over.
   **three exits**: buy your freedom (→ renting, needs ~40 saved), run away
   (→ homeless), or take an apprenticeship (→ apprentice housing + job, age 10+).
 - **edu_basicschool** (job = studying): exams, first crush, a friend, prize
-  day, and after-school **errands** (a money route for the school path). The
-  **credential** (`education = school`) is earned by *studying hard* (exams /
-  prize), not just by attending — drop out for work before then and it doesn't
-  count. (Room for `edu_grammar` later.)
+  day, after-school **errands** (money route), and the **leaver** milestone at
+  14 — both choices grant the `school` credential, then you either stay on to
+  study (toward a future grammar tier) or leave for work (→ unemployed). (Room
+  for `edu_grammar` → `university` later.)
+- **job_unemployed** (job = unemployed): a school-leaver hunting for work. A
+  recurring job offer (shop vs factory, or hold out) plus an idle-day card; the
+  family cost bites until you take a job, which hands this deck away. First pass.
 - **home_renting** (housing = renting): flat life on top of the rent/spirit
   drift — a **lodger** for income, the **landlord**, doing the place up,
   neighbours, a quiet night. First-pass mock-up.
