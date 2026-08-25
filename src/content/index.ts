@@ -54,17 +54,18 @@ export const content = {
         studying: { label: "status.job.studying", drift: { spirit: -5 }, addDecks: ["edu_basicschool"] },
         // Learning a trade under a master: a small stipend and no danger — the
         // best way out of the workhouse. Paired with the "apprentice" housing.
-        apprentice: { label: "status.job.apprentice", drift: { finances: 5 } },
+        apprentice: { label: "status.job.apprentice", drift: { finances: 5 }, addDecks: ["job_apprentice"] },
         // Left school, no work: a grim state with a heavy happiness/spirit
         // drain (on top of the family living cost) — you want out fast. Opens
         // the job-offer deck.
         unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, addDecks: ["job_unemployed"] },
-        // First jobs (their own decks are future): shop = steady & safe (needs
-        // basic schooling); factory = better pay, harder on the body; pickpocket
-        // = the criminal life — quick money at a steady cost to the spirit.
-        shophand: { label: "status.job.shophand", drift: { finances: 5 } },
-        factory: { label: "status.job.factory", drift: { finances: 10, health: -5 } },
-        pickpocket: { label: "status.job.pickpocket", drift: { finances: 10, spirit: -5 } },
+        // First jobs. Each opens its own deck (job events + a job-loss card
+        // that returns you to unemployed): shop = steady & safe (needs basic
+        // schooling); factory = better pay, harder on the body; pickpocket =
+        // the criminal life — quick money at a steady cost to the spirit.
+        shophand: { label: "status.job.shophand", drift: { finances: 5 }, addDecks: ["job_shop"] },
+        factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
+        pickpocket: { label: "status.job.pickpocket", drift: { finances: 10, spirit: -5 }, addDecks: ["job_criminal"] },
       },
     },
     housing: {
@@ -792,6 +793,78 @@ export const content = {
           options: {
             left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" } } }] },
             right: { label: "job_labour_wages.right", outcomes: [{ result: "job_labour_wages.right.r0", effects: { vitals: { happiness: "+", finances: "++", spirit: "-" } } }] },
+          },
+        },
+        {
+          // Job loss → back to unemployed. Filler, so it can recur across
+          // separate stints; both options end the job (removing this deck).
+          id: "job_labour_sacked",
+          kind: "filler",
+          prompt: "job_labour_sacked.prompt",
+          options: {
+            left: { label: "job_labour_sacked.left", outcomes: [{ result: "job_labour_sacked.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_labour_sacked.right", outcomes: [{ result: "job_labour_sacked.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Job decks (post-school jobs). Each is mostly a job-loss event for now
+    //     (→ unemployed); real progression/events are Backlog per the design. --
+    {
+      id: "job_shop",
+      cards: [
+        {
+          id: "job_shop_sacked",
+          kind: "filler",
+          prompt: "job_shop_sacked.prompt",
+          options: {
+            left: { label: "job_shop_sacked.left", outcomes: [{ result: "job_shop_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_shop_sacked.right", outcomes: [{ result: "job_shop_sacked.right.r0", effects: { vitals: { spirit: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_factory",
+      cards: [
+        {
+          id: "job_factory_sacked",
+          kind: "filler",
+          prompt: "job_factory_sacked.prompt",
+          options: {
+            left: { label: "job_factory_sacked.left", outcomes: [{ result: "job_factory_sacked.left.r0", effects: { vitals: { health: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_factory_sacked.right", outcomes: [{ result: "job_factory_sacked.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_apprentice",
+      cards: [
+        {
+          id: "job_apprentice_end",
+          kind: "filler",
+          prompt: "job_apprentice_end.prompt",
+          options: {
+            left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { happiness: "-", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_criminal",
+      cards: [
+        {
+          // Arrest is rougher than an honest sacking (a real prison status is
+          // Backlog); for now it dumps you back to unemployed with a penalty.
+          id: "job_criminal_nicked",
+          kind: "filler",
+          prompt: "job_criminal_nicked.prompt",
+          options: {
+            left: { label: "job_criminal_nicked.left", outcomes: [{ result: "job_criminal_nicked.left.r0", effects: { vitals: { finances: "--", health: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_criminal_nicked.right", outcomes: [{ result: "job_criminal_nicked.right.r0", effects: { vitals: { health: "-", happiness: "-", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],

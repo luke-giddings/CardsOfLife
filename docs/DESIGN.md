@@ -285,6 +285,57 @@ and playable on a phone.
 
 ---
 
+## 17b. Adult career paths (paper design)
+
+Three broad ladders open up after the age-14 school-leaver (or from childhood
+work/crime). Each is a `job` status with its own deck; you climb tiers, and any
+job can end (→ unemployed). **Built so far:** the entry tier of each path, the
+`unemployed` hub, and a job-loss card per job. **Designed, not built:** the
+higher tiers, promotions, and the prison branch.
+
+**1. Respectable / educated** — *gated by education, safe, steady.*
+| Tier | Job | Drift | Needs |
+|---|---|---|---|
+| 1 | **Shop assistant** *(built)* | £ +5 | education ≥ school |
+| 2 | Clerk / counting-house | £ +10, ✦ +5 | school + experience |
+| 3 | Professional (solicitor's clerk, schoolmaster, manager) | £ +15, ✦ +5 | **grammar/university** (future edu tiers) |
+
+Low physical risk; the ceiling is gated by education. Main risk = redundancy
+(firm fails) → unemployed. This is the "study pays off" payoff.
+
+**2. Manual labour** — *no education, decent early money, grinds health, low ceiling.*
+| Tier | Job | Drift | Needs |
+|---|---|---|---|
+| 1 | **Factory hand** *(built)* | £ +10, ♥ −5 | — |
+| 2 | Skilled hand / foreman | £ +15, ♥ −5, ✦ +5 | experience |
+
+Risks: industrial **injury** (a hazard, like the loom) and **layoffs** →
+unemployed. Never gets rich, but reliable while your body holds.
+
+**3. Criminal** — *illicit, fastest money, corrodes spirit, catastrophic risk.*
+| Tier | Job | Drift | Needs |
+|---|---|---|---|
+| 1 | **Pickpocket** *(built)* | £ +10, ✦ −5 | — |
+| 2 | Burglar / footpad | £ +15, ✦ −5, ♥ −5 | nerve |
+| 3 | Fence / gang boss | £ +20, ✦ −10 | reputation |
+
+The big risk is **arrest → prison** (a new brutal status, or `endGame` via the
+gallows/transportation for serious crime). The `rescue` mechanism could make a
+petty first arrest "prison, then out" rather than fatal. Highest reward, highest
+ruin.
+
+**Cross-cutting mechanics still to design:**
+- **Promotion** up a tier — a card that fires after N years in a job
+  (age/experience gate), offering the next rung; the respectable ladder also
+  gates on the next education tier.
+- **Job loss** *(built, first pass)* — sacked / firm bankrupt / injured /
+  arrested → unemployed; if it also bankrupts you, the workhouse net still
+  catches your finances.
+- **Prison** — the criminal path's downside state (heavy drains + a release/
+  escape), and the trigger for the education gate to bite on release.
+- **Experience trait** — a counter incremented each year in a job, so promotions
+  can require "time served".
+
 ## 18. Backlog (agreed future work)
 
 Roughly in likely order. None of these are started.

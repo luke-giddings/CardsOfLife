@@ -384,6 +384,37 @@ export const EN = {
   "job_labour_wages.right": "Keep a little back",
   "job_labour_wages.right.r0": "A secret farthing for yourself — guilty, but glad.",
 
+  // ---- JOB LOSS (each job → back to unemployed) -------------------------
+  "job_labour_sacked.prompt": "Trade's slow at the mill, and the foreman is turning off the youngest hands — you among them.",
+  "job_labour_sacked.left": "Take your wages owed",
+  "job_labour_sacked.left.r0": "You collect the little you're owed and trudge out of the gates.",
+  "job_labour_sacked.right": "Walk out proud",
+  "job_labour_sacked.right.r0": "No begging. You leave with your pride, if nothing else.",
+
+  "job_shop_sacked.prompt": "Custom's been thin, and the shopkeeper says, regretfully, he can't keep you on.",
+  "job_shop_sacked.left": "Ask for a reference",
+  "job_shop_sacked.left.r0": "He writes you a fair character — it'll help you find the next place.",
+  "job_shop_sacked.right": "Take it hard",
+  "job_shop_sacked.right.r0": "Sacked through no fault of your own. The unfairness stings.",
+
+  "job_factory_sacked.prompt": "A hand is mangled in the machinery; the works shut for the inquest, and the casual lads are let go.",
+  "job_factory_sacked.left": "On to the next mill",
+  "job_factory_sacked.left.r0": "Worn out and out of work, you start the weary round again.",
+  "job_factory_sacked.right": "Curse the owners",
+  "job_factory_sacked.right.r0": "You spit at the gates. It changes nothing, but it feels good.",
+
+  "job_apprentice_end.prompt": "Your master falls ill and shuts up the workshop — your indenture is cut short.",
+  "job_apprentice_end.left": "Grateful for the skills",
+  "job_apprentice_end.left.r0": "Not a full trade, but skills in your hands and pride in your heart.",
+  "job_apprentice_end.right": "Rue the wasted years",
+  "job_apprentice_end.right.r0": "All those years bent to the bench, and nothing to show but calluses.",
+
+  "job_criminal_nicked.prompt": "A constable's hand closes on your collar mid-lift. You're nicked.",
+  "job_criminal_nicked.left": "Bolt and run",
+  "job_criminal_nicked.left.r0": "You drop the loot and leg it — lungs burning, purse empty, but free.",
+  "job_criminal_nicked.right": "Come quietly",
+  "job_criminal_nicked.right.r0": "A night in the cells and a magistrate's lecture. You're let off — this time.",
+
   // ---- SIBLING (brother = r0, sister = r1) ------------------------------
   "sibling_play.prompt": "Your little sibling is begging you to come and play.",
   "sibling_play.left": "Play along",
@@ -835,6 +866,37 @@ export const IT: Record<StringId, string> = {
   "job_labour_wages.left.r0": "Ogni centesimo nel bilancio di famiglia. Sono fieri di te.",
   "job_labour_wages.right": "Tenerne un po'",
   "job_labour_wages.right.r0": "Un soldo di nascosto per te — in colpa, ma contento.",
+
+  // ---- JOB LOSS (ogni lavoro → di nuovo disoccupato) -------------------
+  "job_labour_sacked.prompt": "Gli affari vanno a rilento al mulino, e il caposquadra manda via i più giovani — tu compreso.",
+  "job_labour_sacked.left": "Riscuotere la paga",
+  "job_labour_sacked.left.r0": "Raccogli il poco che ti spetta e te ne vai a testa bassa dai cancelli.",
+  "job_labour_sacked.right": "Uscire a testa alta",
+  "job_labour_sacked.right.r0": "Niente suppliche. Te ne vai con l'orgoglio, se non altro.",
+
+  "job_shop_sacked.prompt": "Gli affari sono scarsi, e il negoziante dice, a malincuore, che non può tenerti.",
+  "job_shop_sacked.left": "Chiedere le referenze",
+  "job_shop_sacked.left.r0": "Ti scrive una buona referenza — ti aiuterà a trovare un altro posto.",
+  "job_shop_sacked.right": "Prenderla male",
+  "job_shop_sacked.right.r0": "Licenziato senza colpa. L'ingiustizia brucia.",
+
+  "job_factory_sacked.prompt": "Una mano finisce stritolata negli ingranaggi; la fabbrica chiude per l'inchiesta e i braccianti a giornata vengono mandati via.",
+  "job_factory_sacked.left": "Alla prossima fabbrica",
+  "job_factory_sacked.left.r0": "Sfinito e senza lavoro, ricominci il giro estenuante.",
+  "job_factory_sacked.right": "Maledire i padroni",
+  "job_factory_sacked.right.r0": "Sputi ai cancelli. Non cambia nulla, ma ti fa sentire meglio.",
+
+  "job_apprentice_end.prompt": "Il tuo maestro si ammala e chiude la bottega — il tuo contratto si interrompe prima del tempo.",
+  "job_apprentice_end.left": "Grato per ciò che hai imparato",
+  "job_apprentice_end.left.r0": "Non un mestiere completo, ma abilità nelle mani e orgoglio nel cuore.",
+  "job_apprentice_end.right": "Rimpiangere gli anni sprecati",
+  "job_apprentice_end.right.r0": "Tutti quegli anni chino sul banco, e niente da mostrare se non i calli.",
+
+  "job_criminal_nicked.prompt": "La mano di un poliziotto ti afferra il colletto a metà colpo. Sei preso.",
+  "job_criminal_nicked.left": "Scappare di corsa",
+  "job_criminal_nicked.left.r0": "Molli il bottino e scappi — i polmoni in fiamme, il borsello vuoto, ma libero.",
+  "job_criminal_nicked.right": "Arrenderti",
+  "job_criminal_nicked.right.r0": "Una notte in cella e la ramanzina del giudice. Ti lasciano andare — per questa volta.",
 
   // ---- SIBLING (brother = r0, sister = r1) ------------------------------
   "sibling_play.prompt": "Il tuo fratellino ti implora di andare a giocare.",
