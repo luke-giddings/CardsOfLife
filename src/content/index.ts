@@ -613,7 +613,14 @@ export const content = {
           conditions: { ageMin: 11 },
           prompt: "edu_basicschool_exams.prompt",
           options: {
-            left: { label: "edu_basicschool_exams.left", outcomes: [{ result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } }] },
+            left: {
+              label: "edu_basicschool_exams.left",
+              outcomes: [
+                // A bookish child finds studying a pleasure, not a grind.
+                { if: { traits: { bookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
+                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" } } },
+              ],
+            },
             right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },
@@ -641,7 +648,14 @@ export const content = {
           kind: "filler",
           prompt: "edu_basicschool_prize.prompt",
           options: {
-            left: { label: "edu_basicschool_prize.left", outcomes: [{ result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } }] },
+            left: {
+              label: "edu_basicschool_prize.left",
+              outcomes: [
+                // Already read half the syllabus for fun — an easy win.
+                { if: { traits: { bookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" } } },
+                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
+              ],
+            },
             right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
           },
         },

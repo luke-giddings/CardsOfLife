@@ -297,7 +297,8 @@ export const EN = {
   // ---- EDUCATION: BASIC SCHOOL -----------------------------------------
   "edu_basicschool_exams.prompt": "Big examinations loom, and the schoolmaster expects great things.",
   "edu_basicschool_exams.left": "Study hard",
-  "edu_basicschool_exams.left.r0": "Top marks — earned with stress and sleepless nights.",
+  "edu_basicschool_exams.left.r0": "The books come easily to a natural reader — top marks, and you rather enjoyed it.",
+  "edu_basicschool_exams.left.r1": "Top marks — earned with stress and sleepless nights.",
   "edu_basicschool_exams.right": "Wing it",
   "edu_basicschool_exams.right.r0": "Relaxed and well-rested, but the results sting.",
 
@@ -315,7 +316,8 @@ export const EN = {
 
   "edu_basicschool_prize.prompt": "Prize-giving day. The medal for best pupil is within your reach.",
   "edu_basicschool_prize.left": "Swot for it",
-  "edu_basicschool_prize.left.r0": "The medal is yours — pinned on to polite applause.",
+  "edu_basicschool_prize.left.r0": "You've half-read the syllabus for pleasure already — the medal's yours, no sweat.",
+  "edu_basicschool_prize.left.r1": "The medal is yours — pinned on to polite applause.",
   "edu_basicschool_prize.right": "Let it go",
   "edu_basicschool_prize.right.r0": "You'd rather be out playing than buried in books.",
 
@@ -726,7 +728,8 @@ export const IT: Record<StringId, string> = {
   // ---- EDUCATION: BASIC SCHOOL -----------------------------------------
   "edu_basicschool_exams.prompt": "Si avvicinano gli esami importanti, e il maestro si aspetta grandi cose.",
   "edu_basicschool_exams.left": "Studiare sodo",
-  "edu_basicschool_exams.left.r0": "Voti eccellenti — conquistati con stress e notti insonni.",
+  "edu_basicschool_exams.left.r0": "I libri vengono facili a un lettore nato — voti eccellenti, e ti sei pure divertito.",
+  "edu_basicschool_exams.left.r1": "Voti eccellenti — conquistati con stress e notti insonni.",
   "edu_basicschool_exams.right": "Andare a caso",
   "edu_basicschool_exams.right.r0": "Rilassato e ben riposato, ma i risultati bruciano.",
 
@@ -744,7 +747,8 @@ export const IT: Record<StringId, string> = {
 
   "edu_basicschool_prize.prompt": "Giorno della premiazione. La medaglia per il miglior allievo è a portata di mano.",
   "edu_basicschool_prize.left": "Sgobbare per averla",
-  "edu_basicschool_prize.left.r0": "La medaglia è tua — appuntata tra educati applausi.",
+  "edu_basicschool_prize.left.r0": "Hai già letto metà del programma per piacere — la medaglia è tua, senza fatica.",
+  "edu_basicschool_prize.left.r1": "La medaglia è tua — appuntata tra educati applausi.",
   "edu_basicschool_prize.right": "Lasciar stare",
   "edu_basicschool_prize.right.r0": "Preferisci giocare all'aperto che stare sepolto tra i libri.",
 
