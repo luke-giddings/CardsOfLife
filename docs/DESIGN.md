@@ -81,7 +81,7 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 | Status | States (so far) | Notes |
 |---|---|---|
 | **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: finances +5 / health −5, opens `job_labour`. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +5, safe — **needs education ≥ school**), **factory** (finances +10 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). |
-| **Housing** | family · workhouse · renting · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): finances −5 rent but spirit +5 (independence); own deck is Backlog. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
+| **Housing** | family · workhouse · renting · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): finances −5 rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | none · school | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
 | **Lifestyle** | default | Reserved. |
 
@@ -170,7 +170,7 @@ Status **drift** (after effects) → check game-over.
   deck away. **Jobs can have education requirements** (the shop counter needs
   `education ≥ school`) — currently forward-looking, since every unemployed kid
   comes via the school-leaver and so is already educated.
-- **home_renting** (housing = renting): flat life on top of the rent/spirit
+- **home_renting** (housing = renting): flat life on top of the rent/health
   drift — a **lodger** for income, the **landlord**, doing the place up,
   neighbours, a quiet night. First-pass mock-up.
 - **job_labour** (job = child_labourer): the loom hazard, Friday wages.
@@ -409,10 +409,18 @@ yet?" moment, and a bigger job is how you clear it. After purchase, only small
 
 | House | Gate | Cost | Upkeep/yr | Gives |
 |---|---|---|---|---|
-| Rented room | — | — | −4 (rent) | ☺ +1 |
-| Small house | Finances ≥ 50 | `---` | −3 | ♥ +3, ✦ +2 |
-| Large house | Finances ≥ 65 | `---` | −5 | ♥ +5, ✦ +4, ☺ +2 |
-| Estate | Finances ≥ 80 | `---` | −8 | ♥ +7, ✦ +6, ☺ +3 |
+| Renting *(BUILT, childhood)* | move out: Finances ≥ 50, age ≥ 14 | — | −5 (rent) | ♥ +5 |
+| Small house | Finances ≥ 55 | `---` | −3 | ♥ +7, ✦ +3 |
+| Large house | Finances ≥ 70 | `---` | −5 | ♥ +9, ✦ +5, ☺ +2 |
+| Estate | Finances ≥ 85 | `---` | −8 | ♥ +11, ✦ +7, ☺ +4 |
+
+Renting is the only **built** rung (the childhood `renting` housing status: −5 rent,
+**♥ +5** — a place of your own, better conditions, more rest). The purchasable
+tiers above are **provisional adult design**, re-based so each is strictly better
+than renting (more health, and progressively broader — adding spirit, then
+happiness) and clearly worth its `---` lump. Owned upkeep is *lower* than rent
+(you paid the lump up front). The lifestyle drain (higher tiers cost ♥/✦) is what
+claws these bonuses back into the treadmill equilibrium.
 
 **Finances net #2 — selling the house (adult; reuses `rescue`).** The house is
 stored wealth and the adult finances net. If **Finances would hit 0 while you own
