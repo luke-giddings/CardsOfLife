@@ -374,6 +374,35 @@ flavour by path): floor 0 · tier 1 ≈ −5 · tier 2 ≈ −10 · tier 3 ≈ �
 - **Criminal** risk is **arrest → prison** (see below).
 - **Educated** tiers gate on the new higher education levels (grammar, university).
 
+**Progression pacing — where a *reasonable* run stands at 18.** These are the
+calibration targets for tuning the experience/schooling gates (they fit the real
+Victorian ages, so they should hold into the full-life game):
+
+| Path | By age 18, a reasonable run has… |
+|---|---|
+| **Educated** | finished basic **+** grammar school, about to start **university** (school ~5–13, grammar ~13–18, uni 18+) |
+| **Skilled** | **started but not finished** the apprenticeship (indentures ran ~7 yrs from ~14 → qualify ~21) |
+| **Unskilled** | *just* climbed out of child labour into the **factory** |
+
+How the gates realise this:
+- **Experience ≈ years-in-role** (one work card ≈ one year ≈ +1 exp), so an
+  experience threshold is effectively a "years to promote" dial. It's a **noisy**
+  proxy (draw luck) — deliberately kept **fuzzy / distributional** for now ("a
+  *reasonable* run gets to X", not a guarantee). **No age-gates yet**; if we later
+  want reliable age-pacing, add a minimum-age gate *alongside* the experience one.
+- **Per-job, independently tweakable thresholds.** Each promotion card carries its
+  own `experience` gate, so paths pace differently. Because **unskilled has fewer
+  rungs, its steps cost *more* experience** (child labour → factory is now
+  `experience ≥ 4`, higher than the tier-1 steps on other paths) — a longer haul
+  per rung so the low-ceiling path fills a life rather than topping out early.
+- **The educated path paces itself by schooling** (attendance over years, age-
+  driven) rather than experience, so it fits the ages automatically.
+- **No skipping the grind.** The unemployed job offers route a green worker to the
+  *floor* (child labour), not straight to a tier-1 factory job — the factory
+  outcome is itself gated on `experience ≥ 4`, so you can't use unemployment to
+  bypass the experience counter. (Uses the existing outcome `if`; no new condition
+  operator needed — `NumberMatch` already does `{min}`/`{max}` and exact `== n`.)
+
 > **Built.** The four paths are implemented and gated by the `education`
 > credential (academic `illiterate→basic→grammar→university` ordered ladder +
 > trade `journeyman`/`master` off-ladder credentials). Unskilled: child labour →

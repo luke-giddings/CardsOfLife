@@ -761,7 +761,17 @@ export const content = {
                 { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
               ],
             },
-            right: { label: "job_unemployed_offer.right", outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
+            right: {
+              // The factory floor. You only walk straight into a proper factory
+              // job if you've served your time (experience ≥ 4) — otherwise it's
+              // the casual child-labour floor first, so the offer can't be used
+              // to skip the experience grind up the unskilled ladder.
+              label: "job_unemployed_offer.right",
+              outcomes: [
+                { if: { traits: { experience: { min: 4 } } }, result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } },
+                { result: "job_unemployed_offer.right.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
+              ],
+            },
             down: { label: "job_unemployed_offer.down", outcomes: [{ result: "job_unemployed_offer.down.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -876,10 +886,12 @@ export const content = {
         },
         {
           // The ordinary escape up the UNSKILLED ladder: a steady factory job.
-          // Experience-gated; resets experience for the next rung (gang-master).
+          // Experience-gated (higher than other tier-1 steps because the
+          // unskilled path has fewer rungs, so each is a longer haul — a
+          // reasonable run only just reaches the factory by ~18).
           id: "job_labour_factory",
           kind: "filler",
-          conditions: { traits: { experience: { min: 3 } } },
+          conditions: { traits: { experience: { min: 4 } } },
           prompt: "job_labour_factory.prompt",
           options: {
             left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },

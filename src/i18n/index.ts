@@ -341,7 +341,8 @@ export const EN = {
   "job_unemployed_offer.left.r0": "You can read a ledger and cipher, so it's the counter for you — respectable, steady, and yours.",
   "job_unemployed_offer.left.r1": "No letters, so the counter's not for you — it's back to the casual graft, scraping a wage where you can, and keeping an ear out for a master who'll take an apprentice.",
   "job_unemployed_offer.right": "The factory floor",
-  "job_unemployed_offer.right.r0": "The mill: louder, harder, and better paid.",
+  "job_unemployed_offer.right.r0": "You've the years behind you, so they set you on properly. The mill: louder, harder, and better paid.",
+  "job_unemployed_offer.right.r1": "No trade and no years to your name — it's the casual labouring first. Earn your place and the mill floor will have you.",
   "job_unemployed_offer.down": "Hold out for better",
   "job_unemployed_offer.down.r0": "Not those two. You'll keep looking a while yet.",
 
@@ -1018,7 +1019,8 @@ export const IT: Record<StringId, string> = {
   "job_unemployed_offer.left.r0": "Sai leggere un registro e far di conto, così tocca a te il bancone — rispettabile, sicuro, e tuo.",
   "job_unemployed_offer.left.r1": "Niente lettere, così il bancone non fa per te — si torna alla fatica occasionale, raccattando una paga dove capita, con l'orecchio teso per un maestro che prenda un apprendista.",
   "job_unemployed_offer.right": "Il reparto della fabbrica",
-  "job_unemployed_offer.right.r0": "La fabbrica: più rumorosa, più dura, e meglio pagata.",
+  "job_unemployed_offer.right.r0": "Hai gli anni alle spalle, così ti assumono come si deve. La fabbrica: più rumorosa, più dura, e meglio pagata.",
+  "job_unemployed_offer.right.r1": "Nessun mestiere e nessun anno d'esperienza — prima la fatica occasionale. Guadagnati il posto e il reparto ti accoglierà.",
   "job_unemployed_offer.down": "Aspettare di meglio",
   "job_unemployed_offer.down.r0": "Non questi due. Continuerai a cercare ancora un po'.",
 
