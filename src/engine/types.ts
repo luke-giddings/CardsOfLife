@@ -189,6 +189,10 @@ export interface StatusStateDef {
   label?: StringId;                      // display name id (defaults to the key)
   drift?: Partial<Record<VitalKey, number>>;
   addDecks?: string[];                   // decks owned while in this state
+  // (job states) A "between jobs" state — entering it preserves the `experience`
+  // counter and the job it was earned in, so a sacking→re-hire into the SAME job
+  // doesn't wipe your progress. See changeStatus.
+  keepExperience?: boolean;
 }
 
 export interface StatusDef {
@@ -221,6 +225,7 @@ export interface GameState {
   activeDecks: string[];
   usedCards: Record<string, number>; // card id -> times played
   lastCardId?: string;                // to avoid drawing the same card twice in a row
+  experienceJob?: string;             // the job the current `experience` was earned in (see changeStatus)
   pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;

@@ -50,7 +50,7 @@ export const content = {
         studying: { label: "status.job.studying", drift: { spirit: -5 }, addDecks: ["edu_basicschool"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
-        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, addDecks: ["job_unemployed"] },
+        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, addDecks: ["job_unemployed"], keepExperience: true },
 
         // === FOUR CAREER PATHS ==========================================
         // Progression is by an `experience` counter (ticked by work cards); a
