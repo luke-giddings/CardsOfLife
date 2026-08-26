@@ -368,7 +368,7 @@ export class Game {
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
     if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
-    if (!chips) chips = `<span class="ep-none">—</span>`;
+    // No vital changes → show nothing (rather than a bare "—").
     return chips;
   }
 
