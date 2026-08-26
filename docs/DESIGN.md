@@ -514,7 +514,16 @@ Roughly in likely order. None of these are started.
   **"continue as your child"** thread.
 - **Relationship character decks** — unlock a sibling/friend/partner's storyline
   when a `rel*` trait crosses a threshold; different runs surface different
-  stories.
+  stories. **Next up: expand the brother/sister decks.**
+- **Conditional card options (engine change)** — needed for the sibling work
+  above. Options are currently fixed; only the card's `conditions` and each
+  outcome's `if` are conditional, so an individual choice can't be shown only
+  when a condition holds. Add an optional `if?: Condition` to `CardOption`; the
+  UI renders/enables a direction only when its `if` passes (a swipe toward a
+  hidden option is a no-op). First use: a 3rd option on `sibling_blame` —
+  "Blame the other sibling" (an up/down swipe) shown only when
+  `traits: { hasBrother: true, hasSister: true }` (the rare three-child family).
+  General-purpose: any "only if you have X" choice.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
 - **Richer end-of-run epitaph / scoring** — cause of death, life recap, a score
