@@ -747,10 +747,13 @@ export const content = {
           prompt: "job_unemployed_offer.prompt",
           options: {
             left: {
+              // Lettered → the shop counter (educated path). Unlettered → no
+              // wasted swipe: the shopkeeper sends you to the mill (factory),
+              // so you still land work — shophand just stays literacy-gated.
               label: "job_unemployed_offer.left",
               outcomes: [
                 { if: { status: { education: { atLeast: "basic" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
-                { result: "job_unemployed_offer.left.r1", effects: { vitals: { spirit: "-", happiness: "-" } } },
+                { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } },
               ],
             },
             right: { label: "job_unemployed_offer.right", outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
