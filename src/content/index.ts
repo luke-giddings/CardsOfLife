@@ -813,14 +813,16 @@ export const content = {
           prompt: "job_labour_machine.prompt",
           options: {
             left: {
+              // Working the machine is a shift like any other — it ticks
+              // experience (except the outcome where it kills you).
               label: "job_labour_machine.left",
               outcomes: [
-                { if: { traits: { sporty: true } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" } } },
-                { if: { vitals: { health: { min: 40 } } }, result: "job_labour_machine.left.r1", effects: { vitals: { health: "--", finances: "+" } } },
+                { if: { traits: { sporty: true } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { experience: 1 } } },
+                { if: { vitals: { health: { min: 40 } } }, result: "job_labour_machine.left.r1", effects: { vitals: { health: "--", finances: "+" }, incTraits: { experience: 1 } } },
                 { result: "job_labour_machine.left.r2", effects: { endGame: "health" } },
               ],
             },
-            right: { label: "job_labour_machine.right", outcomes: [{ result: "job_labour_machine.right.r0", effects: { vitals: { finances: "-", happiness: "-", health: "-" } } }] },
+            right: { label: "job_labour_machine.right", outcomes: [{ result: "job_labour_machine.right.r0", effects: { vitals: { finances: "-", happiness: "-", health: "-" }, incTraits: { experience: 1 } } }] },
           },
         },
         {

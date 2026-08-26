@@ -1000,7 +1000,13 @@ function fmtCond(c?: Condition): string {
   }
   if (c.traits) {
     for (const [k, v] of Object.entries(c.traits)) {
-      p.push(typeof v === "object" && v !== null ? `${k}∈range` : `${k}=${v}`);
+      if (typeof v === "object" && v !== null) {
+        const m = v as { min?: number; max?: number };
+        if (m.min != null) p.push(`${k}≥${m.min}`);
+        if (m.max != null) p.push(`${k}≤${m.max}`);
+      } else {
+        p.push(`${k}=${v}`);
+      }
     }
   }
   return p.join(", ") || "any";
