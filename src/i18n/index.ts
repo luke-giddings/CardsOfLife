@@ -668,8 +668,8 @@ export const EN = {
 
   // ---- UI chrome --------------------------------------------------------
   "ui.yearsOld": "years old",
-  "ui.easy": "Easy",
-  "ui.easyTip": "Easy mode: preview each choice's effect on your vitals",
+  "ui.hard": "Hard",
+  "ui.hardTip": "Hard mode: hide the preview of each choice's effect on your vitals",
   "ui.debug": "Debug",
   "ui.debugTip": "Toggle debug info",
   "ui.reset": "Reset",
@@ -1328,8 +1328,8 @@ export const IT: Record<StringId, string> = {
 
   // ---- UI chrome --------------------------------------------------------
   "ui.yearsOld": "anni",
-  "ui.easy": "Facile",
-  "ui.easyTip": "Modalità facile: mostra l'effetto di ogni scelta sulle statistiche",
+  "ui.hard": "Difficile",
+  "ui.hardTip": "Modalità difficile: nascondi l'anteprima dell'effetto di ogni scelta sulle statistiche",
   "ui.debug": "Debug",
   "ui.debugTip": "Attiva/disattiva le info di debug",
   "ui.reset": "Azzera",

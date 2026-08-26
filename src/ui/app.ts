@@ -32,7 +32,7 @@ import { t, tf, getLocale, setLocale, LOCALES, type StringId } from "../i18n/ind
 import { APP_VERSION, BUILD_DESC } from "../version.ts";
 
 const DEBUG_KEY = "cardsoflife.debug";
-const EASY_KEY = "cardsoflife.easy";
+const HARD_KEY = "cardsoflife.hard";
 const DECK_BY_ID = new Map(content.decks.map((d) => [d.id, d]));
 const ALL_CARDS: Card[] = content.decks.flatMap((d) =>
   d.cards.map((c) => ({ ...c, deck: d.id }) as Card),
@@ -101,8 +101,8 @@ export class Game {
   private flip: HTMLElement | null = null;
 
   private debug = false;
-  private easy = false; // "easy mode": preview each choice's vital changes on the card
-  private easyBtn!: HTMLButtonElement;
+  private hard = false; // "hard mode": HIDE each choice's vital-change preview (shown by default)
+  private hardBtn!: HTMLButtonElement;
   private ageNumEl!: HTMLElement;
   private fills!: Record<VitalKey, HTMLElement>;
   private flashes!: Record<VitalKey, HTMLElement>;
@@ -124,7 +124,7 @@ export class Game {
     this.root = root;
     setContent(content);
     this.debug = loadDebug();
-    this.easy = loadEasy();
+    this.hard = loadHard();
     this.buildShell();
     this.state = loadGame() ?? initGame(content);
     this.prevVitals = { ...this.state.vitals };
@@ -156,11 +156,11 @@ export class Game {
     lang.addEventListener("click", () => {
       if (!this.busy) this.cycleLocale();
     });
-    this.easyBtn = el("button", "easy") as HTMLButtonElement;
-    this.easyBtn.textContent = t("ui.easy");
-    this.easyBtn.title = t("ui.easyTip");
-    this.easyBtn.classList.toggle("on", this.easy);
-    this.easyBtn.addEventListener("click", () => this.toggleEasy());
+    this.hardBtn = el("button", "hard") as HTMLButtonElement;
+    this.hardBtn.textContent = t("ui.hard");
+    this.hardBtn.title = t("ui.hardTip");
+    this.hardBtn.classList.toggle("on", this.hard);
+    this.hardBtn.addEventListener("click", () => this.toggleHard());
     this.dbgBtn = el("button", "dbg") as HTMLButtonElement;
     this.dbgBtn.textContent = t("ui.debug");
     this.dbgBtn.title = t("ui.debugTip");
@@ -172,8 +172,8 @@ export class Game {
       if (!this.busy) this.restart();
     });
     // Debug lives on the far left (with the age) so it's clearly separate from
-    // the three player-facing controls (Language / Easy / Reset) on the right.
-    controls.append(lang, this.easyBtn, reset);
+    // the three player-facing controls (Language / Hard / Reset) on the right.
+    controls.append(lang, this.hardBtn, reset);
     const headLeft = el("div", "head-left");
     headLeft.append(age, this.dbgBtn);
     headRow.append(headLeft, controls);
@@ -343,10 +343,10 @@ export class Game {
     else this.beginTurn();
   }
 
-  // --- easy mode -------------------------------------------------------------
+  // --- choice previews (hidden in "hard mode") -------------------------------------------------------------
 
   // The vital-symbol deltas of the outcome that would actually fire for a
-  // choice given the current state (used by easy mode under each edge label).
+  // choice given the current state (shown under each edge label unless hard mode is on).
   private vitalChips(opt: CardOption): string {
     const outcome = resolveOutcome(opt, this.state, content);
     // The turn also applies status drift after the card's effects, so fold it
@@ -372,11 +372,11 @@ export class Game {
     return chips;
   }
 
-  private toggleEasy(): void {
+  private toggleHard(): void {
     if (this.busy) return;
-    this.easy = !this.easy;
-    saveEasy(this.easy);
-    this.easyBtn.classList.toggle("on", this.easy);
+    this.hard = !this.hard;
+    saveHard(this.hard);
+    this.hardBtn.classList.toggle("on", this.hard);
     // Re-render the current front card so the preview appears/disappears.
     if (this.phase === "front" && this.card) {
       if (this.holder) {
@@ -539,7 +539,7 @@ export class Game {
     saveGame(this.state);
     this.syncTop();
     this.renderDebug();
-    this.refreshFront(); // vitals affect easy-mode symbols / which outcome resolves
+    this.refreshFront(); // vitals affect preview symbols / which outcome resolves
   }
   private adjustAge(delta: number): void {
     this.state.age = Math.max(0, this.state.age + delta);
@@ -556,7 +556,7 @@ export class Game {
     this.seenDecks.add(id);
     saveGame(this.state);
     this.renderDebug();
-    this.refreshFront(); // drift changes → easy-mode fatality may change
+    this.refreshFront(); // drift changes → preview fatality may change
   }
   private toggleTrait(key: string, delta?: number): void {
     const t = this.state.traits as unknown as Record<string, unknown>;
@@ -598,7 +598,7 @@ export class Game {
     const ageLabel = this.state.age === 0 ? t("ui.newborn") : tf("ui.age", { n: this.state.age });
     // Easy mode: attach each option's vital preview right under its edge label.
     const ev = (opt: CardOption): string =>
-      this.easy ? `<span class="edge-vitals">${this.vitalChips(opt)}</span>` : "";
+      !this.hard ? `<span class="edge-vitals">${this.vitalChips(opt)}</span>` : "";
     const o = card.options;
     front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
@@ -635,7 +635,7 @@ export class Game {
   }
 
   // Debug: re-render the current front card in place (no entrance animation) so
-  // its easy-mode symbols / resolved outcomes reflect edited vitals, age, etc.
+  // its preview symbols / resolved outcomes reflect edited vitals, age, etc.
   private refreshFront(): void {
     if (this.busy || this.phase !== "front" || !this.card) return;
     if (this.holder) {
@@ -1021,16 +1021,16 @@ function saveDebug(on: boolean): void {
   }
 }
 
-function loadEasy(): boolean {
+function loadHard(): boolean {
   try {
-    return localStorage.getItem(EASY_KEY) === "1";
+    return localStorage.getItem(HARD_KEY) === "1";
   } catch {
     return false;
   }
 }
-function saveEasy(on: boolean): void {
+function saveHard(on: boolean): void {
   try {
-    localStorage.setItem(EASY_KEY, on ? "1" : "0");
+    localStorage.setItem(HARD_KEY, on ? "1" : "0");
   } catch {
     // ignore
   }
