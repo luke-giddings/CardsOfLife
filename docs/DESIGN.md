@@ -555,6 +555,22 @@ Roughly in likely order. None of these are started.
   (c) job decks are broadly *work-card + loss-card* (~50/50 work-or-sacked across
   the board) — decide whether jobs need more work-event variety and/or rarer
   (gated / lower-weight) loss cards once real careers can play out.
+- **Trait naming/hierarchy refactor** — rename every trait to a `group_[subgroup_]name`
+  convention and update all references (a big sweep — `experience` alone has ~65),
+  then make the debug trait tree nest **recursively on `_`** (it currently groups
+  one level, by `_` or camelCase prefix). Target layout:
+  - `skill_` → `skill_martialArts`
+  - `personality_` → `personality_bookish` / `_sporty` / `_sweetTooth` / `_sociable`
+  - `job_` → `job_experience`, `job_strikes`, `job_timesChanged`, and per-path
+    highest-tier under a sub-level: `job_unskilled_highestTier`,
+    `job_skilled_highestTier`, … (ties into the highest-tier cache item below —
+    `reachedFactory` becomes `job_unskilled_highestTier`)
+  - `brother_` → `brother_has`, `brother_relationship`, + brother-storyline traits;
+    `sister_` likewise (splits the current `has*`/`rel*` pairs into per-sibling groups)
+  - `finance_` → `finance_uniFund`
+  - top-level singletons stay ungrouped (e.g. `vaccinated`)
+  Do it as one focused pass (rename + reference update + recursive tree) rather
+  than piecemeal, to avoid mixed conventions.
 - **Highest-tier-reached cache (job re-entry)** — `reachedFactory` (bool, set by
   the child-labour→factory promotion) is a stopgap that gates the "back to the
   mill" option so a sacked factory hand can resume without re-grinding. Generalise
