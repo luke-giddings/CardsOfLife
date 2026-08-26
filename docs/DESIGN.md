@@ -528,3 +528,20 @@ Roughly in likely order. None of these are started.
   is the same mechanism). Also: more languages are now just another table.
 - **Card art / imagery** — currently text-only; add art later.
 - **Design-doc upkeep** — keep this file in sync as systems land.
+
+## 19. Sharp edges (known rough spots — not yet fixed)
+
+Deliberately-parked rough edges. Recorded so they aren't forgotten; each is
+left unfixed on purpose (usually because a later tweak may dissolve it, or the
+fix is a design decision we haven't taken).
+
+- **Apprenticeship overwrites an academic credential.** `education` holds one
+  value at a time (trade **or** academic — see §17b). Qualifying as a journeyman
+  sets `education = journeyman`, erasing a prior `basic`. So a schooled child who
+  ends up a labourer/in the workhouse, apprentices, qualifies, and *later* loses
+  the job can no longer take the shop assistant job (it gates on `education
+  atLeast basic`) — leaving an ex-tradesman *worse off than an illiterate* for
+  that one route. Disliked but not fixed: a later change (e.g. making shop work
+  accept a trade credential too, or letting `journeyman` imply literacy) may
+  dissolve it, so we're holding off rather than special-casing now. Rare in play
+  (only labourers/workhouse folk are offered apprenticeships).
