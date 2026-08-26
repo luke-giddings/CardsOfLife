@@ -397,11 +397,15 @@ How the gates realise this:
   per rung so the low-ceiling path fills a life rather than topping out early.
 - **The educated path paces itself by schooling** (attendance over years, age-
   driven) rather than experience, so it fits the ages automatically.
-- **No skipping the grind.** The unemployed job offers route a green worker to the
-  *floor* (child labour), not straight to a tier-1 factory job — the factory
-  outcome is itself gated on `experience ≥ 4`, so you can't use unemployment to
-  bypass the experience counter. (Uses the existing outcome `if`; no new condition
-  operator needed — `NumberMatch` already does `{min}`/`{max}` and exact `== n`.)
+- **Taking the factory early is a trade, not a skip.** The unemployed offer lets
+  an illiterate choose the child-labour *floor* (`left`) or the factory (`right`)
+  directly. That's a real decision, not a bypass: the factory has no
+  apprenticeship, so taking it **forgoes the skilled path** — only the child-labour
+  floor keeps the apprenticeship (skilled) route in reach. So the "cost" of
+  jumping to a steady factory job is giving up the trade ladder. (An
+  experience-gate here doesn't work: entering the factory resets `experience` to
+  0, so a fired factory hand would read as green — job *history*, not the live
+  counter, would be needed, and the trade-off framing is cleaner anyway.)
 
 > **Built.** The four paths are implemented and gated by the `education`
 > credential (academic `illiterate→basic→grammar→university` ordered ladder +

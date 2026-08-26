@@ -761,17 +761,11 @@ export const content = {
                 { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
               ],
             },
-            right: {
-              // The factory floor. You only walk straight into a proper factory
-              // job if you've served your time (experience ≥ 4) — otherwise it's
-              // the casual child-labour floor first, so the offer can't be used
-              // to skip the experience grind up the unskilled ladder.
-              label: "job_unemployed_offer.right",
-              outcomes: [
-                { if: { traits: { experience: { min: 4 } } }, result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } },
-                { result: "job_unemployed_offer.right.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
-              ],
-            },
+            // The factory floor. Taking it straight off isn't a "skip" — it's a
+            // real trade: better pay & safety now, but the factory has no
+            // apprenticeship, so you forgo the skilled path (which only the
+            // child-labour floor, via `left` when illiterate, keeps in reach).
+            right: { label: "job_unemployed_offer.right", outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
             down: { label: "job_unemployed_offer.down", outcomes: [{ result: "job_unemployed_offer.down.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
