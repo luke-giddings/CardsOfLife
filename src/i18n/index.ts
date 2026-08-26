@@ -335,7 +335,7 @@ export const EN = {
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Out of Work",
-  "deck.job_unemployed.blurb": "School's behind you and the world's in front — but no wage in your pocket yet. Time to find work.",
+  "deck.job_unemployed.blurb": "No wage in your pocket and the days stretching empty ahead. You need to find work — and soon.",
   "job_unemployed_offer.prompt": "Word gets round that you're after work. The shopkeeper needs a hand — a clerk if you have your letters, and if not, there's always the mill.",
   "job_unemployed_offer.left": "Try the shop",
   "job_unemployed_offer.left.r0": "You can read a ledger and cipher, so it's the counter for you — respectable, steady, and yours.",
@@ -995,7 +995,7 @@ export const IT: Record<StringId, string> = {
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Senza lavoro",
-  "deck.job_unemployed.blurb": "La scuola è alle spalle e il mondo davanti — ma niente paga in tasca, per ora. È ora di trovare lavoro.",
+  "deck.job_unemployed.blurb": "Niente paga in tasca e le giornate vuote davanti a te. Devi trovare lavoro — e presto.",
   "job_unemployed_offer.prompt": "Si sparge la voce che cerchi lavoro. Il negoziante cerca un aiutante — un commesso se sai leggere e scrivere, altrimenti c'è sempre la fabbrica.",
   "job_unemployed_offer.left": "Provare al negozio",
   "job_unemployed_offer.left.r0": "Sai leggere un registro e far di conto, così tocca a te il bancone — rispettabile, sicuro, e tuo.",
