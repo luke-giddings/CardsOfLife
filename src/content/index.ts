@@ -489,7 +489,7 @@ export const content = {
           conditions: { ageMin: 14, vitals: { finances: { min: 50 } } },
           prompt: "home_family_moveout.prompt",
           options: {
-            left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "---", happiness: "+" }, setStatus: { housing: "renting" } } }] },
+            left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "renting" } } }] },
             right: { label: "home_family_moveout.right", outcomes: [{ result: "home_family_moveout.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
