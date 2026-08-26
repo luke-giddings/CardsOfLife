@@ -101,10 +101,11 @@ export const content = {
         // bleak daily-life events (including three ways out).
         workhouse: { label: "status.housing.workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
         // A place of your own (from the workhouse buyout, or moving out of the
-        // family home): rent to pay every year, but the independence lifts your
-        // spirit. Owns the home_renting deck (flat life, the landlord, a lodger
-        // for income, saving toward a place of your own).
-        renting: { label: "status.housing.renting", drift: { finances: -5, spirit: 5 }, addDecks: ["home_renting"] },
+        // family home): rent to pay every year, but your own space and better
+        // conditions restore some health — the childhood preview of the adult
+        // "better house → health" ladder. Owns the home_renting deck (flat life,
+        // the landlord, a lodger for income, saving toward a place of your own).
+        renting: { label: "status.housing.renting", drift: { finances: -5, health: 5 }, addDecks: ["home_renting"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. (Its own deck & exits are Backlog.)
         homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },
