@@ -501,6 +501,17 @@ Roughly in likely order. None of these are started.
   designed; **deliberately deferred** so childhood content is written and
   balanced first. Starts with the **age-18 leaver branch** (choose first job /
   apprenticeship / further study).
+- **Deck-density pass, once the run extends past 18** — a deck-size audit (job/
+  home/edu/core) flagged things that can't be judged on a 13-year window and are
+  deferred until there's a real runway: (a) **`home_renting` wants ~1 filler** —
+  it's all one-time now, so recurring renting life is thin, but adding it too
+  early may just clutter the shared draw pool (which the sibling/friend decks
+  will also fill); (b) **the terminal-tier job stubs** (`solicitor`, `master`,
+  `gang_master`, `fence`) are only 2 cards (day + loss) because they're
+  unreachable/unplaytested — flesh them out when a longer run reaches them; and
+  (c) job decks are broadly *work-card + loss-card* (~50/50 work-or-sacked across
+  the board) — decide whether jobs need more work-event variety and/or rarer
+  (gated / lower-weight) loss cards once real careers can play out.
 - **House decks & an "owned" housing status** — renting/buying, home events;
   gives something to *own* (prerequisite for inheritance below).
 - **Homeless deck & exits** — `homeless` housing (reached by begging off the
