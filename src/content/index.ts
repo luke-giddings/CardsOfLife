@@ -748,16 +748,33 @@ export const content = {
           options: {
             left: {
               // Lettered → the shop counter (educated path). Unlettered → no
-              // wasted swipe: the shopkeeper sends you to the mill (factory),
-              // so you still land work — shophand just stays literacy-gated.
+              // wasted swipe: it's back to casual child-labour (job=child_labourer)
+              // — the loom-deck floor, which also keeps the lucky-break
+              // apprenticeship in reach. shophand stays literacy-gated. Contrast
+              // the right option, which is the steadier factory (no apprentice
+              // route). So for the illiterate this is a real choice: the grim
+              // floor with a shot at a trade, or the safer mill dead-end.
               label: "job_unemployed_offer.left",
               outcomes: [
                 { if: { status: { education: { atLeast: "basic" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
-                { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } },
+                { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
               ],
             },
             right: { label: "job_unemployed_offer.right", outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
             down: { label: "job_unemployed_offer.down", outcomes: [{ result: "job_unemployed_offer.down.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+        {
+          // A second chance at schooling — but only while you're still young
+          // enough (ageMax). Enrolling → job=studying (its edu_basicschool deck),
+          // the way onto the EDUCATED path for a child who went to work first.
+          id: "job_unemployed_school",
+          kind: "filler",
+          conditions: { ageMax: 11 },
+          prompt: "job_unemployed_school.prompt",
+          options: {
+            left: { label: "job_unemployed_school.left", outcomes: [{ result: "job_unemployed_school.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "studying" } } }] },
+            right: { label: "job_unemployed_school.right", outcomes: [{ result: "job_unemployed_school.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
         {
@@ -833,6 +850,26 @@ export const content = {
           options: {
             left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
             right: { label: "job_labour_wages.right", outcomes: [{ result: "job_labour_wages.right.r0", effects: { vitals: { happiness: "+", finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          // More work-event fillers so the deck isn't a coin-flip between wages
+          // and the sack — both options tick experience toward the factory step.
+          id: "job_labour_toil",
+          kind: "filler",
+          prompt: "job_labour_toil.prompt",
+          options: {
+            left: { label: "job_labour_toil.left", outcomes: [{ result: "job_labour_toil.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_labour_toil.right", outcomes: [{ result: "job_labour_toil.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_labour_errand",
+          kind: "filler",
+          prompt: "job_labour_errand.prompt",
+          options: {
+            left: { label: "job_labour_errand.left", outcomes: [{ result: "job_labour_errand.left.r0", effects: { vitals: { finances: "+", happiness: "+" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_labour_errand.right", outcomes: [{ result: "job_labour_errand.right.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { experience: 1 } } }] },
           },
         },
         {

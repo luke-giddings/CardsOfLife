@@ -336,10 +336,10 @@ export const EN = {
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Out of Work",
   "deck.job_unemployed.blurb": "No wage in your pocket and the days stretching empty ahead. You need to find work — and soon.",
-  "job_unemployed_offer.prompt": "Word gets round that you're after work. The shopkeeper needs a hand — a clerk if you have your letters, and if not, there's always the mill.",
+  "job_unemployed_offer.prompt": "Word gets round that you're after work. The shopkeeper wants a clerk — if you have your letters — while the mill takes any strong pair of arms.",
   "job_unemployed_offer.left": "Try the shop",
   "job_unemployed_offer.left.r0": "You can read a ledger and cipher, so it's the counter for you — respectable, steady, and yours.",
-  "job_unemployed_offer.left.r1": "No letters, so the counter's not for you — but the shopkeeper points you to the mill, where strong arms are always wanted.",
+  "job_unemployed_offer.left.r1": "No letters, so the counter's not for you — it's back to the casual graft, scraping a wage where you can, and keeping an ear out for a master who'll take an apprentice.",
   "job_unemployed_offer.right": "The factory floor",
   "job_unemployed_offer.right.r0": "The mill: louder, harder, and better paid.",
   "job_unemployed_offer.down": "Hold out for better",
@@ -383,6 +383,23 @@ export const EN = {
   "job_labour_wages.left.r0": "Every penny to the family pot. They are proud of you.",
   "job_labour_wages.right": "Keep a little back",
   "job_labour_wages.right.r0": "A secret farthing for yourself — guilty, but glad.",
+
+  "job_labour_toil.prompt": "A back-breaking day is set before you — haul it all, or spare yourself the worst.",
+  "job_labour_toil.left": "Haul till you drop",
+  "job_labour_toil.left.r0": "You earn every penny and then some, though your body pays the toll.",
+  "job_labour_toil.right": "Pace yourself",
+  "job_labour_toil.right.r0": "You save your strength and your temper — the wage is lighter for it.",
+  "job_labour_errand.prompt": "The foreman sends you across town on an errand — a chance to dawdle, or to impress.",
+  "job_labour_errand.left": "Run it smartly",
+  "job_labour_errand.left.r0": "Quick and willing, you're slipped a coin and a kind word.",
+  "job_labour_errand.right": "Take the long way",
+  "job_labour_errand.right.r0": "You steal a little freedom in the streets, tiring but sweet.",
+
+  "job_unemployed_school.prompt": "A board school will take a child your age for nothing — a chance at your letters, if you'll give up the search for work.",
+  "job_unemployed_school.left": "Go to school",
+  "job_unemployed_school.left.r0": "Slate and chalk instead of the wage queue. A hard road, but letters open doors.",
+  "job_unemployed_school.right": "Keep looking for work",
+  "job_unemployed_school.right.r0": "No time for schooling — there's a living to be scraped.",
 
   // ---- JOB LOSS (each job → back to unemployed) -------------------------
   "job_labour_sacked.prompt": "Trade's slow at the mill, and the foreman is turning off the youngest hands — you among them.",
@@ -996,10 +1013,10 @@ export const IT: Record<StringId, string> = {
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Senza lavoro",
   "deck.job_unemployed.blurb": "Niente paga in tasca e le giornate vuote davanti a te. Devi trovare lavoro — e presto.",
-  "job_unemployed_offer.prompt": "Si sparge la voce che cerchi lavoro. Il negoziante cerca un aiutante — un commesso se sai leggere e scrivere, altrimenti c'è sempre la fabbrica.",
+  "job_unemployed_offer.prompt": "Si sparge la voce che cerchi lavoro. Il negoziante vuole un commesso — se sai leggere e scrivere — mentre la fabbrica prende qualunque paio di braccia robuste.",
   "job_unemployed_offer.left": "Provare al negozio",
   "job_unemployed_offer.left.r0": "Sai leggere un registro e far di conto, così tocca a te il bancone — rispettabile, sicuro, e tuo.",
-  "job_unemployed_offer.left.r1": "Niente lettere, così il bancone non fa per te — ma il negoziante ti indirizza alla fabbrica, dove le braccia forti servono sempre.",
+  "job_unemployed_offer.left.r1": "Niente lettere, così il bancone non fa per te — si torna alla fatica occasionale, raccattando una paga dove capita, con l'orecchio teso per un maestro che prenda un apprendista.",
   "job_unemployed_offer.right": "Il reparto della fabbrica",
   "job_unemployed_offer.right.r0": "La fabbrica: più rumorosa, più dura, e meglio pagata.",
   "job_unemployed_offer.down": "Aspettare di meglio",
@@ -1029,6 +1046,12 @@ export const IT: Record<StringId, string> = {
   "job_unemployed_despair.right": "Lasciarti andare",
   "job_unemployed_despair.right.r0": "Resti a letto e lasci scorrere il mondo — riposato, e vuoto.",
 
+  "job_unemployed_school.prompt": "Una scuola pubblica accoglie gratis un bambino della tua età — una possibilità d'imparare a leggere, se rinunci a cercare lavoro.",
+  "job_unemployed_school.left": "Andare a scuola",
+  "job_unemployed_school.left.r0": "Lavagna e gesso invece della fila per la paga. Una strada dura, ma le lettere aprono porte.",
+  "job_unemployed_school.right": "Continuare a cercare lavoro",
+  "job_unemployed_school.right.r0": "Niente tempo per la scuola — c'è da raccattare da vivere.",
+
   // ---- JOB: LABOUR ------------------------------------------------------
   "job_labour_machine.prompt": "Il capoccia ti fa cenno di infilarti sotto il telaio rombante per liberare un inceppo.",
   "job_labour_machine.left": "Infilare la mano",
@@ -1043,6 +1066,17 @@ export const IT: Record<StringId, string> = {
   "job_labour_wages.left.r0": "Ogni centesimo nel bilancio di famiglia. Sono fieri di te.",
   "job_labour_wages.right": "Tenerne un po'",
   "job_labour_wages.right.r0": "Un soldo di nascosto per te — in colpa, ma contento.",
+
+  "job_labour_toil.prompt": "Ti aspetta una giornata massacrante — sfacchinare tutto, o risparmiarti il peggio.",
+  "job_labour_toil.left": "Sfacchinare fino a crollare",
+  "job_labour_toil.left.r0": "Guadagni ogni soldo e anche di più, anche se il corpo ne paga il prezzo.",
+  "job_labour_toil.right": "Dosare le forze",
+  "job_labour_toil.right.r0": "Risparmi le forze e la pazienza — la paga è più leggera per questo.",
+  "job_labour_errand.prompt": "Il caposquadra ti manda in giro per la città per una commissione — un'occasione per bighellonare, o per farti valere.",
+  "job_labour_errand.left": "Sbrigarla con solerzia",
+  "job_labour_errand.left.r0": "Svelto e volenteroso, ti scivolano in mano una moneta e una buona parola.",
+  "job_labour_errand.right": "Fare la strada lunga",
+  "job_labour_errand.right.r0": "Rubi un po' di libertà per le strade, faticoso ma dolce.",
 
   // ---- JOB LOSS (ogni lavoro → di nuovo disoccupato) -------------------
   "job_labour_sacked.prompt": "Gli affari vanno a rilento al mulino, e il caposquadra manda via i più giovani — tu compreso.",
