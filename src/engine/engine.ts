@@ -68,6 +68,17 @@ function dueMilestone(cards: Card[], state: GameState, content: Content): Card |
   return best;
 }
 
+// Focus the draw on urgent states. When any eligible card belongs to a
+// `priority` deck (a state you should be escaping — unemployment, the workhouse),
+// restrict the pool to those cards, so the escape routes aren't drowned out by
+// incidental flavour from other still-active decks (e.g. childhood/home life).
+function focusPool(pool: Card[], content: Content): Card[] {
+  const priority = new Set(content.decks.filter((d) => d.priority).map((d) => d.id));
+  if (priority.size === 0) return pool;
+  const urgent = pool.filter((c) => !!c.deck && priority.has(c.deck));
+  return urgent.length > 0 ? urgent : pool;
+}
+
 // Draw the next card: a due milestone if there is one, otherwise a random
 // eligible non-milestone card. Returns null when nothing is eligible (the
 // caller then passes a "quiet year").
@@ -104,10 +115,11 @@ export function drawCard(
   if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };
 
   // Rescue cards are never drawn normally — only via the pending-rescue path.
-  const pool = cards.filter(
+  const eligible = cards.filter(
     (c) => c.kind !== "milestone" && !c.rescue && isEligible(c, state, content),
   );
-  if (pool.length === 0) return { card: null, state };
+  if (eligible.length === 0) return { card: null, state };
+  const pool = focusPool(eligible, content);
 
   // Avoid repeating the immediately-previous card when there's a choice.
   let choices = pool;
@@ -132,11 +144,13 @@ export function eligibleDraw(
     (c) => !!c.deck && !c.rescue && state.activeDecks.includes(c.deck) && !exhausted(c, state),
   );
   const milestone = dueMilestone(cards, state, content);
-  const pool = inDeck.filter(
+  const eligible = inDeck.filter(
     (c) => c.kind !== "milestone" && meets(c.conditions, state, content),
   );
+  // Mirror drawCard: while an urgent (priority) deck is active it owns the pool.
+  const pool = focusPool(eligible, content);
   const gated = inDeck.filter(
-    (c) => c !== milestone && !meets(c.conditions, state, content),
+    (c) => c !== milestone && (!meets(c.conditions, state, content) || !pool.includes(c)),
   );
   return { milestone, pool, gated };
 }

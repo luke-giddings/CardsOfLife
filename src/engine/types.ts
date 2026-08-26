@@ -200,6 +200,10 @@ export interface Deck {
   title?: StringId;  // shown when this deck is unlocked for the first time
   unlock?: StringId; // blurb for the first-time unlock announcement
   noDrift?: boolean; // while active, status drift is suspended (unloseable grace, e.g. babyhood)
+  // An "urgent" deck: while it is active, its eligible cards OWN the draw pool —
+  // incidental flavour from other active decks is suppressed so you can escape
+  // the state (unemployment, the workhouse) instead of drifting in it for years.
+  priority?: boolean;
 }
 
 // --- Status definitions ------------------------------------------------------

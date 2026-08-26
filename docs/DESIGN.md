@@ -135,6 +135,14 @@ eligibility (deck membership + optional conditions + not exhausted) into the
 adding/removing decks and gating are trivial filters.
 
 - **Milestones** that are due jump the queue (highest priority first).
+- **Force-at-max** (`Card.force`) then jumps the queue when its vital is capped.
+- **Priority (urgent) decks own the pool:** if any eligible card belongs to a
+  deck flagged `priority` (an escape-me state — `job_unemployed`, `home_workhouse`),
+  the draw is **restricted to those cards**, so the escape routes aren't drowned
+  out by incidental flavour from other still-active decks (childhood/home life).
+  You can't spend six years unemployed drawing "a day at the fair"; the job-hunt
+  cards surface until you're out. (Falls back to the full pool when no priority
+  deck is active — so it costs nothing in normal life and scales to post-18.)
 - Otherwise a **random** eligible non-milestone card is drawn.
 - **No card repeats twice in a row** (when alternatives exist).
 - **Draw-and-discard:** a played card is consumed, unless it's **filler**

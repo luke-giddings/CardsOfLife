@@ -558,6 +558,9 @@ export const content = {
       id: "home_workhouse",
       title: "deck.home_workhouse.title",
       unlock: "deck.home_workhouse.blurb",
+      // Urgent: the workhouse grind + its three exits own the draw, so you can
+      // get out rather than drifting there while childhood flavour draws.
+      priority: true,
       cards: [
         {
           id: "home_workhouse_gruel",
@@ -739,6 +742,9 @@ export const content = {
       id: "job_unemployed",
       title: "deck.job_unemployed.title",
       unlock: "deck.job_unemployed.blurb",
+      // Urgent: while jobless, the job-hunt/hardship cards own the draw so you
+      // aren't stuck for years drawing incidental childhood/home flavour.
+      priority: true,
       cards: [
         {
           // Honest work. The shop counter needs your letters and figures
