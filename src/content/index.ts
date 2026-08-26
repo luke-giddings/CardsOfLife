@@ -868,8 +868,8 @@ export const content = {
           kind: "filler",
           prompt: "job_labour_errand.prompt",
           options: {
-            left: { label: "job_labour_errand.left", outcomes: [{ result: "job_labour_errand.left.r0", effects: { vitals: { finances: "+", happiness: "+" }, incTraits: { experience: 1 } } }] },
-            right: { label: "job_labour_errand.right", outcomes: [{ result: "job_labour_errand.right.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_labour_errand.left", outcomes: [{ result: "job_labour_errand.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_labour_errand.right", outcomes: [{ result: "job_labour_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
           },
         },
         {

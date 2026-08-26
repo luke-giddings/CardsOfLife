@@ -391,9 +391,9 @@ export const EN = {
   "job_labour_toil.right.r0": "You save your strength and your temper — the wage is lighter for it.",
   "job_labour_errand.prompt": "The foreman sends you across town on an errand — a chance to dawdle, or to impress.",
   "job_labour_errand.left": "Run it smartly",
-  "job_labour_errand.left.r0": "Quick and willing, you're slipped a coin and a kind word.",
+  "job_labour_errand.left.r0": "Quick and willing, you earn your coin — but it's all duty and no delight.",
   "job_labour_errand.right": "Take the long way",
-  "job_labour_errand.right.r0": "You steal a little freedom in the streets, tiring but sweet.",
+  "job_labour_errand.right.r0": "You steal a little freedom in the streets — sweet, though the foreman docks you for dawdling.",
 
   "job_unemployed_school.prompt": "A board school will take a child your age for nothing — a chance at your letters, if you'll give up the search for work.",
   "job_unemployed_school.left": "Go to school",
@@ -1074,9 +1074,9 @@ export const IT: Record<StringId, string> = {
   "job_labour_toil.right.r0": "Risparmi le forze e la pazienza — la paga è più leggera per questo.",
   "job_labour_errand.prompt": "Il caposquadra ti manda in giro per la città per una commissione — un'occasione per bighellonare, o per farti valere.",
   "job_labour_errand.left": "Sbrigarla con solerzia",
-  "job_labour_errand.left.r0": "Svelto e volenteroso, ti scivolano in mano una moneta e una buona parola.",
+  "job_labour_errand.left.r0": "Svelto e volenteroso, ti guadagni la moneta — ma è tutto dovere e nessuna gioia.",
   "job_labour_errand.right": "Fare la strada lunga",
-  "job_labour_errand.right.r0": "Rubi un po' di libertà per le strade, faticoso ma dolce.",
+  "job_labour_errand.right.r0": "Rubi un po' di libertà per le strade — dolce, anche se il caposquadra ti decurta la paga per l'indugio.",
 
   // ---- JOB LOSS (ogni lavoro → di nuovo disoccupato) -------------------
   "job_labour_sacked.prompt": "Gli affari vanno a rilento al mulino, e il caposquadra manda via i più giovani — tu compreso.",
