@@ -83,8 +83,14 @@ export interface Traits {
   // Durable "reached the factory" marker (unlike `experience`, which resets on
   // each job change). Lets the unemployed offer let a former factory worker
   // return to the factory without re-grinding, while a green worker cannot skip
-  // straight there.
+  // straight there. (Stopgap: will fold into a per-path "highest tier reached"
+  // cache when adult job re-entry lands.)
   reachedFactory: boolean;
+  // Standing with your current employer (0 = model worker). Rises when you shirk
+  // and each time you grovel to keep your job; a high count means the foreman
+  // won't hear your pleading. Resets to 0 on any job change (a fresh reputation
+  // with a new employer).
+  jobStrikes: number;
 }
 
 export const DEFAULT_TRAITS: Traits = {
@@ -104,6 +110,7 @@ export const DEFAULT_TRAITS: Traits = {
   numTimesPlayedLottery: 0,
   experience: 0,
   reachedFactory: false,
+  jobStrikes: 0,
 };
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.

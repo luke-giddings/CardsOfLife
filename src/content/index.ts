@@ -846,7 +846,7 @@ export const content = {
                 { result: "job_labour_machine.left.r2", effects: { endGame: "health" } },
               ],
             },
-            right: { label: "job_labour_machine.right", outcomes: [{ result: "job_labour_machine.right.r0", effects: { vitals: { finances: "-", happiness: "-", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_labour_machine.right", outcomes: [{ result: "job_labour_machine.right.r0", effects: { vitals: { finances: "-", happiness: "-", health: "-" }, incTraits: { experience: 1, jobStrikes: 1 } } }] },
           },
         },
         {
@@ -877,7 +877,7 @@ export const content = {
           prompt: "job_labour_errand.prompt",
           options: {
             left: { label: "job_labour_errand.left", outcomes: [{ result: "job_labour_errand.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
-            right: { label: "job_labour_errand.right", outcomes: [{ result: "job_labour_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_labour_errand.right", outcomes: [{ result: "job_labour_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1, jobStrikes: 1 } } }] },
           },
         },
         {
@@ -912,14 +912,19 @@ export const content = {
           },
         },
         {
-          // Job loss → back to unemployed. Filler, so it can recur across
-          // separate stints; both options end the job (removing this deck).
+          // Job loss → back to unemployed (both left/right accept it). But a
+          // worker in decent standing can `down`-swipe to BEG the foreman and
+          // keep the job — a humbling save (spirit/happiness cost) that itself
+          // adds a strike, so the goodwill runs out: once you've shirked or
+          // grovelled enough (jobStrikes > 1) the beg option is hidden and the
+          // sacking sticks. Strikes reset when you do change jobs.
           id: "job_labour_sacked",
           kind: "filler",
           prompt: "job_labour_sacked.prompt",
           options: {
             left: { label: "job_labour_sacked.left", outcomes: [{ result: "job_labour_sacked.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "unemployed" } } }] },
             right: { label: "job_labour_sacked.right", outcomes: [{ result: "job_labour_sacked.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            down: { label: "job_labour_sacked.down", if: { traits: { jobStrikes: { max: 1 } } }, outcomes: [{ result: "job_labour_sacked.down.r0", effects: { vitals: { spirit: "-", happiness: "-" }, incTraits: { jobStrikes: 1 } } }] },
           },
         },
       ],

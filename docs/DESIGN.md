@@ -547,6 +547,22 @@ Roughly in likely order. None of these are started.
   (c) job decks are broadly *work-card + loss-card* (~50/50 work-or-sacked across
   the board) — decide whether jobs need more work-event variety and/or rarer
   (gated / lower-weight) loss cards once real careers can play out.
+- **Highest-tier-reached cache (job re-entry)** — `reachedFactory` (bool, set by
+  the child-labour→factory promotion) is a stopgap that gates the "back to the
+  mill" option so a sacked factory hand can resume without re-grinding. Generalise
+  it to a **per-path "highest tier reached"** record (set on entering each job) so
+  that being fired from *any* tier (e.g. a tier-3 solicitor) lets you return near
+  your former level rather than restarting at the bottom. Real once adult re-entry
+  to tier 2/3 jobs exists; fold `reachedFactory` into it then.
+- **"Keep your job" / `jobStrikes` mechanic** — *prototyped on the labour deck.* A
+  per-job `jobStrikes` counter (resets on any job change) rises when you shirk
+  (`job_labour_machine`/`errand` "refuse/dawdle" options) and each time you grovel;
+  the sacking card's `down` = "beg to keep your place" (conditional option, shown
+  only while `jobStrikes ≤ 1`) lets a worker in good standing save the job at a
+  pride cost, and the option vanishes once you've pushed your luck. Softens how
+  often a sacking actually lands. **To do:** replicate to the other job decks'
+  loss cards if it feels good, and add more shirk→strike moments as those decks
+  gain work cards.
 - **House decks & an "owned" housing status** — renting/buying, home events;
   gives something to *own* (prerequisite for inheritance below).
 - **Homeless deck & exits** — `homeless` housing (reached by begging off the

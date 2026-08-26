@@ -407,6 +407,8 @@ export const EN = {
   "job_labour_sacked.left.r0": "You collect the little you're owed and trudge out of the gates.",
   "job_labour_sacked.right": "Walk out proud",
   "job_labour_sacked.right.r0": "No begging. You leave with your pride, if nothing else.",
+  "job_labour_sacked.down": "Beg to keep your place",
+  "job_labour_sacked.down.r0": "Cap in hand, you plead your case — and the foreman, grudgingly, lets you stay on. Your pride smarts for it.",
 
   "job_shop_sacked.prompt": "Custom's been thin, and the shopkeeper says, regretfully, he can't keep you on.",
   "job_shop_sacked.left": "Ask for a reference",
@@ -1084,6 +1086,8 @@ export const IT: Record<StringId, string> = {
   "job_labour_sacked.left.r0": "Raccogli il poco che ti spetta e te ne vai a testa bassa dai cancelli.",
   "job_labour_sacked.right": "Uscire a testa alta",
   "job_labour_sacked.right.r0": "Niente suppliche. Te ne vai con l'orgoglio, se non altro.",
+  "job_labour_sacked.down": "Implorare di restare",
+  "job_labour_sacked.down.r0": "Col cappello in mano, perori la tua causa — e il caposquadra, a malincuore, ti lascia restare. Il tuo orgoglio ne soffre.",
 
   "job_shop_sacked.prompt": "Gli affari sono scarsi, e il negoziante dice, a malincuore, che non può tenerti.",
   "job_shop_sacked.left": "Chiedere le referenze",

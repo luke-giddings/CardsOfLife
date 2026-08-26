@@ -198,6 +198,9 @@ function changeStatus(
       state.experienceJob = value;
     }
   }
+  // Standing with your employer is per-job: a new employer means a fresh start,
+  // so any job change (including into unemployment) wipes the strike count.
+  if (kind === "job" && value !== previous) state.traits.jobStrikes = 0;
 }
 
 function applyEffect(state: GameState, effect: Effect, content: Content): void {
