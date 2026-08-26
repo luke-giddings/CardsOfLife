@@ -305,7 +305,9 @@ export function chooseDirection(
 ): { state: GameState; result: string } {
   const content = CONTENT;
   const option = card.options[dir];
-  if (!option) return { state: prev, result: "" };
+  // A missing option, or one hidden by its `if`, is a no-op (defensive — the UI
+  // already refuses to swipe toward a hidden option).
+  if (!option || !meets(option.if, prev, content)) return { state: prev, result: "" };
 
   const state = structuredClone(prev);
   const outcome = resolveOutcome(option, state, content);

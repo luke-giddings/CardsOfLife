@@ -80,6 +80,11 @@ export interface Traits {
   // Years served in the current job. Ticked by each work-event card; a
   // promotion card gates on it and resets it to 0 on the step up.
   experience: number;
+  // Durable "reached the factory" marker (unlike `experience`, which resets on
+  // each job change). Lets the unemployed offer let a former factory worker
+  // return to the factory without re-grinding, while a green worker cannot skip
+  // straight there.
+  reachedFactory: boolean;
 }
 
 export const DEFAULT_TRAITS: Traits = {
@@ -98,6 +103,7 @@ export const DEFAULT_TRAITS: Traits = {
   numTimesChangedJob: 0,
   numTimesPlayedLottery: 0,
   experience: 0,
+  reachedFactory: false,
 };
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.
@@ -149,6 +155,11 @@ export interface CardOption {
   label: StringId;
   // Resolved top-to-bottom; author the last one unconditional as the fallback.
   outcomes: Outcome[];
+  // Optional per-option visibility. When present, the option (edge label + swipe)
+  // only appears if this condition holds — so a card can offer a choice only in
+  // certain states (e.g. "return to the factory" only once you've reached it).
+  // A swipe toward a hidden option is a no-op.
+  if?: Condition;
 }
 
 // Every card has left + right; up/down are optional (3–4 option cards).

@@ -397,15 +397,17 @@ How the gates realise this:
   per rung so the low-ceiling path fills a life rather than topping out early.
 - **The educated path paces itself by schooling** (attendance over years, age-
   driven) rather than experience, so it fits the ages automatically.
-- **Taking the factory early is a trade, not a skip.** The unemployed offer lets
-  an illiterate choose the child-labour *floor* (`left`) or the factory (`right`)
-  directly. That's a real decision, not a bypass: the factory has no
-  apprenticeship, so taking it **forgoes the skilled path** — only the child-labour
-  floor keeps the apprenticeship (skilled) route in reach. So the "cost" of
-  jumping to a steady factory job is giving up the trade ladder. (An
-  experience-gate here doesn't work: entering the factory resets `experience` to
-  0, so a fired factory hand would read as green — job *history*, not the live
-  counter, would be needed, and the trade-off framing is cleaner anyway.)
+- **No skipping the grind — but you can resume a career.** The unemployed offer's
+  "back to the mill" (factory) option is shown **only if you've *reached* the
+  factory before** — a durable `reachedFactory` trait, set by the child-labour →
+  factory promotion (not the live `experience` counter, which resets on every job
+  change, so a fired factory hand would otherwise read as green). So a green
+  worker can't jump straight to a factory job (must grind child labour up to it),
+  while a former factory hand who was sacked can pick their career back up without
+  re-grinding. For the green worker the option is **hidden entirely** (per-option
+  `if` — see below), not a dead/duplicate choice. Green illiterate at the offer
+  therefore chooses child-labour (`left`) or hold out (`down`); the factory
+  (`right`) only appears once earned.
 
 > **Built.** The four paths are implemented and gated by the `education`
 > credential (academic `illiterate→basic→grammar→university` ordered ladder +
@@ -567,15 +569,14 @@ Roughly in likely order. None of these are started.
 - **Relationship character decks** — unlock a sibling/friend/partner's storyline
   when a `rel*` trait crosses a threshold; different runs surface different
   stories. **Next up: expand the brother/sister decks.**
-- **Conditional card options (engine change)** — needed for the sibling work
-  above. Options are currently fixed; only the card's `conditions` and each
-  outcome's `if` are conditional, so an individual choice can't be shown only
-  when a condition holds. Add an optional `if?: Condition` to `CardOption`; the
-  UI renders/enables a direction only when its `if` passes (a swipe toward a
-  hidden option is a no-op). First use: a 3rd option on `sibling_blame` —
-  "Blame the other sibling" (an up/down swipe) shown only when
-  `traits: { hasBrother: true, hasSister: true }` (the rare three-child family).
-  General-purpose: any "only if you have X" choice.
+- **Conditional card options** — **BUILT** (`CardOption.if?: Condition`): an
+  option's edge label + swipe only appear when its `if` holds; a swipe toward a
+  hidden option is a no-op (engine `chooseDirection` also guards it). First use is
+  the "back to the mill" factory option above (shown only with `reachedFactory`).
+  Still **to do** with it: the 3rd option on `sibling_blame` — "Blame the other
+  sibling" (an up/down swipe) shown only when `traits: { hasBrother: true,
+  hasSister: true }` (the rare three-child family) — part of the sibling-deck
+  expansion. General-purpose: any "only if you have X" choice.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
 - **Richer end-of-run epitaph / scoring** — cause of death, life recap, a score

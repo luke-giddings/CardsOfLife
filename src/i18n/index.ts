@@ -336,12 +336,12 @@ export const EN = {
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Out of Work",
   "deck.job_unemployed.blurb": "No wage in your pocket and the days stretching empty ahead. You need to find work — and soon.",
-  "job_unemployed_offer.prompt": "Word gets round that you're after work. The shopkeeper wants a clerk — if you have your letters — while the mill takes any strong pair of arms.",
+  "job_unemployed_offer.prompt": "Word gets round that you're after work. There's a place at the shop counter for a lettered lad — and other doors open to those with the history to earn them.",
   "job_unemployed_offer.left": "Try the shop",
   "job_unemployed_offer.left.r0": "You can read a ledger and cipher, so it's the counter for you — respectable, steady, and yours.",
   "job_unemployed_offer.left.r1": "No letters, so the counter's not for you — it's back to the casual graft, scraping a wage where you can, and keeping an ear out for a master who'll take an apprentice.",
-  "job_unemployed_offer.right": "The factory floor",
-  "job_unemployed_offer.right.r0": "The mill: louder, harder, and better paid — but no master here to take an apprentice.",
+  "job_unemployed_offer.right": "Back to the mill",
+  "job_unemployed_offer.right.r0": "A foreman who remembers your work sets you back on. The mill floor again — louder, harder, and better paid.",
   "job_unemployed_offer.down": "Hold out for better",
   "job_unemployed_offer.down.r0": "Not those two. You'll keep looking a while yet.",
 
@@ -1013,12 +1013,12 @@ export const IT: Record<StringId, string> = {
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Senza lavoro",
   "deck.job_unemployed.blurb": "Niente paga in tasca e le giornate vuote davanti a te. Devi trovare lavoro — e presto.",
-  "job_unemployed_offer.prompt": "Si sparge la voce che cerchi lavoro. Il negoziante vuole un commesso — se sai leggere e scrivere — mentre la fabbrica prende qualunque paio di braccia robuste.",
+  "job_unemployed_offer.prompt": "Si sparge la voce che cerchi lavoro. C'è un posto al bancone del negozio per chi sa leggere — e altre porte aperte a chi ha l'esperienza per meritarle.",
   "job_unemployed_offer.left": "Provare al negozio",
   "job_unemployed_offer.left.r0": "Sai leggere un registro e far di conto, così tocca a te il bancone — rispettabile, sicuro, e tuo.",
   "job_unemployed_offer.left.r1": "Niente lettere, così il bancone non fa per te — si torna alla fatica occasionale, raccattando una paga dove capita, con l'orecchio teso per un maestro che prenda un apprendista.",
-  "job_unemployed_offer.right": "Il reparto della fabbrica",
-  "job_unemployed_offer.right.r0": "La fabbrica: più rumorosa, più dura, e meglio pagata — ma qui nessun maestro prende un apprendista.",
+  "job_unemployed_offer.right": "Tornare alla fabbrica",
+  "job_unemployed_offer.right.r0": "Un caposquadra che ricorda il tuo lavoro ti riprende. Di nuovo in fabbrica — più rumorosa, più dura, e meglio pagata.",
   "job_unemployed_offer.down": "Aspettare di meglio",
   "job_unemployed_offer.down.r0": "Non questi due. Continuerai a cercare ancora un po'.",
 

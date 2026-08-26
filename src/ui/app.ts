@@ -372,6 +372,13 @@ export class Game {
     return chips;
   }
 
+  // An option is available only if it exists AND its per-option `if` holds in the
+  // current state. Hidden options don't render an edge and can't be swiped to.
+  private availOpt(card: Card, dir: Direction): CardOption | undefined {
+    const o = card.options[dir];
+    return o && meets(o.if, this.state, content) ? o : undefined;
+  }
+
   private toggleHard(): void {
     if (this.busy) return;
     this.hard = !this.hard;
@@ -602,14 +609,17 @@ export class Game {
     // Easy mode: attach each option's vital preview right under its edge label.
     const ev = (opt: CardOption): string =>
       !this.hard ? `<span class="edge-vitals">${this.vitalChips(opt)}</span>` : "";
-    const o = card.options;
+    const edge = (dir: Direction, cls: string): string => {
+      const opt = this.availOpt(card, dir);
+      return opt ? `<div class="edge ${cls}">${t(opt.label)}${ev(opt)}</div>` : "";
+    };
     front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
       <p class="prompt">${t(card.prompt)}</p>
-      ${o.left ? `<div class="edge edge-left">${t(o.left.label)}${ev(o.left)}</div>` : ""}
-      ${o.right ? `<div class="edge edge-right">${t(o.right.label)}${ev(o.right)}</div>` : ""}
-      ${o.up ? `<div class="edge edge-up">${t(o.up.label)}${ev(o.up)}</div>` : ""}
-      ${o.down ? `<div class="edge edge-down">${t(o.down.label)}${ev(o.down)}</div>` : ""}`;
+      ${edge("left", "edge-left")}
+      ${edge("right", "edge-right")}
+      ${edge("up", "edge-up")}
+      ${edge("down", "edge-down")}`;
 
     const back = document.createElement("div");
     back.className = "face back";
@@ -860,7 +870,7 @@ export class Game {
     };
     if (this.phase === "front" && this.card) {
       const dir = map[e.key];
-      if (dir && this.card.options[dir]) {
+      if (dir && this.availOpt(this.card, dir)) {
         e.preventDefault();
         this.choose(dir);
       }
@@ -879,8 +889,8 @@ export class Game {
     const tilt = (dx: number, dy: number): void => {
       const horiz = Math.abs(dx) >= Math.abs(dy);
       const dir: Direction = horiz ? (dx < 0 ? "left" : "right") : (dy < 0 ? "up" : "down");
-      // Don't rotate toward a direction that has no choice.
-      if (!card.options[dir]) {
+      // Don't rotate toward a direction that has no choice (absent or hidden).
+      if (!this.availOpt(card, dir)) {
         flip.style.transform = "";
         flip.classList.remove(...LEAN_CLASSES);
         return;
@@ -911,17 +921,17 @@ export class Game {
       // A tap (barely moved) selects the option in whichever region you tapped.
       if (Math.hypot(dx, dy) < TAP_SLOP) {
         const dir = regionDir(flip, x, y);
-        if (dir && card.options[dir]) return this.choose(dir);
+        if (dir && this.availOpt(card, dir)) return this.choose(dir);
         settle();
         return;
       }
       const horiz = Math.abs(dx) >= Math.abs(dy);
       if (horiz && Math.abs(dx) > SWIPE_THRESHOLD) {
         const dir: Direction = dx < 0 ? "left" : "right";
-        if (card.options[dir]) return this.choose(dir);
+        if (this.availOpt(card, dir)) return this.choose(dir);
       } else if (!horiz && Math.abs(dy) > SWIPE_THRESHOLD) {
         const dir: Direction = dy < 0 ? "up" : "down";
-        if (card.options[dir]) return this.choose(dir);
+        if (this.availOpt(card, dir)) return this.choose(dir);
       }
       settle();
     };

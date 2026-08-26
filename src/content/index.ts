@@ -761,11 +761,13 @@ export const content = {
                 { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
               ],
             },
-            // The factory floor. Taking it straight off isn't a "skip" — it's a
-            // real trade: better pay & safety now, but the factory has no
-            // apprenticeship, so you forgo the skilled path (which only the
-            // child-labour floor, via `left` when illiterate, keeps in reach).
-            right: { label: "job_unemployed_offer.right", outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
+            // Return to the factory — but only if you've *been* there (the
+            // durable `reachedFactory` marker, earned via the child-labour →
+            // factory promotion). So a green worker can't use unemployment to
+            // skip the years of graft, while a fired factory hand can pick their
+            // career back up without re-grinding. Hidden entirely otherwise (no
+            // dead/duplicate option), via per-option `if`.
+            right: { label: "job_unemployed_offer.right", if: { traits: { reachedFactory: true } }, outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
             down: { label: "job_unemployed_offer.down", outcomes: [{ result: "job_unemployed_offer.down.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -888,7 +890,7 @@ export const content = {
           conditions: { traits: { experience: { min: 4 } } },
           prompt: "job_labour_factory.prompt",
           options: {
-            left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
+            left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" }, setTraits: { reachedFactory: true } } }] },
             right: { label: "job_labour_factory.right", outcomes: [{ result: "job_labour_factory.right.r0", effects: { vitals: { happiness: "+" } } }] },
           },
         },
