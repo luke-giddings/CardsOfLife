@@ -854,10 +854,11 @@ export const content = {
           },
         },
         {
-          // More work-event fillers so the deck isn't a coin-flip between wages
-          // and the sack — both options tick experience toward the factory step.
+          // Extra work events (one_time): each gives a one-off experience tick
+          // toward the factory step and thins the early pool away from the sack,
+          // then bows out once played — wages remains the recurring earner.
           id: "job_labour_toil",
-          kind: "filler",
+          kind: "one_time",
           prompt: "job_labour_toil.prompt",
           options: {
             left: { label: "job_labour_toil.left", outcomes: [{ result: "job_labour_toil.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
@@ -866,7 +867,7 @@ export const content = {
         },
         {
           id: "job_labour_errand",
-          kind: "filler",
+          kind: "one_time",
           prompt: "job_labour_errand.prompt",
           options: {
             left: { label: "job_labour_errand.left", outcomes: [{ result: "job_labour_errand.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
@@ -888,12 +889,14 @@ export const content = {
         {
           // The LUCKY BREAK: a master offers to take you on as an apprentice —
           // the crossover from the capped unskilled floor onto the high-ceiling
-          // SKILLED ladder. Uncommon (gated on keeping your health/spirit up, so
-          // it feels earned) and one_time (a break you take or miss). Accept →
-          // apprentice (housed & fed); decline → stay a labourer.
+          // SKILLED ladder. A MILESTONE, so it fires as soon as you qualify
+          // (kept your health & spirit up as a labourer past age 13) rather than
+          // waiting on a lucky random draw — earned, then guaranteed. Fires once
+          // (consumed on either choice): accept → apprentice, or miss your break.
           id: "job_labour_apprenticeship",
-          kind: "one_time",
-          conditions: { ageMin: 12, vitals: { health: { min: 45 }, spirit: { min: 45 } } },
+          kind: "milestone",
+          priority: 40,
+          conditions: { ageMin: 13, vitals: { health: { min: 55 }, spirit: { min: 55 } } },
           prompt: "job_labour_apprenticeship.prompt",
           options: {
             left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
