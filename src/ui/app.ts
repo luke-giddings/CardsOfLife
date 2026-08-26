@@ -427,21 +427,50 @@ export class Game {
       ...gated.map((c) => row(c, "·", "gated", fmtCond(c.conditions))),
     ];
 
-    // Current traits: booleans/gender tap to toggle; numbers get −/+ buttons.
-    const traitHtml = Object.entries(this.state.traits)
-      .map(([k, v]) => {
-        if (typeof v === "number") {
-          // Experience counts single years (thresholds ~3–4); the relationship
-          // counters move in larger steps — so scale the debug step per trait.
-          const step = k === "experience" ? 1 : 10;
-          return `<span class="dbg-trait ${v !== 0 ? "set" : ""}">${k}=${v}
-            <button data-trait="${k}" data-tdelta="-${step}">−</button>
-            <button data-trait="${k}" data-tdelta="${step}">+</button></span>`;
-        }
-        const set = typeof v === "boolean" ? v : true;
-        return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
-      })
-      .join("");
+    // Current traits, grouped into collapsible sub-sections so the (growing)
+    // list stays scannable. One chip each: numbers get −/+ buttons; the rest tap
+    // to toggle.
+    const traitChip = ([k, v]: [string, unknown]): string => {
+      if (typeof v === "number") {
+        // Experience counts single years (thresholds ~3–4); the relationship
+        // counters move in larger steps — so scale the debug step per trait.
+        const step = k === "experience" ? 1 : 10;
+        return `<span class="dbg-trait ${v !== 0 ? "set" : ""}">${k}=${v}
+          <button data-trait="${k}" data-tdelta="-${step}">−</button>
+          <button data-trait="${k}" data-tdelta="${step}">+</button></span>`;
+      }
+      const set = typeof v === "boolean" ? v : true;
+      return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
+    };
+    // Group by the segment before the first "_", else the leading camelCase word
+    // (so `relBrother`/`relSister` → "rel"). Only a prefix shared by 2+ traits
+    // becomes a collapsible group; lone traits sit flat at the top.
+    const groupOf = (k: string): string => {
+      const u = k.indexOf("_");
+      if (u > 0) return k.slice(0, u);
+      return k.match(/^[a-z]+/)?.[0] ?? k;
+    };
+    const byGroup = new Map<string, [string, unknown][]>();
+    for (const e of Object.entries(this.state.traits)) {
+      const g = groupOf(e[0]);
+      const arr = byGroup.get(g) ?? [];
+      if (arr.length === 0) byGroup.set(g, arr);
+      arr.push(e);
+    }
+    const loose: string[] = [];
+    const groups: string[] = [];
+    for (const [g, es] of byGroup) {
+      if (es.length < 2) {
+        loose.push(traitChip(es[0]));
+        continue;
+      }
+      const id = `trait:${g}`;
+      groups.push(`<details class="dbg-sec dbg-subsec" ${this.debugOpen.has(id) ? "open" : ""}>
+        <summary data-sec="${id}">${g} · ${es.length}</summary>
+        <div class="dbg-traits">${es.map(traitChip).join("")}</div>
+      </details>`);
+    }
+    const traitHtml = `<div class="dbg-traits">${loose.join("")}</div>${groups.join("")}`;
 
     // Debug controls: vitals, age, decks, milestone jumps.
     const vitalCtl = VITAL_KEYS.map(
@@ -508,7 +537,7 @@ export class Game {
     this.debugPanel.innerHTML =
       sec("vitals", "Vitals", `<div class="dbg-ctl">${vitalCtl}</div>`) +
       sec("age", "Age", `<div class="dbg-ctl">${ageCtl}</div>`) +
-      sec("traits", "Traits — tap to toggle", `<div class="dbg-traits">${traitHtml}</div>`) +
+      sec("traits", "Traits — tap to toggle", traitHtml) +
       sec("decks", "Decks — tap to add / remove", `<div class="dbg-decks">${deckCtl}</div>`) +
       sec("milestones", "Skip to milestone", `<div class="dbg-decks">${milestoneCtl}</div>`) +
       sec("pool", `Draw pool — age ${this.state.age} · tap a card to inspect`, `<div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`) +

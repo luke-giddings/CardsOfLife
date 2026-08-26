@@ -193,6 +193,9 @@ body {
 .dbg-sec > summary::-webkit-details-marker { display: none; }
 .dbg-sec > summary::before { content: "▸ "; }
 .dbg-sec[open] > summary::before { content: "▾ "; }
+/* Nested trait groups: indented, no bottom gap, muted summary. */
+.dbg-subsec { margin: 0 0 2px 10px; }
+.dbg-subsec > summary { text-transform: none; letter-spacing: 0.04em; color: var(--muted, #9a8) ; }
 .dbg-row {
   padding: 3px 0;
   cursor: pointer;
