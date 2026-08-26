@@ -424,9 +424,12 @@ export class Game {
     const traitHtml = Object.entries(this.state.traits)
       .map(([k, v]) => {
         if (typeof v === "number") {
+          // Experience counts single years (thresholds ~3–4); the relationship
+          // counters move in larger steps — so scale the debug step per trait.
+          const step = k === "experience" ? 1 : 10;
           return `<span class="dbg-trait ${v !== 0 ? "set" : ""}">${k}=${v}
-            <button data-trait="${k}" data-tdelta="-10">−</button>
-            <button data-trait="${k}" data-tdelta="10">+</button></span>`;
+            <button data-trait="${k}" data-tdelta="-${step}">−</button>
+            <button data-trait="${k}" data-tdelta="${step}">+</button></span>`;
         }
         const set = typeof v === "boolean" ? v : true;
         return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
