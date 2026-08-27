@@ -230,11 +230,18 @@ high-risk/high-reward gamble (money via drift, but a real chance it kills you);
 ## 12. End of run
 
 The run ends when any Vital hits 0, or a hazard's `endGame` fires. The end
-screen names the ending and shows a short recap. Reaching 18 is its own ending —
-**"You Survived Childhood"** — reframing adulthood as an achievement. **For now
-the game ends here.** The adult run, its ageing-drift/natural-death model, and the
-qualitative epitaph are designed in §17b and will replace "Survived Childhood" as
-the terminal ending once adult content is built.
+screen names the ending and shows a short recap.
+
+**Reaching 18 is no longer an ending** — it's a **coming-of-age transition**
+(`child_adult` milestone): it hands off the `childhood` deck and adds the
+`young_adult` stage deck, and the run **continues into adult life** on top of your
+job/housing decks. **Young adulthood (18–~25) is built** (skeleton pass —
+recurring life-event trades). There is **no cap yet**: past 18 the run just keeps
+going until a vital fails — deliberately, to see when the draw pool starts to run
+thin and needs the next life-stage. Later stages (midlife → old age), the
+ageing-drift/natural-death model, and the qualitative epitaph are designed in
+§17b and still to build. (The old `grown_up` / "Survived Childhood" ending is
+retired; the string lingers unused.)
 
 ## 13. Save / resume / reset
 

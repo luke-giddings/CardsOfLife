@@ -375,14 +375,83 @@ export const content = {
         },
 
         {
+          // Coming of age (18): no longer an ending — it hands childhood off for
+          // the young_adult stage deck and carries you into adult life. Both
+          // choices transition; they differ only in the mood you carry forward.
           id: "child_adult",
           kind: "milestone",
           priority: 100,
           conditions: { ageMin: 18 },
           prompt: "child_adult.prompt",
           options: {
-            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { endGame: "grown_up" } }] },
-            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { endGame: "grown_up" } }] },
+            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, removeDecks: ["childhood"], addDecks: ["young_adult"] } }] },
+            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, removeDecks: ["childhood"], addDecks: ["young_adult"] } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Young adulthood (18–~25): shared life-stage deck, added at coming-of-age
+    //     (child_adult), on top of your job/housing decks. Settling into your
+    //     station, first freedoms and first responsibilities. Skeleton pass:
+    //     recurring life-event trades; the run now continues past 18. ----------
+    {
+      id: "young_adult",
+      title: "deck.young_adult.title",
+      unlock: "deck.young_adult.blurb",
+      cards: [
+        {
+          id: "ya_lodgings",
+          kind: "filler",
+          prompt: "ya_lodgings.prompt",
+          options: {
+            left: { label: "ya_lodgings.left", outcomes: [{ result: "ya_lodgings.left.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" } } }] },
+            right: { label: "ya_lodgings.right", outcomes: [{ result: "ya_lodgings.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "ya_courting",
+          kind: "filler",
+          prompt: "ya_courting.prompt",
+          options: {
+            left: { label: "ya_courting.left", outcomes: [{ result: "ya_courting.left.r0", effects: { vitals: { happiness: "++", finances: "-" } } }] },
+            right: { label: "ya_courting.right", outcomes: [{ result: "ya_courting.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          id: "ya_tavern",
+          kind: "filler",
+          prompt: "ya_tavern.prompt",
+          options: {
+            left: { label: "ya_tavern.left", outcomes: [{ result: "ya_tavern.left.r0", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } }] },
+            right: { label: "ya_tavern.right", outcomes: [{ result: "ya_tavern.right.r0", effects: { vitals: { health: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          id: "ya_thrift",
+          kind: "filler",
+          prompt: "ya_thrift.prompt",
+          options: {
+            left: { label: "ya_thrift.left", outcomes: [{ result: "ya_thrift.left.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
+            right: { label: "ya_thrift.right", outcomes: [{ result: "ya_thrift.right.r0", effects: { vitals: { happiness: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          id: "ya_ambition",
+          kind: "filler",
+          prompt: "ya_ambition.prompt",
+          options: {
+            left: { label: "ya_ambition.left", outcomes: [{ result: "ya_ambition.left.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
+            right: { label: "ya_ambition.right", outcomes: [{ result: "ya_ambition.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "ya_faith",
+          kind: "filler",
+          prompt: "ya_faith.prompt",
+          options: {
+            left: { label: "ya_faith.left", outcomes: [{ result: "ya_faith.left.r0", effects: { vitals: { spirit: "++", happiness: "-" } } }] },
+            right: { label: "ya_faith.right", outcomes: [{ result: "ya_faith.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
           },
         },
       ],
