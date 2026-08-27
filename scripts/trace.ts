@@ -34,7 +34,7 @@ for (let r = 0; r < RUNS; r++) {
     if (d.card.id === "job_labour_apprenticeship" && s.statuses.job === "apprentice") accepted = true;
     if (s.statuses.job === "child_labourer") {
       child = true;
-      if (s.age >= 13) { reached13 = true; if (s.vitals.health >= 55 && s.vitals.spirit >= 55) eligible = true; }
+      if (s.age >= 13) { reached13 = true; if (s.vitals.health >= 35 && s.vitals.spirit >= 35) eligible = true; }
     }
   }
   if (child) {
@@ -52,7 +52,7 @@ console.log(`\n=== ${RUNS} random lives ===`);
 console.log(`baby_schooling fork:  work→child_labourer ${p(babyRight)}   school→studying ${p(babyLeft)}`);
 console.log(`ever a child_labourer:            ${everChild}  (${p(everChild)})`);
 console.log(`  ...reached age 13 alive:        ${childReached13}  (${(100 * childReached13 / everChild).toFixed(1)}% of them)`);
-console.log(`  ...ever apprentice-ELIGIBLE     ${childEverEligible}  (${(100 * childEverEligible / everChild).toFixed(1)}% of them)  [age≥13 & health≥55 & spirit≥55]`);
+console.log(`  ...ever apprentice-ELIGIBLE     ${childEverEligible}  (${(100 * childEverEligible / everChild).toFixed(1)}% of them)  [age≥13 & health≥35 & spirit≥35]`);
 console.log(`  ...reached 30:                  ${bornWorkerReached30}  (${(100 * bornWorkerReached30 / everChild).toFixed(1)}% of them)`);
 console.log(`apprenticeship milestone OFFERED: ${apprOffered}  (${p(apprOffered)})`);
 console.log(`apprenticeship ACCEPTED:          ${apprAccepted}  (${p(apprAccepted)})`);

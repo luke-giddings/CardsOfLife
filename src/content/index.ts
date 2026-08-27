@@ -61,7 +61,7 @@ export const content = {
         // Dangerous child labour → factory hand → gang-master. Decent money
         // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
         // crosses you onto the skilled ladder.
-        child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
+        child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -3 }, addDecks: ["job_labour"] },
         factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
         gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, addDecks: ["job_gangmaster"] },
 
@@ -94,9 +94,11 @@ export const content = {
       states: {
         // Home life while living with the family. Costs money — your keep /
         // your share of the household — which the labourer's wage offsets but
-        // the pupil's doesn't. (Suspended in babyhood by the baby deck's
-        // noDrift.) Owns the home-life deck.
-        family: { label: "status.housing.family", drift: { finances: -5 }, addDecks: ["home_family"] },
+        // the pupil's doesn't. A fed, sheltered child mends a little each year
+        // (health +2): the offset that keeps childhood from being pure attrition
+        // and makes the apprenticeship gate reachable. (Suspended in babyhood by
+        // the baby deck's noDrift.) Owns the home-life deck.
+        family: { label: "status.housing.family", drift: { finances: -5, health: 2 }, addDecks: ["home_family"] },
         // The workhouse: a grinding health/happiness drain, and its own deck of
         // bleak daily-life events (including three ways out).
         workhouse: { label: "status.housing.workhouse", drift: { health: -5, happiness: -5 }, addDecks: ["home_workhouse"] },
@@ -979,7 +981,7 @@ export const content = {
           id: "job_labour_apprenticeship",
           kind: "milestone",
           priority: 40,
-          conditions: { ageMin: 13, vitals: { health: { min: 55 }, spirit: { min: 55 } } },
+          conditions: { ageMin: 13, vitals: { health: { min: 35 }, spirit: { min: 35 } } },
           prompt: "job_labour_apprenticeship.prompt",
           options: {
             left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
