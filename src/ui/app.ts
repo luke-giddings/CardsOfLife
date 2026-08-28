@@ -368,6 +368,14 @@ export class Game {
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
     if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
+    // A path-changing payload beyond the vital numbers (a new job/home/education,
+    // or a lasting trait, or a life-stage deck swap) gets a "special" star — so a
+    // rewarding choice (seize the apprenticeship, buy the house) doesn't look
+    // weaker than a plain sibling that only moves a stat. Incremental ticks
+    // (experience, +1 sporty) deliberately don't qualify, to keep the star rare.
+    const e = outcome.effects;
+    const special = !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
+    if (special) chips += `<span class="ep-v ep-special" title="This choice changes your path — a job, home, or lasting trait">★</span>`;
     // No vital changes → show nothing (rather than a bare "—").
     return chips;
   }
