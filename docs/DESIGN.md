@@ -80,8 +80,8 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 
 | Status | States (so far) | Notes |
 |---|---|---|
-| **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: finances +5 / health −5, opens `job_labour`. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +5, safe — **needs education ≥ school**), **factory** (finances +10 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). |
-| **Housing** | family · workhouse · renting · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): finances −5 rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
+| **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +12 / health −5**, opens `job_labour` — the wage is a real net income now (+7 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +5, safe — **needs education ≥ school**), **factory** (finances +10 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). |
+| **Housing** | family · workhouse · renting · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): finances −5 rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | none · school | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
 | **Lifestyle** | default | Reserved. |
 
@@ -206,11 +206,13 @@ appears at random, but **survival depends on prior preparation**:
 **The `rescue` mechanism (safety nets).** A first-class engine feature: a card
 can carry `rescue: <vital>`. When that vital would hit 0, instead of a game-over
 the engine floors the vital to **1** and force-draws the rescue card (it jumps
-the queue, bypassing normal eligibility). A rescue is eligible only while its
-**deck is active** and it is **not exhausted**, and rescue cards are *never*
-drawn normally — only fired by this mechanism. Because only one rescue per vital
-can be active at once, deck-gating lets different life stages provide different
-nets for the *same* vital (childhood workhouse vs. adult house-sale, below).
+the normal draw queue). A rescue is eligible only while its **deck is active**,
+it is **not exhausted**, and its **`conditions` hold** (rescues honour `meets`
+just like `force` does — so a net can be age-gated, e.g. the charity hospital
+below only catches young children); rescue cards are *never* drawn normally —
+only fired by this mechanism. Because only one rescue per vital can be active at
+once, deck- and condition-gating let different life stages provide different nets
+for the *same* vital (childhood workhouse vs. adult house-sale, below).
 
 **Finances net #1 — the workhouse (childhood only, once).** `child_hunger` is
 the childhood finances rescue and is a **`one_time` card**, so it fires **at most
@@ -220,9 +222,19 @@ exits) or take to the **streets** (free but harsher). It lives in the childhood
 deck, so once adult decks replace it it cannot fire in adult life — the workhouse
 catches you *once, as a child*, and never again.
 
-This makes health/happiness/spirit the directly-lethal vitals; poverty routes you
-through a net instead — thematically the Victorian safety net. (Adult life has
-its own finances net — selling the house — designed in §17b.)
+**Health net — the charity hospital (young children only, once).**
+`child_charity_hospital` is a **`one_time`** health rescue gated `ageMax: 9`
+(hence the condition-check above). When a small child's health would hit 0, a
+charity hospital takes them in: the vital floors to 1 and you choose — **accept
+their ward** (a big health bump, but you incur `owesCharity`, a debt that comes
+due in young adulthood) or **refuse** (barely mended, but beholden to no one).
+Fires at most once, and only under 10 — an older child who burns out gets no such
+mercy. It's the symmetric twin of the finances net (previously health had *no*
+net at all, which is why it was the #1 killer).
+
+So poverty and a young child's ill-health both route through a net; **happiness
+and spirit remain directly lethal**, and health is directly lethal from age 10.
+(Adult life has its own finances net — selling the house — designed in §17b.)
 
 **Target:** a *thoughtful, prepared* player reaches 18 roughly **70%** of the
 time; careless/random play dies far more. The **work path** is a deliberate
@@ -252,8 +264,20 @@ and restarts. A separate **Debug** toggle (persisted) unlocks the debug toolkit.
 An **Easy** toggle (persisted, player-facing) previews each choice's vital
 changes on the card — the vital symbols (£ ☺ ♥ ✦) and magnitude shown right
 under each option's edge label, computed from the outcome that would actually
-fire given the current state (a ☠ marks a choice that can end the run). A
-**language** toggle switches English/Italian live.
+fire given the current state. Two extra markers:
+- A **☠** marks a choice that can end the run. The check **projects the whole
+  year** — the card's change (if any) *plus* the turn's passive drift — onto
+  every vital, so it warns of death from the *drain* too, even on a vital the
+  card doesn't touch (e.g. a card that ignores health while workhouse drift is
+  about to zero it). It shows on whichever vital would hit 0.
+- A gold **★** marks a choice with a **path-changing payload beyond the numbers**
+  — a new job/home/education (`setStatus`), a lasting trait (`setTraits`), or a
+  life-stage deck swap — so a rewarding option (seize the apprenticeship → become
+  an apprentice) doesn't look weaker than a plain sibling that only moves a stat.
+  Incremental ticks (experience, +1 sporty) deliberately don't qualify, keeping
+  the star rare.
+
+A **language** toggle switches English/Italian live.
 
 ## 14. Tech & architecture
 
@@ -293,11 +317,19 @@ fire given the current state (a ☠ marks a choice that can end the run). A
 
 ## 16. Current scope (built)
 
-Birth → babyhood (unloseable build-up, trait setups) → **school-or-work** at 5 →
-childhood (shared events + home / education / occupation decks + hazards,
-genuinely failable), the workhouse as a grim fallback → **age 18 / "You
-Survived Childhood"**. Sibling relationship deck. Full debug toolkit. Deployed
-and playable on a phone.
+Birth → babyhood (unloseable build-up, trait setups — incl. the `baby_disposition`
+fork: sporty / bookish / neither) → **school-or-work** at 5 → childhood (shared
+events + home / education / occupation decks + hazards, genuinely failable), with
+two safety nets — the **workhouse** (finances) and the **charity hospital**
+(health, under-10s, on `owesCharity` credit) → **coming-of-age at 18** (no longer
+an ending; hands off into a young-adult life-event stage that continues with **no
+cap**). Occupation ladders partly built: dangerous child labour with the **earned
+apprenticeship** crossover (spirit/happiness, ages 13–18) onto the skilled trade
+(`_day`/bench-job XP → survivable closure → the qualifying trial → journeyman);
+factory step within unskilled; criminal entry. Housing ladder (family → move-out
+→ renting) with health recovery; the apprenticeship borrows and returns your
+housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path
+★). Full debug toolkit. Deployed and playable on a phone.
 
 ## 17. Settled decisions (quick reference)
 
@@ -358,7 +390,7 @@ distinct identities:
 
 |              | Safe / high ceiling            | Dangerous / capped                         |
 |--------------|--------------------------------|--------------------------------------------|
-| **Invest early** | **Educated** (study years) | **Skilled** (lucky-break apprenticeship)   |
+| **Invest early** | **Educated** (study years) | **Skilled** (earned apprenticeship)   |
 | **Earn now**     | —                          | **Unskilled** (labour) · **Criminal** (scores) |
 
 Educated and Skilled are the *delayed-gratification* paths — you pay in years up
@@ -379,13 +411,20 @@ flavour by path): floor 0 · tier 1 ≈ −5 · tier 2 ≈ −10 · tier 3 ≈ �
 
 - **Unskilled caps at tier 2** — the quietly-tragic honest lot: decent money
   early, but no master-equivalent to rise to. Its identity *is* the low ceiling.
-- **Skilled** is entered by a **lucky-break apprenticeship** that crosses you over
+- **Skilled** is entered by an **earned apprenticeship** that crosses you over
   from the unskilled floor (dangerous child labour) onto the high-ceiling ladder.
-  The apprenticeship is **strictly time-limited** (a few years, then it forces you
-  onward to the trade — its own progression mechanic, not the experience grind),
-  and it **can be *failed*** → thrown back to unskilled / unemployed. So the break
-  is a real gamble, not a free lift.
-- **Dangerous child labour is never a dead-end** — always has exits: the lucky
+  *No longer a lucky-break random draw:* a master takes on a labouring child who
+  has kept their **spirit** (grit) or **happiness** (favour) up through the mill —
+  two cards, each entering the pool at the stat ≥ **70** and **forced** at 100,
+  gated to **ages 13–18** (apprentices were bound as minors). Gating on the two
+  stats a labourer can actually *build* (not health, which the work drains) makes
+  it a reward for perseverance rather than luck. Once bound, the apprenticeship is
+  **time-limited**: `_day`/one-shot bench jobs tick **experience**, the workshop
+  can close early (`_end` — survivable now: seek another master, or leave), and at
+  experience ≥ 4 the **trial** (`_qualify`) forces a resolution — pass (→
+  journeyman, if health held up) or fail (→ unemployed). So the break is earned,
+  then the trade is a gamble.
+- **Dangerous child labour is never a dead-end** — always has exits: the earned
   apprenticeship (→ skilled), a steady factory job (→ up within unskilled), or
   unemployed / crime. You can't get *stuck* there, but you *can* stay if unlucky.
 - **Criminal** risk is **arrest → prison** (see below).
@@ -429,7 +468,7 @@ How the gates realise this:
 > **Built.** The four paths are implemented and gated by the `education`
 > credential (academic `illiterate→basic→grammar→university` ordered ladder +
 > trade `journeyman`/`master` off-ladder credentials). Unskilled: child labour →
-> factory → gang-master (ceiling). Skilled: lucky-break apprenticeship (from the
+> factory → gang-master (ceiling). Skilled: earned apprenticeship (from the
 > labour deck, gated on health/spirit) → **time-limited qualifying milestone**
 > (experience ≥ 4; pass on health → journeyman job + credential, fail → back to
 > unemployed) → journeyman → master. Criminal: pickpocket (no wage) → burglar
