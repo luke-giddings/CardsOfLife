@@ -162,11 +162,6 @@ export const EN = {
   // ---- YOUNG ADULTHOOD (18–~25) -----------------------------------------
   "deck.young_adult.title": "The Prime of Life",
   "deck.young_adult.blurb": "Grown now, and your own master. The years ahead are yours to make — or to squander.",
-  "ya_lodgings.prompt": "You could take proper lodgings of your own — a little independence, at a little cost.",
-  "ya_lodgings.left": "Take the rooms",
-  "ya_lodgings.left.r0": "A door that locks and a hearth that's yours. Poorer for it, but your own man.",
-  "ya_lodgings.right": "Make do and save",
-  "ya_lodgings.right.r0": "You put the money by and swallow the cramped arrangement a while longer.",
   "ya_courting.prompt": "A sweetheart has caught your eye, and courting is a costly business.",
   "ya_courting.left": "Court in earnest",
   "ya_courting.left.r0": "Walks and posies and Sunday teas. Your heart's full, if your purse is light.",
@@ -890,11 +885,6 @@ export const IT: Record<StringId, string> = {
   // ---- GIOVENTÙ ADULTA (18–~25) -----------------------------------------
   "deck.young_adult.title": "Il Fiore degli Anni",
   "deck.young_adult.blurb": "Ormai adulto, e padrone di te stesso. Gli anni a venire sono tuoi da costruire — o da sprecare.",
-  "ya_lodgings.prompt": "Potresti prendere un alloggio tutto tuo — un po' d'indipendenza, a un piccolo prezzo.",
-  "ya_lodgings.left": "Prendere le stanze",
-  "ya_lodgings.left.r0": "Una porta che si chiude e un focolare tuo. Più povero, ma padrone di te.",
-  "ya_lodgings.right": "Arrangiarsi e risparmiare",
-  "ya_lodgings.right.r0": "Metti da parte i soldi e sopporti ancora un po' la sistemazione angusta.",
   "ya_courting.prompt": "Un'innamorata ti ha catturato lo sguardo, e corteggiare è un affare costoso.",
   "ya_courting.left": "Corteggiare sul serio",
   "ya_courting.left.r0": "Passeggiate, mazzolini e tè della domenica. Il cuore è pieno, se la borsa è leggera.",

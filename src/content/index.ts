@@ -420,15 +420,6 @@ export const content = {
       unlock: "deck.young_adult.blurb",
       cards: [
         {
-          id: "ya_lodgings",
-          kind: "filler",
-          prompt: "ya_lodgings.prompt",
-          options: {
-            left: { label: "ya_lodgings.left", outcomes: [{ result: "ya_lodgings.left.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" } } }] },
-            right: { label: "ya_lodgings.right", outcomes: [{ result: "ya_lodgings.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
-          },
-        },
-        {
           id: "ya_courting",
           kind: "filler",
           prompt: "ya_courting.prompt",
