@@ -1139,13 +1139,15 @@ export const content = {
       cards: [
         {
           // Learning the trade at the bench. Low stipend; ticks experience
-          // toward qualifying. Graft hard (spirit cost, faster learning) or take
-          // it steady.
+          // toward qualifying. A real trade-off: GRAFT (spirit + health cost)
+          // learns the trade twice as fast (experience +2), or take it STEADY
+          // (happiness +) at the ordinary pace (+1). Neither dominates -- rush
+          // the qualification through your body, or enjoy the craft the slow way.
           id: "job_apprentice_day",
           kind: "filler",
           prompt: "job_apprentice_day.prompt",
           options: {
-            left: { label: "job_apprentice_day.left", outcomes: [{ result: "job_apprentice_day.left.r0", effects: { vitals: { spirit: "-", health: "-" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_apprentice_day.left", outcomes: [{ result: "job_apprentice_day.left.r0", effects: { vitals: { spirit: "-", health: "-" }, incTraits: { experience: 2 } } }] },
             right: { label: "job_apprentice_day.right", outcomes: [{ result: "job_apprentice_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
           },
         },
