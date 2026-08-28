@@ -61,7 +61,7 @@ export const content = {
         // Dangerous child labour → factory hand → gang-master. Decent money
         // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
         // crosses you onto the skilled ladder.
-        child_labourer: { label: "status.job.child_labourer", drift: { finances: 5, health: -5 }, addDecks: ["job_labour"] },
+        child_labourer: { label: "status.job.child_labourer", drift: { finances: 8, health: -5 }, addDecks: ["job_labour"] },
         factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
         gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, addDecks: ["job_gangmaster"] },
 
@@ -373,6 +373,25 @@ export const content = {
             right: { label: "child_hunger.right", outcomes: [{ result: "child_hunger.right.r0", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse" } } }] },
           },
         },
+        {
+          // The health safety net for the very young (age < 10): the twin of
+          // child_hunger. It fires (once) when a small child would otherwise die
+          // of ill health — a charity hospital takes them in. The rescue floors
+          // health to 1; accepting their ward bumps it further (++), but the
+          // ledger remembers (owesCharity) and the debt falls due in young
+          // adulthood. Refusing keeps you free of debt but barely mended. Gated
+          // to age <= 9 (findRescue honours conditions), so an older child who
+          // burns out gets no such mercy.
+          id: "child_charity_hospital",
+          kind: "one_time",
+          rescue: "health",
+          conditions: { ageMax: 9 },
+          prompt: "child_charity_hospital.prompt",
+          options: {
+            left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setTraits: { owesCharity: true } } }] },
+            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "+", spirit: "+" } } }] },
+          },
+        },
 
         {
           // Coming of age (18): no longer an ending — it hands childhood off for
@@ -452,6 +471,21 @@ export const content = {
           options: {
             left: { label: "ya_faith.left", outcomes: [{ result: "ya_faith.left.r0", effects: { vitals: { spirit: "++", happiness: "-" } } }] },
             right: { label: "ya_faith.right", outcomes: [{ result: "ya_faith.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // The charity hospital's ledger, come due. Only surfaces if the
+          // childhood health rescue was taken (owesCharity), and recurs (filler)
+          // until you settle up: pay it off (a real dent in your purse, but the
+          // debt clears and your conscience with it) or turn the collector away
+          // (keep the coin, at a cost to spirit — and he'll be back next year).
+          id: "ya_charity_debt",
+          kind: "filler",
+          conditions: { traits: { owesCharity: true } },
+          prompt: "ya_charity_debt.prompt",
+          options: {
+            left: { label: "ya_charity_debt.left", outcomes: [{ result: "ya_charity_debt.left.r0", effects: { vitals: { finances: "--", spirit: "+" }, setTraits: { owesCharity: false } } }] },
+            right: { label: "ya_charity_debt.right", outcomes: [{ result: "ya_charity_debt.right.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
           },
         },
       ],
@@ -976,14 +1010,37 @@ export const content = {
           // (kept your health & spirit up as a labourer past age 13) rather than
           // waiting on a lucky random draw — earned, then guaranteed. Fires once
           // (consumed on either choice): accept → apprentice, or miss your break.
-          id: "job_labour_apprenticeship",
-          kind: "milestone",
-          priority: 40,
-          conditions: { ageMin: 13, vitals: { health: { min: 55 }, spirit: { min: 55 } } },
+          // The crossover from the capped unskilled floor onto the high-ceiling
+          // SKILLED ladder. No longer a health check (health is what labour
+          // DRAINS, so gating the escape on it made it unreachable). Instead the
+          // apprenticeship is EARNED with the two stats a labourer can actually
+          // build through choices — spirit (grit) or happiness (favour) — via
+          // two cards. Each is a `filler` that enters the random pool once its
+          // stat is high (>= 70) and is `force`d when the stat maxes (100), so
+          // it is a growing chance that becomes a certainty, not a blind lucky
+          // draw. Age-gated to 13 (force honours conditions), and consumed on
+          // either choice: accept -> apprentice, or take the coin and stay put.
+          id: "job_labour_apprenticeship_grit",
+          kind: "filler",
+          force: "spirit",
+          conditions: { ageMin: 13, vitals: { spirit: { min: 70 } } },
           prompt: "job_labour_apprenticeship.prompt",
           options: {
-            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
+            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
             right: { label: "job_labour_apprenticeship.right", outcomes: [{ result: "job_labour_apprenticeship.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // The favour route: a well-liked, cheerful lad the master warms to.
+          // Same shape on happiness.
+          id: "job_labour_apprenticeship_favour",
+          kind: "filler",
+          force: "happiness",
+          conditions: { ageMin: 13, vitals: { happiness: { min: 70 } } },
+          prompt: "job_labour_apprenticeship_favour.prompt",
+          options: {
+            left: { label: "job_labour_apprenticeship_favour.left", outcomes: [{ result: "job_labour_apprenticeship_favour.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
+            right: { label: "job_labour_apprenticeship_favour.right", outcomes: [{ result: "job_labour_apprenticeship_favour.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
           },
         },
         {

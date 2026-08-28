@@ -147,6 +147,11 @@ export const EN = {
   "child_hunger.left.r0": "Better the open road than the workhouse gate. Free, if you can survive it.",
   "child_hunger.right": "Into the workhouse",
   "child_hunger.right.r0": "You trade your liberty for a roof and a full belly tonight. The grind starts tomorrow.",
+  "child_charity_hospital.prompt": "The fever has you, and there's no money for a doctor — until a charity hospital opens its doors to a dying child.",
+  "child_charity_hospital.left": "Take their care",
+  "child_charity_hospital.left.r0": "Clean sheets, warm broth, a physician's hands. You mend — and a ledger somewhere now bears your name.",
+  "child_charity_hospital.right": "Too proud for charity",
+  "child_charity_hospital.right.r0": "Your family won't take alms. You pull through on stubbornness alone — thin, shaky, but beholden to no one.",
 
   "child_adult.prompt": "Against the odds, you reach eighteen. So many did not. Childhood is behind you, and adult life opens up ahead.",
   "child_adult.left": "Step forward with hope",
@@ -187,6 +192,11 @@ export const EN = {
   "ya_faith.left.r0": "You find real comfort in the old words, though they ask much of a Sunday morning.",
   "ya_faith.right": "Sleep in",
   "ya_faith.right.r0": "You'll make your own way, thanks. A lie-in and a late breakfast suit you better.",
+  "ya_charity_debt.prompt": "A collector calls: the charity hospital that saved you as a child would see its kindness repaid, now you're grown and earning.",
+  "ya_charity_debt.left": "Settle the debt",
+  "ya_charity_debt.left.r0": "It empties your purse, but the ledger is closed and your conscience with it. You owe no one now.",
+  "ya_charity_debt.right": "Send him away",
+  "ya_charity_debt.right.r0": "You keep your coins and your excuses. He tips his hat and promises to return — as he will, until you pay.",
 
   // ---- HOME: FAMILY -----------------------------------------------------
   "home_family_chores.prompt": "Your parents offer pocket money for helping around the house.",
@@ -551,6 +561,11 @@ export const EN = {
   "job_labour_apprenticeship.left.r0": "Bound as an apprentice — housed, fed, and learning a proper trade. The luckiest break of your young life.",
   "job_labour_apprenticeship.right": "Turn it down",
   "job_labour_apprenticeship.right.r0": "You can't afford years of low pay. You take the coins in hand instead.",
+  "job_labour_apprenticeship_favour.prompt": "The master has taken a liking to a cheerful, willing lad, and offers to take you on and teach you a trade.",
+  "job_labour_apprenticeship_favour.left": "Seize the chance",
+  "job_labour_apprenticeship_favour.left.r0": "Bound as an apprentice — housed, fed, and learning a proper trade, all because he warmed to you.",
+  "job_labour_apprenticeship_favour.right": "Turn it down",
+  "job_labour_apprenticeship_favour.right.r0": "You can't afford years of low pay. You take the coins in hand instead.",
 
   "job_apprentice_day.prompt": "The master sets you a hard task at the bench, watching to see what you're made of.",
   "job_apprentice_day.left": "Graft at it",
@@ -860,6 +875,11 @@ export const IT: Record<StringId, string> = {
   "child_hunger.left.r0": "Meglio la strada aperta che il cancello della casa di lavoro. Libero, se riesci a sopravvivere.",
   "child_hunger.right": "Entrare nella casa di lavoro",
   "child_hunger.right.r0": "Baratti la tua libertà per un tetto e la pancia piena stanotte. La fatica comincia domani.",
+  "child_charity_hospital.prompt": "La febbre ti ha preso, e non ci sono soldi per un medico — finché un ospedale di carità non apre le porte a un bambino morente.",
+  "child_charity_hospital.left": "Accettare le loro cure",
+  "child_charity_hospital.left.r0": "Lenzuola pulite, brodo caldo, le mani di un medico. Guarisci — e da qualche parte un registro ora porta il tuo nome.",
+  "child_charity_hospital.right": "Troppo orgoglioso per la carità",
+  "child_charity_hospital.right.r0": "La tua famiglia non accetta l'elemosina. Te la cavi per pura testardaggine — magro, malfermo, ma senza debiti con nessuno.",
 
   "child_adult.prompt": "Contro ogni previsione, arrivi ai diciotto. In tanti non ce l'hanno fatta. L'infanzia è alle spalle, e la vita adulta si apre davanti a te.",
   "child_adult.left": "Farsi avanti con speranza",
@@ -900,6 +920,11 @@ export const IT: Record<StringId, string> = {
   "ya_faith.left.r0": "Trovi vero conforto nelle vecchie parole, per quanto esigano molto una domenica mattina.",
   "ya_faith.right": "Dormire fino a tardi",
   "ya_faith.right.r0": "Farai a modo tuo, grazie. Una dormita e una colazione tarda ti si addicono di più.",
+  "ya_charity_debt.prompt": "Si presenta un esattore: l'ospedale di carità che ti salvò da bambino vorrebbe veder ripagata la sua bontà, ora che sei grande e guadagni.",
+  "ya_charity_debt.left": "Saldare il debito",
+  "ya_charity_debt.left.r0": "Ti svuota la borsa, ma il registro è chiuso e con esso la tua coscienza. Ora non devi niente a nessuno.",
+  "ya_charity_debt.right": "Mandarlo via",
+  "ya_charity_debt.right.r0": "Tieni i tuoi soldi e le tue scuse. Si tocca il cappello e promette di tornare — come farà, finché non paghi.",
 
   // ---- HOME: FAMILY -----------------------------------------------------
   "home_family_chores.prompt": "I tuoi genitori ti offrono la paghetta per dare una mano in casa.",
@@ -1264,6 +1289,11 @@ export const IT: Record<StringId, string> = {
   "job_labour_apprenticeship.left.r0": "Preso come apprendista — vitto, alloggio e un mestiere vero da imparare. La più grande fortuna della tua giovane vita.",
   "job_labour_apprenticeship.right": "Rifiutare",
   "job_labour_apprenticeship.right.r0": "Non puoi permetterti anni di paga misera. Prendi i soldi contanti invece.",
+  "job_labour_apprenticeship_favour.prompt": "Il mastro si è affezionato a un ragazzo allegro e volenteroso, e si offre di prenderti e insegnarti un mestiere.",
+  "job_labour_apprenticeship_favour.left": "Cogliere l'occasione",
+  "job_labour_apprenticeship_favour.left.r0": "Preso come apprendista — vitto, alloggio e un mestiere vero da imparare, tutto perché gli sei piaciuto.",
+  "job_labour_apprenticeship_favour.right": "Rifiutare",
+  "job_labour_apprenticeship_favour.right.r0": "Non puoi permetterti anni di paga misera. Prendi i soldi contanti invece.",
 
   "job_apprentice_day.prompt": "Il maestro ti assegna un compito difficile al banco, osservando di che pasta sei fatto.",
   "job_apprentice_day.left": "Sgobbare",

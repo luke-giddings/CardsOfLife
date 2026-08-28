@@ -283,13 +283,17 @@ function applyDrift(state: GameState, content: Content): void {
 
 const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
 
-// A one-shot safety-net card for a vital: `rescue === vital`, not yet used, and
-// in an active deck. (Rescue cards are never drawn normally — see drawCard.)
+// A one-shot safety-net card for a vital: `rescue === vital`, not yet used,
+// in an active deck, and whose `conditions` hold (so a rescue can be gated —
+// e.g. the charity hospital only catches young children). Mirrors how `force`
+// already checks eligibility. (Rescue cards are never drawn normally — see
+// drawCard.)
 function findRescue(state: GameState, content: Content, key: VitalKey): Card | null {
   for (const card of allCards(content)) {
     if (card.rescue !== key) continue;
     if (exhausted(card, state)) continue;
     if (!card.deck || !state.activeDecks.includes(card.deck)) continue;
+    if (!meets(card.conditions, state, content)) continue;
     return card;
   }
   return null;

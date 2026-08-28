@@ -91,6 +91,10 @@ export interface Traits {
   // won't hear your pleading. Resets to 0 on any job change (a fresh reputation
   // with a new employer).
   jobStrikes: number;
+  // Durable debt to the charity hospital that saved you as a small child (the
+  // health rescue). Set when you take their care; the ledger comes due in young
+  // adulthood, unlocking the repayment card until you clear it.
+  owesCharity: boolean;
 }
 
 export const DEFAULT_TRAITS: Traits = {
@@ -111,6 +115,7 @@ export const DEFAULT_TRAITS: Traits = {
   experience: 0,
   reachedFactory: false,
   jobStrikes: 0,
+  owesCharity: false,
 };
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.
