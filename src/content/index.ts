@@ -1023,7 +1023,11 @@ export const content = {
           id: "job_labour_apprenticeship_grit",
           kind: "filler",
           force: "spirit",
-          conditions: { ageMin: 13, vitals: { spirit: { min: 70 } } },
+          // Age-capped at 18: apprentices were bound as minors, and the copy
+          // ("the luckiest break of your YOUNG life") only rings true for the
+          // young. Past coming-of-age the unskilled adult escapes via the
+          // factory step + the wage->house recovery instead, not this.
+          conditions: { ageMin: 13, ageMax: 18, vitals: { spirit: { min: 70 } } },
           prompt: "job_labour_apprenticeship.prompt",
           options: {
             left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
@@ -1036,7 +1040,7 @@ export const content = {
           id: "job_labour_apprenticeship_favour",
           kind: "filler",
           force: "happiness",
-          conditions: { ageMin: 13, vitals: { happiness: { min: 70 } } },
+          conditions: { ageMin: 13, ageMax: 18, vitals: { happiness: { min: 70 } } },
           prompt: "job_labour_apprenticeship_favour.prompt",
           options: {
             left: { label: "job_labour_apprenticeship_favour.left", outcomes: [{ result: "job_labour_apprenticeship_favour.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
