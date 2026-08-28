@@ -356,15 +356,17 @@ export class Game {
     let chips = "";
     for (const key of VITAL_KEYS) {
       const mag = outcome.effects?.vitals?.[key];
-      if (!mag) continue;
-      const pos = mag.startsWith("+");
-      // If this stat would reach 0 (after this change plus the turn's drift),
-      // it's lethal — show the death symbol on it instead of the magnitude.
-      const lethal =
-        applyMagnitude(this.state.vitals[key], mag) + (drift[key] ?? 0) <= VITAL_MIN;
+      // Project the year: the card's change (if any) plus the turn's drift. A
+      // vital reaches 0 → death, and we show the skull EVEN IF this card doesn't
+      // touch that vital — otherwise a drain the card leaves untouched kills you
+      // with no warning. Vitals the card doesn't move and won't kill you: shown
+      // as nothing (no bare "—").
+      const base = mag ? applyMagnitude(this.state.vitals[key], mag) : this.state.vitals[key];
+      const lethal = base + (drift[key] ?? 0) <= VITAL_MIN;
+      if (!mag && !lethal) continue;
       const body = lethal
         ? `<span class="dbad ep-end" title="This would be fatal">☠</span>`
-        : `<span class="${pos ? "dgood" : "dbad"}">${mag.split("-").join("−")}</span>`;
+        : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${mag!.split("-").join("−")}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
     if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
