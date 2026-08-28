@@ -50,26 +50,35 @@ const agg: Record<string, { n: number; succ: number; choice: Map<string, [number
 for (const c of COHORTS) agg[c] = { n: 0, succ: 0, choice: new Map() };
 const deaths: Record<string, number> = {};
 const deathAges: number[] = [];
+// Which card the run ended on (the proximate cause). "(quiet year)" = drift
+// killed you on a yearless turn, not a card.
+const deathCards: Record<string, number> = {};
 
 for (let r = 0; r < RUNS; r++) {
   let s = initGame(gameContent);
   const picks: string[] = [];
   const streams = new Set<string>();
   let guard = 0;
+  let deathCard = "?";
   while (!s.over && s.age < SUCCESS_AGE && guard < 400) {
     guard++;
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s).state; continue; }
+    if (!d.card) { s = quietYear(s).state; if (s.over) deathCard = "(quiet year)"; continue; }
     const dirs = availDirs(d.card, s);
-    if (dirs.length === 0) { s = quietYear(s).state; continue; }
+    if (dirs.length === 0) { s = quietYear(s).state; if (s.over) deathCard = "(quiet year)"; continue; }
     const dir = greedy ? greedyDir(d.card, s, dirs) : dirs[Math.floor(Math.random() * dirs.length)];
     picks.push(`${d.card.id}|${dir}`);
     s = chooseDirection(s, d.card, dir).state;
+    if (s.over) deathCard = d.card.id; // the card whose resolution (or its post-turn drift) killed you
     const st = STREAM[s.statuses.job];
     if (st) streams.add(st);
   }
   const success = s.age >= SUCCESS_AGE;
-  if (!success) { deaths[s.endReason ?? "?"] = (deaths[s.endReason ?? "?"] ?? 0) + 1; deathAges.push(s.age); }
+  if (!success) {
+    deaths[s.endReason ?? "?"] = (deaths[s.endReason ?? "?"] ?? 0) + 1;
+    deathAges.push(s.age);
+    deathCards[deathCard] = (deathCards[deathCard] ?? 0) + 1;
+  }
   const cohort = streams.size === 0 ? "none" : streams.size === 1 ? [...streams][0] : "switched";
   for (const co of ["all", cohort]) {
     const a = agg[co];
@@ -91,11 +100,16 @@ function rowsFor(co: string) {
   return [...byCard.entries()].map(([c, d]) => ({ c, d }));
 }
 
+// Death cards ranked most-lethal first, as [cardId, count] pairs.
+const deathCardsRanked = Object.entries(deathCards).sort((a, b) => b[1] - a[1]);
+const totalDeaths = deathCardsRanked.reduce((n, [, c]) => n + c, 0);
+
 if (asJson) {
   const sorted = deathAges.sort((a, b) => a - b);
   const out = {
     runs: RUNS, greedy, deaths,
     medianDeath: sorted.length ? sorted[Math.floor(sorted.length / 2)] : SUCCESS_AGE,
+    deathCards: deathCardsRanked.map(([card, n]) => ({ card, n })),
     cohorts: COHORTS.map((c) => ({ name: c, n: agg[c].n, succ: pct(agg[c].succ, agg[c].n) })),
     rows: Object.fromEntries(COHORTS.map((c) => [c, rowsFor(c)])),
   };
@@ -105,5 +119,9 @@ if (asJson) {
   for (const c of COHORTS) {
     const a = agg[c];
     console.log(`  ${c.padEnd(10)} n=${String(a.n).padStart(6)}  reached 30: ${String(pct(a.succ, a.n)).padStart(2)}%  (${((100 * a.n) / RUNS).toFixed(0)}% of lives)`);
+  }
+  console.log(`\n=== deadliest cards (${totalDeaths} deaths before ${SUCCESS_AGE}) ===`);
+  for (const [card, n] of deathCardsRanked.slice(0, 15)) {
+    console.log(`  ${card.padEnd(28)} ${String(n).padStart(6)}  ${pct(n, totalDeaths)}% of deaths`);
   }
 }
