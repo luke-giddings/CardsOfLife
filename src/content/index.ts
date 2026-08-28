@@ -1198,18 +1198,19 @@ export const content = {
           copies: 99,
           conditions: { traits: { experience: { min: 4 } } },
           prompt: "job_apprentice_qualify.prompt",
-          // Leaving the master's roof (pass or fail) moves you out of the
-          // `apprentice` housing to `renting` — a place of your own — so the
-          // skilled ladder pays rent and gets home-life cards like everyone else.
+          // Leaving the master's roof (pass or fail) returns you to whatever
+          // housing you had BEFORE the apprenticeship (`restoreHousing`) — the
+          // job ladder never silently grants or strips a home. You climb the
+          // housing ladder separately, on its own cards.
           options: {
             left: {
               label: "job_apprentice_qualify.left",
               outcomes: [
-                { if: { vitals: { health: { min: 35 } } }, result: "job_apprentice_qualify.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "journeyman", education: "journeyman", housing: "renting" } } },
-                { result: "job_apprentice_qualify.left.r1", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed", housing: "renting" } } },
+                { if: { vitals: { health: { min: 35 } } }, result: "job_apprentice_qualify.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "journeyman", education: "journeyman" }, restoreHousing: true } },
+                { result: "job_apprentice_qualify.left.r1", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } },
               ],
             },
-            right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
+            right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
           },
         },
         {
@@ -1223,8 +1224,8 @@ export const content = {
           id: "job_apprentice_end",
           kind: "filler",
           options: {
-            left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
-            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
+            left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
+            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
             down: { label: "job_apprentice_end.down", outcomes: [{ result: "job_apprentice_end.down.r0", effects: { vitals: { finances: "-", happiness: "-" } } }] },
           },
           prompt: "job_apprentice_end.prompt",

@@ -215,6 +215,13 @@ function changeStatus(
   // Standing with your employer is per-job: a new employer means a fresh start,
   // so any job change (including into unemployment) wipes the strike count.
   if (kind === "job" && value !== previous) state.traits.jobStrikes = 0;
+  // Moving INTO the master's house remembers where you lived before, so leaving
+  // the apprenticeship (restoreHousing) returns you there rather than silently
+  // granting/stripping a rented place. (Only the first move in records it, so a
+  // no-op re-set of "apprentice" doesn't overwrite the origin.)
+  if (kind === "housing" && value === "apprentice" && previous !== "apprentice") {
+    state.housingBeforeApprentice = previous;
+  }
 }
 
 function applyEffect(state: GameState, effect: Effect, content: Content): void {
@@ -222,6 +229,10 @@ function applyEffect(state: GameState, effect: Effect, content: Content): void {
     for (const [k, v] of Object.entries(effect.setStatus)) {
       changeStatus(state, k as StatusKind, v, content);
     }
+  }
+  if (effect.restoreHousing) {
+    changeStatus(state, "housing", state.housingBeforeApprentice ?? "renting", content);
+    state.housingBeforeApprentice = undefined;
   }
   if (effect.addDecks) {
     for (const d of effect.addDecks) {

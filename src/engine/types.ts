@@ -153,6 +153,11 @@ export interface Effect {
   setTraits?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
   endGame?: string; // ends the run with this ending id (see ENDINGS)
+  // Return housing to whatever it was before you entered the master's house (see
+  // GameState.housingBeforeApprentice). Used by the apprenticeship exits so the
+  // job ladder never silently grants or strips housing — you go back where you
+  // came from (family/renting/…). Falls back to `renting` if nothing was saved.
+  restoreHousing?: boolean;
 }
 
 // --- Cards -------------------------------------------------------------------
@@ -257,6 +262,7 @@ export interface GameState {
   usedCards: Record<string, number>; // card id -> times played
   lastCardId?: string;                // to avoid drawing the same card twice in a row
   experienceJob?: string;             // the job the current `experience` was earned in (see changeStatus)
+  housingBeforeApprentice?: string;   // housing to return to on leaving apprenticeship (see changeStatus / restoreHousing)
   pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;

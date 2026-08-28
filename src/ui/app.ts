@@ -1027,6 +1027,7 @@ function fmtEffect(e?: Effect): string {
   if (e.incTraits) for (const [k, v] of Object.entries(e.incTraits)) parts.push(`${k}+=${v}`);
   if (e.addDecks) parts.push(`+deck ${e.addDecks.join(",")}`);
   if (e.removeDecks) parts.push(`−deck ${e.removeDecks.join(",")}`);
+  if (e.restoreHousing) parts.push("housing=restore");
   if (e.endGame) parts.push(`END:${e.endGame}`);
   return parts.join(", ") || "—";
 }
