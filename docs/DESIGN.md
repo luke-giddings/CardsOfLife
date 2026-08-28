@@ -669,3 +669,10 @@ fix is a design decision we haven't taken).
   accept a trade credential too, or letting `journeyman` imply literacy) may
   dissolve it, so we're holding off rather than special-casing now. Rare in play
   (only labourers/workhouse folk are offered apprenticeships).
+- **Positive drift isn't shown on the vital bars.** The top-bar drift preview
+  only surfaces *losses* (a negative per-turn drain, e.g. rent/keep eating your
+  health/finances). A *positive* passive drift — notably a child labourer's wage
+  income (`finances +12`, net +7 with the family keep) — accrues silently, so the
+  player can't see the slow build. Backlogged: show positive drift too (a small
+  up-arrow / "+" on the bar), so income and any future passive recovery read as
+  clearly as the drains do.
