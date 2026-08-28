@@ -1151,6 +1151,38 @@ export const content = {
             right: { label: "job_apprentice_day.right", outcomes: [{ result: "job_apprentice_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
           },
         },
+        // One-shot bench jobs: each is a GUARANTEED tick of experience toward the
+        // trial (both options +1), so reaching the qualifying threshold isn't
+        // hostage to the day-vs-sack coin flip. They also thin the early pool
+        // away from `_end`, then bow out once played -- the same pattern the
+        // labour deck uses (toil/errand/machine).
+        {
+          id: "job_apprentice_errand",
+          kind: "one_time",
+          prompt: "job_apprentice_errand.prompt",
+          options: {
+            left: { label: "job_apprentice_errand.left", outcomes: [{ result: "job_apprentice_errand.left.r0", effects: { vitals: { health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_apprentice_errand.right", outcomes: [{ result: "job_apprentice_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_apprentice_tools",
+          kind: "one_time",
+          prompt: "job_apprentice_tools.prompt",
+          options: {
+            left: { label: "job_apprentice_tools.left", outcomes: [{ result: "job_apprentice_tools.left.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_apprentice_tools.right", outcomes: [{ result: "job_apprentice_tools.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_apprentice_market",
+          kind: "one_time",
+          prompt: "job_apprentice_market.prompt",
+          options: {
+            left: { label: "job_apprentice_market.left", outcomes: [{ result: "job_apprentice_market.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
+          },
+        },
         {
           // TIME-LIMIT: the indenture is up (experience >= 4). A MILESTONE, so it
           // jumps the queue and forces a resolution — you can't apprentice
@@ -1181,16 +1213,19 @@ export const content = {
           },
         },
         {
-          // Early failure: the master's workshop closes before you qualify —
-          // out of the master's house (→ renting) and out of work.
+          // The master's workshop closes before you qualify. Not a dead end any
+          // more: `down` = seek another master to take over your indenture, so a
+          // closure needn't cost you the trade (like begging to keep a job). It
+          // keeps you an apprentice AND your experience, at a real cost (finances
+          // + happiness -- the upheaval and lost time). Otherwise leave: with
+          // PRIDE (spirit) and no coin, or press the ailing master for the
+          // indenture's worth (MONEY, but a bitter parting).
           id: "job_apprentice_end",
           kind: "filler",
           options: {
-            // A real trade-off, not a no-brainer: leave with PRIDE (spirit) and
-            // no coin, or press the ailing master for the indenture's worth —
-            // MONEY in hand, but a bitter parting (happiness).
             left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
             right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
+            down: { label: "job_apprentice_end.down", outcomes: [{ result: "job_apprentice_end.down.r0", effects: { vitals: { finances: "-", happiness: "-" } } }] },
           },
           prompt: "job_apprentice_end.prompt",
         },
