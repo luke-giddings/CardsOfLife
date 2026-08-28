@@ -656,6 +656,17 @@ Roughly in likely order. None of these are started.
   it a `home_homeless` deck (begging for coins, finding shelter, a soup kitchen)
   and exits (a benefactor, a doss-house job → renting/apprentice), mirroring
   what the workhouse now has.
+- **Eviction rescue — "turned out onto the streets" (adult finances net).**
+  *Maybe, if needed — decide from playtest.* The finances rescue (`child_hunger`
+  → workhouse) is childhood-only and `one_time`, and the adult net (§17b) is
+  *selling the house* — which does nothing for a **renter**. So a poor adult
+  renter who can't make rent (rent is −10, so an unemployed renter bleeds toward
+  0) currently just dies of bankruptcy with no net. Idea: a `rescue: "finances"`
+  card gated to adult renters (deck-/condition-gated, since only one finances
+  rescue is active at a time) that, instead of a game-over, **evicts you →
+  `homeless`** — alive but in the hardest state. Depends on the homeless deck
+  above having exits, and on whether playtest shows the bleed actually kills
+  people (raising the wages may be enough). Hold until we see the need.
 - **Renting deck** — first-pass `home_renting` deck is in (lodger, landlord,
   furnish, neighbour, quiet). Still wants: the step up to **buying** a place
   (toward the inheritance thread), and possibly a lodger as a persistent income
