@@ -183,21 +183,18 @@ export const content = {
           },
         },
         {
-          id: "baby_bookworm",
+          // The child's disposition: one guaranteed fork instead of two lucky
+          // draws. Lean physical (sporty) or bookish -- each sets its 0..3
+          // disposition counter straight to the cap (3, "fully" that trait) --
+          // or choose NEITHER trait for a big all-round vitals boost. Sporty
+          // helps survive labour (the loom), bookish helps the school path.
+          id: "baby_disposition",
           kind: "one_time",
-          prompt: "baby_bookworm.prompt",
+          prompt: "baby_disposition.prompt",
           options: {
-            left: { label: "baby_bookworm.left", outcomes: [{ result: "baby_bookworm.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { bookish: true } } }] },
-            right: { label: "baby_bookworm.right", outcomes: [{ result: "baby_bookworm.right.r0", effects: { vitals: { happiness: "++" } } }] },
-          },
-        },
-        {
-          id: "baby_sporty",
-          kind: "one_time",
-          prompt: "baby_sporty.prompt",
-          options: {
-            left: { label: "baby_sporty.left", outcomes: [{ result: "baby_sporty.left.r0", effects: { vitals: { health: "+" }, setTraits: { sporty: true } } }] },
-            right: { label: "baby_sporty.right", outcomes: [{ result: "baby_sporty.right.r0", effects: { vitals: { health: "++" } } }] },
+            left: { label: "baby_disposition.left", outcomes: [{ result: "baby_disposition.left.r0", effects: { vitals: { health: "+" }, setTraits: { sporty: 3 } } }] },
+            right: { label: "baby_disposition.right", outcomes: [{ result: "baby_disposition.right.r0", effects: { vitals: { spirit: "+" }, setTraits: { bookish: 3 } } }] },
+            down: { label: "baby_disposition.down", outcomes: [{ result: "baby_disposition.down.r0", effects: { vitals: { health: "++", happiness: "++", spirit: "+" } } }] },
           },
         },
         {
@@ -303,7 +300,10 @@ export const content = {
           kind: "one_time",
           prompt: "child_sports.prompt",
           options: {
-            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
+            // Going all-out also builds the sporty counter (+1) -- the first
+            // youth source toward re-earning what a sporty baby got for free.
+            // (Backlog: more +1 sources so youth can actually reach the cap.)
+            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" }, incTraits: { sporty: 1 } } }] },
             right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", spirit: "+", health: "-" } } }] },
           },
         },
@@ -342,7 +342,7 @@ export const content = {
             left: {
               label: "child_accident.left",
               outcomes: [
-                { if: { traits: { sporty: true } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
+                { if: { traits: { sporty: { min: 3 } } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
                 { if: { vitals: { health: { min: 40 } } }, result: "child_accident.left.r1", effects: { vitals: { health: "--" } } },
                 { result: "child_accident.left.r2", effects: { endGame: "health" } },
               ],
@@ -756,7 +756,7 @@ export const content = {
               // the prize.) A bookish child finds it a pleasure, not a grind.
               label: "edu_basicschool_exams.left",
               outcomes: [
-                { if: { traits: { bookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
+                { if: { traits: { bookish: { min: 3 } } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
                 { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
@@ -792,7 +792,7 @@ export const content = {
               // already half-read the syllabus for fun — an easy win.
               label: "edu_basicschool_prize.left",
               outcomes: [
-                { if: { traits: { bookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "basic" } } },
+                { if: { traits: { bookish: { min: 3 } } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "basic" } } },
                 { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
@@ -941,7 +941,7 @@ export const content = {
               // experience (except the outcome where it kills you).
               label: "job_labour_machine.left",
               outcomes: [
-                { if: { traits: { sporty: true } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { experience: 1 } } },
+                { if: { traits: { sporty: { min: 3 } } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { experience: 1 } } },
                 { if: { vitals: { health: { min: 40 } } }, result: "job_labour_machine.left.r1", effects: { vitals: { health: "--", finances: "+" }, incTraits: { experience: 1 } } },
                 { result: "job_labour_machine.left.r2", effects: { endGame: "health" } },
               ],

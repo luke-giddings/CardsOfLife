@@ -66,8 +66,12 @@ export interface Traits {
   vaccinated: boolean;
   // baby-deck "setups for the future"
   uniFund: boolean;
-  bookish: boolean;
-  sporty: boolean;
+  // Disposition counters (0..3). A baby who leans into it starts at the cap (3,
+  // = "fully" the trait); otherwise you build it up +1 at a time in youth. Cards
+  // that reward the trait gate on `{ min: 3 }`. (Backlog: more +1 sources so
+  // youth can actually reach 3, and more results that branch on the level.)
+  bookish: number;
+  sporty: number;
   sweetTooth: boolean;
   sociable: boolean;
   hasBrother: boolean;
@@ -102,8 +106,8 @@ export const DEFAULT_TRAITS: Traits = {
   knowsMartialArts: false,
   vaccinated: false,
   uniFund: false,
-  bookish: false,
-  sporty: false,
+  bookish: 0,
+  sporty: 0,
   sweetTooth: false,
   sociable: false,
   hasBrother: false,

@@ -100,11 +100,13 @@ Job/Housing are named states).
 
 Arbitrary persistent variables, set by effects and read by conditions **and
 results**:
-- **Booleans:** `knowsMartialArts`, `vaccinated`, `uniFund`, `bookish`,
-  `sporty`, `sweetTooth`, `sociable`, `hasBrother`, `hasSister`.
+- **Booleans:** `knowsMartialArts`, `vaccinated`, `uniFund`, `sweetTooth`,
+  `sociable`, `hasBrother`, `hasSister`.
 - **Enum:** `gender` (boy/girl), chosen on the birth card.
 - **Counters:** `relBrother`, `relSister` (relationship stats, can go negative =
-  rivalry), `numTimesChangedJob`, `numTimesPlayedLottery`.
+  rivalry), `numTimesChangedJob`, `numTimesPlayedLottery`; **`sporty`/`bookish`**
+  (0..3 disposition — a baby sets it to the cap, else built +1 at a time in
+  youth; reward cards gate on `{ min: 3 }`, see §18 backlog).
 
 **Relationships are just Traits.** Character decks can later branch on
 thresholds (e.g. high `relBrother` → a loyal-sibling arc). Baby-deck "setups"
@@ -594,6 +596,19 @@ Roughly in likely order. None of these are started.
   often a sacking actually lands. **To do:** replicate to the other job decks'
   loss cards if it feels good, and add more shirk→strike moments as those decks
   gain work cards.
+- **Disposition counters (`sporty`/`bookish`) — scaffolded, needs fleshing out.**
+  These changed from booleans to **0..3 counters**: the merged `baby_disposition`
+  card sets one straight to the cap (3), and cards that reward the trait gate on
+  `{ min: 3 }` (the loom `job_labour_machine`, `child_accident`, the two
+  `edu_basicschool_*` cards). The "build it up in youth if you didn't pick it as a
+  baby" path is only **partly** wired: `child_sports` "go all-out" gives `+1
+  sporty` (the first source), but it's `one_time`, so youth can currently reach at
+  most 1 — not the cap. **To do:** (a) add more `+1` youth sources for *both*
+  sporty and bookish (bookish has none yet) so the cap is reachable through effort;
+  (b) have more card *results* branch on the counter (e.g. `child_sports`'s own
+  results, other physical/scholarly moments), per the "use them in more cards"
+  note — right now the counter is mostly checked at the loom/school, not rewarded
+  broadly.
 - **House decks & an "owned" housing status** — renting/buying, home events;
   gives something to *own* (prerequisite for inheritance below).
 - **Homeless deck & exits** — `homeless` housing (reached by begging off the
