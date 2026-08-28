@@ -464,8 +464,8 @@ export const EN = {
   "job_apprentice_end.prompt": "Your master falls ill and shuts up the workshop — your indenture is cut short.",
   "job_apprentice_end.left": "Grateful for the skills",
   "job_apprentice_end.left.r0": "Not a full trade, but skills in your hands and pride in your heart.",
-  "job_apprentice_end.right": "Rue the wasted years",
-  "job_apprentice_end.right.r0": "All those years bent to the bench, and nothing to show but calluses.",
+  "job_apprentice_end.right": "Claim what you're owed",
+  "job_apprentice_end.right.r0": "You press the ailing master for the indenture's worth. Coin in your pocket — but you leave on bitter terms.",
 
   "job_criminal_nicked.prompt": "A constable's hand closes on your collar mid-lift. You're nicked.",
   "job_criminal_nicked.left": "Bolt and run",
@@ -1187,8 +1187,8 @@ export const IT: Record<StringId, string> = {
   "job_apprentice_end.prompt": "Il tuo maestro si ammala e chiude la bottega — il tuo contratto si interrompe prima del tempo.",
   "job_apprentice_end.left": "Grato per ciò che hai imparato",
   "job_apprentice_end.left.r0": "Non un mestiere completo, ma abilità nelle mani e orgoglio nel cuore.",
-  "job_apprentice_end.right": "Rimpiangere gli anni sprecati",
-  "job_apprentice_end.right.r0": "Tutti quegli anni chino sul banco, e niente da mostrare se non i calli.",
+  "job_apprentice_end.right": "Reclamare il dovuto",
+  "job_apprentice_end.right.r0": "Insisti col mastro malato per il valore del contratto. Soldi in tasca — ma te ne vai in cattivi rapporti.",
 
   "job_criminal_nicked.prompt": "La mano di un poliziotto ti afferra il colletto a metà colpo. Sei preso.",
   "job_criminal_nicked.left": "Scappare di corsa",

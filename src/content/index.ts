@@ -1184,8 +1184,11 @@ export const content = {
           id: "job_apprentice_end",
           kind: "filler",
           options: {
+            // A real trade-off, not a no-brainer: leave with PRIDE (spirit) and
+            // no coin, or press the ailing master for the indenture's worth —
+            // MONEY in hand, but a bitter parting (happiness).
             left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
-            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { happiness: "-", spirit: "-" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
+            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed", housing: "renting" } } }] },
           },
           prompt: "job_apprentice_end.prompt",
         },
