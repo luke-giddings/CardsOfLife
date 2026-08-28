@@ -62,23 +62,26 @@ export const content = {
         // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
         // crosses you onto the skilled ladder.
         child_labourer: { label: "status.job.child_labourer", drift: { finances: 10, health: -5 }, addDecks: ["job_labour"] },
-        factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
+        factory: { label: "status.job.factory", drift: { finances: 13, health: -5 }, addDecks: ["job_factory"] },
         gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, addDecks: ["job_gangmaster"] },
 
         // --- SKILLED (credential: journeyman → master; safe; high ceiling) -
         // Apprentice is a low-stipend, TIME-LIMITED indenture entered by a
         // lucky break; completing it grants the `journeyman` education
         // credential and the journeyman job. Failing it → unemployed.
+        // Apprentice keeps a low stipend (+5) but is HOUSED FREE (apprentice
+        // housing, no rent), so it still nets +5 — the dues-paying phase whose
+        // real reward is the journeyman/master pay to come.
         apprentice: { label: "status.job.apprentice", drift: { finances: 5 }, addDecks: ["job_apprentice"] },
-        journeyman: { label: "status.job.journeyman", drift: { finances: 15 }, addDecks: ["job_journeyman"] },
-        master: { label: "status.job.master", drift: { finances: 25 }, addDecks: ["job_master"] },
+        journeyman: { label: "status.job.journeyman", drift: { finances: 18 }, addDecks: ["job_journeyman"] },
+        master: { label: "status.job.master", drift: { finances: 28 }, addDecks: ["job_master"] },
 
         // --- EDUCATED (credential: basic/grammar/university; safe; top pay) -
         // Shophand → clerk → solicitor. Entry needs basic schooling; the higher
         // rungs want grammar/university (future schooling content), so for now
         // the path tops out at clerk in normal play.
-        shophand: { label: "status.job.shophand", drift: { finances: 5 }, addDecks: ["job_shop"] },
-        clerk: { label: "status.job.clerk", drift: { finances: 10, happiness: -5 }, addDecks: ["job_clerk"] },
+        shophand: { label: "status.job.shophand", drift: { finances: 12 }, addDecks: ["job_shop"] },
+        clerk: { label: "status.job.clerk", drift: { finances: 16, happiness: -5 }, addDecks: ["job_clerk"] },
         solicitor: { label: "status.job.solicitor", drift: { finances: 20, happiness: -5, spirit: -5 }, addDecks: ["job_solicitor"] },
 
         // --- CRIMINAL (no credential; earn-now via big scores; arrest risk) -
