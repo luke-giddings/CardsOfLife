@@ -103,9 +103,12 @@ export const content = {
         // A place of your own (from the workhouse buyout, or moving out of the
         // family home): rent to pay every year, but your own space and better
         // conditions restore some health — the childhood preview of the adult
-        // "better house → health" ladder. Owns the home_renting deck (flat life,
-        // the landlord, a lodger for income, saving toward a place of your own).
-        renting: { label: "status.housing.renting", drift: { finances: -5, health: 5 }, addDecks: ["home_renting"] },
+        // "better house → health" ladder. Rent (−10) is set to swallow the base
+        // child-labour wage (+10), so a labourer renting nets ~0 money: you get
+        // the health recovery, not continued free savings — you only get ahead
+        // again on a better wage (promotion/apprenticeship) or the renting deck's
+        // income cards (a lodger, etc.). Owns the home_renting deck.
+        renting: { label: "status.housing.renting", drift: { finances: -10, health: 5 }, addDecks: ["home_renting"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. (Its own deck & exits are Backlog.)
         homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },
