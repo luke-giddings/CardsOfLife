@@ -61,7 +61,7 @@ export const content = {
         // Dangerous child labour → factory hand → gang-master. Decent money
         // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
         // crosses you onto the skilled ladder.
-        child_labourer: { label: "status.job.child_labourer", drift: { finances: 12, health: -5 }, addDecks: ["job_labour"] },
+        child_labourer: { label: "status.job.child_labourer", drift: { finances: 10, health: -5 }, addDecks: ["job_labour"] },
         factory: { label: "status.job.factory", drift: { finances: 10, health: -5 }, addDecks: ["job_factory"] },
         gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, addDecks: ["job_gangmaster"] },
 
