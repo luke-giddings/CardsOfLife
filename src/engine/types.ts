@@ -142,6 +142,11 @@ export interface Condition {
   vitals?: Partial<Record<VitalKey, { min?: number; max?: number }>>;
   status?: Partial<Record<StatusKind, StatusMatch>>;
   traits?: TraitConditions;
+  // OR-gate: passes if ANY listed sub-condition holds (each is a full Condition).
+  // The other clauses on this object are still AND-ed with the `any` result — so
+  // `{ ageMin: 18, any: [A, B] }` means "18+ AND (A or B)". Use for "uniFund OR
+  // savings"-style gates.
+  any?: Condition[];
 }
 
 // --- Effects -----------------------------------------------------------------

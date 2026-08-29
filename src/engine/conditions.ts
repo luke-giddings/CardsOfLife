@@ -67,5 +67,8 @@ export function meets(
     }
   }
 
+  // OR-gate: at least one sub-condition must hold (AND-ed with the clauses above).
+  if (cond.any && !cond.any.some((c) => meets(c, state, content))) return false;
+
   return true;
 }

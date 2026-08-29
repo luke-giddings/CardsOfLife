@@ -48,6 +48,13 @@ export const content = {
         // family costs money; the labourer's wage offsets it, the pupil's
         // doesn't.) Owns the school-events deck; education records the level.
         studying: { label: "status.job.studying", drift: { spirit: -5 }, addDecks: ["edu_basicschool"] },
+        // Fee-paying academia above the free board school: the grind on the
+        // spirit continues AND tuition bites the purse (−5/yr) — the "invest
+        // early, poor now" cost of the educated path — with no wage. Each owns
+        // its events deck. (uniFund/savings gate entry to university; see the
+        // grammar leaver.) Income cards inside the decks let you offset the fees.
+        grammar_school: { label: "status.job.grammar_school", drift: { spirit: -5, finances: -5 }, addDecks: ["edu_grammar"] },
+        university: { label: "status.job.university", drift: { spirit: -5, finances: -5 }, addDecks: ["edu_university"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
         unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, addDecks: ["job_unemployed"], keepExperience: true },
@@ -818,17 +825,149 @@ export const content = {
         },
         {
           // End of basic school. BOTH choices earn the credential (education ->
-          // school); only reaching this counts, so dropping out earlier (for
-          // work / the workhouse) leaves you "Illiterate". Then either continue
-          // studying, or leave to look for work (job -> unemployed).
+          // basic); only reaching this counts, so dropping out earlier (for
+          // work / the workhouse) leaves you "Illiterate". Then either go UP to
+          // grammar school (the fee-paying academic ladder), or leave to look
+          // for work (job -> unemployed → shophand etc.).
           id: "edu_basicschool_leaver",
           kind: "milestone",
           priority: 60,
           conditions: { ageMin: 14 },
           prompt: "edu_basicschool_leaver.prompt",
           options: {
-            left: { label: "edu_basicschool_leaver.left", outcomes: [{ result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic" } } }] },
+            left: { label: "edu_basicschool_leaver.left", outcomes: [{ result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "grammar_school" } } }] },
             right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Grammar school: active while job = grammar_school (the fee-paying
+    //     academic ladder above the free board school; ~14–17). Tuition drift
+    //     bites and there's no wage; the tutoring card offsets it. The leaver at
+    //     17 earns the `grammar` credential, then it's up to university or out
+    //     to work. ------------------------------------------------------------
+    {
+      id: "edu_grammar",
+      cards: [
+        {
+          id: "edu_grammar_classics",
+          kind: "one_time",
+          prompt: "edu_grammar_classics.prompt",
+          options: {
+            left: { label: "edu_grammar_classics.left", outcomes: [{ result: "edu_grammar_classics.left.r0", effects: { vitals: { spirit: "++", health: "-" } } }] },
+            right: { label: "edu_grammar_classics.right", outcomes: [{ result: "edu_grammar_classics.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "edu_grammar_master",
+          kind: "one_time",
+          prompt: "edu_grammar_master.prompt",
+          options: {
+            left: { label: "edu_grammar_master.left", outcomes: [{ result: "edu_grammar_master.left.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+            right: { label: "edu_grammar_master.right", outcomes: [{ result: "edu_grammar_master.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "edu_grammar_debate",
+          kind: "one_time",
+          prompt: "edu_grammar_debate.prompt",
+          options: {
+            left: { label: "edu_grammar_debate.left", outcomes: [{ result: "edu_grammar_debate.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } }] },
+            right: { label: "edu_grammar_debate.right", outcomes: [{ result: "edu_grammar_debate.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // Tutoring a younger boy for pennies — the income card that offsets the
+          // grammar-school fees (filler, so it recurs through the years).
+          id: "edu_grammar_tutoring",
+          kind: "filler",
+          prompt: "edu_grammar_tutoring.prompt",
+          options: {
+            left: { label: "edu_grammar_tutoring.left", outcomes: [{ result: "edu_grammar_tutoring.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
+            right: { label: "edu_grammar_tutoring.right", outcomes: [{ result: "edu_grammar_tutoring.right.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          // End of grammar school (age >= 17): earns the `grammar` credential.
+          // Then UP to university — the family fund OR your own savings pay the
+          // way (uniFund OR finances >= 50, so the option hides if you can't
+          // afford it) — or leave for work.
+          id: "edu_grammar_leaver",
+          kind: "milestone",
+          priority: 60,
+          conditions: { ageMin: 17 },
+          prompt: "edu_grammar_leaver.prompt",
+          options: {
+            left: {
+              label: "edu_grammar_leaver.left",
+              if: { any: [{ traits: { uniFund: true } }, { vitals: { finances: { min: 50 } } }] },
+              outcomes: [{ result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" } } }],
+            },
+            right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- University: active while job = university (~17–21). Higher fees, still
+    //     no wage; the stipend card offsets. Graduation at 21 earns the
+    //     `university` credential — the top of the academic ladder. (The
+    //     graduate-only profession is Backlog; for now a grad enters the
+    //     workforce, where the degree already clears the solicitor gate.) ------
+    {
+      id: "edu_university",
+      cards: [
+        {
+          id: "edu_university_lectures",
+          kind: "one_time",
+          prompt: "edu_university_lectures.prompt",
+          options: {
+            left: { label: "edu_university_lectures.left", outcomes: [{ result: "edu_university_lectures.left.r0", effects: { vitals: { spirit: "++", health: "-" } } }] },
+            right: { label: "edu_university_lectures.right", outcomes: [{ result: "edu_university_lectures.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "edu_university_mentor",
+          kind: "one_time",
+          prompt: "edu_university_mentor.prompt",
+          options: {
+            left: { label: "edu_university_mentor.left", outcomes: [{ result: "edu_university_mentor.left.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+            right: { label: "edu_university_mentor.right", outcomes: [{ result: "edu_university_mentor.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "edu_university_life",
+          kind: "one_time",
+          prompt: "edu_university_life.prompt",
+          options: {
+            left: { label: "edu_university_life.left", outcomes: [{ result: "edu_university_life.left.r0", effects: { vitals: { happiness: "++", finances: "-", spirit: "-" } } }] },
+            right: { label: "edu_university_life.right", outcomes: [{ result: "edu_university_life.right.r0", effects: { vitals: { spirit: "+", happiness: "-", health: "-" } } }] },
+          },
+        },
+        {
+          // A junior tutoring / clerking post — the income card that offsets the
+          // university fees (filler).
+          id: "edu_university_stipend",
+          kind: "filler",
+          prompt: "edu_university_stipend.prompt",
+          options: {
+            left: { label: "edu_university_stipend.left", outcomes: [{ result: "edu_university_stipend.left.r0", effects: { vitals: { finances: "++", health: "-" } } }] },
+            right: { label: "edu_university_stipend.right", outcomes: [{ result: "edu_university_stipend.right.r0", effects: { vitals: { spirit: "+", finances: "-" } } }] },
+          },
+        },
+        {
+          // Graduation (age >= 21): earns the `university` credential — the top of
+          // the academic ladder — then out to seek a profession (job -> unemployed).
+          // Both options graduate; they differ only in outlook.
+          id: "edu_university_grad",
+          kind: "milestone",
+          priority: 60,
+          conditions: { ageMin: 21 },
+          prompt: "edu_university_grad.prompt",
+          options: {
+            left: { label: "edu_university_grad.left", outcomes: [{ result: "edu_university_grad.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "university", job: "unemployed" } } }] },
+            right: { label: "edu_university_grad.right", outcomes: [{ result: "edu_university_grad.right.r0", effects: { vitals: { finances: "+", happiness: "+" }, setStatus: { education: "university", job: "unemployed" } } }] },
           },
         },
       ],
