@@ -21,6 +21,10 @@ const SUCCESS_AGE = 30;
 const RUNS = Number(process.argv[2]) || 20000;
 const asJson = process.argv.includes("--json");
 const greedy = process.argv.includes("--greedy");
+// --work: force the age-5 school-or-work fork onto WORK (baby_schooling right →
+// child_labourer), so the whole population is the non-education path. Lets us
+// judge the work side without the (still-stubbed) school/education branch.
+const workOnly = process.argv.includes("--work");
 
 const STREAM: Record<string, string> = {
   shophand: "educated", clerk: "educated", bookkeeper: "educated", solicitor: "educated",
@@ -66,7 +70,8 @@ for (let r = 0; r < RUNS; r++) {
     if (!d.card) { s = quietYear(s).state; if (s.over) deathCard = "(quiet year)"; continue; }
     const dirs = availDirs(d.card, s);
     if (dirs.length === 0) { s = quietYear(s).state; if (s.over) deathCard = "(quiet year)"; continue; }
-    const dir = greedy ? greedyDir(d.card, s, dirs) : dirs[Math.floor(Math.random() * dirs.length)];
+    let dir = greedy ? greedyDir(d.card, s, dirs) : dirs[Math.floor(Math.random() * dirs.length)];
+    if (workOnly && d.card.id === "baby_schooling" && dirs.includes("right")) dir = "right"; // right → child_labourer
     picks.push(`${d.card.id}|${dir}`);
     s = chooseDirection(s, d.card, dir).state;
     if (s.over) deathCard = d.card.id; // the card whose resolution (or its post-turn drift) killed you

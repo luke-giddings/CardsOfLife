@@ -1098,7 +1098,7 @@ export const content = {
           prompt: "job_shop_sacked.prompt",
           options: {
             left: { label: "job_shop_sacked.left", outcomes: [{ result: "job_shop_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_shop_sacked.right", outcomes: [{ result: "job_shop_sacked.right.r0", effects: { vitals: { spirit: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_shop_sacked.right", outcomes: [{ result: "job_shop_sacked.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
@@ -1327,7 +1327,7 @@ export const content = {
           prompt: "job_clerk_sacked.prompt",
           options: {
             left: { label: "job_clerk_sacked.left", outcomes: [{ result: "job_clerk_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_clerk_sacked.right", outcomes: [{ result: "job_clerk_sacked.right.r0", effects: { vitals: { spirit: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_clerk_sacked.right", outcomes: [{ result: "job_clerk_sacked.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
@@ -1350,7 +1350,7 @@ export const content = {
           prompt: "job_solicitor_ruin.prompt",
           options: {
             left: { label: "job_solicitor_ruin.left", outcomes: [{ result: "job_solicitor_ruin.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_solicitor_ruin.right", outcomes: [{ result: "job_solicitor_ruin.right.r0", effects: { vitals: { happiness: "--", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_solicitor_ruin.right", outcomes: [{ result: "job_solicitor_ruin.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
@@ -1375,7 +1375,7 @@ export const content = {
           prompt: "job_gangmaster_sacked.prompt",
           options: {
             left: { label: "job_gangmaster_sacked.left", outcomes: [{ result: "job_gangmaster_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_gangmaster_sacked.right", outcomes: [{ result: "job_gangmaster_sacked.right.r0", effects: { vitals: { health: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_gangmaster_sacked.right", outcomes: [{ result: "job_gangmaster_sacked.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
@@ -1412,7 +1412,7 @@ export const content = {
           prompt: "job_journeyman_sacked.prompt",
           options: {
             left: { label: "job_journeyman_sacked.left", outcomes: [{ result: "job_journeyman_sacked.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_journeyman_sacked.right", outcomes: [{ result: "job_journeyman_sacked.right.r0", effects: { vitals: { health: "-", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_journeyman_sacked.right", outcomes: [{ result: "job_journeyman_sacked.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
@@ -1435,7 +1435,7 @@ export const content = {
           prompt: "job_master_ruin.prompt",
           options: {
             left: { label: "job_master_ruin.left", outcomes: [{ result: "job_master_ruin.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_master_ruin.right", outcomes: [{ result: "job_master_ruin.right.r0", effects: { vitals: { happiness: "--", health: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_master_ruin.right", outcomes: [{ result: "job_master_ruin.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],
