@@ -119,6 +119,16 @@ export const content = {
         // again on a better wage (promotion/apprenticeship) or the renting deck's
         // income cards (a lodger, etc.). Owns the home_renting deck.
         renting: { label: "status.housing.renting", drift: { finances: -10, health: 5 }, addDecks: ["home_renting"] },
+        // Owned homes: the adult housing ladder above renting. Each is BOUGHT
+        // (offered when finances >= 75, cost "----" = keep ~1/3), then costs only
+        // modest upkeep — well under the −10 rent, since you paid the lump up
+        // front — and gives a permanent, rising vital bonus (health, then spirit,
+        // then happiness). Each owns a deck that hosts the offer of the NEXT tier
+        // up, so buying is a "rebuild to 75, spend down, rebuild" cycle. (The
+        // "sell up" adult finances net is Backlog — §17b / §18.)
+        owned_small: { label: "status.housing.owned_small", drift: { finances: -4, health: 7, spirit: 3 }, addDecks: ["home_owned_small"] },
+        owned_large: { label: "status.housing.owned_large", drift: { finances: -6, health: 9, spirit: 5, happiness: 2 }, addDecks: ["home_owned_large"] },
+        owned_estate: { label: "status.housing.owned_estate", drift: { finances: -8, health: 11, spirit: 7, happiness: 4 }, addDecks: ["home_owned_estate"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. (Its own deck & exits are Backlog.)
         homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },
@@ -654,6 +664,71 @@ export const content = {
           options: {
             left: { label: "home_renting_quiet.left", outcomes: [{ result: "home_renting_quiet.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" } } }] },
             right: { label: "home_renting_quiet.right", outcomes: [{ result: "home_renting_quiet.right.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },
+          },
+        },
+        {
+          // The rung up from renting: buy a place of your own. OFFERED (not
+          // forced) once you've saved (finances >= 75); the "---" cost keeps ~a
+          // third of your money — a huge felt hit — but you own it: modest upkeep
+          // and a real health/spirit bonus (the owned_small status). A genuine
+          // choice — commit the savings, or hold your money and keep renting.
+          id: "home_buy_small",
+          kind: "filler",
+          conditions: { vitals: { finances: { min: 75 } } },
+          prompt: "home_buy_small.prompt",
+          options: {
+            left: { label: "home_buy_small.left", outcomes: [{ result: "home_buy_small.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_small" } } }] },
+            right: { label: "home_buy_small.right", outcomes: [{ result: "home_buy_small.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Owned homes: the adult housing ladder. Each owned-tier deck hosts the
+    //     offer of the NEXT tier up (finances >= 75, "---" cost) — buying is a
+    //     "rebuild to 75, spend down, rebuild" cycle. The estate is the top. ---
+    {
+      id: "home_owned_small",
+      cards: [
+        {
+          id: "home_buy_large",
+          kind: "filler",
+          conditions: { vitals: { finances: { min: 75 } } },
+          prompt: "home_buy_large.prompt",
+          options: {
+            left: { label: "home_buy_large.left", outcomes: [{ result: "home_buy_large.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_large" } } }] },
+            right: { label: "home_buy_large.right", outcomes: [{ result: "home_buy_large.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "home_owned_large",
+      cards: [
+        {
+          id: "home_buy_estate",
+          kind: "filler",
+          conditions: { vitals: { finances: { min: 75 } } },
+          prompt: "home_buy_estate.prompt",
+          options: {
+            left: { label: "home_buy_estate.left", outcomes: [{ result: "home_buy_estate.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_estate" } } }] },
+            right: { label: "home_buy_estate.right", outcomes: [{ result: "home_buy_estate.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      // Top of the housing ladder — no further purchase, just the comfortable
+      // life of the landed. (More owned-home flavour events are Backlog.)
+      id: "home_owned_estate",
+      cards: [
+        {
+          id: "home_owned_estate_life",
+          kind: "filler",
+          prompt: "home_owned_estate_life.prompt",
+          options: {
+            left: { label: "home_owned_estate_life.left", outcomes: [{ result: "home_owned_estate_life.left.r0", effects: { vitals: { happiness: "++", finances: "-", spirit: "-" } } }] },
+            right: { label: "home_owned_estate_life.right", outcomes: [{ result: "home_owned_estate_life.right.r0", effects: { vitals: { spirit: "+", finances: "+", happiness: "-" } } }] },
           },
         },
       ],

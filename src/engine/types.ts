@@ -29,11 +29,13 @@ export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "---">, number> = {
   "-": -10,
   "--": -25,
 };
-// Apply a magnitude to a value (unclamped). Most are flat steps; "---" is a
-// proportional "lose about half" — a big cost that can never reach 0 from a
-// positive value, so a card gated behind a floor condition can't game-over.
+// Apply a magnitude to a value (unclamped). Most are flat steps; "---" is the
+// PROPORTIONAL "big purchase" cost — it keeps ~a third (loses two thirds), used
+// for buying housing (moving out, and the house tiers). Floored at 1 so it can
+// never reach 0 from a positive value — a card gated behind a floor condition
+// can't game-over.
 export function applyMagnitude(value: number, mag: Magnitude): number {
-  if (mag === "---") return Math.round(value / 2);
+  if (mag === "---") return Math.max(1, Math.round(value / 3));
   return value + MAGNITUDE_POINTS[mag];
 }
 

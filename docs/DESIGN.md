@@ -66,7 +66,7 @@ so every bar move is a clearly-perceptible size (no muddy +10-vs-+15):
 | `+` | +10 |
 | `-` | −10 |
 | `--` | −25 |
-| `---` | **−50%** (proportional — halves the vital; can't reach 0 from a positive value, so a floor-gated card can't game-over) |
+| `---` | **keep ~⅓ (lose two thirds)** — the proportional "big purchase" cost (moving out, buying a house). Self-scaling and floored at 1, so it can't reach 0 from a positive value (a floor-gated card can't game-over). |
 
 Point values live in one place (`MAGNITUDE_POINTS`, `types.ts`) — balancing is a
 single table, and more levels (e.g. `+++`) can be added later. Relationship
@@ -81,7 +81,7 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 | Status | States (so far) | Notes |
 |---|---|---|
 | **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and educated ladder (shophand +12, clerk +16, solicitor +20) pay clearly more, so a promotion is a real raise. |
-| **Housing** | family · workhouse · renting · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): **finances −10** rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). Rent is set to **swallow the base child-labour wage** (+10), so a labourer renting nets ~0 money — you buy health recovery, not continued free savings; getting ahead again needs a better wage or the renting deck's income cards. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
+| **Housing** | family · workhouse · renting · owned_small/large/estate · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): **finances −10** rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). Rent is set to **swallow the base child-labour wage** (+10), so a labourer renting nets ~0 money — you buy health recovery, not continued free savings; getting ahead again needs a better wage or the renting deck's income cards. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | illiterate · basic · grammar · university (+ trade: journeyman/master) | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
 | **Lifestyle** | default | Reserved. |
 
@@ -506,10 +506,19 @@ yet?" moment, and a bigger job is how you clear it. After purchase, only small
 
 | House | Gate | Cost | Upkeep/yr | Gives |
 |---|---|---|---|---|
-| Renting *(BUILT, childhood)* | move out: Finances ≥ 50, age ≥ 14 | — | −5 (rent) | ♥ +5 |
-| Small house | Finances ≥ 55 | `---` | −3 | ♥ +7, ✦ +3 |
-| Large house | Finances ≥ 70 | `---` | −5 | ♥ +9, ✦ +5, ☺ +2 |
-| Estate | Finances ≥ 85 | `---` | −8 | ♥ +11, ✦ +7, ☺ +4 |
+| Renting *(BUILT)* | move out: Finances ≥ 50, age ≥ 14 | `---` | −10 (rent) | ♥ +5 |
+| Small house *(BUILT)* | Finances ≥ 75 | `---` | −4 | ♥ +7, ✦ +3 |
+| Large house *(BUILT)* | Finances ≥ 75 | `---` | −6 | ♥ +9, ✦ +5, ☺ +2 |
+| Estate *(BUILT)* | Finances ≥ 75 | `---` | −8 | ♥ +11, ✦ +7, ☺ +4 |
+
+Houses are **offered, not forced** (a filler in the current tier's home deck),
+so you buy when you choose. The gate is a flat **≥ 75 for every tier** and the
+`---` cost keeps ~a third — so each purchase is *rebuild your savings to 75, buy
+the next tier up, spend down to ~25, rebuild*. You can only buy the next tier up
+(the offer lives in the tier-below's deck), so it's a strict ladder:
+renting → small → large → estate. **Balance to verify by sim:** the health
+bonuses (+7/+9/+11) with cheap upkeep make owning very safe — watch that it
+doesn't over-flatten late-game mortality once the lifestyle drain lands.
 
 Renting is the only **built** rung (the childhood `renting` housing status: −5 rent,
 **♥ +5** — a place of your own, better conditions, more rest). The purchasable
