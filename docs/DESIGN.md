@@ -591,6 +591,12 @@ estate, having lived comfortably, aged 71."* No arithmetic.
 
 Roughly in likely order. None of these are started.
 
+> **Current focus — finish the WORK-side content** (before more education work).
+> The four big missing pieces: **(1)** homeless deck & exits, **(2)** house decks
+> + purchase triggers + owned-housing cost statuses, **(3)** the lifestyle status
+> unlocked at adulthood, **(4)** finish the work-path job decks (the day+loss
+> stubs). Each is a bullet below, tagged **[work-side focus]**.
+
 - **Academic careers + education balance** — the grammar/university *school
   flows* are built (decks, tuition, the uniFund-or-savings gate, earning the
   credentials). Still to do: (a) the **university-only top profession** the
@@ -665,14 +671,29 @@ Roughly in likely order. None of these are started.
   results, other physical/scholarly moments), per the "use them in more cards"
   note — right now the counter is mostly checked at the loom/school, not rewarded
   broadly.
-- **House decks & an "owned" housing status** — renting/buying, home events;
-  gives something to *own* (prerequisite for inheritance below).
-- **Homeless deck & exits** — `homeless` housing (reached by begging off the
-  hunger card, or running away from the workhouse) now has its own health/
-  happiness drift but **no deck and no way out** — a pure hardship spiral. Give
-  it a `home_homeless` deck (begging for coins, finding shelter, a soup kitchen)
-  and exits (a benefactor, a doss-house job → renting/apprentice), mirroring
-  what the workhouse now has.
+- **House decks & an "owned" housing status** — **[work-side focus]** renting →
+  **buying**: a purchase **trigger** (a `force`-style offer once you can afford
+  it) with an up-front `---` **cost**, new **owned** housing **statuses** (each
+  with its own upkeep drift + a health tier — "better house → more health"), and
+  home events. Gives something to *own* (prerequisite for inheritance below). Per
+  §17b: houses as `---` purchases behind a rising Finances gate, then cheap upkeep.
+- **Lifestyle status (unlocked at adulthood)** — **[work-side focus]** the
+  `lifestyle` status exists but has only a `default` state and does nothing.
+  Unlock it at coming-of-age: spendable tiers (frugal → comfortable → lavish, per
+  §17b) that trade money for happiness, each with its own cost/vitals drift — the
+  hedonic-treadmill money **sink** that finally gives income somewhere to go.
+- **Finish the work-path job decks** — **[work-side focus]** several jobs are
+  still just *day + loss* stubs — factory, gang-master, journeyman, master, the
+  criminal tiers (burglar/fence), and the educated tiers (clerk/solicitor). Give
+  each real work events, promotion moments, and path-appropriate hazards so a
+  career actually plays out rather than just ticking experience toward a promotion
+  or a sacking. (Supersedes the terminal-tier note in the deck-density item.)
+- **Homeless deck & exits** — **[work-side focus]** `homeless` housing (reached by
+  begging off the hunger card, or running away from the workhouse) now has its own
+  health/happiness drift but **no deck and no way out** — a pure hardship spiral.
+  Give it a `home_homeless` deck (begging for coins, finding shelter, a soup
+  kitchen) and exits (a benefactor, a doss-house job → renting/apprentice),
+  mirroring what the workhouse now has.
 - **Eviction rescue — "turned out onto the streets" (adult finances net).**
   *Maybe, if needed — decide from playtest.* The finances rescue (`child_hunger`
   → workhouse) is childhood-only and `one_time`, and the adult net (§17b) is
@@ -697,15 +718,11 @@ Roughly in likely order. None of these are started.
   **"continue as your child"** thread.
 - **Relationship character decks** — unlock a sibling/friend/partner's storyline
   when a `rel*` trait crosses a threshold; different runs surface different
-  stories. **Next up: expand the brother/sister decks.**
-- **Conditional card options** — **BUILT** (`CardOption.if?: Condition`): an
-  option's edge label + swipe only appear when its `if` holds; a swipe toward a
-  hidden option is a no-op (engine `chooseDirection` also guards it). First use is
-  the "back to the mill" factory option above (shown only with `reachedFactory`).
-  Still **to do** with it: the 3rd option on `sibling_blame` — "Blame the other
-  sibling" (an up/down swipe) shown only when `traits: { hasBrother: true,
-  hasSister: true }` (the rare three-child family) — part of the sibling-deck
-  expansion. General-purpose: any "only if you have X" choice.
+  stories. **Next up: expand the brother/sister decks.** Use `CardOption.if`
+  (built) for **"only if you have X"** choices — e.g. a 3rd option on
+  `sibling_blame`, *"Blame the other sibling"* (an up/down swipe), shown only when
+  `traits: { hasBrother: true, hasSister: true }` — i.e. you have **two siblings**
+  (a brother *and* a sister). Any such conditional choice reuses the same feature.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
 - **Richer end-of-run epitaph / scoring** — cause of death, life recap, a score
