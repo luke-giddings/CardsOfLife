@@ -120,15 +120,17 @@ export const content = {
         // income cards (a lodger, etc.). Owns the home_renting deck.
         renting: { label: "status.housing.renting", drift: { finances: -10, health: 5 }, addDecks: ["home_renting"] },
         // Owned homes: the adult housing ladder above renting. Each is BOUGHT
-        // (offered when finances >= 75, cost "----" = keep ~1/3), then costs only
-        // modest upkeep — well under the −10 rent, since you paid the lump up
-        // front — and gives a permanent, rising vital bonus (health, then spirit,
-        // then happiness). Each owns a deck that hosts the offer of the NEXT tier
-        // up, so buying is a "rebuild to 75, spend down, rebuild" cycle. (The
-        // "sell up" adult finances net is Backlog — §17b / §18.)
-        owned_small: { label: "status.housing.owned_small", drift: { finances: -4, health: 7, spirit: 3 }, addDecks: ["home_owned_small"] },
-        owned_large: { label: "status.housing.owned_large", drift: { finances: -6, health: 9, spirit: 5, happiness: 2 }, addDecks: ["home_owned_large"] },
-        owned_estate: { label: "status.housing.owned_estate", drift: { finances: -8, health: 11, spirit: 7, happiness: 4 }, addDecks: ["home_owned_estate"] },
+        // (offered when finances >= 75, cost "---" = keep ~1/3) and gives a
+        // permanent, rising vital bonus (health, then spirit, then happiness).
+        // Upkeep SCALES UP with the tier and crosses ABOVE the −10 rent for the
+        // larger homes, so a bigger house needs a bigger wage to sustain: a
+        // steady worker can keep a small house, but a grand estate is a money pit
+        // only a top income (solicitor/master) can run — overreach and the drain
+        // pulls you toward the sell-up rescue. Each owns a deck that hosts the
+        // offer of the NEXT tier up ("rebuild to 75, spend down, rebuild").
+        owned_small: { label: "status.housing.owned_small", drift: { finances: -8, health: 7, spirit: 3 }, addDecks: ["home_owned_small"] },
+        owned_large: { label: "status.housing.owned_large", drift: { finances: -12, health: 9, spirit: 5, happiness: 2 }, addDecks: ["home_owned_large"] },
+        owned_estate: { label: "status.housing.owned_estate", drift: { finances: -18, health: 11, spirit: 7, happiness: 4 }, addDecks: ["home_owned_estate"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. (Its own deck & exits are Backlog.)
         homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },

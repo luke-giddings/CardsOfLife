@@ -517,9 +517,9 @@ yet?" moment, and a bigger job is how you clear it. After purchase, only small
 | House | Gate | Cost | Upkeep/yr | Gives |
 |---|---|---|---|---|
 | Renting *(BUILT)* | move out: Finances ≥ 50, age ≥ 14 | `---` | −10 (rent) | ♥ +5 |
-| Small house *(BUILT)* | Finances ≥ 75 | `---` | −4 | ♥ +7, ✦ +3 |
-| Large house *(BUILT)* | Finances ≥ 75 | `---` | −6 | ♥ +9, ✦ +5, ☺ +2 |
-| Estate *(BUILT)* | Finances ≥ 75 | `---` | −8 | ♥ +11, ✦ +7, ☺ +4 |
+| Small house *(BUILT)* | Finances ≥ 75 | `---` | **−8** | ♥ +7, ✦ +3 |
+| Large house *(BUILT)* | Finances ≥ 75 | `---` | **−12** | ♥ +9, ✦ +5, ☺ +2 |
+| Estate *(BUILT)* | Finances ≥ 75 | `---` | **−18** | ♥ +11, ✦ +7, ☺ +4 |
 
 The **purchase is never forced** — you always choose (right = decline) — but the
 offer is **force-DRAWN** (like the move-out card): a filler in the current tier's
@@ -529,16 +529,32 @@ gate is a flat **≥ 75 for every tier** and the
 `---` cost keeps ~a third — so each purchase is *rebuild your savings to 75, buy
 the next tier up, spend down to ~25, rebuild*. You can only buy the next tier up
 (the offer lives in the tier-below's deck), so it's a strict ladder:
-renting → small → large → estate. **Balance to verify by sim:** the health
-bonuses (+7/+9/+11) with cheap upkeep make owning very safe — watch that it
-doesn't over-flatten late-game mortality once the lifestyle drain lands.
+renting → small → large → estate.
 
-Renting is the only **built** rung (the childhood `renting` housing status: −5 rent,
-**♥ +5** — a place of your own, better conditions, more rest). The purchasable
-tiers above are **provisional adult design**, re-based so each is strictly better
-than renting (more health, and progressively broader — adding spirit, then
-happiness) and clearly worth its `---` lump. Owned upkeep is *lower* than rent
-(you paid the lump up front). The lifestyle drain (higher tiers cost ♥/✦) is what
+**Upkeep scales UP with the tier, crossing above the −10 rent for large/estate**
+(−8 / −12 / −18): a bigger house needs a bigger wage to run, so houses gate on
+*income*, not just savings. Net income while owning, by job:
+
+| Wage | small −8 | large −12 | estate −18 |
+|---|---|---|---|
+| factory +13 | +5 | +1 *(stuck)* | −5 *(bleeds → sell-up)* |
+| clerk +16 | +8 | +4 | −2 |
+| journeyman +18 | +10 | +6 | 0 |
+| solicitor +20 | +12 | +8 | +2 |
+| master +28 | +20 | +16 | +10 |
+
+So a steady worker tops out around a **large** house (owning large nets only ~+1,
+too slow to save the ~50 to reach the estate gate); the **estate is a money pit
+only a top income sustains** — overreach and the drain pulls you toward the
+sell-up rescue. This replaced the earlier *lower-than-rent* upkeep, which made the
+ladder self-accelerate (each house cheaper to run than the last → a factory hand
+could reach an estate). *(The health bonuses +7/+9/+11 still make owning safe once
+you can afford it; that's the "made it" reward, now correctly income-gated.)*
+
+Renting is the built entry rung (the `renting` housing status: −10 rent, **♥ +5**).
+The purchasable tiers are re-based so each is strictly better on *vitals* than
+renting (more health, then spirit, then happiness) and clearly worth its `---`
+lump, but costs more in *upkeep* the grander it is. The lifestyle drain (higher tiers cost ♥/✦) is what
 claws these bonuses back into the treadmill equilibrium.
 
 **Finances net #2 — selling the house (adult; reuses `rescue`).** **BUILT** — one
