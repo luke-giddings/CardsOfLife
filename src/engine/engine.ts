@@ -247,6 +247,9 @@ function applyEffect(state: GameState, effect: Effect, content: Content): void {
   if (effect.setTraits) {
     Object.assign(state.traits, effect.setTraits);
   }
+  if (effect.setFlaws) {
+    Object.assign(state.traits, effect.setFlaws); // same as setTraits; the star logic treats it differently
+  }
   if (effect.incTraits) {
     for (const [k, delta] of Object.entries(effect.incTraits)) {
       const key = k as keyof typeof state.traits;

@@ -413,9 +413,9 @@ export const content = {
           conditions: { ageMax: 13 },
           prompt: "child_charity_hospital.prompt",
           options: {
-            left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setTraits: { owesCharity: true } } }] },
-            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "++", happiness: "+" }, setTraits: { owesCharity: true } } }] },
-            down: { label: "child_charity_hospital.down", outcomes: [{ result: "child_charity_hospital.down.r0", effects: { vitals: { health: "++", finances: "+" }, setTraits: { owesCharity: true } } }] },
+            left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setFlaws: { owesCharity: true } } }] },
+            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "++", happiness: "+" }, setFlaws: { owesCharity: true } } }] },
+            down: { label: "child_charity_hospital.down", outcomes: [{ result: "child_charity_hospital.down.r0", effects: { vitals: { health: "++", finances: "+" }, setFlaws: { owesCharity: true } } }] },
           },
         },
 
@@ -716,8 +716,8 @@ export const content = {
           rescue: "finances",
           prompt: "home_sellup_small.prompt",
           options: {
-            left: { label: "home_sellup_small.left", outcomes: [{ result: "home_sellup_small.left.r0", effects: { vitals: { finances: "+", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
-            right: { label: "home_sellup_small.right", outcomes: [{ result: "home_sellup_small.right.r0", effects: { vitals: { finances: "+", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
+            left: { label: "home_sellup_small.left", outcomes: [{ result: "home_sellup_small.left.r0", effects: { vitals: { finances: "+", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            right: { label: "home_sellup_small.right", outcomes: [{ result: "home_sellup_small.right.r0", effects: { vitals: { finances: "+", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
           },
         },
       ],
@@ -743,8 +743,8 @@ export const content = {
           rescue: "finances",
           prompt: "home_sellup_large.prompt",
           options: {
-            left: { label: "home_sellup_large.left", outcomes: [{ result: "home_sellup_large.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
-            right: { label: "home_sellup_large.right", outcomes: [{ result: "home_sellup_large.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
+            left: { label: "home_sellup_large.left", outcomes: [{ result: "home_sellup_large.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            right: { label: "home_sellup_large.right", outcomes: [{ result: "home_sellup_large.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
           },
         },
       ],
@@ -771,8 +771,8 @@ export const content = {
           rescue: "finances",
           prompt: "home_sellup_estate.prompt",
           options: {
-            left: { label: "home_sellup_estate.left", outcomes: [{ result: "home_sellup_estate.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
-            right: { label: "home_sellup_estate.right", outcomes: [{ result: "home_sellup_estate.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
+            left: { label: "home_sellup_estate.left", outcomes: [{ result: "home_sellup_estate.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            right: { label: "home_sellup_estate.right", outcomes: [{ result: "home_sellup_estate.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
           },
         },
       ],

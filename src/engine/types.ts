@@ -162,6 +162,12 @@ export interface Effect {
   addDecks?: string[];
   removeDecks?: string[]; // ids, or a trailing wildcard like "job_*"
   setTraits?: Partial<Traits>;
+  // Like setTraits, but for BURDENS (owesCharity, soldUp, …). Mechanically
+  // identical — sets trait values — but semantically "a bad thing", so the UI's
+  // beneficial-choice ★ does NOT fire for it (and is suppressed if the outcome
+  // also changes status, e.g. selling up → renting). Keep boons in setTraits so
+  // they still earn the star (vaccinated, sporty, …).
+  setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
   endGame?: string; // ends the run with this ending id (see ENDINGS)
   // Return housing to whatever it was before you entered the master's house (see

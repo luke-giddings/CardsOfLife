@@ -274,16 +274,18 @@ fire given the current state. Two extra markers:
   card doesn't touch (e.g. a card that ignores health while workhouse drift is
   about to zero it). It shows on whichever vital would hit 0.
 - A gold **★** marks a **beneficial path change beyond the numbers** — a new
-  job/home/education (`setStatus`) or a life-stage deck swap — so a rewarding
-  option (seize the apprenticeship → become an apprentice; buy the house) doesn't
-  look weaker than a plain sibling that only moves a stat. It reads as *good*, so
-  it deliberately does **not** fire on trait-only payloads (a trait can be a
-  burden — the charity-hospital debt, a sold-up shame mark) and is **suppressed**
-  when a choice saddles you with `owesCharity`/`soldUp` even if it also changes
-  status (e.g. selling up → renting). Incremental ticks (experience, +1 sporty)
-  don't qualify either, keeping the star rare. *(Known remaining case: a plain
-  demotion like being sacked → unemployed still stars, since detecting a
-  downgrade needs status rankings — parked.)*
+  job/home/education (`setStatus`), a **boon trait** (`setTraits` — vaccinated,
+  sporty, a uni fund…), or a life-stage deck swap — so a rewarding option (seize
+  the apprenticeship; buy the house; get vaccinated) doesn't look weaker than a
+  plain sibling that only moves a stat. The star reads as *good*, so a trait that
+  is a **burden** is set via **`setFlaws`** instead of `setTraits` (mechanically
+  identical, but flagged bad): `setFlaws` never earns the star, **and suppresses
+  it** even when the same outcome also changes status (so selling up → renting, or
+  the charity-hospital debt, don't star). Incremental ticks (experience, +1
+  sporty) don't qualify either, keeping the star rare. *(Known remaining case: a
+  plain demotion like being sacked → unemployed still stars — it's a bare
+  `setStatus` with no flaw, and telling a downgrade from an upgrade needs status
+  rankings; parked.)*
 
 A **language** toggle switches English/Italian live.
 

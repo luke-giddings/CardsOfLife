@@ -370,18 +370,18 @@ export class Game {
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
     if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
-    // A BENEFICIAL path change beyond the vital numbers (a new job/home/education,
-    // or a life-stage deck swap) gets a "special" star — so a rewarding choice
-    // (seize the apprenticeship, buy the house) doesn't look weaker than a plain
-    // sibling that only moves a stat. Deliberately NOT trait-only payloads: a
-    // trait can be a BURDEN, not a boon (the charity-hospital debt, a sold-up
-    // shame mark), and the star reads as "good". So we drop setTraits/incTraits
-    // as triggers, and suppress the star entirely when the choice saddles you with
-    // a debt/shame flag even if it also changes status (e.g. selling up → renting).
+    // A BENEFICIAL path change beyond the vital numbers gets a "special" star —
+    // so a rewarding choice (seize the apprenticeship, buy the house, get
+    // vaccinated) doesn't look weaker than a plain sibling that only moves a stat.
+    // It fires on a new job/home/education (setStatus), a BOON trait (setTraits),
+    // or a life-stage deck swap. It is suppressed when the outcome inflicts a
+    // BURDEN (setFlaws — the charity-hospital debt, the sold-up shame mark), even
+    // if that outcome also changes status (e.g. selling up → renting), since the
+    // star reads as "good". Incremental ticks (experience, +1 sporty) don't count.
     const e = outcome.effects;
-    const burden = !!(e?.setTraits && (e.setTraits.owesCharity === true || e.setTraits.soldUp === true));
-    const special = !burden && !!(e?.setStatus || e?.addDecks || e?.removeDecks);
-    if (special) chips += `<span class="ep-v ep-special" title="This choice changes your path — a new job, home, or schooling">★</span>`;
+    const hasFlaw = !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
+    const special = !hasFlaw && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
+    if (special) chips += `<span class="ep-v ep-special" title="This choice changes your path — a job, home, schooling, or a lasting boon">★</span>`;
     // No vital changes → show nothing (rather than a bare "—").
     return chips;
   }
@@ -1030,6 +1030,7 @@ function fmtEffect(e?: Effect): string {
   }
   if (e.setStatus) for (const [k, v] of Object.entries(e.setStatus)) parts.push(`${k}=${v}`);
   if (e.setTraits) for (const [k, v] of Object.entries(e.setTraits)) parts.push(`${k}=${v}`);
+  if (e.setFlaws) for (const [k, v] of Object.entries(e.setFlaws)) parts.push(`${k}=${v}`);
   if (e.incTraits) for (const [k, v] of Object.entries(e.incTraits)) parts.push(`${k}+=${v}`);
   if (e.addDecks) parts.push(`+deck ${e.addDecks.join(",")}`);
   if (e.removeDecks) parts.push(`−deck ${e.removeDecks.join(",")}`);
