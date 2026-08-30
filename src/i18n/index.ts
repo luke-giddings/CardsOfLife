@@ -148,8 +148,8 @@ export const EN = {
   "child_charity_hospital.left.r0": "Clean sheets, warm broth, and the nursing sisters' quiet kindness. You mend, heart and body — and a ledger somewhere now bears your name.",
   "child_charity_hospital.right": "Make a friend on the ward",
   "child_charity_hospital.right.r0": "A companion in the next bed makes the long days bright. You mend the better for it — and a ledger somewhere now bears your name.",
-  "child_charity_hospital.down": "Leave better provided",
-  "child_charity_hospital.down.r0": "They clothe and feed you, and send you off better shod than you came. You mend — and a ledger somewhere now bears your name.",
+  "child_charity_hospital.down": "Do some jobs for the sisters",
+  "child_charity_hospital.down.r0": "As you mend you run errands and sweep the wards, and the sisters press a few coins into your hand at the gate. And a ledger somewhere now bears your name.",
 
   "child_adult.prompt": "Against the odds, you reach eighteen. So many did not. Childhood is behind you, and adult life opens up ahead.",
   "child_adult.left": "Step forward with hope",
@@ -978,8 +978,8 @@ export const IT: Record<StringId, string> = {
   "child_charity_hospital.left.r0": "Lenzuola pulite, brodo caldo, e la quieta gentilezza delle suore infermiere. Guarisci, nel corpo e nell'animo — e da qualche parte un registro ora porta il tuo nome.",
   "child_charity_hospital.right": "Farti un amico in corsia",
   "child_charity_hospital.right.r0": "Un compagno nel letto accanto rende luminose le lunghe giornate. Guarisci meglio per questo — e da qualche parte un registro ora porta il tuo nome.",
-  "child_charity_hospital.down": "Andartene meglio provvisto",
-  "child_charity_hospital.down.r0": "Ti vestono e ti nutrono, e ti mandano via meglio calzato di come sei arrivato. Guarisci — e da qualche parte un registro ora porta il tuo nome.",
+  "child_charity_hospital.down": "Fare qualche lavoretto per le suore",
+  "child_charity_hospital.down.r0": "Mentre guarisci fai commissioni e spazzi le corsie, e al cancello le suore ti mettono in mano qualche moneta. E da qualche parte un registro ora porta il tuo nome.",
 
   "child_adult.prompt": "Contro ogni previsione, arrivi ai diciotto. In tanti non ce l'hanno fatta. L'infanzia è alle spalle, e la vita adulta si apre davanti a te.",
   "child_adult.left": "Farsi avanti con speranza",
