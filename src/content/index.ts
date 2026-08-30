@@ -700,6 +700,23 @@ export const content = {
             right: { label: "home_buy_large.right", outcomes: [{ result: "home_buy_large.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
+        {
+          // The adult finances net: bankrupt while you own → the house is sold to
+          // clear your debts. The `rescue` floors finances to 1, then the sale
+          // proceeds top you up (a bigger house sells for more — see large/estate)
+          // and you crash all the way back to RENTING, marked `soldUp`. A real
+          // choice in the fall: sell up cleanly (less shame) or cling to your
+          // pride as it's taken (spirit, but a deeper public humiliation).
+          // One-shot per tier (re-buy and you can be caught again).
+          id: "home_sellup_small",
+          kind: "one_time",
+          rescue: "finances",
+          prompt: "home_sellup_small.prompt",
+          options: {
+            left: { label: "home_sellup_small.left", outcomes: [{ result: "home_sellup_small.left.r0", effects: { vitals: { finances: "+", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
+            right: { label: "home_sellup_small.right", outcomes: [{ result: "home_sellup_small.right.r0", effects: { vitals: { finances: "+", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
+          },
+        },
       ],
     },
     {
@@ -713,6 +730,18 @@ export const content = {
           options: {
             left: { label: "home_buy_estate.left", outcomes: [{ result: "home_buy_estate.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_estate" } } }] },
             right: { label: "home_buy_estate.right", outcomes: [{ result: "home_buy_estate.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+        {
+          // Sell-up net for the large house — sells for more than the small
+          // (finances "++" proceeds vs "+").
+          id: "home_sellup_large",
+          kind: "one_time",
+          rescue: "finances",
+          prompt: "home_sellup_large.prompt",
+          options: {
+            left: { label: "home_sellup_large.left", outcomes: [{ result: "home_sellup_large.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
+            right: { label: "home_sellup_large.right", outcomes: [{ result: "home_sellup_large.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
           },
         },
       ],
@@ -729,6 +758,18 @@ export const content = {
           options: {
             left: { label: "home_owned_estate_life.left", outcomes: [{ result: "home_owned_estate_life.left.r0", effects: { vitals: { happiness: "++", finances: "-", spirit: "-" } } }] },
             right: { label: "home_owned_estate_life.right", outcomes: [{ result: "home_owned_estate_life.right.r0", effects: { vitals: { spirit: "+", finances: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // Sell-up net for the estate — the highest fall, and the biggest sale
+          // (finances "++" proceeds, floored highest of the three).
+          id: "home_sellup_estate",
+          kind: "one_time",
+          rescue: "finances",
+          prompt: "home_sellup_estate.prompt",
+          options: {
+            left: { label: "home_sellup_estate.left", outcomes: [{ result: "home_sellup_estate.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
+            right: { label: "home_sellup_estate.right", outcomes: [{ result: "home_sellup_estate.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraits: { soldUp: true } } }] },
           },
         },
       ],

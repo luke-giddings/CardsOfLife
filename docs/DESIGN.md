@@ -234,7 +234,8 @@ net at all, which is why it was the #1 killer).
 
 So poverty and a young child's ill-health both route through a net; **happiness
 and spirit remain directly lethal**, and health is directly lethal from age 10.
-(Adult life has its own finances net — selling the house — designed in §17b.)
+(Adult life has its own finances net — **selling the house** (§17b), now **BUILT**:
+a homeowner who would go bankrupt is caught and crashed back to renting instead.)
 
 **Target:** a *thoughtful, prepared* player reaches 18 roughly **70%** of the
 time; careless/random play dies far more. The **work path** is a deliberate
@@ -528,7 +529,11 @@ happiness) and clearly worth its `---` lump. Owned upkeep is *lower* than rent
 (you paid the lump up front). The lifestyle drain (higher tiers cost ♥/✦) is what
 claws these bonuses back into the treadmill equilibrium.
 
-**Finances net #2 — selling the house (adult; reuses `rescue`).** The house is
+**Finances net #2 — selling the house (adult; reuses `rescue`).** **BUILT** — one
+`home_sellup_*` rescue per owned-house deck; both options crash you to renting +
+`soldUp`, differing in pride (sell cleanly, happiness− spirit− / cling on,
+happiness−− spirit+); proceeds scale by tier (small `+`, large/estate `++`).
+Verified: no homeowner dies of finances — the net always catches. The house is
 stored wealth and the adult finances net. If **Finances would hit 0 while you own
 a house (tier ≥ small)**, a forced **"sell up"** rescue fires. It **crashes you
 all the way down to renting in one step** — you liquidate *everything*, not one

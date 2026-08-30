@@ -101,6 +101,9 @@ export interface Traits {
   // health rescue). Set when you take their care; the ledger comes due in young
   // adulthood, unlocking the repayment card until you clear it.
   owesCharity: boolean;
+  // Durable mark of shame: you were forced to sell your home to cover debts (the
+  // sell-up rescue). Recorded for the end-of-run epitaph (Backlog).
+  soldUp: boolean;
 }
 
 export const DEFAULT_TRAITS: Traits = {
@@ -122,6 +125,7 @@ export const DEFAULT_TRAITS: Traits = {
   reachedFactory: false,
   jobStrikes: 0,
   owesCharity: false,
+  soldUp: false,
 };
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.
