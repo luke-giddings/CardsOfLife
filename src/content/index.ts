@@ -400,11 +400,12 @@ export const content = {
           // The health safety net for the very young (age < 10): the twin of
           // child_hunger. It fires (once) when a small child would otherwise die
           // of ill health — a charity hospital takes them in. The rescue floors
-          // health to 1; accepting their ward bumps it further (++), but the
-          // ledger remembers (owesCharity) and the debt falls due in young
-          // adulthood. Refusing keeps you free of debt but barely mended. Gated
-          // to age <= 9 (findRescue honours conditions), so an older child who
-          // burns out gets no such mercy.
+          // health to 1; the ward mends you further (health ++) whatever you do,
+          // and you ALWAYS leave owing them (owesCharity — you used the net; the
+          // debt falls due in young adulthood). The three options differ only in
+          // what small extra you take from the stay (spirit / happiness / a
+          // material leg-up). Gated to age <= 9 (findRescue honours conditions),
+          // so an older child who burns out gets no such mercy.
           id: "child_charity_hospital",
           kind: "one_time",
           rescue: "health",
@@ -412,7 +413,8 @@ export const content = {
           prompt: "child_charity_hospital.prompt",
           options: {
             left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setTraits: { owesCharity: true } } }] },
-            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "+", spirit: "+" } } }] },
+            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "++", happiness: "+" }, setTraits: { owesCharity: true } } }] },
+            down: { label: "child_charity_hospital.down", outcomes: [{ result: "child_charity_hospital.down.r0", effects: { vitals: { health: "++", finances: "+" }, setTraits: { owesCharity: true } } }] },
           },
         },
 

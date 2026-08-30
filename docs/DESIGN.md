@@ -271,12 +271,17 @@ fire given the current state. Two extra markers:
   every vital, so it warns of death from the *drain* too, even on a vital the
   card doesn't touch (e.g. a card that ignores health while workhouse drift is
   about to zero it). It shows on whichever vital would hit 0.
-- A gold **★** marks a choice with a **path-changing payload beyond the numbers**
-  — a new job/home/education (`setStatus`), a lasting trait (`setTraits`), or a
-  life-stage deck swap — so a rewarding option (seize the apprenticeship → become
-  an apprentice) doesn't look weaker than a plain sibling that only moves a stat.
-  Incremental ticks (experience, +1 sporty) deliberately don't qualify, keeping
-  the star rare.
+- A gold **★** marks a **beneficial path change beyond the numbers** — a new
+  job/home/education (`setStatus`) or a life-stage deck swap — so a rewarding
+  option (seize the apprenticeship → become an apprentice; buy the house) doesn't
+  look weaker than a plain sibling that only moves a stat. It reads as *good*, so
+  it deliberately does **not** fire on trait-only payloads (a trait can be a
+  burden — the charity-hospital debt, a sold-up shame mark) and is **suppressed**
+  when a choice saddles you with `owesCharity`/`soldUp` even if it also changes
+  status (e.g. selling up → renting). Incremental ticks (experience, +1 sporty)
+  don't qualify either, keeping the star rare. *(Known remaining case: a plain
+  demotion like being sacked → unemployed still stars, since detecting a
+  downgrade needs status rankings — parked.)*
 
 A **language** toggle switches English/Italian live.
 
