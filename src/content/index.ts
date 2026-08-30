@@ -677,6 +677,11 @@ export const content = {
           // choice — commit the savings, or hold your money and keep renting.
           id: "home_buy_small",
           kind: "filler",
+          // Force-DRAWN at max finances (like the move-out card): capped at 100,
+          // the offer is guaranteed to surface rather than hiding in the random
+          // pool — you still CHOOSE whether to buy (right = decline). Also offered
+          // from finances >= 75 in the normal pool.
+          force: "finances",
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_small.prompt",
           options: {
@@ -696,6 +701,7 @@ export const content = {
         {
           id: "home_buy_large",
           kind: "filler",
+          force: "finances", // force-drawn at 100, still a choice (see home_buy_small)
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_large.prompt",
           options: {
@@ -728,6 +734,7 @@ export const content = {
         {
           id: "home_buy_estate",
           kind: "filler",
+          force: "finances", // force-drawn at 100, still a choice (see home_buy_small)
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_estate.prompt",
           options: {

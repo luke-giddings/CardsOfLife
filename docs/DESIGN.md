@@ -521,8 +521,11 @@ yet?" moment, and a bigger job is how you clear it. After purchase, only small
 | Large house *(BUILT)* | Finances ≥ 75 | `---` | −6 | ♥ +9, ✦ +5, ☺ +2 |
 | Estate *(BUILT)* | Finances ≥ 75 | `---` | −8 | ♥ +11, ✦ +7, ☺ +4 |
 
-Houses are **offered, not forced** (a filler in the current tier's home deck),
-so you buy when you choose. The gate is a flat **≥ 75 for every tier** and the
+The **purchase is never forced** — you always choose (right = decline) — but the
+offer is **force-DRAWN** (like the move-out card): a filler in the current tier's
+home deck, offered from finances ≥ 75, and *guaranteed to surface* when you're
+capped at 100 (`force: "finances"`) rather than hiding in the random pool. The
+gate is a flat **≥ 75 for every tier** and the
 `---` cost keeps ~a third — so each purchase is *rebuild your savings to 75, buy
 the next tier up, spend down to ~25, rebuild*. You can only buy the next tier up
 (the offer lives in the tier-below's deck), so it's a strict ladder:
