@@ -222,18 +222,20 @@ exits) or take to the **streets** (free but harsher). It lives in the childhood
 deck, so once adult decks replace it it cannot fire in adult life — the workhouse
 catches you *once, as a child*, and never again.
 
-**Health net — the charity hospital (young children only, once).**
-`child_charity_hospital` is a **`one_time`** health rescue gated `ageMax: 9`
-(hence the condition-check above). When a small child's health would hit 0, a
-charity hospital takes them in: the vital floors to 1 and you choose — **accept
-their ward** (a big health bump, but you incur `owesCharity`, a debt that comes
-due in young adulthood) or **refuse** (barely mended, but beholden to no one).
-Fires at most once, and only under 10 — an older child who burns out gets no such
-mercy. It's the symmetric twin of the finances net (previously health had *no*
-net at all, which is why it was the #1 killer).
+**Health net — the charity hospital (childhood, once).**
+`child_charity_hospital` is a **`one_time`** health rescue gated **`ageMax: 13`**
+(hence the condition-check above) — it covers the whole childhood window, up until
+the move-out card unlocks at 14 and adult life proper begins. When a child's
+health would hit 0, a charity hospital takes them in: the vital floors to 1, the
+ward mends you further (health `++`), and you **always incur `owesCharity`** (you
+used the net; the debt comes due in young adulthood). It's a real choice only in
+what small extra you take from the stay — **spirit** (the sisters' care),
+**happiness** (a friend on the ward), or **a few coins** (odd jobs for the
+sisters). Fires at most once. It's the symmetric twin of the finances net
+(previously health had *no* net at all, which is why it was the #1 killer).
 
-So poverty and a young child's ill-health both route through a net; **happiness
-and spirit remain directly lethal**, and health is directly lethal from age 10.
+So poverty and a child's ill-health both route through a net; **happiness and
+spirit remain directly lethal**, and health is directly lethal from age 14 on.
 (Adult life has its own finances net — **selling the house** (§17b), now **BUILT**:
 a homeowner who would go bankrupt is caught and crashed back to renting instead.)
 
@@ -327,7 +329,7 @@ Birth → babyhood (unloseable build-up, trait setups — incl. the `baby_dispos
 fork: sporty / bookish / neither) → **school-or-work** at 5 → childhood (shared
 events + home / education / occupation decks + hazards, genuinely failable), with
 two safety nets — the **workhouse** (finances) and the **charity hospital**
-(health, under-10s, on `owesCharity` credit) → **coming-of-age at 18** (no longer
+(health, children up to 13, on `owesCharity` credit) → **coming-of-age at 18** (no longer
 an ending; hands off into a young-adult life-event stage that continues with **no
 cap**). Occupation ladders partly built: dangerous child labour with the **earned
 apprenticeship** crossover (spirit/happiness, ages 13–18) onto the skilled trade

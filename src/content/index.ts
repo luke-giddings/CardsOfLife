@@ -397,19 +397,20 @@ export const content = {
           },
         },
         {
-          // The health safety net for the very young (age < 10): the twin of
-          // child_hunger. It fires (once) when a small child would otherwise die
-          // of ill health — a charity hospital takes them in. The rescue floors
+          // The health safety net for children (age <= 13, i.e. up until the
+          // move-out card unlocks at 14 and adult life proper begins): the twin
+          // of child_hunger. It fires (once) when a child would otherwise die of
+          // ill health — a charity hospital takes them in. The rescue floors
           // health to 1; the ward mends you further (health ++) whatever you do,
           // and you ALWAYS leave owing them (owesCharity — you used the net; the
           // debt falls due in young adulthood). The three options differ only in
-          // what small extra you take from the stay (spirit / happiness / a
-          // material leg-up). Gated to age <= 9 (findRescue honours conditions),
-          // so an older child who burns out gets no such mercy.
+          // what small extra you take from the stay (spirit / happiness / a few
+          // coins). Gated to age <= 13 (findRescue honours conditions), so from
+          // 14 on you face ill-health mortality without the net.
           id: "child_charity_hospital",
           kind: "one_time",
           rescue: "health",
-          conditions: { ageMax: 9 },
+          conditions: { ageMax: 13 },
           prompt: "child_charity_hospital.prompt",
           options: {
             left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setTraits: { owesCharity: true } } }] },
