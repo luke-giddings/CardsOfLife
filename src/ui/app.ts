@@ -57,6 +57,7 @@ const VITAL_ICON: Record<VitalKey, string> = {
 };
 
 const STATUS_LABEL: Record<StatusKind, StringId> = {
+  age: "statuskind.age",
   job: "statuskind.job",
   housing: "statuskind.housing",
   education: "statuskind.education",
@@ -290,10 +291,14 @@ export class Game {
     // when a status is still at its neutral start value. During babyhood they
     // stay hidden (there's nothing meaningful to show yet). Lifestyle is
     // reserved, so it only appears once it differs from its default.
-    const inChildhood = !s.activeDecks.includes("baby");
+    const inChildhood = !s.activeDecks.includes("age_baby");
     for (const kind of STATUS_KINDS) {
       const value = s.statuses[kind];
-      if (kind === "lifestyle") {
+      if (!value) continue; // defensive: an old save without a newer status kind
+      if (kind === "age") {
+        // The life-stage chip is always shown — from birth onward it's the one
+        // status that means something in babyhood too.
+      } else if (kind === "lifestyle") {
         if (value === content.start.statuses[kind]) continue;
       } else if (!inChildhood) {
         continue;

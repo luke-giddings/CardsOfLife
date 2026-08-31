@@ -7,7 +7,7 @@ export const babyDecks = [
     // --- Baby: ages 0–5. Tutorial + build-up; impossible to lose. noDrift
     //     suspends status drift (e.g. family living costs) through babyhood. --
     {
-      id: "baby",
+      id: "age_baby",
       noDrift: true,
       cards: [
         {
@@ -117,11 +117,11 @@ export const babyDecks = [
           options: {
             left: {
               label: "baby_schooling.left",
-              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "studying" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { age: "child", job: "studying" }, addDecks: ["age_childhood", "home_family"], removeDecks: ["age_baby"] } }],
             },
             right: {
               label: "baby_schooling.right",
-              outcomes: [{ result: "baby_schooling.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" }, addDecks: ["childhood", "home_family"], removeDecks: ["baby"] } }],
+              outcomes: [{ result: "baby_schooling.right.r0", effects: { vitals: { finances: "+" }, setStatus: { age: "child", job: "child_labourer" }, addDecks: ["age_childhood", "home_family"], removeDecks: ["age_baby"] } }],
             },
           },
         },

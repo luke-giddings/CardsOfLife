@@ -7,7 +7,7 @@ export const childhoodDecks = [
 
     // --- Childhood (shared): events any child has, school or working. -------
     {
-      id: "childhood",
+      id: "age_childhood",
       title: "deck.childhood.title",
       unlock: "deck.childhood.blurb",
       cards: [
@@ -147,8 +147,8 @@ export const childhoodDecks = [
           conditions: { ageMin: 18 },
           prompt: "child_adult.prompt",
           options: {
-            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { lifestyle: "frugal" }, removeDecks: ["childhood"], addDecks: ["young_adult", "lifestyle"] } }] },
-            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, setStatus: { lifestyle: "frugal" }, removeDecks: ["childhood"], addDecks: ["young_adult", "lifestyle"] } }] },
+            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } }] },
+            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } }] },
           },
         },
       ],

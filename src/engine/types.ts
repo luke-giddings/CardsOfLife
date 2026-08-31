@@ -57,8 +57,8 @@ export const ENDINGS: Record<string, Ending> = {
 };
 
 // --- Statuses: persistent side-states that drift Vitals and gate content. ----
-export type StatusKind = "job" | "housing" | "education" | "lifestyle";
-export const STATUS_KINDS: StatusKind[] = ["job", "housing", "education", "lifestyle"];
+export type StatusKind = "age" | "job" | "housing" | "education" | "lifestyle";
+export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education", "lifestyle"];
 
 // --- Traits: hidden state. Booleans, enums, counters. ------------------------
 // Add a field here and it is instantly usable (and type-checked) in content.
@@ -252,6 +252,11 @@ export interface StatusDef {
   id: StatusKind;
   ordered?: boolean;
   levels?: string[];                     // ordering for `atLeast`, low → high
+  // When true, this kind's drift applies even during a `noDrift` grace period
+  // (babyhood). Used by the `age` status so the life-stage bonus/penalty is
+  // always felt — the baby stage's small all-round bonus lands even while the
+  // baby deck otherwise suspends drift. Living-cost drains stay suspended.
+  ignoreNoDrift?: boolean;
   states: Record<string, StatusStateDef>;
 }
 

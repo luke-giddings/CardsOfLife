@@ -27,14 +27,17 @@ import {
 // child_bully, edu_basicschool_exams, job_labour_machine, sibling_play).
 //
 // DECK NAMING: status-driven decks are prefixed by their life-area:
+//   age_*   the life stage    (age_baby, age_childhood, age_young_adult,
+//           age_adult, age_old_age — handed over by the age-stage milestones)
 //   edu_*   the school path  (edu_basicschool — activated by job=studying;
 //           room for edu_grammar etc. later)
 //   home_*  housing status   (home_family, home_workhouse)
 //   job_*   job status       (job_labour)
 // Cross-cutting decks that aren't owned by a single status keep plain names:
-// baby, childhood (shared child events), sibling. A status state `addDecks` its
-// deck, and changeStatus hands decks over on a status change (leaving `family`
-// for `workhouse` swaps home_family out for home_workhouse automatically).
+// sibling. A status state `addDecks` its deck, and changeStatus hands decks over
+// on a status change (leaving `family` for `workhouse` swaps home_family out for
+// home_workhouse automatically); the life-stage decks are handed over the same
+// way by their milestones (age_baby → age_childhood → … → age_old_age).
 //
 // FILE LAYOUT: this file holds `start` + `statuses` + the final assembly. The
 // decks themselves live in `./decks/<domain>.ts` (baby · childhood · adult ·
@@ -47,12 +50,34 @@ export const content = {
     // Start low and even — babyhood is where the meters get built up (unevenly,
     // by your choices), ready for the child deck to start spending them.
     vitals: { finances: 20, happiness: 20, health: 20, spirit: 20 },
-    statuses: { job: "infant", housing: "family", education: "illiterate", lifestyle: "default" },
-    decks: ["baby"],
+    statuses: { age: "baby", job: "infant", housing: "family", education: "illiterate", lifestyle: "default" },
+    decks: ["age_baby"],
     traits: {},
   },
 
   statuses: {
+    // Life stage — a VISIBLE, passive status that moves you through the ages,
+    // handed over by the same milestones that hand over the life-stage decks
+    // (start = baby; baby_schooling → child; child_adult → young_adult; then two
+    // age-gated milestones ya_adult → adult and adult_oldage → old_age). Its
+    // drift is the passive tax/dividend of your age: babyhood a small all-round
+    // bonus (and `ignoreNoDrift` so it lands even inside the baby grace period),
+    // childhood a touch of happiness, young adulthood neutral, then a health
+    // decline that starts in adulthood and steepens in old age. Ordered so cards
+    // can gate on atLeast/atMost by stage. Balance: all values are starter knobs.
+    age: {
+      id: "age",
+      ordered: true,
+      ignoreNoDrift: true,
+      levels: ["baby", "child", "young_adult", "adult", "old_age"],
+      states: {
+        baby: { label: "status.age.baby", drift: { finances: 2, happiness: 2, health: 2, spirit: 2 } },
+        child: { label: "status.age.child", drift: { happiness: 2 } },
+        young_adult: { label: "status.age.young_adult" },
+        adult: { label: "status.age.adult", drift: { health: -3 } },
+        old_age: { label: "status.age.old_age", drift: { health: -8 } },
+      },
+    },
     job: {
       id: "job",
       states: {

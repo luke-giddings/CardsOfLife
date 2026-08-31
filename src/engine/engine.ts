@@ -272,12 +272,14 @@ function applyEffect(state: GameState, effect: Effect, content: Content): void {
 export function totalDrift(state: GameState, content: Content): Partial<Vitals> {
   // While a `noDrift` deck is active (babyhood — the unloseable grace period),
   // status drift is suspended, so living costs etc. don't bite before the game
-  // proper begins. Keeps totalDrift the single source of truth for the UI's
-  // drain preview too.
-  if (content.decks.some((d) => d.noDrift && state.activeDecks.includes(d.id))) return {};
+  // proper begins — EXCEPT kinds flagged `ignoreNoDrift` (the age status), whose
+  // life-stage drift is always felt (so the baby-stage bonus lands in babyhood).
+  // Keeps totalDrift the single source of truth for the UI's drain preview too.
+  const noDrift = content.decks.some((d) => d.noDrift && state.activeDecks.includes(d.id));
   const drift: Partial<Vitals> = {};
   for (const kind of Object.keys(state.statuses) as StatusKind[]) {
     const def = content.statuses[kind];
+    if (noDrift && !def?.ignoreNoDrift) continue;
     const st = def?.states[state.statuses[kind]];
     if (!st?.drift) continue;
     for (const [k, v] of Object.entries(st.drift)) {

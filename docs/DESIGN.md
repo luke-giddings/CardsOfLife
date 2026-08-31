@@ -80,18 +80,21 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 
 | Status | States (so far) | Notes |
 |---|---|---|
+| **Age / life stage** | baby · child · young_adult · adult · old_age | **Built.** A **visible, passive** status that moves you through the ages — handed over by the same life-stage milestones that swap the life-stage decks (start = baby; `baby_schooling` → child at 5; `child_adult` → young_adult at 18; `ya_adult` → adult at 25; `adult_oldage` → old_age at 50). Its **drift is the passive tax/dividend of your age**: baby a small **all-round bonus** (and flagged `ignoreNoDrift`, so it lands even inside the babyhood grace period — the one status that drifts there), child a touch of ☺, young adult neutral, then a **health decline that starts in adulthood (♥ −3) and steepens in old age (♥ −8)**. Ordered, so cards can gate on `atLeast/atMost` by stage. Always shown (even in babyhood). All values are starter knobs. |
 | **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and educated ladder (shophand +12, clerk +16, solicitor +20) pay clearly more, so a promotion is a real raise. |
 | **Housing** | family · workhouse · renting · owned_small/large/estate · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): **finances −10** rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). Rent is set to **swallow the base child-labour wage** (+10), so a labourer renting nets ~0 money — you buy health recovery, not continued free savings; getting ahead again needs a better wage or the renting deck's income cards. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | illiterate · basic · grammar · university (+ trade: journeyman/master) | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
 | **Lifestyle** | (default →) frugal · modest · comfortable · lavish | **Built.** The money↔happiness lever, unlocked at coming-of-age (§17b). Ordered; each tier trades £ for ☺ (and, high up, ♥/✦). Frugal is a ☺ *drain* on purpose. Changed via the `lifestyle` deck's live-better / economize cards. |
 
 **Deck naming:** decks owned by a status are prefixed by that status's kind —
-`edu_*` (education), `home_*` (housing), `job_*` (occupation) — so the growing
-set of small per-status decks stays legible and leaves room for siblings like
-`edu_grammar`. Cross-cutting decks that aren't owned by a status keep plain
-names (`baby`, `childhood`, `sibling`). Changing a status hands its decks over
-automatically (leaving `family` for `workhouse` swaps `home_family` out for
-`home_workhouse`).
+`age_*` (life stage: `age_baby`, `age_childhood`, `age_young_adult`,
+`age_adult`, `age_old_age`), `edu_*` (education), `home_*` (housing), `job_*`
+(occupation) — so the growing set of small per-status decks stays legible and
+leaves room for siblings like `edu_grammar`. Cross-cutting decks that aren't
+owned by a status keep plain names (`sibling`). Changing a status hands its
+decks over automatically (leaving `family` for `workhouse` swaps `home_family`
+out for `home_workhouse`); the life-stage decks are handed over the same way by
+their age milestones (`age_baby` → `age_childhood` → … → `age_old_age`).
 
 Statuses are **ordered or unordered** (Education is ordered for `≥` checks;
 Job/Housing are named states).
@@ -342,7 +345,10 @@ events + home / education / occupation decks + hazards, genuinely failable), wit
 two safety nets — the **workhouse** (finances) and the **charity hospital**
 (health, children up to 13, on `owesCharity` credit) → **coming-of-age at 18** (no longer
 an ending; hands off into a young-adult life-event stage that continues with **no
-cap**). Occupation ladders partly built: dangerous child labour with the **earned
+cap**) → **adulthood at 25** → **old age at 50**, each a life-event stage of its
+own. A **visible Age status** rides these transitions and applies the passive
+**life-stage drift** (baby bonus → neutral young adult → a health decline that
+starts at adulthood and steepens in old age — §6). Occupation ladders partly built: dangerous child labour with the **earned
 apprenticeship** crossover (spirit/happiness, ages 13–18) onto the skilled trade
 (`_day`/bench-job XP → survivable closure → the qualifying trial → journeyman);
 factory step within unskilled; criminal entry. Housing ladder (family → move-out
