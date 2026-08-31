@@ -71,7 +71,7 @@ export const content = {
       ignoreNoDrift: true,
       levels: ["baby", "child", "young_adult", "adult", "old_age"],
       states: {
-        baby: { label: "status.age.baby", drift: { finances: 2, happiness: 2, health: 2, spirit: 2 } },
+        baby: { label: "status.age.baby", drift: { happiness: 2, health: 2, spirit: 2 } },
         child: { label: "status.age.child", drift: { happiness: 2 } },
         young_adult: { label: "status.age.young_adult" },
         adult: { label: "status.age.adult", drift: { health: -3 } },
