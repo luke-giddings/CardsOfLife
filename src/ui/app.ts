@@ -1,5 +1,6 @@
 import { gameContent as content } from "../content/index.ts";
 import {
+  applyEffect,
   chooseDirection,
   drawCard,
   eligibleDraw,
@@ -13,7 +14,6 @@ import { meets } from "../engine/conditions.ts";
 import { clearSave, loadGame, saveGame } from "../engine/save.ts";
 import {
   ENDINGS,
-  applyMagnitude,
   STATUS_KINDS,
   VITAL_KEYS,
   VITAL_MIN,
@@ -366,20 +366,24 @@ export class Game {
   // choice given the current state (shown under each edge label unless hard mode is on).
   private vitalChips(opt: CardOption): string {
     const outcome = resolveOutcome(opt, this.state, content);
-    // The turn also applies status drift after the card's effects, so fold it
-    // into the fatal check — a small card loss can still be lethal once the
-    // per-turn drain lands.
-    const drift = totalDrift(this.state, content);
+    // Simulate the choice's effects on a throwaway clone, so the fatal check uses
+    // the drift of the status you'd be IN *after* the card — a choice that
+    // changes your job/home/lifestyle changes the drains too, and previewing the
+    // CURRENT drains would mislead. `projected.vitals` already holds the card's
+    // vital change (clamped, in engine order: effect then drift), and `drift` is
+    // the post-change per-turn drain.
+    const projected = structuredClone(this.state);
+    if (outcome.effects) applyEffect(projected, outcome.effects, content);
+    const drift = totalDrift(projected, content);
     let chips = "";
     for (const key of VITAL_KEYS) {
       const mag = outcome.effects?.vitals?.[key];
-      // Project the year: the card's change (if any) plus the turn's drift. A
+      // Project the year: the post-card vital plus the turn's (new) drift. A
       // vital reaches 0 → death, and we show the skull EVEN IF this card doesn't
       // touch that vital — otherwise a drain the card leaves untouched kills you
       // with no warning. Vitals the card doesn't move and won't kill you: shown
       // as nothing (no bare "—").
-      const base = mag ? applyMagnitude(this.state.vitals[key], mag) : this.state.vitals[key];
-      const lethal = base + (drift[key] ?? 0) <= VITAL_MIN;
+      const lethal = projected.vitals[key] + (drift[key] ?? 0) <= VITAL_MIN;
       if (!mag && !lethal) continue;
       const body = lethal
         ? `<span class="dbad ep-end" title="This would be fatal">☠</span>`

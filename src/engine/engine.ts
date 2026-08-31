@@ -224,7 +224,7 @@ function changeStatus(
   }
 }
 
-function applyEffect(state: GameState, effect: Effect, content: Content): void {
+export function applyEffect(state: GameState, effect: Effect, content: Content): void {
   if (effect.setStatus) {
     for (const [k, v] of Object.entries(effect.setStatus)) {
       changeStatus(state, k as StatusKind, v, content);

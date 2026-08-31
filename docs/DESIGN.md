@@ -272,10 +272,14 @@ changes on the card — the vital symbols (£ ☺ ♥ ✦) and magnitude shown r
 under each option's edge label, computed from the outcome that would actually
 fire given the current state. Two extra markers:
 - A **☠** marks a choice that can end the run. The check **projects the whole
-  year** — the card's change (if any) *plus* the turn's passive drift — onto
-  every vital, so it warns of death from the *drain* too, even on a vital the
-  card doesn't touch (e.g. a card that ignores health while workhouse drift is
-  about to zero it). It shows on whichever vital would hit 0.
+  year** by simulating the choice on a throwaway clone — the card's change (if
+  any) *plus* the turn's passive drift — onto every vital, so it warns of death
+  from the *drain* too, even on a vital the card doesn't touch (e.g. a card that
+  ignores health while workhouse drift is about to zero it). Crucially the drift
+  is the drift of the status you'd be **in after the choice**: a card that moves
+  you to a harsher status (homeless, workhouse, a pricier lifestyle) previews
+  *that* status's drains, not your current ones. It shows on whichever vital
+  would hit 0.
 - A gold **★** marks a **beneficial path change beyond the numbers** — a new
   job/home/education (`setStatus`), a **boon trait** (`setTraits` — vaccinated,
   sporty, a uni fund…), or a life-stage deck swap — so a rewarding option (seize
