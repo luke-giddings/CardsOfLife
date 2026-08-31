@@ -115,6 +115,13 @@ export class Game {
   private prevVitals!: Vitals;
   private seenDecks = new Set<string>();
   private pendingUnlock: { title: StringId; blurb: StringId } | null = null;
+  // A lagging snapshot the STATUS CHIPS render from. When a choice changes a
+  // status AND unlocks a new titled deck (a "new chapter"), we hold the visible
+  // chip change here through the result reveal and only advance it when the
+  // chapter card appears — so the status change lands together with the card,
+  // not a beat early. Vitals/bars always read live state; only the chips lag.
+  private displayStatuses!: Record<StatusKind, string>;
+  private displayDecks: string[] = [];
   private debugSelectedId: string | null = null;
   private debugOpen = new Set<string>(["pool", "detail"]); // which debug sections are expanded
   // Debug history: the pre-choice snapshot at each played card, so we can list
@@ -130,6 +137,7 @@ export class Game {
     this.state = loadGame() ?? initGame(content);
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
+    this.captureDisplay();
     this.syncTop();
     if (this.state.over) this.showEnd();
     else this.beginTurn();
@@ -264,10 +272,14 @@ export class Game {
   private syncTop(): void {
     const s = this.state;
     this.ageNumEl.textContent = String(s.age);
+    // The chips (and the drain preview that must match them) render from the
+    // lagging display snapshot, so a status change held for a chapter card
+    // doesn't show early. Vitals/bars below always read live state.
+    const disp: GameState = { ...s, statuses: this.displayStatuses, activeDecks: this.displayDecks };
     // Preview each active status's drain: the tip of the bar that next turn's
     // drift will strip off is marked, so a passive loss is visible before it
     // happens. Only losses (negative drift) are previewed.
-    const drift = totalDrift(s, content);
+    const drift = totalDrift(disp, content);
     for (const key of VITAL_KEYS) {
       const nv = s.vitals[key];
       const ov = this.prevVitals[key];
@@ -291,9 +303,9 @@ export class Game {
     // when a status is still at its neutral start value. During babyhood they
     // stay hidden (there's nothing meaningful to show yet). Lifestyle is
     // reserved, so it only appears once it differs from its default.
-    const inChildhood = !s.activeDecks.includes("age_baby");
+    const inChildhood = !disp.activeDecks.includes("age_baby");
     for (const kind of STATUS_KINDS) {
-      const value = s.statuses[kind];
+      const value = disp.statuses[kind];
       if (!value) continue; // defensive: an old save without a newer status kind
       if (kind === "age") {
         // The life-stage chip is always shown — from birth onward it's the one
@@ -613,6 +625,8 @@ export class Game {
     else decks.push(id);
     this.seenDecks.add(id);
     saveGame(this.state);
+    this.captureDisplay(); // debug edit lands immediately (no chapter card to wait for)
+    this.syncTop();
     this.renderDebug();
     this.refreshFront(); // drift changes → preview fatality may change
   }
@@ -718,6 +732,7 @@ export class Game {
     saveGame(this.state);
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
+    this.captureDisplay();
     this.pendingUnlock = null;
     this.busy = false;
     this.holder = null;
@@ -748,6 +763,9 @@ export class Game {
     this.state = res.state;
     saveGame(this.state);
     this.detectUnlocks();
+    // Hold the visible status/chip change until the "A new chapter" card when one
+    // is pending; otherwise let it land now (there's no chapter to sync it to).
+    if (!this.pendingUnlock) this.captureDisplay();
 
     const flip = this.flip;
     const back = flip.querySelector<HTMLElement>(".back .result")!;
@@ -848,8 +866,17 @@ export class Game {
     this.history = [];
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
+    this.captureDisplay();
     this.syncTop();
     this.beginTurn();
+  }
+
+  // Advance the lagging chip snapshot to live state. Called whenever the visible
+  // status change should land: on init/resume/restart, after a choice that has
+  // NO chapter card to sync to, and at the moment the chapter card appears.
+  private captureDisplay(): void {
+    this.displayStatuses = { ...this.state.statuses };
+    this.displayDecks = [...this.state.activeDecks];
   }
 
   // Note any deck that just became active for the first time this run, so its
@@ -867,6 +894,9 @@ export class Game {
     const u = this.pendingUnlock;
     this.pendingUnlock = null;
     if (!u) return this.beginTurn();
+    // The held status/chip change lands now, together with the chapter card.
+    this.captureDisplay();
+    this.syncTop();
     this.phase = "over"; // not a swipe card; advance by tapping only
     this.renderDebug();
 

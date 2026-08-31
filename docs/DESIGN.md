@@ -290,6 +290,17 @@ fire given the current state. Two extra markers:
   `setStatus` with no flaw, and telling a downgrade from an upgrade needs status
   rankings; parked.)*
 
+**Status reveal timing:** when a choice both changes a status and unlocks a new
+titled deck (a "new chapter"), the visible **status-chip** change is **held until
+the chapter card appears**, so the two land together instead of the chips moving a
+beat early on the result reveal. The chips render from a lagging *display
+snapshot* (of `statuses` + `activeDecks`) that the UI advances only at the chapter
+card; the **vital bars still move immediately** on the result. As a bonus, the
+core Job/Housing/Education chips (first shown at coming-of-school) and the
+lifestyle chip (at coming-of-age) now *appear* alongside their chapter card. A
+status change with **no** chapter card (e.g. a lifestyle up/down) updates
+immediately — there's nothing to sync it to (until lifestyle gets its own decks).
+
 A **language** toggle switches English/Italian live.
 
 ## 14. Tech & architecture
