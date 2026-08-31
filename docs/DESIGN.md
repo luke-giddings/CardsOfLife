@@ -297,6 +297,15 @@ A **language** toggle switches English/Italian live.
   evaluation, Vitals/Statuses/drift, result resolution, save/load, rendering,
   input. Content = decks & cards as **typed data** (`satisfies Content`), so a
   misspelled trait/stat/magnitude is a **compile error**.
+- **Content file layout.** `src/content/index.ts` holds only the `start` state,
+  the `statuses` blocks (job / housing / education / lifestyle), and the final
+  assembly. The decks themselves are **domain-grouped**, one file per area under
+  `src/content/decks/`: `baby`, `childhood`, `adult`, `home`, `education`,
+  `jobs`, `sibling` — each exporting a `<domain>Decks` array typed
+  `satisfies Deck[]`. A barrel (`decks/index.ts`) re-exports them and
+  `index.ts` spreads them into the `decks` array. Player text is **not** split
+  out — every string stays central in `src/i18n`, so `StringId` type-safety and
+  the single translation table are preserved unchanged.
 - **Localisation.** No player-facing text is inline in the content: every
   prompt, option label, outcome result, deck title/blurb and status label is a
   **string id** looked up per-language in `src/i18n` (`EN` is the master table;
