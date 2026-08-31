@@ -83,7 +83,7 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 | **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and educated ladder (shophand +12, clerk +16, solicitor +20) pay clearly more, so a promotion is a real raise. |
 | **Housing** | family · workhouse · renting · owned_small/large/estate · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): **finances −10** rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). Rent is set to **swallow the base child-labour wage** (+10), so a labourer renting nets ~0 money — you buy health recovery, not continued free savings; getting ahead again needs a better wage or the renting deck's income cards. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | illiterate · basic · grammar · university (+ trade: journeyman/master) | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
-| **Lifestyle** | default | Reserved. |
+| **Lifestyle** | (default →) frugal · modest · comfortable · lavish | **Built.** The money↔happiness lever, unlocked at coming-of-age (§17b). Ordered; each tier trades £ for ☺ (and, high up, ♥/✦). Frugal is a ☺ *drain* on purpose. Changed via the `lifestyle` deck's live-better / economize cards. |
 
 **Deck naming:** decks owned by a status are prefixed by that status's kind —
 `edu_*` (education), `home_*` (housing), `job_*` (occupation) — so the growing
@@ -517,7 +517,7 @@ yet?" moment, and a bigger job is how you clear it. After purchase, only small
 | House | Gate | Cost | Upkeep/yr | Gives |
 |---|---|---|---|---|
 | Renting *(BUILT)* | move out: Finances ≥ 50, age ≥ 14 | `---` | −10 (rent) | ♥ +5 |
-| Small house *(BUILT)* | Finances ≥ 75 | `---` | **−8** | ♥ +7, ✦ +3 |
+| Small house *(BUILT)* | Finances ≥ 75 | `---` | **−10** *(= rent)* | ♥ +7, ✦ +3 |
 | Large house *(BUILT)* | Finances ≥ 75 | `---` | **−12** | ♥ +9, ✦ +5, ☺ +2 |
 | Estate *(BUILT)* | Finances ≥ 75 | `---` | **−18** | ♥ +11, ✦ +7, ☺ +4 |
 
@@ -583,18 +583,26 @@ one-shot flag needed. **Below renting there is no adult net**, so Finances → 0
 while renting is game over (nothing left to sell) — the adult mirror of the
 workhouse catching you only once.
 
-### Lifestyle — unlocked out of childhood; costs money *and* vitals
+### Lifestyle — **BUILT** (unlocked at coming-of-age; the money↔happiness lever)
 
-Lifestyle is the main **Happiness** source and the main **Money/Health** sink, so
-it is the lever of the treadmill. Upgrading a lifestyle tier can be a one-time
-`---` "move up in the world"; then an ongoing per-year drain:
+Lifestyle is the main **Happiness** source and the main **Money/Health** sink — the
+treadmill's lever. Unlocked at `child_adult` (starts **frugal**), an ordered status
+`frugal → modest → comfortable → lavish` with an ongoing per-year drift per tier.
+Two cards move you between tiers (in the `lifestyle` deck): **live_better** (up one,
+offered with spare cash ≥ 40 and while not lavish) and **life_economize** (down one,
+offered when short ≤ 25) — so you adapt as income rises and falls; conditional
+outcomes do the per-tier maths, gated with the new `atMost`/`atLeast` status match.
 
 | Lifestyle | £/yr | ☺ | ♥ / ✦ |
 |---|---|---|---|
 | Frugal | 0 | **−4** (joyless) | — |
-| Modest | −4 | +2 | ♥ −1 |
-| Comfortable | −10 | +6 | ♥ −2 |
-| Lavish | −22 | +12 | ♥ −6, ✦ −2 |
+| Modest | −3 | +2 | — |
+| Comfortable | −8 | +5 | ♥ −1 |
+| Lavish | −15 | +9 | **♥ −8, ✦ −4** |
+
+*(Re-based for this session's economy; heavier lavish vital hit so a hedonist can
+genuinely burn out, not just go broke. **All values are actively being tuned** —
+first sim shows frugal's ☺−4 driving a lot of happiness deaths, likely to soften.)*
 
 Frugal being a *happiness drain* is deliberate: it removes "play boring, live
 longest". You must spend **up to** your means to stay content, but not beyond.
@@ -634,10 +642,10 @@ estate, having lived comfortably, aged 71."* No arithmetic.
 Roughly in likely order. None of these are started.
 
 > **Current focus — finish the WORK-side content** (before more education work).
-> The four big missing pieces: **(1)** homeless deck & exits, **(2)** house decks
-> + purchase triggers + owned-housing cost statuses, **(3)** the lifestyle status
-> unlocked at adulthood, **(4)** finish the work-path job decks (the day+loss
-> stubs). Each is a bullet below, tagged **[work-side focus]**.
+> Of the four big pieces: **house decks/purchase/owned statuses ✅ BUILT** and
+> **lifestyle ✅ BUILT** (both actively being balanced). Remaining: **(1)** homeless
+> deck & exits, **(2)** finish the work-path job decks (the day+loss stubs). Tagged
+> **[work-side focus]** below.
 
 - **Academic careers + education balance** — the grammar/university *school
   flows* are built (decks, tuition, the uniFund-or-savings gate, earning the
@@ -737,16 +745,11 @@ Roughly in likely order. None of these are started.
   kitchen) and exits (a benefactor, a doss-house job → renting/apprentice),
   mirroring what the workhouse now has.
 - **Eviction rescue — "turned out onto the streets" (adult finances net).**
-  *Maybe, if needed — decide from playtest.* The finances rescue (`child_hunger`
-  → workhouse) is childhood-only and `one_time`, and the adult net (§17b) is
-  *selling the house* — which does nothing for a **renter**. So a poor adult
-  renter who can't make rent (rent is −10, so an unemployed renter bleeds toward
-  0) currently just dies of bankruptcy with no net. Idea: a `rescue: "finances"`
-  card gated to adult renters (deck-/condition-gated, since only one finances
-  rescue is active at a time) that, instead of a game-over, **evicts you →
-  `homeless`** — alive but in the hardest state. Depends on the homeless deck
-  above having exits, and on whether playtest shows the bleed actually kills
-  people (raising the wages may be enough). Hold until we see the need.
+  **BUILT** (`home_renting_eviction`, `rescue: "finances"`, `ageMin 18`): an adult
+  renter who would go bankrupt is instead **evicted → `homeless`** (rescue floors
+  finances to 1, then you choose how you go). Still depends on the **homeless deck
+  & exits** above to not just be a slower death — until that lands, eviction buys
+  time but the streets have no way out.
 - **Renting deck** — first-pass `home_renting` deck is in (lodger, landlord,
   furnish, neighbour, quiet). Still wants: the step up to **buying** a place
   (toward the inheritance thread), and possibly a lodger as a persistent income

@@ -191,6 +191,26 @@ export const EN = {
   "ya_charity_debt.right": "Send him away",
   "ya_charity_debt.right.r0": "You keep your coins and your excuses. He tips his hat and promises to return — as he will, until you pay.",
 
+  "life_better.prompt": "You've a little put by. You could live a bit better than you do — a nicer table, a warmer hearth.",
+  "life_better.left": "Live a little better",
+  "life_better.left.r0": "You lift yourself out of bare frugality into modest comfort. It costs, but life is sweeter.",
+  "life_better.left.r1": "You step up to a comfortable life — good food, good company, small pleasures. Money well spent.",
+  "life_better.left.r2": "You take up a lavish style — the finest of everything. Glorious, and ruinously dear.",
+  "life_better.right": "Make do as you are",
+  "life_better.right.r0": "You resist the urge and carry on as you are. The pennies stay in the jar, if not the smile on your face.",
+  "life_economize.prompt": "Money is tight. You're living beyond your means and something has to give.",
+  "life_economize.left": "Tighten your belt",
+  "life_economize.left.r0": "You give up the lavish trappings for merely comfortable living. A blow to the pride, but the books balance again.",
+  "life_economize.left.r1": "You trim comfortable living back to modest. Less sweet, but you can afford it.",
+  "life_economize.left.r2": "You cut back to bare frugality. Grim and joyless, but it stops the bleeding.",
+  "life_economize.right": "Keep up appearances",
+  "life_economize.right.r0": "You refuse to be seen to come down in the world. It feels grand — while it lasts, and the debts mount.",
+  "home_renting_eviction.prompt": "You can't make the rent, and the landlord's patience is spent. You're to be turned out.",
+  "home_renting_eviction.left": "Sell what you can carry",
+  "home_renting_eviction.left.r0": "You pawn what little you own and take to the streets with a few coins and the clothes on your back.",
+  "home_renting_eviction.right": "Walk out with your head high",
+  "home_renting_eviction.right.r0": "You leave with nothing but your dignity, and meet the cold street on your own terms.",
+
   // ---- HOME: FAMILY -----------------------------------------------------
   "home_family_chores.prompt": "Your parents offer pocket money for helping around the house.",
   "home_family_chores.left": "Do the chores",
@@ -812,6 +832,11 @@ export const EN = {
   "status.education.journeyman": "Journeyman (trade)",
   "status.education.master": "Master (trade)",
 
+  "status.lifestyle.frugal": "Frugal",
+  "status.lifestyle.modest": "Modest",
+  "status.lifestyle.comfortable": "Comfortable",
+  "status.lifestyle.lavish": "Lavish",
+
   // ---- STATUS kind (chip prefix) ---------------------------------------
   "statuskind.job": "Job",
   "statuskind.housing": "Home",
@@ -1020,6 +1045,26 @@ export const IT: Record<StringId, string> = {
   "ya_charity_debt.left.r0": "Ti svuota la borsa, ma il registro è chiuso e con esso la tua coscienza. Ora non devi niente a nessuno.",
   "ya_charity_debt.right": "Mandarlo via",
   "ya_charity_debt.right.r0": "Tieni i tuoi soldi e le tue scuse. Si tocca il cappello e promette di tornare — come farà, finché non paghi.",
+
+  "life_better.prompt": "Hai messo da parte qualcosa. Potresti vivere un po' meglio di così — una tavola più ricca, un focolare più caldo.",
+  "life_better.left": "Vivere un po' meglio",
+  "life_better.left.r0": "Ti sollevi dalla nuda frugalità a una modesta agiatezza. Costa, ma la vita è più dolce.",
+  "life_better.left.r1": "Passi a una vita agiata — buon cibo, buona compagnia, piccoli piaceri. Soldi ben spesi.",
+  "life_better.left.r2": "Adotti uno stile fastoso — il meglio di tutto. Splendido, e rovinosamente caro.",
+  "life_better.right": "Accontentarti di com'è",
+  "life_better.right.r0": "Resisti alla tentazione e vai avanti così. I soldi restano nel barattolo, se non il sorriso sul volto.",
+  "life_economize.prompt": "I soldi scarseggiano. Vivi al di sopra dei tuoi mezzi e qualcosa deve cedere.",
+  "life_economize.left": "Stringere la cinghia",
+  "life_economize.left.r0": "Rinunci ai fasti per un vivere solo agiato. Un colpo all'orgoglio, ma i conti tornano.",
+  "life_economize.left.r1": "Riduci l'agiatezza a una vita modesta. Meno dolce, ma te la puoi permettere.",
+  "life_economize.left.r2": "Torni alla nuda frugalità. Cupa e senza gioia, ma ferma l'emorragia.",
+  "life_economize.right": "Salvare le apparenze",
+  "life_economize.right.r0": "Ti rifiuti di dare a vedere di essere caduto in basso. Ci si sente grandi — finché dura, e i debiti crescono.",
+  "home_renting_eviction.prompt": "Non riesci a pagare l'affitto, e la pazienza del padrone è finita. Sarai sfrattato.",
+  "home_renting_eviction.left": "Vendere ciò che puoi portare",
+  "home_renting_eviction.left.r0": "Impegni il poco che hai e ti butti in strada con qualche moneta e i vestiti addosso.",
+  "home_renting_eviction.right": "Uscire a testa alta",
+  "home_renting_eviction.right.r0": "Te ne vai con nient'altro che la tua dignità, e affronti la strada gelida alle tue condizioni.",
 
   // ---- HOME: FAMILY -----------------------------------------------------
   "home_family_chores.prompt": "I tuoi genitori ti offrono la paghetta per dare una mano in casa.",
@@ -1641,6 +1686,11 @@ export const IT: Record<StringId, string> = {
   "status.education.university": "Università",
   "status.education.journeyman": "Operaio qualificato (mestiere)",
   "status.education.master": "Maestro (mestiere)",
+
+  "status.lifestyle.frugal": "Frugale",
+  "status.lifestyle.modest": "Modesto",
+  "status.lifestyle.comfortable": "Agiato",
+  "status.lifestyle.lavish": "Fastoso",
 
   // ---- STATUS kind (chip prefix) ---------------------------------------
   "statuskind.job": "Lavoro",

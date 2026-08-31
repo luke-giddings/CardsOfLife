@@ -47,10 +47,16 @@ export function meets(
       if (typeof match === "string") {
         if (current !== match) return false;
       } else {
-        // { atLeast } — compare on the status's ordered levels
-        const need = statusRank(content, kind, match.atLeast);
+        // { atLeast } / { atMost } — compare on the status's ordered levels
         const have = statusRank(content, kind, current);
-        if (need < 0 || have < 0 || have < need) return false;
+        if (match.atLeast !== undefined) {
+          const need = statusRank(content, kind, match.atLeast);
+          if (need < 0 || have < 0 || have < need) return false;
+        }
+        if (match.atMost !== undefined) {
+          const cap = statusRank(content, kind, match.atMost);
+          if (cap < 0 || have < 0 || have > cap) return false;
+        }
       }
     }
   }

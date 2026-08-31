@@ -135,7 +135,7 @@ export type NumericTraitKey = {
 
 // --- Conditions --------------------------------------------------------------
 export type NumberMatch = number | { min?: number; max?: number };
-export type StatusMatch = string | { atLeast: string };
+export type StatusMatch = string | { atLeast?: string; atMost?: string };
 
 // Per-trait match: exact value for bool/enum, number-or-range for counters.
 export type TraitConditions = {

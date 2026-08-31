@@ -128,7 +128,7 @@ export const content = {
         // only a top income (solicitor/master) can run — overreach and the drain
         // pulls you toward the sell-up rescue. Each owns a deck that hosts the
         // offer of the NEXT tier up ("rebuild to 75, spend down, rebuild").
-        owned_small: { label: "status.housing.owned_small", drift: { finances: -8, health: 7, spirit: 3 }, addDecks: ["home_owned_small"] },
+        owned_small: { label: "status.housing.owned_small", drift: { finances: -10, health: 7, spirit: 3 }, addDecks: ["home_owned_small"] },
         owned_large: { label: "status.housing.owned_large", drift: { finances: -12, health: 9, spirit: 5, happiness: 2 }, addDecks: ["home_owned_large"] },
         owned_estate: { label: "status.housing.owned_estate", drift: { finances: -18, health: 11, spirit: 7, happiness: 4 }, addDecks: ["home_owned_estate"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
@@ -161,7 +161,25 @@ export const content = {
         master: { label: "status.education.master" },
       },
     },
-    lifestyle: { id: "lifestyle", states: { default: {} } },
+    // How you live — the money→happiness SINK and the treadmill's lever.
+    // Unlocked at coming-of-age (child_adult sets it to `frugal`); before that
+    // it's the neutral `default` (no drift, hidden). Ordered so the up/down
+    // lifestyle cards can gate on atLeast/atMost. Frugal is a HAPPINESS DRAIN on
+    // purpose — living cheap isn't the safe long life; you must spend up to your
+    // means. Higher tiers buy happiness with money AND (at the top) health/spirit
+    // — a lavish life genuinely wears you out.
+    lifestyle: {
+      id: "lifestyle",
+      ordered: true,
+      levels: ["frugal", "modest", "comfortable", "lavish"],
+      states: {
+        default: {},
+        frugal: { label: "status.lifestyle.frugal", drift: { happiness: -4 } },
+        modest: { label: "status.lifestyle.modest", drift: { finances: -3, happiness: 2 } },
+        comfortable: { label: "status.lifestyle.comfortable", drift: { finances: -8, happiness: 5, health: -1 } },
+        lavish: { label: "status.lifestyle.lavish", drift: { finances: -15, happiness: 9, health: -8, spirit: -4 } },
+      },
+    },
   },
 
   decks: [
@@ -431,8 +449,8 @@ export const content = {
           conditions: { ageMin: 18 },
           prompt: "child_adult.prompt",
           options: {
-            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, removeDecks: ["childhood"], addDecks: ["young_adult"] } }] },
-            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, removeDecks: ["childhood"], addDecks: ["young_adult"] } }] },
+            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { lifestyle: "frugal" }, removeDecks: ["childhood"], addDecks: ["young_adult", "lifestyle"] } }] },
+            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, setStatus: { lifestyle: "frugal" }, removeDecks: ["childhood"], addDecks: ["young_adult", "lifestyle"] } }] },
           },
         },
       ],
@@ -505,6 +523,59 @@ export const content = {
           options: {
             left: { label: "ya_charity_debt.left", outcomes: [{ result: "ya_charity_debt.left.r0", effects: { vitals: { finances: "--", spirit: "+" }, setTraits: { owesCharity: false } } }] },
             right: { label: "ya_charity_debt.right", outcomes: [{ result: "ya_charity_debt.right.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- Lifestyle: the money→happiness sink. Added at coming-of-age (child_adult
+    //     sets lifestyle = frugal), and stays active through adult life. Two
+    //     cards move you between the ordered tiers; conditional outcomes do the
+    //     per-tier maths, and the atMost/atLeast gates keep each card to the
+    //     range where it makes sense. ----------------------------------------
+    {
+      id: "lifestyle",
+      cards: [
+        {
+          // LIVE BETTER — spend more to move up a tier. Offered when you have
+          // spare cash (finances >= 40) and aren't already lavish. The ongoing
+          // extra drain (a higher lifestyle status) is the real cost; the card
+          // itself just gives the little joy of moving up.
+          id: "life_better",
+          kind: "filler",
+          conditions: { vitals: { finances: { min: 40 } }, status: { lifestyle: { atMost: "comfortable" } } },
+          prompt: "life_better.prompt",
+          options: {
+            left: {
+              label: "life_better.left",
+              outcomes: [
+                { if: { status: { lifestyle: "frugal" } }, result: "life_better.left.r0", effects: { vitals: { happiness: "+" }, setStatus: { lifestyle: "modest" } } },
+                { if: { status: { lifestyle: "modest" } }, result: "life_better.left.r1", effects: { vitals: { happiness: "+" }, setStatus: { lifestyle: "comfortable" } } },
+                { result: "life_better.left.r2", effects: { vitals: { happiness: "+" }, setStatus: { lifestyle: "lavish" } } },
+              ],
+            },
+            right: { label: "life_better.right", outcomes: [{ result: "life_better.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+        {
+          // ECONOMIZE — cut back a tier to save money. Offered when you're SHORT
+          // (finances <= 25) and living above frugal, so you can adapt to a drop
+          // in income. Cutting back stings (happiness -) but eases the drain;
+          // "keeping up appearances" (right) feels good now but keeps you bleeding.
+          id: "life_economize",
+          kind: "filler",
+          conditions: { vitals: { finances: { max: 25 } }, status: { lifestyle: { atLeast: "modest" } } },
+          prompt: "life_economize.prompt",
+          options: {
+            left: {
+              label: "life_economize.left",
+              outcomes: [
+                { if: { status: { lifestyle: "lavish" } }, result: "life_economize.left.r0", effects: { vitals: { happiness: "-", spirit: "+" }, setStatus: { lifestyle: "comfortable" } } },
+                { if: { status: { lifestyle: "comfortable" } }, result: "life_economize.left.r1", effects: { vitals: { happiness: "-", spirit: "+" }, setStatus: { lifestyle: "modest" } } },
+                { result: "life_economize.left.r2", effects: { vitals: { happiness: "-", spirit: "+" }, setStatus: { lifestyle: "frugal" } } },
+              ],
+            },
+            right: { label: "life_economize.right", outcomes: [{ result: "life_economize.right.r0", effects: { vitals: { happiness: "+" } } }] },
           },
         },
       ],
@@ -689,6 +760,23 @@ export const content = {
           options: {
             left: { label: "home_buy_small.left", outcomes: [{ result: "home_buy_small.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_small" } } }] },
             right: { label: "home_buy_small.right", outcomes: [{ result: "home_buy_small.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+        {
+          // The adult finances net for RENTERS (age >= 18, so childhood's
+          // workhouse rescue has already handed over): can't make the rent →
+          // TURNED OUT ONTO THE STREETS (housing → homeless) rather than a
+          // bankruptcy game-over. The rescue floors finances to 1; then you
+          // choose how you go — salvage a few coins, or leave with your dignity.
+          // (Homeless has its own harsh drift; its deck + ways out are Backlog.)
+          id: "home_renting_eviction",
+          kind: "one_time",
+          rescue: "finances",
+          conditions: { ageMin: 18 },
+          prompt: "home_renting_eviction.prompt",
+          options: {
+            left: { label: "home_renting_eviction.left", outcomes: [{ result: "home_renting_eviction.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { housing: "homeless" } } }] },
+            right: { label: "home_renting_eviction.right", outcomes: [{ result: "home_renting_eviction.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { housing: "homeless" } } }] },
           },
         },
       ],
