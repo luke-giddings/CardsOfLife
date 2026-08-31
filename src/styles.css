@@ -165,6 +165,9 @@ body {
 .ep-v { display: inline-flex; align-items: center; gap: 1px; }
 .ep-none { color: var(--faint); font-weight: 700; }
 .ep-end { color: var(--bad); }
+/* A rescued death: you'd hit 0 but a one-shot safety net would catch you. The
+   skull struck through reads as "death averted". */
+.ep-rescue { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 2px; opacity: 0.8; }
 /* "This choice changes your path" — a job/home/trait payload beyond the vital
    numbers, so a rewarding choice doesn't look weaker than its plain sibling. */
 .ep-special { color: var(--gold); font-weight: 700; }

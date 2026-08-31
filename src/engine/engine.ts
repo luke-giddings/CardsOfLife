@@ -304,7 +304,7 @@ const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
 // e.g. the charity hospital only catches young children). Mirrors how `force`
 // already checks eligibility. (Rescue cards are never drawn normally — see
 // drawCard.)
-function findRescue(state: GameState, content: Content, key: VitalKey): Card | null {
+export function findRescue(state: GameState, content: Content, key: VitalKey): Card | null {
   for (const card of allCards(content)) {
     if (card.rescue !== key) continue;
     if (exhausted(card, state)) continue;

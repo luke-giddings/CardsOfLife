@@ -4,6 +4,7 @@ import {
   chooseDirection,
   drawCard,
   eligibleDraw,
+  findRescue,
   initGame,
   quietYear,
   resolveOutcome,
@@ -374,6 +375,7 @@ export class Game {
     // the post-change per-turn drain.
     const projected = structuredClone(this.state);
     if (outcome.effects) applyEffect(projected, outcome.effects, content);
+    projected.age += 1; // the turn advances before drift + the game-over/rescue check
     const drift = totalDrift(projected, content);
     let chips = "";
     for (const key of VITAL_KEYS) {
@@ -385,8 +387,14 @@ export class Game {
       // as nothing (no bare "—").
       const lethal = projected.vitals[key] + (drift[key] ?? 0) <= VITAL_MIN;
       if (!mag && !lethal) continue;
+      // A vital hitting 0 is only really death if no safety net catches it. If a
+      // one-shot rescue would fire (charity hospital, sell-up, eviction…), show a
+      // STRUCK-THROUGH skull — you'd be floored but survive (this once).
+      const rescued = lethal && !!findRescue(projected, content, key);
       const body = lethal
-        ? `<span class="dbad ep-end" title="This would be fatal">☠</span>`
+        ? rescued
+          ? `<span class="ep-end ep-rescue" title="You'd hit 0 — but a safety net would catch you (once)">☠</span>`
+          : `<span class="dbad ep-end" title="This would be fatal">☠</span>`
         : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${mag!.split("-").join("−")}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }

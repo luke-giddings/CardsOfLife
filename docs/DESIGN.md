@@ -279,7 +279,11 @@ fire given the current state. Two extra markers:
   is the drift of the status you'd be **in after the choice**: a card that moves
   you to a harsher status (homeless, workhouse, a pricier lifestyle) previews
   *that* status's drains, not your current ones. It shows on whichever vital
-  would hit 0.
+  would hit 0. A **struck-through skull** (☠̶) is shown instead when a **one-shot
+  safety net would catch that 0** — the projection runs `findRescue` on the
+  post-choice state (advanced one turn, so age-gated nets like the charity
+  hospital's `ageMax` resolve correctly), so you can tell "real death" from
+  "you'd be floored but survive, this once".
 - A gold **★** marks a **beneficial path change beyond the numbers** — a new
   job/home/education (`setStatus`), a **boon trait** (`setTraits` — vaccinated,
   sporty, a uni fund…), or a life-stage deck swap — so a rewarding option (seize
