@@ -57,8 +57,11 @@ export const jobDecks = [
           conditions: { ageMax: 11 },
           prompt: "job_unemployed_school.prompt",
           options: {
-            left: { label: "job_unemployed_school.left", outcomes: [{ result: "job_unemployed_school.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "studying" } } }] },
-            right: { label: "job_unemployed_school.right", outcomes: [{ result: "job_unemployed_school.right.r0", effects: { vitals: { happiness: "-" } } }] },
+            // A real trade: schooling is the future (spirit + the education path,
+            // ★) but a hard, penniless road now (happiness −); keeping on the job
+            // hunt scrapes a little casual coin now (finances +) but no letters.
+            left: { label: "job_unemployed_school.left", outcomes: [{ result: "job_unemployed_school.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "studying" } } }] },
+            right: { label: "job_unemployed_school.right", outcomes: [{ result: "job_unemployed_school.right.r0", effects: { vitals: { finances: "+" } } }] },
           },
         },
         {
@@ -305,8 +308,12 @@ export const jobDecks = [
           kind: "filler",
           prompt: "job_factory_sacked.prompt",
           options: {
-            left: { label: "job_factory_sacked.left", outcomes: [{ result: "job_factory_sacked.left.r0", effects: { vitals: { health: "-" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_factory_sacked.right", outcomes: [{ result: "job_factory_sacked.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            // Both lead to unemployment (the works are shut); the choice is how
+            // you take it. Straight to the next mill: you keep earning (finances +)
+            // but drag your worn body round (health −). Curse the owners: a
+            // cathartic day (happiness +) but a day not spent earning (finances −).
+            left: { label: "job_factory_sacked.left", outcomes: [{ result: "job_factory_sacked.left.r0", effects: { vitals: { finances: "+", health: "-" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_factory_sacked.right", outcomes: [{ result: "job_factory_sacked.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],

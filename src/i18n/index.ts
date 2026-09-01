@@ -610,9 +610,9 @@ export const EN = {
 
   "job_factory_sacked.prompt": "A hand is mangled in the machinery; the works shut for the inquest, and the casual lads are let go.",
   "job_factory_sacked.left": "On to the next mill",
-  "job_factory_sacked.left.r0": "Worn out and out of work, you start the weary round again.",
+  "job_factory_sacked.left.r0": "Worn out but not idle, you trudge to the next works and pick up what casual pay you can.",
   "job_factory_sacked.right": "Curse the owners",
-  "job_factory_sacked.right.r0": "You spit at the gates. It changes nothing, but it feels good.",
+  "job_factory_sacked.right.r0": "You spit at the gates and rail all day. It earns you nothing — but by God it feels good.",
 
   "job_apprentice_end.prompt": "Your master falls ill and shuts up the workshop — your indenture is cut short.",
   "job_apprentice_end.left": "Grateful for the skills",
@@ -1519,9 +1519,9 @@ export const IT: Record<StringId, string> = {
 
   "job_factory_sacked.prompt": "Una mano finisce stritolata negli ingranaggi; la fabbrica chiude per l'inchiesta e i braccianti a giornata vengono mandati via.",
   "job_factory_sacked.left": "Alla prossima fabbrica",
-  "job_factory_sacked.left.r0": "Sfinito e senza lavoro, ricominci il giro estenuante.",
+  "job_factory_sacked.left.r0": "Sfinito ma non in ozio, ti trascini al prossimo opificio e racimoli quel po' di paga occasionale che trovi.",
   "job_factory_sacked.right": "Maledire i padroni",
-  "job_factory_sacked.right.r0": "Sputi ai cancelli. Non cambia nulla, ma ti fa sentire meglio.",
+  "job_factory_sacked.right.r0": "Sputi ai cancelli e inveisci tutto il giorno. Non ti frutta nulla — ma, perdio, ti fa sentire meglio.",
 
   "job_apprentice_end.prompt": "Il tuo maestro si ammala e chiude la bottega — il tuo contratto si interrompe prima del tempo.",
   "job_apprentice_end.left": "Grato per ciò che hai imparato",
