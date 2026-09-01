@@ -222,6 +222,11 @@ function changeStatus(
   if (kind === "housing" && value === "apprentice" && previous !== "apprentice") {
     state.housingBeforeApprentice = previous;
   }
+  // A fresh apprenticeship starts with no craftsmanship — `skill` is built up
+  // from scratch by working hard at the bench (see the job_apprentice deck).
+  if (kind === "job" && value === "apprentice" && previous !== "apprentice") {
+    state.traits.skill = 0;
+  }
 }
 
 export function applyEffect(state: GameState, effect: Effect, content: Content): void {

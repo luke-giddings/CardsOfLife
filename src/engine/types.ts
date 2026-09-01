@@ -86,6 +86,12 @@ export interface Traits {
   // Years served in the current job. Ticked by each work-event card; a
   // promotion card gates on it and resets it to 0 on the step up.
   experience: number;
+  // Apprenticeship craftsmanship. Unlike `experience` (time served — every
+  // apprentice work card ticks it whichever way you choose), `skill` only rises
+  // when you APPLY YOURSELF (the "work hard" option). The qualifying trial passes
+  // on skill, not health, so coasting through the years leaves you unready. Reset
+  // to 0 when you (re-)enter the apprenticeship. See the job_apprentice deck.
+  skill: number;
   // Durable "reached the factory" marker (unlike `experience`, which resets on
   // each job change). Lets the unemployed offer let a former factory worker
   // return to the factory without re-grinding, while a green worker cannot skip
@@ -122,6 +128,7 @@ export const DEFAULT_TRAITS: Traits = {
   numTimesChangedJob: 0,
   numTimesPlayedLottery: 0,
   experience: 0,
+  skill: 0,
   reachedFactory: false,
   jobStrikes: 0,
   owesCharity: false,

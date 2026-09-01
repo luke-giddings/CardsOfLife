@@ -369,7 +369,15 @@ own. A **visible Age status** rides these transitions and applies the passive
 **life-stage drift** (baby bonus → neutral young adult → a health decline that
 starts at adulthood and steepens in old age — §6). Occupation ladders partly built: dangerous child labour with the **earned
 apprenticeship** crossover (spirit/happiness, ages 13–18) onto the skilled trade
-(`_day`/bench-job XP → survivable closure → the qualifying trial → journeyman);
+(`_day`/bench-job XP → survivable closure → the qualifying trial → journeyman).
+The **trial is judged on a `skill` trait** — bench cards all tick a year of
+`experience` (time served, which calls the trial at ≥4) but only the *work-hard*
+option of each also builds skill; the trial passes on **skill ≥ 3**, so coasting
+leaves you unready. An unready apprentice can **beg for more time** (a 3rd option,
+shown only while skill < 3; winds the term back so you serve more years and can
+graft the skill you lack) rather than being forced to sit and fail; and simply
+**giving up the trade** is milder than a botched trial. `skill` resets on each
+(re-)entry to the apprenticeship.
 factory step within unskilled; criminal entry. Housing ladder (family → move-out
 → renting) with health recovery; the apprenticeship borrows and returns your
 housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path
