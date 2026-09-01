@@ -394,7 +394,9 @@ housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path
 ★). **Academic ladder now built**: free basic school → fee-paying **grammar
 school** (job=grammar_school, tuition −5) → **university** (job=university,
 tuition −5, entry gated on `uniFund` OR savings ≥ 50 via the new `any`
-OR-condition), earning the `basic`/`grammar`/`university` credentials that gate
+OR-condition — and the way is *paid*: the family fund covers it and is spent
+(`uniFund` → false), otherwise your own savings foot a heavy tuition bill
+(finances −−)), earning the `basic`/`grammar`/`university` credentials that gate
 the educated jobs. (Balance: reaching university is currently very rare — the
 tuition drain vs the savings gate — see §18.) Full debug toolkit. Deployed and
 playable on a phone.

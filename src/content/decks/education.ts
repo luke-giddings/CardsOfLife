@@ -145,7 +145,9 @@ export const educationDecks = [
           // End of grammar school (age >= 17): earns the `grammar` credential.
           // Then UP to university — the family fund OR your own savings pay the
           // way (uniFund OR finances >= 50, so the option hides if you can't
-          // afford it) — or leave for work.
+          // afford it) — or leave for work. The way is actually PAID for now: the
+          // family fund covers it and is spent (uniFund -> false); otherwise your
+          // own savings foot a heavy tuition bill (finances --).
           id: "edu_grammar_leaver",
           kind: "milestone",
           priority: 60,
@@ -155,7 +157,10 @@ export const educationDecks = [
             left: {
               label: "edu_grammar_leaver.left",
               if: { any: [{ traits: { uniFund: true } }, { vitals: { finances: { min: 50 } } }] },
-              outcomes: [{ result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" } } }],
+              outcomes: [
+                { if: { traits: { uniFund: true } }, result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" }, setTraits: { uniFund: false } } },
+                { result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" } } },
+              ],
             },
             right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "unemployed" } } }] },
           },

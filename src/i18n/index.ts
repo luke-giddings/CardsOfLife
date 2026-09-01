@@ -495,7 +495,8 @@ export const EN = {
   "edu_grammar_tutoring.right.r0": "You keep your own time for study and rest — restful, but the fees still bite.",
   "edu_grammar_leaver.prompt": "You've finished at the grammar school, a scholar now. The university beckons — if the means can be found.",
   "edu_grammar_leaver.left": "Up to university",
-  "edu_grammar_leaver.left.r0": "The fund — or your own savings — sees you matriculated. Few climb this high.",
+  "edu_grammar_leaver.left.r0": "The family fund, laid by all these years, sees you matriculated — and is spent doing it. Few climb this high.",
+  "edu_grammar_leaver.left.r1": "You empty your own hard-won savings to pay the fees. A heavy price, but the university gates open to you.",
   "edu_grammar_leaver.right": "Out into the world",
   "edu_grammar_leaver.right.r0": "You take your grammar-school credit and go to seek a respectable position.",
 
@@ -1411,7 +1412,8 @@ export const IT: Record<StringId, string> = {
   "edu_grammar_tutoring.right.r0": "Conservi il tuo tempo per studio e riposo — riposante, ma le rette pesano lo stesso.",
   "edu_grammar_leaver.prompt": "Hai finito la scuola superiore, ora sei un erudito. L'università chiama — se si trovano i mezzi.",
   "edu_grammar_leaver.left": "Su all'università",
-  "edu_grammar_leaver.left.r0": "Il fondo — o i tuoi risparmi — ti fa immatricolare. In pochi salgono così in alto.",
+  "edu_grammar_leaver.left.r0": "Il fondo di famiglia, messo da parte in tutti questi anni, ti fa immatricolare — e nel farlo si esaurisce. In pochi salgono così in alto.",
+  "edu_grammar_leaver.left.r1": "Svuoti i tuoi sudati risparmi per pagare le tasse. Un prezzo salato, ma le porte dell'università ti si aprono.",
   "edu_grammar_leaver.right": "Fuori nel mondo",
   "edu_grammar_leaver.right.r0": "Prendi il tuo diploma superiore e vai a cercare una posizione rispettabile.",
 
