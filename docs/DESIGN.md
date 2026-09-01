@@ -370,14 +370,20 @@ own. A **visible Age status** rides these transitions and applies the passive
 starts at adulthood and steepens in old age — §6). Occupation ladders partly built: dangerous child labour with the **earned
 apprenticeship** crossover (spirit/happiness, ages 13–18) onto the skilled trade
 (`_day`/bench-job XP → survivable closure → the qualifying trial → journeyman).
-The **trial is judged on a `skill` trait** — bench cards all tick a year of
-`experience` (time served, which calls the trial at ≥4) but only the *work-hard*
-option of each also builds skill; the trial passes on **skill ≥ 3**, so coasting
-leaves you unready. An unready apprentice can **beg for more time** (a 3rd option,
-shown only while skill < 3; winds the term back so you serve more years and can
-graft the skill you lack) rather than being forced to sit and fail; and simply
-**giving up the trade** is milder than a botched trial. `skill` resets on each
-(re-)entry to the apprenticeship.
+The **trial is judged on a `skill` trait**. The course is **5 one-shot bench
+cards**; each ticks a year of `experience` (time served, which calls the trial at
+≥3) but only the *work-hard* option also builds skill, and the trial passes on
+**skill ≥ 3** — so you must work hard on 3 of the 5, and coasting leaves you
+unready. An unready apprentice can **beg for more time** (a 3rd option, shown only
+while bench cards remain (experience < 5) and you're not up to standard (skill ≤
+2)); begging *defers* the trial via an `apprenticeDeferred` flag — no setback —
+which the next bench card clears, so the trial returns once you've made progress.
+Leaving (sit the trial, or give up) removes the deck, so the trial only repeats if
+you beg. **Giving up the trade** is milder than a botched trial. The `apprentice_end`
+misfortune (workshop closes) is also one-shot and grants no experience/skill.
+`skill` (and the deferral) reset on each (re-)entry to the apprenticeship.
+(Balance: with the deck sharing the draw pool the course runs ~9 years; a future
+`priority` flag would tighten it to ~5 — see §18.)
 factory step within unskilled; criminal entry. Housing ladder (family → move-out
 → renting) with health recovery; the apprenticeship borrows and returns your
 housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path

@@ -321,34 +321,30 @@ export const jobDecks = [
     {
       id: "job_apprentice",
       cards: [
+        // THE COURSE: five one-shot bench tasks. Each ticks a year of `experience`
+        // (time served) whichever way you choose; only the WORK-HARD (left) option
+        // also earns +1 `skill` — the craftsmanship the trial is judged on. You
+        // must work hard on 3 of the 5 to reach the passing standard (skill >= 3).
+        // Both options clear `apprenticeDeferred`, so a begged-for trial comes
+        // round again once you've done more work. Neither option dominates —
+        // graft the craft (a cost now, skill for the trial), or coast (a small
+        // comfort, but you learn nothing).
         {
-          // Learning the trade at the bench. Both options tick a year of
-          // `experience` (time served); only GRAFT (spirit + health cost) also
-          // builds `skill` — the craftsmanship the qualifying trial is judged on.
-          // Take it STEADY (happiness +) and the years still pass, but you learn
-          // nothing. This is the repeatable skill grind: after the one-shot bench
-          // jobs are used up, it's how an unready apprentice earns the skill to
-          // pass. Neither dominates — graft your craft, or coast and enjoy it.
           id: "job_apprentice_day",
-          kind: "filler",
+          kind: "one_time",
           prompt: "job_apprentice_day.prompt",
           options: {
-            left: { label: "job_apprentice_day.left", outcomes: [{ result: "job_apprentice_day.left.r0", effects: { vitals: { spirit: "-", health: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
-            right: { label: "job_apprentice_day.right", outcomes: [{ result: "job_apprentice_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_apprentice_day.left", outcomes: [{ result: "job_apprentice_day.left.r0", effects: { vitals: { spirit: "-", health: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            right: { label: "job_apprentice_day.right", outcomes: [{ result: "job_apprentice_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
           },
         },
-        // One-shot bench jobs: each ticks a guaranteed year of experience toward
-        // the trial (both options +1), and the "work hard" (left) option also
-        // earns +1 skill — the diligent choice on each task is where your
-        // craftsmanship comes from. They also thin the early pool away from
-        // `_end`, then bow out once played -- the pattern the labour deck uses.
         {
           id: "job_apprentice_errand",
           kind: "one_time",
           prompt: "job_apprentice_errand.prompt",
           options: {
-            left: { label: "job_apprentice_errand.left", outcomes: [{ result: "job_apprentice_errand.left.r0", effects: { vitals: { health: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
-            right: { label: "job_apprentice_errand.right", outcomes: [{ result: "job_apprentice_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_apprentice_errand.left", outcomes: [{ result: "job_apprentice_errand.left.r0", effects: { vitals: { health: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            right: { label: "job_apprentice_errand.right", outcomes: [{ result: "job_apprentice_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
           },
         },
         {
@@ -356,8 +352,8 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_tools.prompt",
           options: {
-            left: { label: "job_apprentice_tools.left", outcomes: [{ result: "job_apprentice_tools.left.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
-            right: { label: "job_apprentice_tools.right", outcomes: [{ result: "job_apprentice_tools.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_apprentice_tools.left", outcomes: [{ result: "job_apprentice_tools.left.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            right: { label: "job_apprentice_tools.right", outcomes: [{ result: "job_apprentice_tools.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
           },
         },
         {
@@ -365,30 +361,40 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_market.prompt",
           options: {
-            left: { label: "job_apprentice_market.left", outcomes: [{ result: "job_apprentice_market.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
-            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_apprentice_market.left", outcomes: [{ result: "job_apprentice_market.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
           },
         },
         {
-          // TIME-LIMIT: the term is up (experience >= 4). A MILESTONE, so it jumps
-          // the queue — you can't apprentice forever. The trial is judged on
-          // SKILL, not health: work hard through the years and your piece passes.
-          //   left  Sit the trial → PASS if skill >= 3 → journeyman job +
-          //         `journeyman` credential; else FAIL (your piece is clumsy) →
-          //         unemployed, no credential — the painful outcome.
-          //   right Give up the trade → unemployed, but LESS painful than a fail
-          //         (you chose it; no botched-trial humiliation).
-          //   down  Beg for more time → only shown while you're NOT YET up to
-          //         standard (skill <= 2). Stays an apprentice and winds the term
-          //         back (experience -2) so you serve more years — a chance to
-          //         graft the skill you're short of, instead of a forced fail.
+          id: "job_apprentice_lesson",
+          kind: "one_time",
+          prompt: "job_apprentice_lesson.prompt",
+          options: {
+            left: { label: "job_apprentice_lesson.left", outcomes: [{ result: "job_apprentice_lesson.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            right: { label: "job_apprentice_lesson.right", outcomes: [{ result: "job_apprentice_lesson.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+          },
+        },
+        {
+          // THE TRIAL. A MILESTONE, eligible once the term is far enough along
+          // (experience >= 3) and not currently deferred. Judged on SKILL, not
+          // health: work hard on 3 of the five bench tasks (skill >= 3) and your
+          // piece passes.
+          //   left  Sit the trial → PASS (skill >= 3) → journeyman job +
+          //         `journeyman` credential; else FAIL → unemployed, no credential.
+          //   right Give up the trade → unemployed, milder than a botched trial.
+          //   down  Beg for more time → shown only while bench cards remain
+          //         (experience < 5) AND you're not yet up to standard (skill <= 2).
+          //         Defers the trial (no setback) so a bench card draws next and you
+          //         can graft more skill; the next work card clears the deferral and
+          //         the trial returns. Leaving (sit / give up) removes the deck, so
+          //         the trial only ever repeats if you beg.
           id: "job_apprentice_qualify",
           kind: "milestone",
           priority: 50,
           // Repeatable: you may serve more than one apprenticeship in a life
           // (e.g. after a first one fails), and each must reach its own trial.
           copies: 99,
-          conditions: { traits: { experience: { min: 4 } } },
+          conditions: { traits: { experience: { min: 3 }, apprenticeDeferred: false } },
           prompt: "job_apprentice_qualify.prompt",
           // Leaving the master's roof (pass or fail) returns you to whatever
           // housing you had BEFORE the apprenticeship (`restoreHousing`) — the
@@ -403,19 +409,18 @@ export const jobDecks = [
               ],
             },
             right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
-            down: { label: "job_apprentice_qualify.down", if: { traits: { skill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0", effects: { vitals: { happiness: "-" }, incTraits: { experience: -2 } } }] },
+            down: { label: "job_apprentice_qualify.down", if: { traits: { experience: { max: 4 }, skill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0", effects: { setTraits: { apprenticeDeferred: true } } }] },
           },
         },
         {
-          // The master's workshop closes before you qualify. Not a dead end any
-          // more: `down` = seek another master to take over your indenture, so a
-          // closure needn't cost you the trade (like begging to keep a job). It
-          // keeps you an apprentice AND your experience, at a real cost (finances
-          // + happiness -- the upheaval and lost time). Otherwise leave: with
-          // PRIDE (spirit) and no coin, or press the ailing master for the
-          // indenture's worth (MONEY, but a bitter parting).
+          // The master's workshop closes before you qualify. A ONE-SHOT (it can
+          // happen at most once), and it grants NO experience or skill — it's
+          // misfortune, not training. `down` = seek another master to take over
+          // your indenture (stay apprentice, keep your progress) at a cost; else
+          // leave with PRIDE (spirit) and no coin, or press the ailing master for
+          // the indenture's worth (MONEY, but a bitter parting).
           id: "job_apprentice_end",
-          kind: "filler",
+          kind: "one_time",
           options: {
             left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
             right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
