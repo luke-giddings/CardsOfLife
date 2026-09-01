@@ -813,8 +813,11 @@ Roughly in likely order. None of these are started.
   the **next run starts in that house** (and maybe with some money/traits).
   Implemented as a shim: on the end screen write an `inheritance` record to
   `localStorage`; on `New life`, override `content.start` before the first card.
-  The engine needn't change (start is already pure data). Related: the deferred
-  **"continue as your child"** thread.
+  The engine needn't change (start is already pure data). A natural lever here is
+  **seeding `uniFund`** (or starting savings) from a well-off forebear — the
+  intended way to make the deliberately-rare university path reachable more often
+  in a *later* run, without cheapening it within a single life. Related: the
+  deferred **"continue as your child"** thread.
 - **Relationship character decks** — unlock a sibling/friend/partner's storyline
   when a `rel*` trait crosses a threshold; different runs surface different
   stories. **Next up: expand the brother/sister decks.** Use `CardOption.if`
