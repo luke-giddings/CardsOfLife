@@ -85,8 +85,11 @@ export const adultDecks = [
           conditions: { ageMin: 25 },
           prompt: "ya_adult.prompt",
           options: {
+            // A milestone into adulthood — neither option should sting. Contentment
+            // (happiness + spirit) vs throwing yourself at the earning (a bigger
+            // finances boost); different rewards, no penalty either way.
             left: { label: "ya_adult.left", outcomes: [{ result: "ya_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "adult" }, removeDecks: ["age_young_adult"], addDecks: ["age_adult"] } }] },
-            right: { label: "ya_adult.right", outcomes: [{ result: "ya_adult.right.r0", effects: { vitals: { finances: "+", health: "-" }, setStatus: { age: "adult" }, removeDecks: ["age_young_adult"], addDecks: ["age_adult"] } }] },
+            right: { label: "ya_adult.right", outcomes: [{ result: "ya_adult.right.r0", effects: { vitals: { finances: "++" }, setStatus: { age: "adult" }, removeDecks: ["age_young_adult"], addDecks: ["age_adult"] } }] },
           },
         },
       ],
