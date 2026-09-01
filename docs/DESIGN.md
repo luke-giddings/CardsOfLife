@@ -293,7 +293,10 @@ fire given the current state. Two extra markers:
   identical, but flagged bad): `setFlaws` never earns the star, **and suppresses
   it** even when the same outcome also changes status (so selling up → renting, or
   the charity-hospital debt, don't star). Incremental ticks (experience, +1
-  sporty) don't qualify either, keeping the star rare. *(Known remaining case: a
+  sporty) don't qualify either, and neither do **internal bookkeeping flags**
+  (`STAR_IGNORE_TRAITS` — e.g. the apprenticeship's `apprenticeDeferred`, which
+  every bench card clears): only a genuine boon trait counts, keeping the star
+  rare. *(Known remaining case: a
   plain demotion like being sacked → unemployed still stars — it's a bare
   `setStatus` with no flaw, and telling a downgrade from an upgrade needs status
   rankings; parked.)*
