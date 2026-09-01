@@ -382,8 +382,10 @@ Leaving (sit the trial, or give up) removes the deck, so the trial only repeats 
 you beg. **Giving up the trade** is milder than a botched trial. The `apprentice_end`
 misfortune (workshop closes) is also one-shot and grants no experience/skill.
 `skill` (and the deferral) reset on each (re-)entry to the apprenticeship.
-(Balance: with the deck sharing the draw pool the course runs ~9 years; a future
-`priority` flag would tighten it to ~5 — see §18.)
+(Pacing: the deck deliberately shares the draw pool with life-event cards, so the
+course runs ~9 years with life variety throughout — a decision over tightening it
+to a themed ~5 years by making the deck `priority`, which would suppress those
+events during the indenture.)
 factory step within unskilled; criminal entry. Housing ladder (family → move-out
 → renting) with health recovery; the apprenticeship borrows and returns your
 housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path
