@@ -57,11 +57,6 @@ const VITAL_ICON: Record<VitalKey, string> = {
   spirit: "✦",
 };
 
-// Internal bookkeeping traits that must NOT earn the beneficial-choice ★ when set
-// (they're mechanism, not reward) — e.g. the apprenticeship's trial-deferral flag,
-// which every bench card clears.
-const STAR_IGNORE_TRAITS = new Set<string>(["apprenticeDeferred"]);
-
 const STATUS_LABEL: Record<StatusKind, StringId> = {
   age: "statuskind.age",
   job: "statuskind.job",
@@ -411,13 +406,10 @@ export class Game {
     // or a life-stage deck swap. It is suppressed when the outcome inflicts a
     // BURDEN (setFlaws — the charity-hospital debt, the sold-up shame mark), even
     // if that outcome also changes status (e.g. selling up → renting), since the
-    // star reads as "good". Incremental ticks (experience, +1 sporty) don't count,
-    // nor do internal bookkeeping flags (STAR_IGNORE_TRAITS, e.g. the
-    // apprenticeship's deferral flag) — only a genuine BOON trait earns the star.
+    // star reads as "good". Incremental ticks (experience, +1 sporty) don't count.
     const e = outcome.effects;
     const hasFlaw = !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
-    const boonTraits = !!(e?.setTraits && Object.keys(e.setTraits).some((k) => !STAR_IGNORE_TRAITS.has(k)));
-    const special = !hasFlaw && !!(e?.setStatus || boonTraits || e?.addDecks || e?.removeDecks);
+    const special = !hasFlaw && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
     if (special) chips += `<span class="ep-v ep-special" title="This choice changes your path — a job, home, schooling, or a lasting boon">★</span>`;
     // No vital changes → show nothing (rather than a bare "—").
     return chips;

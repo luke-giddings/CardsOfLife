@@ -92,11 +92,6 @@ export interface Traits {
   // on skill, not health, so coasting through the years leaves you unready. Reset
   // to 0 when you (re-)enter the apprenticeship. See the job_apprentice deck.
   skill: number;
-  // Apprenticeship trial deferral. Set true when you "beg for more time" at the
-  // trial, which keeps the trial (a milestone) from re-firing every turn; the
-  // next bench (work) card you play clears it, so the trial comes round again
-  // once you've made more progress. Reset on (re-)entering the apprenticeship.
-  apprenticeDeferred: boolean;
   // Durable "reached the factory" marker (unlike `experience`, which resets on
   // each job change). Lets the unemployed offer let a former factory worker
   // return to the factory without re-grinding, while a green worker cannot skip
@@ -134,7 +129,6 @@ export const DEFAULT_TRAITS: Traits = {
   numTimesPlayedLottery: 0,
   experience: 0,
   skill: 0,
-  apprenticeDeferred: false,
   reachedFactory: false,
   jobStrikes: 0,
   owesCharity: false,

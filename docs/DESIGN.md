@@ -293,10 +293,7 @@ fire given the current state. Two extra markers:
   identical, but flagged bad): `setFlaws` never earns the star, **and suppresses
   it** even when the same outcome also changes status (so selling up → renting, or
   the charity-hospital debt, don't star). Incremental ticks (experience, +1
-  sporty) don't qualify either, and neither do **internal bookkeeping flags**
-  (`STAR_IGNORE_TRAITS` — e.g. the apprenticeship's `apprenticeDeferred`, which
-  every bench card clears): only a genuine boon trait counts, keeping the star
-  rare. *(Known remaining case: a
+  sporty) don't qualify either, keeping the star rare. *(Known remaining case: a
   plain demotion like being sacked → unemployed still stars — it's a bare
   `setStatus` with no flaw, and telling a downgrade from an upgrade needs status
   rankings; parked.)*
@@ -374,21 +371,23 @@ starts at adulthood and steepens in old age — §6). Occupation ladders partly 
 apprenticeship** crossover (spirit/happiness, ages 13–18) onto the skilled trade
 (`_day`/bench-job XP → survivable closure → the qualifying trial → journeyman).
 The **trial is judged on a `skill` trait**. The course is **5 one-shot bench
-cards**; each ticks a year of `experience` (time served, which calls the trial at
-≥3) but only the *work-hard* option also builds skill, and the trial passes on
-**skill ≥ 3** — so you must work hard on 3 of the 5, and coasting leaves you
-unready. An unready apprentice can **beg for more time** (a 3rd option, shown only
-while bench cards remain (experience < 5) and you're not up to standard (skill ≤
-2)); begging *defers* the trial via an `apprenticeDeferred` flag — no setback —
-which the next bench card clears, so the trial returns once you've made progress.
-Leaving (sit the trial, or give up) removes the deck, so the trial only repeats if
-you beg. **Giving up the trade** is milder than a botched trial. The `apprentice_end`
-misfortune (workshop closes) is also one-shot and grants no experience/skill.
-`skill` (and the deferral) reset on each (re-)entry to the apprenticeship.
-(Pacing: the deck deliberately shares the draw pool with life-event cards, so the
-course runs ~9 years with life variety throughout — a decision over tightening it
-to a themed ~5 years by making the deck `priority`, which would suppress those
-events during the indenture.)
+cards**; each ticks a year of `experience` (time served) but only the *work-hard*
+option also builds skill, and the trial passes on **skill ≥ 3** — so you must work
+hard on 3 of the 5, and coasting leaves you unready. The **trial is a plain
+(filler) card that unlocks at experience ≥ 3** and then sits in the draw pool — no
+milestone forcing: because the bench cards are one-shots, the trial is simply
+what's left to draw as they deplete, so it comes round on its own. An unready
+apprentice can **beg for more time** (a 3rd option, shown only while bench cards
+remain (experience < 5) and you're not up to standard (skill ≤ 2)) — a no-op
+decline, so the trial just comes round again another year once you've done more
+work. Leaving (sit the trial, or give up) changes your job and removes the deck, so
+the trial only repeats if you beg. **Giving up the trade** is milder than a botched
+trial. The `apprentice_end` misfortune (workshop closes) is also one-shot and
+grants no experience/skill. `skill` resets on each (re-)entry to the
+apprenticeship. (Pacing: sharing the draw pool with life-event cards, and with the
+trial no longer forced, the course runs long — a ~14-year median — with life
+variety throughout; tightening it would mean making the deck `priority` or forcing
+the trial again.)
 factory step within unskilled; criminal entry. Housing ladder (family → move-out
 → renting) with health recovery; the apprenticeship borrows and returns your
 housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path

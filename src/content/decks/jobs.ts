@@ -325,17 +325,15 @@ export const jobDecks = [
         // (time served) whichever way you choose; only the WORK-HARD (left) option
         // also earns +1 `skill` — the craftsmanship the trial is judged on. You
         // must work hard on 3 of the 5 to reach the passing standard (skill >= 3).
-        // Both options clear `apprenticeDeferred`, so a begged-for trial comes
-        // round again once you've done more work. Neither option dominates —
-        // graft the craft (a cost now, skill for the trial), or coast (a small
-        // comfort, but you learn nothing).
+        // Neither option dominates — graft the craft (a cost now, skill for the
+        // trial), or coast (a small comfort, but you learn nothing).
         {
           id: "job_apprentice_day",
           kind: "one_time",
           prompt: "job_apprentice_day.prompt",
           options: {
-            left: { label: "job_apprentice_day.left", outcomes: [{ result: "job_apprentice_day.left.r0", effects: { vitals: { spirit: "-", health: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
-            right: { label: "job_apprentice_day.right", outcomes: [{ result: "job_apprentice_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            left: { label: "job_apprentice_day.left", outcomes: [{ result: "job_apprentice_day.left.r0", effects: { vitals: { spirit: "-", health: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
+            right: { label: "job_apprentice_day.right", outcomes: [{ result: "job_apprentice_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
           },
         },
         {
@@ -343,8 +341,8 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_errand.prompt",
           options: {
-            left: { label: "job_apprentice_errand.left", outcomes: [{ result: "job_apprentice_errand.left.r0", effects: { vitals: { health: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
-            right: { label: "job_apprentice_errand.right", outcomes: [{ result: "job_apprentice_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            left: { label: "job_apprentice_errand.left", outcomes: [{ result: "job_apprentice_errand.left.r0", effects: { vitals: { health: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
+            right: { label: "job_apprentice_errand.right", outcomes: [{ result: "job_apprentice_errand.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
           },
         },
         {
@@ -352,8 +350,8 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_tools.prompt",
           options: {
-            left: { label: "job_apprentice_tools.left", outcomes: [{ result: "job_apprentice_tools.left.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
-            right: { label: "job_apprentice_tools.right", outcomes: [{ result: "job_apprentice_tools.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            left: { label: "job_apprentice_tools.left", outcomes: [{ result: "job_apprentice_tools.left.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
+            right: { label: "job_apprentice_tools.right", outcomes: [{ result: "job_apprentice_tools.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
           },
         },
         {
@@ -361,8 +359,8 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_market.prompt",
           options: {
-            left: { label: "job_apprentice_market.left", outcomes: [{ result: "job_apprentice_market.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
-            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            left: { label: "job_apprentice_market.left", outcomes: [{ result: "job_apprentice_market.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
+            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
           },
         },
         {
@@ -370,31 +368,28 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_lesson.prompt",
           options: {
-            left: { label: "job_apprentice_lesson.left", outcomes: [{ result: "job_apprentice_lesson.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { experience: 1, skill: 1 }, setTraits: { apprenticeDeferred: false } } }] },
-            right: { label: "job_apprentice_lesson.right", outcomes: [{ result: "job_apprentice_lesson.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 }, setTraits: { apprenticeDeferred: false } } }] },
+            left: { label: "job_apprentice_lesson.left", outcomes: [{ result: "job_apprentice_lesson.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { experience: 1, skill: 1 } } }] },
+            right: { label: "job_apprentice_lesson.right", outcomes: [{ result: "job_apprentice_lesson.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
           },
         },
         {
-          // THE TRIAL. A MILESTONE, eligible once the term is far enough along
-          // (experience >= 3) and not currently deferred. Judged on SKILL, not
-          // health: work hard on 3 of the five bench tasks (skill >= 3) and your
-          // piece passes.
+          // THE TRIAL. A plain (filler) card that unlocks at experience >= 3 and
+          // then sits in the draw pool — no milestone forcing needed: the five
+          // bench cards are one-shots, so as they deplete the trial is what's left
+          // to draw, and it comes round on its own. Judged on SKILL, not health:
+          // work hard on 3 of the five bench tasks (skill >= 3) and your piece passes.
           //   left  Sit the trial → PASS (skill >= 3) → journeyman job +
           //         `journeyman` credential; else FAIL → unemployed, no credential.
           //   right Give up the trade → unemployed, milder than a botched trial.
           //   down  Beg for more time → shown only while bench cards remain
           //         (experience < 5) AND you're not yet up to standard (skill <= 2).
-          //         Defers the trial (no setback) so a bench card draws next and you
-          //         can graft more skill; the next work card clears the deferral and
-          //         the trial returns. Leaving (sit / give up) removes the deck, so
-          //         the trial only ever repeats if you beg.
+          //         A no-op decline: you stay an apprentice and the trial simply
+          //         comes round again another year, once you've done more work.
+          // Sitting or giving up changes your job, which removes this deck — so the
+          // trial only ever comes back if you beg.
           id: "job_apprentice_qualify",
-          kind: "milestone",
-          priority: 50,
-          // Repeatable: you may serve more than one apprenticeship in a life
-          // (e.g. after a first one fails), and each must reach its own trial.
-          copies: 99,
-          conditions: { traits: { experience: { min: 3 }, apprenticeDeferred: false } },
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_apprentice_qualify.prompt",
           // Leaving the master's roof (pass or fail) returns you to whatever
           // housing you had BEFORE the apprenticeship (`restoreHousing`) — the
@@ -409,7 +404,7 @@ export const jobDecks = [
               ],
             },
             right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
-            down: { label: "job_apprentice_qualify.down", if: { traits: { experience: { max: 4 }, skill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0", effects: { setTraits: { apprenticeDeferred: true } } }] },
+            down: { label: "job_apprentice_qualify.down", if: { traits: { experience: { max: 4 }, skill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0" }] },
           },
         },
         {

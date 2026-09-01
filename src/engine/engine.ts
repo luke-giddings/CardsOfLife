@@ -223,11 +223,9 @@ function changeStatus(
     state.housingBeforeApprentice = previous;
   }
   // A fresh apprenticeship starts with no craftsmanship — `skill` is built up
-  // from scratch by working hard at the bench (see the job_apprentice deck) —
-  // and with the trial not deferred.
+  // from scratch by working hard at the bench (see the job_apprentice deck).
   if (kind === "job" && value === "apprentice" && previous !== "apprentice") {
     state.traits.skill = 0;
-    state.traits.apprenticeDeferred = false;
   }
 }
 
