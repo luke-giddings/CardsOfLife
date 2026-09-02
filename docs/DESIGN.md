@@ -77,10 +77,12 @@ nudges and drift use raw numbers (they're not player-facing bar moves).
 
 A Status does two jobs: **drift** (a fixed per-turn effect on Vitals) and
 **gating/deck-ownership** (a state can `addDecks`). Drift is shown to the player
-on the status chip as **icon + a 1–3-symbol strength** by magnitude (|v| ≥ 15 →
-`+++`/`−−−`, ≥ 5 → `++`/`−−`, else `+`/`−`), so a heavier drain reads heavier —
-e.g. old age *♥−−* vs adulthood *♥−*, and the lifestyle ladder *☺−* → *£−−* →
-*£−−−*. (Mirrors the `+/++/+++` vocabulary on the cards.)
+on the status chip as **icon + a 1–3-symbol strength** by magnitude (|v| ≥ 16 →
+`+++`/`−−−`, ≥ 8 → `++`/`−−`, else `+`/`−`), so a heavier drain reads heavier —
+e.g. old age *♥−−* (−8) vs adulthood *♥−* (−3). The single band runs to 7 on
+purpose: the game's ubiquitous **−5 "baseline" cost** (study, family keep,
+workhouse, unemployment) should read as one *−*, not a heavy *−−* — so a fresh
+undergrad shows *✦− £−*, not *✦−− £−−*. (Mirrors the `+/++/+++` card vocabulary.)
 
 | Status | States (so far) | Notes |
 |---|---|---|

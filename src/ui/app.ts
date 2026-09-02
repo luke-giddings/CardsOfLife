@@ -323,8 +323,11 @@ export class Game {
         if (!dv) continue;
         // Show the STRENGTH of the drift, not just its sign: 1–3 symbols by
         // magnitude (a heavier drain reads heavier — e.g. old age ♥−− vs
-        // adulthood ♥−), mirroring the +/++/+++ vocabulary on the cards.
-        const mag = Math.abs(dv) >= 15 ? 3 : Math.abs(dv) >= 5 ? 2 : 1;
+        // adulthood ♥−), mirroring the +/++/+++ vocabulary on the cards. The
+        // single-symbol band runs to 7 so the game's ubiquitous −5 "baseline"
+        // cost (study/keep/workhouse) reads as one −, not a heavy −−; the double
+        // band (8–15) is for genuinely bigger drains (old age −8, renting −10).
+        const mag = Math.abs(dv) >= 16 ? 3 : Math.abs(dv) >= 8 ? 2 : 1;
         const sym = (dv > 0 ? "+" : "−").repeat(mag);
         drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${dv > 0 ? "dgood" : "dbad"}">${sym}</span></span>`;
       }
