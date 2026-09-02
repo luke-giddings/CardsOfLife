@@ -167,7 +167,9 @@ body {
 .ep-end { color: var(--bad); }
 /* A rescued death: you'd hit 0 but a one-shot safety net would catch you. The
    skull struck through reads as "death averted". */
-.ep-rescue { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 2px; opacity: 0.8; }
+/* A rescued death: you'd hit 0 but a one-shot safety net catches you. A shield
+   (rather than a struck-through skull, which read poorly) says "protected". */
+.ep-rescue { font-size: 0.9em; line-height: 1; }
 /* "This choice changes your path" — a job/home/trait payload beyond the vital
    numbers, so a rewarding choice doesn't look weaker than its plain sibling. */
 .ep-special { color: var(--gold); font-weight: 700; }

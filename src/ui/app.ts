@@ -393,7 +393,7 @@ export class Game {
       const rescued = lethal && !!findRescue(projected, content, key);
       const body = lethal
         ? rescued
-          ? `<span class="ep-end ep-rescue" title="You'd hit 0 — but a safety net would catch you (once)">☠</span>`
+          ? `<span class="ep-rescue" title="You'd hit 0 — but a safety net would catch you (once)">🛡</span>`
           : `<span class="dbad ep-end" title="This would be fatal">☠</span>`
         : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${mag!.split("-").join("−")}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
