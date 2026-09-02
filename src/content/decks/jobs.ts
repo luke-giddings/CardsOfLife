@@ -25,15 +25,18 @@ export const jobDecks = [
           prompt: "job_unemployed_offer.prompt",
           options: {
             left: {
-              // Lettered → the shop counter (educated path). Unlettered → no
-              // wasted swipe: it's back to casual child-labour (job=child_labourer)
-              // — the loom-deck floor, which also keeps the lucky-break
-              // apprenticeship in reach. shophand stays literacy-gated. Contrast
-              // the right option, which is the steadier factory (no apprentice
-              // route). So for the illiterate this is a real choice: the grim
-              // floor with a shot at a trade, or the safer mill dead-end.
+              // Resume the career your CREDENTIAL fits — each education level
+              // re-enters its own ladder at the bottom rung: university → junior
+              // physician (medicine), grammar → clerk (clerkly/law), basic → shop
+              // assistant (commerce). Unlettered → no wasted swipe: back to casual
+              // child-labour (the loom-deck floor, which keeps the lucky-break
+              // apprenticeship in reach). Outcomes resolve top-to-bottom, so the
+              // highest credential wins. Contrast the right option (the steadier
+              // factory), so the illiterate still get a real choice.
               label: "job_unemployed_offer.left",
               outcomes: [
+                { if: { status: { education: { atLeast: "university" } } }, result: "job_unemployed_offer.left.r2", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician_junior" } } },
+                { if: { status: { education: { atLeast: "grammar" } } }, result: "job_unemployed_offer.left.r3", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" } } },
                 { if: { status: { education: { atLeast: "basic" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
                 { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
               ],
@@ -254,15 +257,15 @@ export const jobDecks = [
           },
         },
         {
-          // Promotion to clerk. Eligible once you have served your time
-          // (experience >= 3). Accept → clerk (reset experience for the next
-          // rung); decline → keep your place, a small knock to the spirit.
+          // COMMERCE ladder rung: shop assistant → shopkeeper (your own shop).
+          // Eligible once you've served your time (experience >= 3). Accept →
+          // shopkeeper (experience resets for the next rung); decline → stay put.
           id: "job_shop_promote",
           kind: "filler",
           conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_shop_promote.prompt",
           options: {
-            left: { label: "job_shop_promote.left", outcomes: [{ result: "job_shop_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" } } }] },
+            left: { label: "job_shop_promote.left", outcomes: [{ result: "job_shop_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shopkeeper" } } }] },
             right: { label: "job_shop_promote.right", outcomes: [{ result: "job_shop_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -481,8 +484,8 @@ export const jobDecks = [
     // Each has a work-event card (ticks experience) and a job-loss card
     // (→ unemployed); climbable tiers add a promotion card.
 
-    // --- Educated: clerk (tier 2). Promotion to solicitor needs GRAMMAR
-    //     schooling (future content), so in normal play this is the ceiling. ---
+    // --- CLERKLY/LAW ladder (grammar): clerk → chief clerk → solicitor. You
+    //     enter as a clerk on leaving grammar school; promotions climb within. ---
     {
       id: "job_clerk",
       cards: [
@@ -496,15 +499,14 @@ export const jobDecks = [
           },
         },
         {
-          // Promotion to solicitor: needs both experience AND grammar-school
-          // education (an academic `atLeast` gate). Dormant until grammar/
-          // university schooling exists — the educated path's high ceiling.
+          // Promotion to chief clerk (experience >= 3). You're already on the
+          // grammar ladder (that's how you became a clerk), so no extra gate.
           id: "job_clerk_promote",
           kind: "filler",
-          conditions: { traits: { experience: { min: 3 } }, status: { education: { atLeast: "grammar" } } },
+          conditions: { traits: { experience: { min: 3 } } },
           prompt: "job_clerk_promote.prompt",
           options: {
-            left: { label: "job_clerk_promote.left", outcomes: [{ result: "job_clerk_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "solicitor" } } }] },
+            left: { label: "job_clerk_promote.left", outcomes: [{ result: "job_clerk_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "chief_clerk" } } }] },
             right: { label: "job_clerk_promote.right", outcomes: [{ result: "job_clerk_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -538,6 +540,154 @@ export const jobDecks = [
           options: {
             left: { label: "job_solicitor_ruin.left", outcomes: [{ result: "job_solicitor_ruin.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
             right: { label: "job_solicitor_ruin.right", outcomes: [{ result: "job_solicitor_ruin.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // === COMMERCE ladder (basic): shopkeeper (mid) → merchant (top) ==========
+    {
+      id: "job_shopkeeper",
+      cards: [
+        {
+          id: "job_shopkeeper_day",
+          kind: "filler",
+          prompt: "job_shopkeeper_day.prompt",
+          options: {
+            left: { label: "job_shopkeeper_day.left", outcomes: [{ result: "job_shopkeeper_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_shopkeeper_day.right", outcomes: [{ result: "job_shopkeeper_day.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_shopkeeper_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_shopkeeper_promote.prompt",
+          options: {
+            left: { label: "job_shopkeeper_promote.left", outcomes: [{ result: "job_shopkeeper_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "merchant" } } }] },
+            right: { label: "job_shopkeeper_promote.right", outcomes: [{ result: "job_shopkeeper_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_merchant",
+      cards: [
+        {
+          id: "job_merchant_day",
+          kind: "filler",
+          prompt: "job_merchant_day.prompt",
+          options: {
+            left: { label: "job_merchant_day.left", outcomes: [{ result: "job_merchant_day.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_merchant_day.right", outcomes: [{ result: "job_merchant_day.right.r0", effects: { vitals: { finances: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_merchant_ruin",
+          kind: "filler",
+          prompt: "job_merchant_ruin.prompt",
+          options: {
+            left: { label: "job_merchant_ruin.left", outcomes: [{ result: "job_merchant_ruin.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_merchant_ruin.right", outcomes: [{ result: "job_merchant_ruin.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+          },
+        },
+      ],
+    },
+
+    // === CLERKLY/LAW ladder (grammar): chief clerk (mid) → solicitor (top) ===
+    {
+      id: "job_chief_clerk",
+      cards: [
+        {
+          id: "job_chief_clerk_day",
+          kind: "filler",
+          prompt: "job_chief_clerk_day.prompt",
+          options: {
+            left: { label: "job_chief_clerk_day.left", outcomes: [{ result: "job_chief_clerk_day.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_chief_clerk_day.right", outcomes: [{ result: "job_chief_clerk_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_chief_clerk_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_chief_clerk_promote.prompt",
+          options: {
+            left: { label: "job_chief_clerk_promote.left", outcomes: [{ result: "job_chief_clerk_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "solicitor" } } }] },
+            right: { label: "job_chief_clerk_promote.right", outcomes: [{ result: "job_chief_clerk_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+      ],
+    },
+
+    // === MEDICINE ladder (university): junior physician → physician → consulting =
+    {
+      id: "job_physician_junior",
+      cards: [
+        {
+          id: "job_physician_junior_day",
+          kind: "filler",
+          prompt: "job_physician_junior_day.prompt",
+          options: {
+            left: { label: "job_physician_junior_day.left", outcomes: [{ result: "job_physician_junior_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_physician_junior_day.right", outcomes: [{ result: "job_physician_junior_day.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_physician_junior_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_physician_junior_promote.prompt",
+          options: {
+            left: { label: "job_physician_junior_promote.left", outcomes: [{ result: "job_physician_junior_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician" } } }] },
+            right: { label: "job_physician_junior_promote.right", outcomes: [{ result: "job_physician_junior_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_physician",
+      cards: [
+        {
+          id: "job_physician_day",
+          kind: "filler",
+          prompt: "job_physician_day.prompt",
+          options: {
+            left: { label: "job_physician_day.left", outcomes: [{ result: "job_physician_day.left.r0", effects: { vitals: { finances: "++", health: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_physician_day.right", outcomes: [{ result: "job_physician_day.right.r0", effects: { vitals: { spirit: "+", happiness: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_physician_promote",
+          kind: "filler",
+          conditions: { traits: { experience: { min: 3 } } },
+          prompt: "job_physician_promote.prompt",
+          options: {
+            left: { label: "job_physician_promote.left", outcomes: [{ result: "job_physician_promote.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician_eminent" } } }] },
+            right: { label: "job_physician_promote.right", outcomes: [{ result: "job_physician_promote.right.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+      ],
+    },
+    {
+      id: "job_physician_eminent",
+      cards: [
+        {
+          id: "job_physician_eminent_day",
+          kind: "filler",
+          prompt: "job_physician_eminent_day.prompt",
+          options: {
+            left: { label: "job_physician_eminent_day.left", outcomes: [{ result: "job_physician_eminent_day.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            right: { label: "job_physician_eminent_day.right", outcomes: [{ result: "job_physician_eminent_day.right.r0", effects: { vitals: { happiness: "+", finances: "+" }, incTraits: { experience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_physician_eminent_ruin",
+          kind: "filler",
+          prompt: "job_physician_eminent_ruin.prompt",
+          options: {
+            left: { label: "job_physician_eminent_ruin.left", outcomes: [{ result: "job_physician_eminent_ruin.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_physician_eminent_ruin.right", outcomes: [{ result: "job_physician_eminent_ruin.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
       ],

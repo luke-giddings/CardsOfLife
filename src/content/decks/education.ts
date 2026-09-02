@@ -164,7 +164,7 @@ export const educationDecks = [
                 { result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" } } },
               ],
             },
-            right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "shophand" } } }] },
+            right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "clerk" } } }] },
           },
         },
       ],
@@ -217,17 +217,18 @@ export const educationDecks = [
           },
         },
         {
-          // Graduation (age >= 21): earns the `university` credential — the top of
-          // the academic ladder — then out to seek a profession (job -> unemployed).
-          // Both options graduate; they differ only in outlook.
+          // Graduation (age >= 21): earns the `university` credential and steps
+          // STRAIGHT into the learned profession (job -> junior physician, the
+          // top MEDICINE ladder) — the degree's payoff. Both options graduate;
+          // they differ only in outlook.
           id: "edu_university_grad",
           kind: "milestone",
           priority: 60,
           conditions: { ageMin: 21 },
           prompt: "edu_university_grad.prompt",
           options: {
-            left: { label: "edu_university_grad.left", outcomes: [{ result: "edu_university_grad.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "university", job: "unemployed" } } }] },
-            right: { label: "edu_university_grad.right", outcomes: [{ result: "edu_university_grad.right.r0", effects: { vitals: { finances: "+", happiness: "+" }, setStatus: { education: "university", job: "unemployed" } } }] },
+            left: { label: "edu_university_grad.left", outcomes: [{ result: "edu_university_grad.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "university", job: "physician_junior" } } }] },
+            right: { label: "edu_university_grad.right", outcomes: [{ result: "edu_university_grad.right.r0", effects: { vitals: { finances: "+", happiness: "+" }, setStatus: { education: "university", job: "physician_junior" } } }] },
           },
         },
       ],

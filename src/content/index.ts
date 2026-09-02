@@ -122,13 +122,24 @@ export const content = {
         journeyman: { label: "status.job.journeyman", drift: { finances: 18 }, addDecks: ["job_journeyman"] },
         master: { label: "status.job.master", drift: { finances: 28 }, addDecks: ["job_master"] },
 
-        // --- EDUCATED (credential: basic/grammar/university; safe; top pay) -
-        // Shophand → clerk → solicitor. Entry needs basic schooling; the higher
-        // rungs want grammar/university (future schooling content), so for now
-        // the path tops out at clerk in normal play.
+        // --- EDUCATED: THREE separate ladders, one per credential, each its own
+        // three-rung world (entry job by the school leaver / job offer; promotions
+        // climb within the ladder). Higher schooling = a different, better career,
+        // not just a taller version of the same one.
+        //   COMMERCE   (basic schooling):   shop assistant → shopkeeper → merchant
+        //   CLERKLY/LAW(grammar school):    clerk → chief clerk → solicitor
+        //   MEDICINE   (university degree):  junior physician → physician → consulting
+        // Wages rise along each ladder, and the university (medicine) ladder tops
+        // out highest of all — the reward for the rare degree. All values tunable.
         shophand: { label: "status.job.shophand", drift: { finances: 12 }, addDecks: ["job_shop"] },
+        shopkeeper: { label: "status.job.shopkeeper", drift: { finances: 18, happiness: -3 }, addDecks: ["job_shopkeeper"] },
+        merchant: { label: "status.job.merchant", drift: { finances: 28, spirit: -3 }, addDecks: ["job_merchant"] },
         clerk: { label: "status.job.clerk", drift: { finances: 16, happiness: -5 }, addDecks: ["job_clerk"] },
-        solicitor: { label: "status.job.solicitor", drift: { finances: 20, happiness: -5, spirit: -5 }, addDecks: ["job_solicitor"] },
+        chief_clerk: { label: "status.job.chief_clerk", drift: { finances: 22, happiness: -5 }, addDecks: ["job_chief_clerk"] },
+        solicitor: { label: "status.job.solicitor", drift: { finances: 28, happiness: -5, spirit: -5 }, addDecks: ["job_solicitor"] },
+        physician_junior: { label: "status.job.physician_junior", drift: { finances: 14, health: -3 }, addDecks: ["job_physician_junior"] },
+        physician: { label: "status.job.physician", drift: { finances: 30, happiness: -5 }, addDecks: ["job_physician"] },
+        physician_eminent: { label: "status.job.physician_eminent", drift: { finances: 42, happiness: -5, spirit: -5 }, addDecks: ["job_physician_eminent"] },
 
         // --- CRIMINAL (no credential; earn-now via big scores; arrest risk) -
         // Pickpocket has NO wage (0 drift) — money & experience come only from

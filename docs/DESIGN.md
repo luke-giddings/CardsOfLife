@@ -81,7 +81,7 @@ on the status chip as **icon + sign** (e.g. *Workhouse ♥− ☺−*).
 | Status | States (so far) | Notes |
 |---|---|---|
 | **Age / life stage** | baby · child · young_adult · adult · old_age | **Built.** A **visible, passive** status that moves you through the ages — handed over by the same life-stage milestones that swap the life-stage decks (start = baby; `baby_schooling` → child at 5; `child_adult` → young_adult at 18; `ya_adult` → adult at 25; `adult_oldage` → old_age at 50). Its **drift is the passive tax/dividend of your age**: baby a small bonus to **☺ / ♥ / ✦** (not finances) (and flagged `ignoreNoDrift`, so it lands even inside the babyhood grace period — the one status that drifts there), child a touch of ☺, young adult neutral, then a **health decline that starts in adulthood (♥ −3) and steepens in old age (♥ −8)**. Ordered, so cards can gate on `atLeast/atMost` by stage. Always shown (even in babyhood). All values are starter knobs. |
-| **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and educated ladder (shophand +12, clerk +16, solicitor +20) pay clearly more, so a promotion is a real raise. |
+| **Job / occupation** | infant · child_labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and the **three educated ladders** pay clearly more, so a promotion is a real raise. The educated paths are now **one distinct ladder per credential** (not a single ladder with a higher cap): **Commerce** (basic) shop assistant +12 → shopkeeper +18 → merchant +28; **Clerkly/Law** (grammar) clerk +16 → chief clerk +22 → solicitor +28; **Medicine** (university) junior physician +14 → physician +30 → **consulting physician +42** (the highest wage in the game — the rare degree's payoff). Your credential sets which ladder you enter (school leaver / graduation / the unemployed job-offer all route by it) and you climb within it by experience. All wages tunable. |
 | **Housing** | family · workhouse · renting · owned_small/large/estate · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`. **renting** (moved out / bought out): **finances −10** rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). Rent is set to **swallow the base child-labour wage** (+10), so a labourer renting nets ~0 money — you buy health recovery, not continued free savings; getting ahead again needs a better wage or the renting deck's income cards. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | illiterate · basic · grammar · university (+ trade: journeyman/master) | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
 | **Lifestyle** | (default →) frugal · modest · comfortable · lavish | **Built.** The money↔happiness lever, unlocked at coming-of-age (§17b). Ordered; each tier trades £ for ☺ (and, high up, ♥/✦). Frugal is a ☺ *drain* on purpose. Changed via the `lifestyle` deck's live-better / economize cards. |
@@ -398,9 +398,11 @@ school** (job=grammar_school, tuition −5) → **university** (job=university,
 tuition −5, entry gated on `uniFund` OR savings ≥ 50 via the new `any`
 OR-condition — and the way is *paid*: the family fund covers it and is spent
 (`uniFund` → false), otherwise your own savings foot a heavy tuition bill
-(finances −−)), earning the `basic`/`grammar`/`university` credentials that gate
-the educated jobs. (Balance: reaching university is currently very rare — the
-tuition drain vs the savings gate — see §18.) Full debug toolkit. Deployed and
+(finances −−)), earning the `basic`/`grammar`/`university` credentials — each of
+which opens its **own distinct career ladder** (Commerce / Clerkly-Law / Medicine
+— see §6), so the level of schooling changes *which* profession you enter, not
+just how high you can climb. (Balance: reaching university is currently very rare
+— the tuition drain vs the savings gate — see §18.) Full debug toolkit. Deployed and
 playable on a phone.
 
 ## 17. Settled decisions (quick reference)
@@ -544,9 +546,11 @@ How the gates realise this:
 > labour deck, gated on health/spirit) → **time-limited qualifying milestone**
 > (experience ≥ 4; pass on health → journeyman job + credential, fail → back to
 > unemployed) → journeyman → master. Criminal: pickpocket (no wage) → burglar
-> (small wage) → fence. Educated: shophand → clerk → solicitor, the clerk→
-> solicitor step gated on `grammar` schooling (dormant until grammar/university
-> school content exists, so educated currently tops out at clerk).
+> (small wage) → fence. Educated: **three separate ladders, one per credential** —
+> Commerce (basic): shop assistant → shopkeeper → merchant; Clerkly/Law (grammar):
+> clerk → chief clerk → solicitor; Medicine (university): junior physician →
+> physician → consulting physician (the highest pay in the game). Your credential
+> decides which ladder you enter; you climb within it by experience.
 
 **Criminal path plays differently — no wage, big scores (built, tier 1).** Unlike
 the wage-drift paths, the criminal tier has **0 drift**: no passive income at all.
@@ -705,10 +709,11 @@ Roughly in likely order. None of these are started.
 
 - **Academic careers + education balance** — the grammar/university *school
   flows* are built (decks, tuition, the uniFund-or-savings gate, earning the
-  credentials). Still to do: (a) the **university-only top profession** the
-  degree unlocks (a new job + deck above solicitor, with pay balanced against
-  rent/keep — the whole point of going up), and per-credential entry so a
-  graduate doesn't start at shophand; (b) **balance the path so university is
+  credentials), and **(a) is now DONE:** each credential opens its own distinct
+  ladder — Commerce (basic) / Clerkly-Law (grammar) / Medicine (university, top
+  pay) — with per-credential entry (leaver / graduation / job-offer all route by
+  credential), so a graduate no longer starts at shophand (see §6). Still to do:
+  **(b) balance the path so university is
   actually attainable** — a steered sim reaches university only ~0.8% / graduates
   ~0.3%, because tuition (−5 grammar, −5 uni) plus the family keep drains you
   below the `finances ≥ 50` gate, and mortality during the studying years is
