@@ -62,6 +62,7 @@ so every bar move is a clearly-perceptible size (no muddy +10-vs-+15):
 
 | Token | Points |
 |---|---|
+| `+++` | +50 — a **huge one-off swing** (~4 turns of a typical wage). Used for the criminal path's rare, random big scores, which have to pay for the dry spells between them. |
 | `++` | +25 |
 | `+` | +10 |
 | `-` | −10 |
@@ -69,7 +70,7 @@ so every bar move is a clearly-perceptible size (no muddy +10-vs-+15):
 | `---` | **keep ~⅓ (lose two thirds)** — the proportional "big purchase" cost (moving out, buying a house). Self-scaling and floored at 1, so it can't reach 0 from a positive value (a floor-gated card can't game-over). |
 
 Point values live in one place (`MAGNITUDE_POINTS`, `types.ts`) — balancing is a
-single table, and more levels (e.g. `+++`) can be added later. Relationship
+single table, and more levels can be added later. Relationship
 nudges and drift use raw numbers (they're not player-facing bar moves).
 
 ## 6. Statuses
@@ -561,9 +562,10 @@ nothing while the rent (housing drift) bleeds you, so you must keep taking jobs,
 each one corroding the spirit and risking arrest. Backing off a score costs
 nothing but a clear conscience. (The £ figures in the table above are the
 *wage-equivalent* for balancing against the other paths; the criminal earns it in
-lumps, not drift.) Currently applied to tier-1 pickpocket; whether tier-2 burglar
-keeps a drift or also goes score-only is open. Score size is capped at `++` (+25)
-until/unless a `+++` magnitude is added.
+lumps, not drift.) Each score now pays `+++` (+50) — a big enough lump that the
+rare, random score cards actually cover the dry spells between them (a normal wage
+is ~+12/turn, so a score ≈ 4 turns' pay). Applied to every score card across
+pickpocket / burglar / fence.
 
 ### Houses — a `---` purchase behind a rising gate, then cheap upkeep
 

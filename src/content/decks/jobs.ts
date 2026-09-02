@@ -433,14 +433,15 @@ export const jobDecks = [
       cards: [
         {
           // A SCORE card. Pulling the job is the only way to earn (there is no
-          // wage) and the only thing that grants experience: a big one-off haul
-          // (finances "++") at a cost to the spirit. Backing off gains nothing
-          // but a clear conscience — and the rent still bites.
+          // wage) and the only thing that grants experience: a HUGE one-off haul
+          // (finances "+++" = ~4 turns of a normal wage) at a cost to the spirit,
+          // sized so the rare, random scores actually pay for the dry spells
+          // between them. Backing off gains nothing but a clear conscience.
           id: "job_criminal_job",
           kind: "filler",
           prompt: "job_criminal_job.prompt",
           options: {
-            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { experience: 1 } } }] },
             right: { label: "job_criminal_job.right", outcomes: [{ result: "job_criminal_job.right.r0", effects: { vitals: { spirit: "+" } } }] },
           },
         },
@@ -451,7 +452,7 @@ export const jobDecks = [
           kind: "filler",
           prompt: "job_criminal_score.prompt",
           options: {
-            left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "++", spirit: "--" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { experience: 1 } } }] },
             right: { label: "job_criminal_score.right", outcomes: [{ result: "job_criminal_score.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
@@ -787,7 +788,7 @@ export const jobDecks = [
           kind: "filler",
           prompt: "job_burglar_job.prompt",
           options: {
-            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { experience: 1 } } }] },
             right: { label: "job_burglar_job.right", outcomes: [{ result: "job_burglar_job.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { experience: 1 } } }] },
           },
         },
@@ -826,7 +827,7 @@ export const jobDecks = [
           kind: "filler",
           prompt: "job_fence_deal.prompt",
           options: {
-            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "++", spirit: "-" }, incTraits: { experience: 1 } } }] },
+            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { experience: 1 } } }] },
             right: { label: "job_fence_deal.right", outcomes: [{ result: "job_fence_deal.right.r0", effects: { vitals: { spirit: "+" } } }] },
           },
         },

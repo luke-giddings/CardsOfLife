@@ -20,10 +20,13 @@ export const VITAL_MAX = 100;
 // Vital changes are expressed in readable magnitude "steps", not raw numbers,
 // so the player sees a small ("+") vs a large ("++") move rather than muddy
 // in-between values. Tweak the point values here in one place; add more levels
-// (e.g. "+++") later as balancing needs them.
-export type Magnitude = "---" | "--" | "-" | "+" | "++";
+// as balancing needs them. "+++" is a HUGE one-off swing (~4 turns of a typical
+// +12 wage) — used for the criminal path's rare, random big scores, which have
+// to pay for the long dry spells between them.
+export type Magnitude = "---" | "--" | "-" | "+" | "++" | "+++";
 // Flat point steps for the fixed magnitudes.
 export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "---">, number> = {
+  "+++": 50,
   "++": 25,
   "+": 10,
   "-": -10,
