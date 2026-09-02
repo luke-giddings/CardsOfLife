@@ -80,8 +80,10 @@ export const educationDecks = [
           // End of basic school. BOTH choices earn the credential (education ->
           // basic); only reaching this counts, so dropping out earlier (for
           // work / the workhouse) leaves you "Illiterate". Then either go UP to
-          // grammar school (the fee-paying academic ladder), or leave to look
-          // for work (job -> unemployed → shophand etc.).
+          // grammar school (the fee-paying academic ladder), or leave STRAIGHT
+          // INTO WORK — your letters land you a shop position (shophand, the
+          // educated-path entry the `basic` credential unlocks) rather than the
+          // punishing scramble through unemployment.
           id: "edu_basicschool_leaver",
           kind: "milestone",
           priority: 60,
@@ -89,7 +91,7 @@ export const educationDecks = [
           prompt: "edu_basicschool_leaver.prompt",
           options: {
             left: { label: "edu_basicschool_leaver.left", outcomes: [{ result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "grammar_school" } } }] },
-            right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "unemployed" } } }] },
+            right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "shophand" } } }] },
           },
         },
       ],
@@ -162,7 +164,7 @@ export const educationDecks = [
                 { result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" } } },
               ],
             },
-            right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "unemployed" } } }] },
+            right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "shophand" } } }] },
           },
         },
       ],

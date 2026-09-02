@@ -470,8 +470,8 @@ export const EN = {
   "edu_basicschool_leaver.prompt": "You've reached the end of your schooling and earned your certificate. What now?",
   "edu_basicschool_leaver.left": "Up to grammar school",
   "edu_basicschool_leaver.left.r0": "You win a place at the grammar school — Latin, fees, and a future few of your street ever see.",
-  "edu_basicschool_leaver.right": "Leave for work",
-  "edu_basicschool_leaver.right.r0": "Books away, cap on. It's time to go out and earn your keep.",
+  "edu_basicschool_leaver.right": "Take a position",
+  "edu_basicschool_leaver.right.r0": "Books away, cap on. Your letters earn you a place behind a shop counter — a respectable start, and a wage from day one.",
 
   "edu_grammar_classics.prompt": "Latin and Greek by the hour — the masters drill the classics into you.",
   "edu_grammar_classics.left": "Master the conjugations",
@@ -497,8 +497,8 @@ export const EN = {
   "edu_grammar_leaver.left": "Up to university",
   "edu_grammar_leaver.left.r0": "The family fund, laid by all these years, sees you matriculated — and is spent doing it. Few climb this high.",
   "edu_grammar_leaver.left.r1": "You empty your own hard-won savings to pay the fees. A heavy price, but the university gates open to you.",
-  "edu_grammar_leaver.right": "Out into the world",
-  "edu_grammar_leaver.right.r0": "You take your grammar-school credit and go to seek a respectable position.",
+  "edu_grammar_leaver.right": "Take a position",
+  "edu_grammar_leaver.right.r0": "You set your grammar-school learning to work and step straight into a respectable shop position.",
 
   "edu_university_lectures.prompt": "The lecture halls are demanding, the reading endless.",
   "edu_university_lectures.left": "Throw yourself in",
@@ -1414,8 +1414,8 @@ export const IT: Record<StringId, string> = {
   "edu_basicschool_leaver.prompt": "Sei arrivato alla fine della scuola e hai ottenuto il tuo attestato. E adesso?",
   "edu_basicschool_leaver.left": "Su alla scuola superiore",
   "edu_basicschool_leaver.left.r0": "Ottieni un posto alla scuola superiore — latino, rette, e un futuro che pochi della tua via vedono mai.",
-  "edu_basicschool_leaver.right": "Cercare lavoro",
-  "edu_basicschool_leaver.right.r0": "Via i libri, berretto in testa. È ora di andare a guadagnarti da vivere.",
+  "edu_basicschool_leaver.right": "Prendere un posto",
+  "edu_basicschool_leaver.right.r0": "Via i libri, berretto in testa. Le tue lettere ti valgono un posto dietro il banco di un negozio — un inizio rispettabile, e una paga fin dal primo giorno.",
 
   "edu_grammar_classics.prompt": "Latino e greco a ogni ora — i maestri ti martellano i classici in testa.",
   "edu_grammar_classics.left": "Padroneggiare le coniugazioni",
@@ -1441,8 +1441,8 @@ export const IT: Record<StringId, string> = {
   "edu_grammar_leaver.left": "Su all'università",
   "edu_grammar_leaver.left.r0": "Il fondo di famiglia, messo da parte in tutti questi anni, ti fa immatricolare — e nel farlo si esaurisce. In pochi salgono così in alto.",
   "edu_grammar_leaver.left.r1": "Svuoti i tuoi sudati risparmi per pagare le tasse. Un prezzo salato, ma le porte dell'università ti si aprono.",
-  "edu_grammar_leaver.right": "Fuori nel mondo",
-  "edu_grammar_leaver.right.r0": "Prendi il tuo diploma superiore e vai a cercare una posizione rispettabile.",
+  "edu_grammar_leaver.right": "Prendere un posto",
+  "edu_grammar_leaver.right.r0": "Metti a frutto la tua istruzione superiore ed entri dritto in una posizione rispettabile in negozio.",
 
   "edu_university_lectures.prompt": "Le aule sono impegnative, le letture infinite.",
   "edu_university_lectures.left": "Buttarti dentro",
