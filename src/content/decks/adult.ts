@@ -209,7 +209,7 @@ export const adultDecks = [
             left: {
               label: "life_better.left",
               outcomes: [
-                { if: { status: { lifestyle: "frugal" } }, result: "life_better.left.r0", effects: { vitals: { happiness: "+" }, setStatus: { lifestyle: "modest" } } },
+                { if: { status: { lifestyle: { atMost: "frugal" } } }, result: "life_better.left.r0", effects: { vitals: { happiness: "+" }, setStatus: { lifestyle: "modest" } } },
                 { if: { status: { lifestyle: "modest" } }, result: "life_better.left.r1", effects: { vitals: { happiness: "+" }, setStatus: { lifestyle: "comfortable" } } },
                 { result: "life_better.left.r2", effects: { vitals: { happiness: "+" }, setStatus: { lifestyle: "lavish" } } },
               ],

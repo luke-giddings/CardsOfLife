@@ -1100,7 +1100,8 @@ function fmtCond(c?: Condition): string {
   }
   if (c.status) {
     for (const [k, m] of Object.entries(c.status)) {
-      p.push(typeof m === "string" ? `${k}=${m}` : `${k}≥${m.atLeast}`);
+      if (typeof m === "string") p.push(`${k}=${m}`);
+      else p.push(`${k}${m.atLeast != null ? `≥${m.atLeast}` : ""}${m.atMost != null ? `≤${m.atMost}` : ""}`);
     }
   }
   if (c.traits) {

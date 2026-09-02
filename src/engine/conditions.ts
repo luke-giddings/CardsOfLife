@@ -55,7 +55,11 @@ export function meets(
         }
         if (match.atMost !== undefined) {
           const cap = statusRank(content, kind, match.atMost);
-          if (cap < 0 || have < 0 || have > cap) return false;
+          // An unranked current value (rank -1) — e.g. the pre-adult `default`
+          // lifestyle, which is off the ordered ladder — counts as BELOW every
+          // ranked level, so it satisfies any atMost cap. (atLeast above still
+          // fails it, which is correct: default is beneath the lowest tier.)
+          if (cap < 0 || have > cap) return false;
         }
       }
     }
