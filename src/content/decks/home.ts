@@ -386,6 +386,13 @@ export const homeDecks = [
           prompt: "home_workhouse_apprentice.prompt",
           options: {
             left: { label: "home_workhouse_apprentice.left", outcomes: [{ result: "home_workhouse_apprentice.left.r0", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" } } }] },
+            // A way back to SCHOOL — leave the workhouse for the family home and
+            // resume your letters (job → studying, its edu deck; housing → family).
+            // Shown only while you're still school-age (<= 13, before the leaver at
+            // 14) AND recovered enough not to relapse straight into ruin: you need
+            // a school fund (finances >= 40, the child_hunger net is spent) and
+            // your vitals off the floor, so the studying/keep drains don't kill you.
+            down: { label: "home_workhouse_apprentice.down", if: { ageMax: 13, vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } } }, outcomes: [{ result: "home_workhouse_apprentice.down.r0", effects: { vitals: { happiness: "+" }, setStatus: { housing: "family", job: "studying" } } }] },
             right: { label: "home_workhouse_apprentice.right", outcomes: [{ result: "home_workhouse_apprentice.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },

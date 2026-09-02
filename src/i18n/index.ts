@@ -433,6 +433,8 @@ export const EN = {
   "home_workhouse_apprentice.left.r0": "A trade, a master's roof, and a future you can build. The workhouse gates close behind you for good.",
   "home_workhouse_apprentice.right": "Let it pass",
   "home_workhouse_apprentice.right.r0": "Not this one. You watch the tradesman go, and hope another comes.",
+  "home_workhouse_apprentice.down": "Go back to school",
+  "home_workhouse_apprentice.down.r0": "You've kept your health and put a little by — enough that a relative takes you back in and the board school will have you again. Slate and chalk in place of oakum.",
 
   // ---- EDUCATION: BASIC SCHOOL -----------------------------------------
   "edu_basicschool_exams.prompt": "Big examinations loom, and the schoolmaster expects great things.",
@@ -963,6 +965,7 @@ export const EN = {
   "status.job.university": "Undergraduate",
   "status.job.apprentice": "Apprentice",
   "status.job.unemployed": "Unemployed",
+  "status.job.pauper": "Pauper",
   "status.job.shophand": "Shop assistant",
   "status.job.factory": "Factory hand",
   "status.job.pickpocket": "Pickpocket",
@@ -1451,6 +1454,8 @@ export const IT: Record<StringId, string> = {
   "home_workhouse_apprentice.left.r0": "Un mestiere, il tetto di un maestro e un futuro da costruire. I cancelli della casa di lavoro si chiudono alle tue spalle per sempre.",
   "home_workhouse_apprentice.right": "Lasciar perdere",
   "home_workhouse_apprentice.right.r0": "Non questo. Guardi l'artigiano andarsene, e speri che ne arrivi un altro.",
+  "home_workhouse_apprentice.down": "Tornare a scuola",
+  "home_workhouse_apprentice.down.r0": "Hai conservato la salute e messo da parte un po' — abbastanza perché un parente ti riprenda con sé e la scuola di quartiere ti riaccolga. Lavagna e gessetto al posto della stoppa.",
 
   // ---- EDUCATION: BASIC SCHOOL -----------------------------------------
   "edu_basicschool_exams.prompt": "Si avvicinano gli esami importanti, e il maestro si aspetta grandi cose.",
@@ -1981,6 +1986,7 @@ export const IT: Record<StringId, string> = {
   "status.job.university": "Universitario",
   "status.job.apprentice": "Apprendista",
   "status.job.unemployed": "Disoccupato",
+  "status.job.pauper": "Indigente",
   "status.job.shophand": "Commesso",
   "status.job.factory": "Operaio",
   "status.job.pickpocket": "Borseggiatore",

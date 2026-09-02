@@ -97,6 +97,11 @@ export const content = {
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
         unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, addDecks: ["job_unemployed"], keepExperience: true },
+        // A workhouse inmate — the institution IS your occupation now, so entering
+        // the workhouse cancels any schooling/job (child_hunger sets this). No
+        // drift and NO deck of its own: the home_workhouse housing deck already
+        // owns workhouse life and its exits. You climb back out via that deck.
+        pauper: { label: "status.job.pauper" },
 
         // === FOUR CAREER PATHS ==========================================
         // Progression is by an `experience` counter (ticked by work cards); a
