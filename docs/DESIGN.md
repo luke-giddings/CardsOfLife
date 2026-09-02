@@ -187,8 +187,10 @@ Status **drift** (after effects) → check game-over.
   drift — a **lodger** for income, the **landlord**, doing the place up,
   neighbours, a quiet night. First-pass mock-up.
 - **job_labour** (job = child_labourer): the loom hazard, Friday wages.
-- **sibling** (unlocked by the baby brother/sister cards): repeatable
-  relationship events; each option branches to whichever sibling you have.
+- **rel_bro** (BROTHER, Tom — unlocked by the baby-brother card): a story-driven
+  arc, not repeatable flavour. See the "Sibling story arc" spec in §18.
+- **sibling** (SISTER placeholder — unlocked by the baby-sister card): the old
+  shared fillers, now sister-only; to be rebuilt as `rel_sis` with her own story.
 
 **Deck-per-status:** occupation/education/housing choices pull in the matching
 deck, so what you *are* determines what cards you *see*, and a status change
@@ -818,13 +820,27 @@ Roughly in likely order. None of these are started.
   intended way to make the deliberately-rare university path reachable more often
   in a *later* run, without cheapening it within a single life. Related: the
   deferred **"continue as your child"** thread.
-- **Relationship character decks** — unlock a sibling/friend/partner's storyline
-  when a `rel*` trait crosses a threshold; different runs surface different
-  stories. **Next up: expand the brother/sister decks.** Use `CardOption.if`
-  (built) for **"only if you have X"** choices — e.g. a 3rd option on
-  `sibling_blame`, *"Blame the other sibling"* (an up/down swipe), shown only when
-  `traits: { hasBrother: true, hasSister: true }` — i.e. you have **two siblings**
-  (a brother *and* a sister). Any such conditional choice reuses the same feature.
+- **Sibling story arc (rel_bro = Tom; rel_sis later)** — a *story-driven*
+  relationship deck, one beat at a time, meant to make you feel the bond. Machinery:
+  a per-sibling **arc cursor** (`relBrotherArc`) points at the armed beat (only that
+  beat is eligible → never spammy), and two hidden axes carry the story —
+  **`relBrotherLove`** (closeness) and **`relBrotherGrit`** (his backbone, shaped by
+  whether you cushion or toughen him). Later beats read *both* axes so it's never a
+  flat help=good / refuse=bad. **Gating differs by beat:** the school-or-work
+  crossroads is *fixed* (a milestone at his life-stage age); other beats get a
+  relaxed `[ageMin, ageMax]` window plus a milestone twin that force-fires at
+  `ageMax` so the thread can't stall. **Flow:** Stage 0 childhood fillers (the bully
+  card keys off `knowsMartialArts`) → **Beat 1** school/work (matching *your own*
+  path, `job==studying` at the time, deepens Love; the opposite breeds resentment;
+  sets branch arc 1=school / 2=work) → **Beat 2** a rift-or-bond in adolescence
+  (varies on whether you still live with family; wide window) → **Beat 3** he makes
+  his way (branch on path + grit) → **Beat 4** the reckoning, *reciprocal* — if
+  you're comfortable you shelter/back him, if you're destitute (workhouse/streets)
+  a well-loved Tom comes for *you* → **Beat 5** settled years → **Beat 6** his fate
+  in old age (a Love×Grit grid of bittersweet endings). **Both-siblings space** via
+  `CardOption.if` on `hasBrother && hasSister`: a "share the burden" 3rd option at
+  Beat 4 and a "take sides" clash. Sister will be her *own* story (`rel_sis`,
+  `relSisterArc`/`relSisterGrit`), not a reskin. **Built so far: Stage 0 + Beat 1.**
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
 - **Richer end-of-run epitaph / scoring** — cause of death, life recap, a score

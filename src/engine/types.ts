@@ -78,9 +78,15 @@ export interface Traits {
   sociable: boolean;
   hasBrother: boolean;
   hasSister: boolean;
-  // hidden relationship stats (can go negative = rivalry)
-  relBrother: number;
-  relSister: number;
+  // Sibling relationships (hidden; can go negative = rivalry). Grouped by sibling
+  // for the debug panel: <sibling>Love = closeness with you; <sibling>Grit = their
+  // own backbone/independence (shaped by how you raise them — cushion vs toughen);
+  // <sibling>Arc = the story cursor (which story beat is armed / which branch).
+  // See the rel_bro deck (Tom). The sister gets Grit/Arc when her story is built.
+  relBrotherLove: number;
+  relBrotherGrit: number;
+  relBrotherArc: number;
+  relSisterLove: number;
   numTimesChangedJob: number;
   numTimesPlayedLottery: number;
   // Years served in the current job. Ticked by each work-event card; a
@@ -123,8 +129,10 @@ export const DEFAULT_TRAITS: Traits = {
   sociable: false,
   hasBrother: false,
   hasSister: false,
-  relBrother: 0,
-  relSister: 0,
+  relBrotherLove: 0,
+  relBrotherGrit: 0,
+  relBrotherArc: 0,
+  relSisterLove: 0,
   numTimesChangedJob: 0,
   numTimesPlayedLottery: 0,
   experience: 0,

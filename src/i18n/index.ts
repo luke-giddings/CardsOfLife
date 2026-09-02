@@ -822,7 +822,32 @@ export const EN = {
   "job_fence_raid.right": "Take the fall",
   "job_fence_raid.right.r0": "They make an example of you. You lose the trade and a piece of yourself with it.",
 
-  // ---- SIBLING (brother = r0, sister = r1) ------------------------------
+  // ---- BROTHER: Tom (rel_bro story arc) ---------------------------------
+  "rel_bro_play.prompt": "Tom trails after you, desperate to be let in on your games.",
+  "rel_bro_play.left": "Let him tag along",
+  "rel_bro_play.left.r0": "You take him everywhere — partners in every scrape. He worships the ground you walk on.",
+  "rel_bro_play.right": "Send him to make his own way",
+  "rel_bro_play.right.r0": "You shoo him off to find his own friends and his own feet. He sulks — then he manages.",
+  "rel_bro_bully.prompt": "A bigger boy has Tom cornered against the wall, fists up.",
+  "rel_bro_bully.left": "Wade in and defend him",
+  "rel_bro_bully.left.r0": "You know how to handle yourself — a few sharp moves and the bully bolts. Tom looks at you like you hung the moon, and stands a little taller himself.",
+  "rel_bro_bully.left.r1": "You throw yourself in and take a few knocks, but you drag the brute off him. Tom's safe — and surer than ever that you'll always come running.",
+  "rel_bro_bully.right": "Show him how to stand up himself",
+  "rel_bro_bully.right.r0": "You won't always be there, you tell him, and teach him to make a proper fist. He's frightened, then furious, then brave.",
+  "rel_bro_share.prompt": "A cold, hungry night, and there isn't enough to go round.",
+  "rel_bro_share.left": "Go without so Tom doesn't",
+  "rel_bro_share.left.r0": "You give him your share and your blanket. He sleeps warm on your account — and learns that you will always provide.",
+  "rel_bro_share.right": "Make him share the hardship",
+  "rel_bro_share.right.r0": "You split it down the middle, fair and hard. Lean going — but he learns to bear it.",
+  "rel_bro_crossroads.prompt": "Tom's old enough now for the same choice you once faced: the schoolroom, or a wage. He looks to you to decide.",
+  "rel_bro_crossroads.left": "Send him to school",
+  "rel_bro_crossroads.left.r0": "Like you, he takes up slate and chalk. He's proud to follow in your footsteps — scholars together, the two of you.",
+  "rel_bro_crossroads.left.r1": "You push him toward letters, though you never had them. He can't see why your road should differ from his — and it quietly rankles.",
+  "rel_bro_crossroads.right": "Put him to work",
+  "rel_bro_crossroads.right.r0": "You send him to the works while you keep your books. He grafts the harder knowing you were spared it — and he does not forget.",
+  "rel_bro_crossroads.right.r1": "He shoulders in beside you at the same hard graft. Brothers in it together — and the work toughens him.",
+
+  // ---- SIBLING (sister placeholder; brother is rel_bro) ------------------
   "sibling_play.prompt": "Your little sibling is begging you to come and play.",
   "sibling_play.left": "Play along",
   "sibling_play.left.r0": "You build an epic blanket fort together. Best mates.",
@@ -854,6 +879,8 @@ export const EN = {
   "deck.home_workhouse.blurb": "Cold stone, thin gruel and the endless clatter of labour. This is home now — until you can find a way out.",
   "deck.sibling.title": "Your Sibling",
   "deck.sibling.blurb": "You've got a little sidekick now — partner in crime, or thorn in your side. That's up to you.",
+  "deck.rel_bro.title": "Little Tom",
+  "deck.rel_bro.blurb": "A baby brother — Tom, a shadow at your heel and a partner in every scrape. What he grows into is, in no small part, down to you.",
 
   // ---- STATUS state labels ---------------------------------------------
   "status.age.baby": "Infancy",
@@ -1739,7 +1766,32 @@ export const IT: Record<StringId, string> = {
   "job_fence_raid.right": "Prenderti la colpa",
   "job_fence_raid.right.r0": "Fanno di te un esempio. Perdi il traffico e un pezzo di te stesso.",
 
-  // ---- SIBLING (brother = r0, sister = r1) ------------------------------
+  // ---- BROTHER: Tom (rel_bro story arc) ---------------------------------
+  "rel_bro_play.prompt": "Tom ti trotta dietro, morto dalla voglia di essere ammesso ai tuoi giochi.",
+  "rel_bro_play.left": "Lascialo venire con te",
+  "rel_bro_play.left.r0": "Lo porti dovunque — complici in ogni marachella. Ti venera come un idolo.",
+  "rel_bro_play.right": "Mandalo a farsi la sua strada",
+  "rel_bro_play.right.r0": "Lo scacci a trovarsi i suoi amici e le sue gambe. Fa il broncio — poi se la cava.",
+  "rel_bro_bully.prompt": "Un ragazzo più grande ha messo Tom con le spalle al muro, i pugni alzati.",
+  "rel_bro_bully.left": "Intervieni e difendilo",
+  "rel_bro_bully.left.r0": "Sai il fatto tuo — due mosse svelte e il bullo scappa. Tom ti guarda come se avessi appeso la luna, e si raddrizza anche lui un po'.",
+  "rel_bro_bully.left.r1": "Ti getti nella mischia e incassi qualche colpo, ma strappi via il bruto da lui. Tom è salvo — e più sicuro che mai che accorrerai sempre.",
+  "rel_bro_bully.right": "Insegnagli a difendersi da solo",
+  "rel_bro_bully.right.r0": "Non ci sarai sempre, gli dici, e gli insegni a stringere un pugno come si deve. Prima spaventato, poi furioso, poi coraggioso.",
+  "rel_bro_share.prompt": "Una notte fredda e affamata, e non c'è abbastanza per tutti.",
+  "rel_bro_share.left": "Fai a meno tu perché non lo faccia Tom",
+  "rel_bro_share.left.r0": "Gli dai la tua parte e la tua coperta. Dorme al caldo a tue spese — e impara che tu provvederai sempre.",
+  "rel_bro_share.right": "Fagli condividere la privazione",
+  "rel_bro_share.right.r0": "Dividi a metà, giusto e duro. Magra cosa — ma impara a sopportarla.",
+  "rel_bro_crossroads.prompt": "Tom è grande abbastanza per la stessa scelta che affrontasti tu: l'aula, o una paga. Guarda te per decidere.",
+  "rel_bro_crossroads.left": "Mandalo a scuola",
+  "rel_bro_crossroads.left.r0": "Come te, prende lavagna e gessetto. È fiero di seguire le tue orme — studiosi insieme, voi due.",
+  "rel_bro_crossroads.left.r1": "Lo spingi verso le lettere, che tu non hai mai avuto. Non capisce perché la tua strada debba differire dalla sua — e la cosa lo rode in silenzio.",
+  "rel_bro_crossroads.right": "Mettilo al lavoro",
+  "rel_bro_crossroads.right.r0": "Lo mandi all'opificio mentre tu tieni i tuoi libri. Fatica di più sapendo che a te è stato risparmiato — e non lo dimentica.",
+  "rel_bro_crossroads.right.r1": "Si mette a spalla a spalla con te nella stessa dura fatica. Fratelli nella stessa barca — e il lavoro lo tempra.",
+
+  // ---- SIBLING (sister placeholder; brother is rel_bro) ------------------
   "sibling_play.prompt": "Il tuo fratellino ti implora di andare a giocare.",
   "sibling_play.left": "Stare al gioco",
   "sibling_play.left.r0": "Costruite insieme un forte di coperte epico. Migliori amici.",
@@ -1771,6 +1823,8 @@ export const IT: Record<StringId, string> = {
   "deck.home_workhouse.blurb": "Pietra fredda, brodaglia e il fragore incessante del lavoro. Ora è qui che vivi — finché non trovi una via d'uscita.",
   "deck.sibling.title": "Il tuo fratellino",
   "deck.sibling.blurb": "Ora hai un piccolo compagno — complice o spina nel fianco. Dipende da te.",
+  "deck.rel_bro.title": "Il piccolo Tom",
+  "deck.rel_bro.blurb": "Un fratellino — Tom, un'ombra alle tue calcagna e complice in ogni marachella. Ciò che diventerà dipende, in buona parte, da te.",
 
   // ---- STATUS state labels ---------------------------------------------
   "status.age.baby": "Infanzia",
