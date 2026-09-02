@@ -321,7 +321,12 @@ export class Game {
       let drift = "";
       for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
         if (!dv) continue;
-        drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${dv > 0 ? "dgood" : "dbad"}">${dv > 0 ? "+" : "−"}</span></span>`;
+        // Show the STRENGTH of the drift, not just its sign: 1–3 symbols by
+        // magnitude (a heavier drain reads heavier — e.g. old age ♥−− vs
+        // adulthood ♥−), mirroring the +/++/+++ vocabulary on the cards.
+        const mag = Math.abs(dv) >= 15 ? 3 : Math.abs(dv) >= 5 ? 2 : 1;
+        const sym = (dv > 0 ? "+" : "−").repeat(mag);
+        drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${dv > 0 ? "dgood" : "dbad"}">${sym}</span></span>`;
       }
       chips += `<span class="chip"><b>${t(STATUS_LABEL[kind])}</b> ${label}${drift}</span>`;
     }
