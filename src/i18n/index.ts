@@ -427,6 +427,8 @@ export const EN = {
   "home_workhouse_runaway.left.r0": "Heart pounding, you bolt — and don't stop until the workhouse is far behind. Free, and utterly on your own.",
   "home_workhouse_runaway.right": "Stay put",
   "home_workhouse_runaway.right.r0": "The risk is too great, the world outside too cold. You slink back to your cot.",
+  "home_workhouse_runaway.down": "Slip back to school",
+  "home_workhouse_runaway.down.r0": "You've kept your health and squirrelled a little away — enough that a relative will take you in and the board school will have you back. Out the gate, and off to your letters.",
 
   "home_workhouse_apprentice.prompt": "A visiting tradesman needs a willing pair of hands, and will take an apprentice off the parish's books.",
   "home_workhouse_apprentice.left": "Take the indenture",
@@ -1448,6 +1450,8 @@ export const IT: Record<StringId, string> = {
   "home_workhouse_runaway.left.r0": "Col cuore in gola, scatti — e non ti fermi finché la casa di lavoro non è lontana. Libero, e completamente solo.",
   "home_workhouse_runaway.right": "Restare",
   "home_workhouse_runaway.right.r0": "Il rischio è troppo grande, il mondo là fuori troppo freddo. Torni mogio alla tua branda.",
+  "home_workhouse_runaway.down": "Sgattaiolare a scuola",
+  "home_workhouse_runaway.down.r0": "Hai conservato la salute e messo da parte un gruzzoletto — abbastanza perché un parente ti accolga e la scuola di quartiere ti riprenda. Fuori dal cancello, e via ai tuoi studi.",
 
   "home_workhouse_apprentice.prompt": "Un artigiano di passaggio cerca un paio di mani volenterose, e prenderà un apprendista a carico della parrocchia.",
   "home_workhouse_apprentice.left": "Firmare il contratto",

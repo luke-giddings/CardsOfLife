@@ -376,6 +376,10 @@ export const homeDecks = [
           prompt: "home_workhouse_runaway.prompt",
           options: {
             left: { label: "home_workhouse_runaway.left", outcomes: [{ result: "home_workhouse_runaway.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless" } } }] },
+            // The SAME back-to-school escape as the apprentice card (same gate), on
+            // this card too — the runaway has no upper age gate, so it widens the
+            // window to ~7–13 without adding a new card to the deck.
+            down: { label: "home_workhouse_runaway.down", if: { ageMax: 13, vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } } }, outcomes: [{ result: "home_workhouse_runaway.down.r0", effects: { vitals: { happiness: "+" }, setStatus: { housing: "family", job: "studying" } } }] },
             right: { label: "home_workhouse_runaway.right", outcomes: [{ result: "home_workhouse_runaway.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
