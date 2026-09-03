@@ -780,7 +780,9 @@ Roughly in likely order. None of these are started.
   These changed from booleans to **0..3 counters**: the merged `baby_disposition`
   card sets one straight to the cap (3), and cards that reward the trait gate on
   `{ min: 3 }` (the loom `job_labour_machine`, `child_accident`, the two
-  `edu_basicschool_*` cards). The "build it up in youth if you didn't pick it as a
+  `edu_basicschool_*` cards, and now the higher-ed study cards `edu_grammar_debate`
+  and `edu_university_lectures` — a bookish scholar pays a gentler cost there too).
+  The "build it up in youth if you didn't pick it as a
   baby" path is only **partly** wired: `child_sports` "go all-out" gives `+1
   sporty` (the first source), but it's `one_time`, so youth can currently reach at
   most 1 — not the cap. **To do:** (a) add more `+1` youth sources for *both*
