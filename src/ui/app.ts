@@ -485,7 +485,7 @@ export class Game {
       if (typeof v === "number") {
         // Experience counts single years (thresholds ~3–4); the relationship
         // counters move in larger steps — so scale the debug step per trait.
-        const step = k === "experience" ? 1 : 10;
+        const step = k === "jobExperience" ? 1 : 10;
         return `<span class="dbg-trait ${v !== 0 ? "set" : ""}">${k}=${v}
           <button data-trait="${k}" data-tdelta="-${step}">−</button>
           <button data-trait="${k}" data-tdelta="${step}">+</button></span>`;
@@ -493,35 +493,40 @@ export class Game {
       const set = typeof v === "boolean" ? v : true;
       return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
     };
-    // Group by the segment before the first "_", else the leading camelCase word
-    // (so `relBrother`/`relSister` → "rel"). Only a prefix shared by 2+ traits
-    // becomes a collapsible group; lone traits sit flat at the top.
-    const groupOf = (k: string): string => {
-      const u = k.indexOf("_");
-      if (u > 0) return k.slice(0, u);
-      return k.match(/^[a-z]+/)?.[0] ?? k;
+    // Explicit trait grouping. Most traits sit loose at the top; the rest fall
+    // into fixed categories — Education (`edu*`), Jobs (`job*`), and a
+    // Relationships category that nests per-sibling (Tom `relBrother*`, Sister
+    // `relSister*`). A collapsed group holding a non-default ("set") trait is
+    // bolded (has-active) so you can spot live state without expanding it.
+    type TEntry = [string, unknown];
+    const isSet = ([, v]: TEntry): boolean =>
+      typeof v === "number" ? v !== 0 : typeof v === "boolean" ? v : true;
+    const loose: TEntry[] = [], edu: TEntry[] = [], job: TEntry[] = [], tom: TEntry[] = [], sis: TEntry[] = [];
+    for (const e of Object.entries(this.state.traits) as TEntry[]) {
+      const k = e[0];
+      if (k.startsWith("relBrother")) tom.push(e);
+      else if (k.startsWith("relSister")) sis.push(e);
+      else if (k.startsWith("edu")) edu.push(e);
+      else if (k.startsWith("job")) job.push(e);
+      else loose.push(e);
+    }
+    // A collapsible group of trait chips; `body` overrides the chip list (used to
+    // nest the per-sibling groups inside Relationships). Empty groups are dropped.
+    const traitSec = (id: string, label: string, es: TEntry[], body?: string): string => {
+      if (es.length === 0 && !body) return "";
+      const active = es.some(isSet);
+      const inner = body ?? `<div class="dbg-traits">${es.map(traitChip).join("")}</div>`;
+      return `<details class="dbg-sec dbg-subsec" ${this.debugOpen.has(id) ? "open" : ""}>
+        <summary class="${active ? "has-active" : ""}" data-sec="${id}">${label}${body ? "" : ` · ${es.length}`}</summary>
+        ${inner}
+      </details>`;
     };
-    const byGroup = new Map<string, [string, unknown][]>();
-    for (const e of Object.entries(this.state.traits)) {
-      const g = groupOf(e[0]);
-      const arr = byGroup.get(g) ?? [];
-      if (arr.length === 0) byGroup.set(g, arr);
-      arr.push(e);
-    }
-    const loose: string[] = [];
-    const groups: string[] = [];
-    for (const [g, es] of byGroup) {
-      if (es.length < 2) {
-        loose.push(traitChip(es[0]));
-        continue;
-      }
-      const id = `trait:${g}`;
-      groups.push(`<details class="dbg-sec dbg-subsec" ${this.debugOpen.has(id) ? "open" : ""}>
-        <summary data-sec="${id}">${g} · ${es.length}</summary>
-        <div class="dbg-traits">${es.map(traitChip).join("")}</div>
-      </details>`);
-    }
-    const traitHtml = `<div class="dbg-traits">${loose.join("")}</div>${groups.join("")}`;
+    const relBody = traitSec("trait:rel:tom", "Tom", tom) + traitSec("trait:rel:sis", "Sister", sis);
+    const traitHtml =
+      `<div class="dbg-traits">${loose.map(traitChip).join("")}</div>` +
+      traitSec("trait:edu", "Education", edu) +
+      traitSec("trait:job", "Jobs", job) +
+      traitSec("trait:rel", "Relationships", [...tom, ...sis], `<div class="dbg-relgroups">${relBody}</div>`);
 
     // Debug controls: vitals, age, decks, milestone jumps.
     const vitalCtl = VITAL_KEYS.map(

@@ -198,17 +198,17 @@ function changeStatus(
   for (const d of newState?.addDecks ?? []) if (!decks.includes(d)) decks = [...decks, d];
   state.activeDecks = decks;
   state.statuses[kind] = value;
-  // `experience` is time-in-the-current-job, tagged with the job it was earned
+  // `jobExperience` is time-in-the-current-job, tagged with the job it was earned
   // in (state.experienceJob). On a job change:
   //  - entering a `keepExperience` state (unemployed — "between jobs") preserves
   //    both the counter and its tag, so a sacking doesn't wipe your progress;
   //  - otherwise reset only when the new job differs from the tagged one, so a
   //    re-hire into the SAME job keeps its experience, while a promotion or a
   //    move to a different career starts the counter fresh.
-  // This is the single place experience resets — content never does it.
+  // This is the single place jobExperience resets — content never does it.
   if (kind === "job" && value !== previous && !newState?.keepExperience) {
     if (state.experienceJob !== value) {
-      state.traits.experience = 0;
+      state.traits.jobExperience = 0;
       state.experienceJob = value;
     }
   }
@@ -222,10 +222,10 @@ function changeStatus(
   if (kind === "housing" && value === "apprentice" && previous !== "apprentice") {
     state.housingBeforeApprentice = previous;
   }
-  // A fresh apprenticeship starts with no craftsmanship — `skill` is built up
+  // A fresh apprenticeship starts with no craftsmanship — `jobSkill` is built up
   // from scratch by working hard at the bench (see the job_apprentice deck).
   if (kind === "job" && value === "apprentice" && previous !== "apprentice") {
-    state.traits.skill = 0;
+    state.traits.jobSkill = 0;
   }
 }
 

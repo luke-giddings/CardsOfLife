@@ -71,8 +71,9 @@ export interface Traits {
   gender: "boy" | "girl";
   knowsMartialArts: boolean;
   vaccinated: boolean;
-  // baby-deck "setups for the future"
-  uniFund: boolean;
+  // Education. `edu*` so the debug panel groups it under an Education category.
+  // The university savings pot, seeded in the baby deck — a "setup for the future".
+  eduUniFund: boolean;
   // Disposition counters (0..3). A baby who leans into it starts at the cap (3,
   // = "fully" the trait); otherwise you build it up +1 at a time in youth. Cards
   // that reward the trait gate on `{ min: 3 }`. (Backlog: more +1 sources so
@@ -81,34 +82,38 @@ export interface Traits {
   sporty: number;
   sweetTooth: boolean;
   sociable: boolean;
-  hasBrother: boolean;
-  hasSister: boolean;
-  // Sibling relationships (hidden; can go negative = rivalry). Grouped by sibling
-  // for the debug panel: <sibling>Love = closeness with you; <sibling>Grit = their
-  // own backbone/independence (shaped by how you raise them — cushion vs toughen);
-  // <sibling>Arc = the story cursor (which story beat is armed / which branch).
+  // Sibling relationships (hidden; can go negative = rivalry). All `rel<Sibling>*`
+  // so the debug panel groups them by sibling under a Relationships category:
+  //   <sibling>Active = whether you have this sibling at all (set at the baby deck);
+  //   <sibling>Love   = closeness with you;
+  //   <sibling>Grit   = their own backbone/independence (cushion vs toughen);
+  //   <sibling>Arc    = the story cursor (which beat is armed / which branch).
   // See the rel_bro deck (Tom). The sister gets Grit/Arc when her story is built.
+  relBrotherActive: boolean;
   relBrotherLove: number;
   relBrotherGrit: number;
   relBrotherArc: number;
+  relSisterActive: boolean;
   relSisterLove: number;
-  numTimesChangedJob: number;
   numTimesPlayedLottery: number;
+  // Work life. All `job*` so the debug panel groups them under a Jobs category.
+  // Times you've switched jobs over the run (an epitaph/flavour counter).
+  jobTimesChanged: number;
   // Years served in the current job. Ticked by each work-event card; a
   // promotion card gates on it and resets it to 0 on the step up.
-  experience: number;
-  // Apprenticeship craftsmanship. Unlike `experience` (time served — every
-  // apprentice work card ticks it whichever way you choose), `skill` only rises
+  jobExperience: number;
+  // Apprenticeship craftsmanship. Unlike `jobExperience` (time served — every
+  // apprentice work card ticks it whichever way you choose), `jobSkill` only rises
   // when you APPLY YOURSELF (the "work hard" option). The qualifying trial passes
   // on skill, not health, so coasting through the years leaves you unready. Reset
   // to 0 when you (re-)enter the apprenticeship. See the job_apprentice deck.
-  skill: number;
-  // Durable "reached the factory" marker (unlike `experience`, which resets on
+  jobSkill: number;
+  // Durable "reached the factory" marker (unlike `jobExperience`, which resets on
   // each job change). Lets the unemployed offer let a former factory worker
   // return to the factory without re-grinding, while a green worker cannot skip
   // straight there. (Stopgap: will fold into a per-path "highest tier reached"
   // cache when adult job re-entry lands.)
-  reachedFactory: boolean;
+  jobReachedFactory: boolean;
   // Standing with your current employer (0 = model worker). Rises when you shirk
   // and each time you grovel to keep your job; a high count means the foreman
   // won't hear your pleading. Resets to 0 on any job change (a fresh reputation
@@ -127,22 +132,22 @@ export const DEFAULT_TRAITS: Traits = {
   gender: "boy",
   knowsMartialArts: false,
   vaccinated: false,
-  uniFund: false,
+  eduUniFund: false,
   bookish: 0,
   sporty: 0,
   sweetTooth: false,
   sociable: false,
-  hasBrother: false,
-  hasSister: false,
+  relBrotherActive: false,
   relBrotherLove: 0,
   relBrotherGrit: 0,
   relBrotherArc: 0,
+  relSisterActive: false,
   relSisterLove: 0,
-  numTimesChangedJob: 0,
   numTimesPlayedLottery: 0,
-  experience: 0,
-  skill: 0,
-  reachedFactory: false,
+  jobTimesChanged: 0,
+  jobExperience: 0,
+  jobSkill: 0,
+  jobReachedFactory: false,
   jobStrikes: 0,
   owesCharity: false,
   soldUp: false,
@@ -170,7 +175,7 @@ export interface Condition {
   traits?: TraitConditions;
   // OR-gate: passes if ANY listed sub-condition holds (each is a full Condition).
   // The other clauses on this object are still AND-ed with the `any` result — so
-  // `{ ageMin: 18, any: [A, B] }` means "18+ AND (A or B)". Use for "uniFund OR
+  // `{ ageMin: 18, any: [A, B] }` means "18+ AND (A or B)". Use for "eduUniFund OR
   // savings"-style gates.
   any?: Condition[];
 }
@@ -303,7 +308,7 @@ export interface GameState {
   activeDecks: string[];
   usedCards: Record<string, number>; // card id -> times played
   lastCardId?: string;                // to avoid drawing the same card twice in a row
-  experienceJob?: string;             // the job the current `experience` was earned in (see changeStatus)
+  experienceJob?: string;             // the job the current `jobExperience` was earned in (see changeStatus)
   housingBeforeApprentice?: string;   // housing to return to on leaving apprenticeship (see changeStatus / restoreHousing)
   pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent

@@ -90,7 +90,7 @@ export const content = {
         // Fee-paying academia above the free board school: the grind on the
         // spirit continues AND tuition bites the purse (−5/yr) — the "invest
         // early, poor now" cost of the educated path — with no wage. Each owns
-        // its events deck. (uniFund/savings gate entry to university; see the
+        // its events deck. (eduUniFund/savings gate entry to university; see the
         // grammar leaver.) Income cards inside the decks let you offset the fees.
         grammar_school: { label: "status.job.grammar_school", drift: { spirit: -5, finances: -5 }, addDecks: ["edu_grammar"] },
         university: { label: "status.job.university", drift: { spirit: -5, finances: -5 }, addDecks: ["edu_university"] },

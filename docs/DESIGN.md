@@ -33,7 +33,7 @@ full tone pass comes once the decks are complete.
 |---|---|
 | **Vital** | One of four bars (0–100). Any at 0 = game over. |
 | **Status** | A persistent side-state (Job/occupation, Housing, Education, Lifestyle). Applies per-turn **drift** and gates content; can own decks. |
-| **Trait** | Hidden state — booleans, enums, counters (e.g. `vaccinated`, `gender`, `relBrother`). |
+| **Trait** | Hidden state — booleans, enums, counters (e.g. `vaccinated`, `gender`, `relBrotherLove`). |
 | **Card** | One year. A **front** (prompt + 2–4 options) and a **back** (the result). |
 | **Outcome** | One resolution of an option: result text + effects, optionally condition-gated. |
 | **Deck** | A named set of cards, switched on/off as life progresses. |
@@ -109,17 +109,23 @@ Job/Housing are named states).
 
 Arbitrary persistent variables, set by effects and read by conditions **and
 results**:
-- **Booleans:** `knowsMartialArts`, `vaccinated`, `uniFund`, `sweetTooth`,
-  `sociable`, `hasBrother`, `hasSister`.
+Traits carry **sensible prefixes** so the debug panel can group them:
+`edu*` (education), `job*` (work life), and `rel<Sibling>*` (relationships,
+nested per sibling — Tom `relBrother*`, Sister `relSister*`).
+- **Booleans:** `knowsMartialArts`, `vaccinated`, `eduUniFund`, `sweetTooth`,
+  `sociable`, `relBrotherActive`, `relSisterActive` (whether you have that
+  sibling), `jobReachedFactory`, and the burdens `owesCharity`, `soldUp`.
 - **Enum:** `gender` (boy/girl), chosen on the birth card.
-- **Counters:** `relBrother`, `relSister` (relationship stats, can go negative =
-  rivalry), `numTimesChangedJob`, `numTimesPlayedLottery`; **`sporty`/`bookish`**
-  (0..3 disposition — a baby sets it to the cap, else built +1 at a time in
-  youth; reward cards gate on `{ min: 3 }`, see §18 backlog).
+- **Counters:** `relBrotherLove`/`relSisterLove` (closeness, can go negative =
+  rivalry), `relBrotherGrit`/`relBrotherArc` (his backbone / story cursor),
+  `jobExperience` (years in the current job), `jobSkill` (apprentice
+  craftsmanship), `jobStrikes`, `jobTimesChanged`, `numTimesPlayedLottery`;
+  **`sporty`/`bookish`** (0..3 disposition — a baby sets it to the cap, else
+  built +1 at a time in youth; reward cards gate on `{ min: 3 }`, see §18 backlog).
 
 **Relationships are just Traits.** Character decks can later branch on
-thresholds (e.g. high `relBrother` → a loyal-sibling arc). Baby-deck "setups"
-(vaccinated, sporty, uniFund…) exist to **pay off later** — notably as what
+thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setups"
+(vaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
 keeps you alive through childhood hazards.
 
 ## 8. Cards: front and back
@@ -378,8 +384,8 @@ own. A **visible Age status** rides these transitions and applies the passive
 starts at adulthood and steepens in old age — §6). Occupation ladders partly built: dangerous child labour with the **earned
 apprenticeship** crossover (spirit/happiness, ages 13–18) onto the skilled trade
 (`_day`/bench-job XP → survivable closure → the qualifying trial → journeyman).
-The **trial is judged on a `skill` trait**. The course is **5 one-shot bench
-cards**; each ticks a year of `experience` (time served) but only the *work-hard*
+The **trial is judged on a `jobSkill` trait**. The course is **5 one-shot bench
+cards**; each ticks a year of `jobExperience` (time served) but only the *work-hard*
 option also builds skill, and the trial passes on **skill ≥ 3** — so you must work
 hard on 3 of the 5, and coasting leaves you unready. The **trial is a plain
 (filler) card that unlocks at experience ≥ 3** and then sits in the draw pool — no
@@ -391,7 +397,7 @@ decline, so the trial just comes round again another year once you've done more
 work. Leaving (sit the trial, or give up) changes your job and removes the deck, so
 the trial only repeats if you beg. **Giving up the trade** is milder than a botched
 trial. The `apprentice_end` misfortune (workshop closes) is also one-shot and
-grants no experience/skill. `skill` resets on each (re-)entry to the
+grants no experience/skill. `jobSkill` resets on each (re-)entry to the
 apprenticeship. (Pacing: sharing the draw pool with life-event cards, and with the
 trial no longer forced, the course runs long — a ~14-year median — with life
 variety throughout; tightening it would mean making the deck `priority` or forcing
@@ -401,9 +407,9 @@ factory step within unskilled; criminal entry. Housing ladder (family → move-o
 housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path
 ★). **Academic ladder now built**: free basic school → fee-paying **grammar
 school** (job=grammar_school, tuition −5) → **university** (job=university,
-tuition −5, entry gated on `uniFund` OR savings ≥ 50 via the new `any`
+tuition −5, entry gated on `eduUniFund` OR savings ≥ 50 via the new `any`
 OR-condition — and the way is *paid*: the family fund covers it and is spent
-(`uniFund` → false), otherwise your own savings foot a heavy tuition bill
+(`eduUniFund` → false), otherwise your own savings foot a heavy tuition bill
 (finances −−)), earning the `basic`/`grammar`/`university` credentials — each of
 which opens its **own distinct career ladder** (Commerce / Clerkly-Law / Medicine
 — see §6), so the level of schooling changes *which* profession you enter, not
@@ -527,7 +533,7 @@ How the gates realise this:
   *reasonable* run gets to X", not a guarantee). **No age-gates yet**; if we later
   want reliable age-pacing, add a minimum-age gate *alongside* the experience one.
 - **Per-job, independently tweakable thresholds.** Each promotion card carries its
-  own `experience` gate, so paths pace differently. Because **unskilled has fewer
+  own `jobExperience` gate, so paths pace differently. Because **unskilled has fewer
   rungs, its steps cost *more* experience** (child labour → factory is now
   `experience ≥ 4`, higher than the tier-1 steps on other paths) — a longer haul
   per rung so the low-ceiling path fills a life rather than topping out early.
@@ -535,8 +541,8 @@ How the gates realise this:
   driven) rather than experience, so it fits the ages automatically.
 - **No skipping the grind — but you can resume a career.** The unemployed offer's
   "back to the mill" (factory) option is shown **only if you've *reached* the
-  factory before** — a durable `reachedFactory` trait, set by the child-labour →
-  factory promotion (not the live `experience` counter, which resets on every job
+  factory before** — a durable `jobReachedFactory` trait, set by the child-labour →
+  factory promotion (not the live `jobExperience` counter, which resets on every job
   change, so a fired factory hand would otherwise read as green). So a green
   worker can't jump straight to a factory job (must grind child labour up to it),
   while a former factory hand who was sacked can pick their career back up without
@@ -715,7 +721,7 @@ Roughly in likely order. None of these are started.
 > **[work-side focus]** below.
 
 - **Academic careers + education balance** — the grammar/university *school
-  flows* are built (decks, tuition, the uniFund-or-savings gate, earning the
+  flows* are built (decks, tuition, the eduUniFund-or-savings gate, earning the
   credentials), and **(a) is now DONE:** each credential opens its own distinct
   ladder — Commerce (basic) / Clerkly-Law (grammar) / Medicine (university, top
   pay) — with per-credential entry (leaver / graduation / job-offer all route by
@@ -725,7 +731,7 @@ Roughly in likely order. None of these are started.
   ~0.3%, because tuition (−5 grammar, −5 uni) plus the family keep drains you
   below the `finances ≥ 50` gate, and mortality during the studying years is
   high. Levers: lower/stagger tuition, make the income cards pay more, soften the
-  gate, make `uniFund` more common or more powerful, or a scholarship route.
+  gate, make `eduUniFund` more common or more powerful, or a scholarship route.
 - **Adult economy (§17b)** — the whole post-childhood game: job ladders (4
   education levels; matched 3-tier manual/criminal/educated paths), houses as
   `---` purchases behind rising Finances gates, lifestyle tiers, and the
@@ -745,7 +751,7 @@ Roughly in likely order. None of these are started.
   the board) — decide whether jobs need more work-event variety and/or rarer
   (gated / lower-weight) loss cards once real careers can play out.
 - **Trait naming/hierarchy refactor** — rename every trait to a `group_[subgroup_]name`
-  convention and update all references (a big sweep — `experience` alone has ~65),
+  convention and update all references (a big sweep — `jobExperience` alone has ~65),
   then make the debug trait tree nest **recursively on `_`** (it currently groups
   one level, by `_` or camelCase prefix). Target layout:
   - `skill_` → `skill_martialArts`
@@ -753,20 +759,20 @@ Roughly in likely order. None of these are started.
   - `job_` → `job_experience`, `job_strikes`, `job_timesChanged`, and per-path
     highest-tier under a sub-level: `job_unskilled_highestTier`,
     `job_skilled_highestTier`, … (ties into the highest-tier cache item below —
-    `reachedFactory` becomes `job_unskilled_highestTier`)
+    `jobReachedFactory` becomes `job_unskilled_highestTier`)
   - `brother_` → `brother_has`, `brother_relationship`, + brother-storyline traits;
     `sister_` likewise (splits the current `has*`/`rel*` pairs into per-sibling groups)
   - `finance_` → `finance_uniFund`
   - top-level singletons stay ungrouped (e.g. `vaccinated`)
   Do it as one focused pass (rename + reference update + recursive tree) rather
   than piecemeal, to avoid mixed conventions.
-- **Highest-tier-reached cache (job re-entry)** — `reachedFactory` (bool, set by
+- **Highest-tier-reached cache (job re-entry)** — `jobReachedFactory` (bool, set by
   the child-labour→factory promotion) is a stopgap that gates the "back to the
   mill" option so a sacked factory hand can resume without re-grinding. Generalise
   it to a **per-path "highest tier reached"** record (set on entering each job) so
   that being fired from *any* tier (e.g. a tier-3 solicitor) lets you return near
   your former level rather than restarting at the bottom. Real once adult re-entry
-  to tier 2/3 jobs exists; fold `reachedFactory` into it then.
+  to tier 2/3 jobs exists; fold `jobReachedFactory` into it then.
 - **"Keep your job" / `jobStrikes` mechanic** — *prototyped on the labour deck.* A
   per-job `jobStrikes` counter (resets on any job change) rises when you shirk
   (`job_labour_machine`/`errand` "refuse/dawdle" options) and each time you grovel;
@@ -830,7 +836,7 @@ Roughly in likely order. None of these are started.
   Implemented as a shim: on the end screen write an `inheritance` record to
   `localStorage`; on `New life`, override `content.start` before the first card.
   The engine needn't change (start is already pure data). A natural lever here is
-  **seeding `uniFund`** (or starting savings) from a well-off forebear — the
+  **seeding `eduUniFund`** (or starting savings) from a well-off forebear — the
   intended way to make the deliberately-rare university path reachable more often
   in a *later* run, without cheapening it within a single life. Related: the
   deferred **"continue as your child"** thread.
@@ -852,7 +858,7 @@ Roughly in likely order. None of these are started.
   you're comfortable you shelter/back him, if you're destitute (workhouse/streets)
   a well-loved Tom comes for *you* → **Beat 5** settled years → **Beat 6** his fate
   in old age (a Love×Grit grid of bittersweet endings). **Both-siblings space** via
-  `CardOption.if` on `hasBrother && hasSister`: a "share the burden" 3rd option at
+  `CardOption.if` on `relBrotherActive && relSisterActive`: a "share the burden" 3rd option at
   Beat 4 and a "take sides" clash. Sister will be her *own* story (`rel_sis`,
   `relSisterArc`/`relSisterGrit`), not a reskin. **Built so far: Tom's full arc —
   Stage 0 childhood + Beats 1–6 (crossroads → rift → making his way → the

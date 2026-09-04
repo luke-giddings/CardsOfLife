@@ -42,7 +42,7 @@ export const babyDecks = [
           prompt: "baby_uncle.prompt",
           options: {
             left: { label: "baby_uncle.left", outcomes: [{ result: "baby_uncle.left.r0", effects: { vitals: { happiness: "++" } } }] },
-            right: { label: "baby_uncle.right", outcomes: [{ result: "baby_uncle.right.r0", effects: { vitals: { finances: "+" }, setTraits: { uniFund: true } } }] },
+            right: { label: "baby_uncle.right", outcomes: [{ result: "baby_uncle.right.r0", effects: { vitals: { finances: "+" }, setTraits: { eduUniFund: true } } }] },
             down: { label: "baby_uncle.down", outcomes: [{ result: "baby_uncle.down.r0", effects: { vitals: { health: "++" } } }] },
           },
         },
@@ -94,8 +94,8 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_brother.prompt",
           options: {
-            left: { label: "baby_brother.left", outcomes: [{ result: "baby_brother.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrotherLove: 30 }, addDecks: ["rel_bro"] } }] },
-            right: { label: "baby_brother.right", outcomes: [{ result: "baby_brother.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { hasBrother: true }, incTraits: { relBrotherLove: -15 }, addDecks: ["rel_bro"] } }] },
+            left: { label: "baby_brother.left", outcomes: [{ result: "baby_brother.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { relBrotherActive: true }, incTraits: { relBrotherLove: 30 }, addDecks: ["rel_bro"] } }] },
+            right: { label: "baby_brother.right", outcomes: [{ result: "baby_brother.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { relBrotherActive: true }, incTraits: { relBrotherLove: -15 }, addDecks: ["rel_bro"] } }] },
           },
         },
         {
@@ -103,8 +103,8 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_sister.prompt",
           options: {
-            left: { label: "baby_sister.left", outcomes: [{ result: "baby_sister.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { hasSister: true }, incTraits: { relSisterLove: 30 }, addDecks: ["sibling"] } }] },
-            right: { label: "baby_sister.right", outcomes: [{ result: "baby_sister.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { hasSister: true }, incTraits: { relSisterLove: -15 }, addDecks: ["sibling"] } }] },
+            left: { label: "baby_sister.left", outcomes: [{ result: "baby_sister.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: 30 }, addDecks: ["sibling"] } }] },
+            right: { label: "baby_sister.right", outcomes: [{ result: "baby_sister.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: -15 }, addDecks: ["sibling"] } }] },
           },
         },
 
