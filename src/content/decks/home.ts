@@ -378,7 +378,12 @@ export const homeDecks = [
           conditions: { ageMin: 7 },
           prompt: "home_workhouse_runaway.prompt",
           options: {
-            left: { label: "home_workhouse_runaway.left", outcomes: [{ result: "home_workhouse_runaway.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless" } } }] },
+            // Onto the streets — and off the parish books. `pauper` (the workhouse
+            // occupation) owns no deck, so leaving it as-is would strand you with
+            // no job cards to draw; flip to `unemployed` so the job_unemployed deck
+            // (the route back to work) comes with you. (The homeless *housing* deck
+            // is still Backlog — for now the unemployed deck is your way forward.)
+            left: { label: "home_workhouse_runaway.left", outcomes: [{ result: "home_workhouse_runaway.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless", job: "unemployed" } } }] },
             // The SAME back-to-school escape as the apprentice card (same gate), on
             // this card too — the runaway has no upper age gate, so it widens the
             // window to ~7–13 without adding a new card to the deck.
