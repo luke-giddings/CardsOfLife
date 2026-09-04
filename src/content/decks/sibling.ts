@@ -44,7 +44,7 @@ export const siblingDecks = [
               // — he's safe, but learns you'll always come running (grit down).
               label: "rel_bro_bully.left",
               outcomes: [
-                { if: { traits: { knowsMartialArts: true } }, result: "rel_bro_bully.left.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 8, relBrotherGrit: 6 } } },
+                { if: { traits: { skillMartialArts: true } }, result: "rel_bro_bully.left.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 8, relBrotherGrit: 6 } } },
                 { result: "rel_bro_bully.left.r1", effects: { vitals: { health: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4 } } },
               ],
             },

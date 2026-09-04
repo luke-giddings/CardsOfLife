@@ -22,7 +22,7 @@ export const educationDecks = [
               // the prize.) A bookish child finds it a pleasure, not a grind.
               label: "edu_basicschool_exams.left",
               outcomes: [
-                { if: { traits: { bookish: { min: 3 } } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
+                { if: { traits: { persBookish: { min: 3 } } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
                 { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
@@ -58,7 +58,7 @@ export const educationDecks = [
               // already half-read the syllabus for fun — an easy win.
               label: "edu_basicschool_prize.left",
               outcomes: [
-                { if: { traits: { bookish: { min: 3 } } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "basic" } } },
+                { if: { traits: { persBookish: { min: 3 } } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "basic" } } },
                 { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
@@ -128,11 +128,11 @@ export const educationDecks = [
           kind: "one_time",
           prompt: "edu_grammar_debate.prompt",
           options: {
-            // A bookish scholar (bookish >= 3) takes to the debate as a pleasure —
+            // A bookish scholar (persBookish >= 3) takes to the debate as a pleasure —
             // no health cost of burning the midnight oil (mirrors how bookish
             // softens the basic-school achievement cards).
             left: { label: "edu_grammar_debate.left", outcomes: [
-              { if: { traits: { bookish: { min: 3 } } }, result: "edu_grammar_debate.left.r1", effects: { vitals: { spirit: "++", happiness: "+" } } },
+              { if: { traits: { persBookish: { min: 3 } } }, result: "edu_grammar_debate.left.r1", effects: { vitals: { spirit: "++", happiness: "+" } } },
               { result: "edu_grammar_debate.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
             ] },
             right: { label: "edu_grammar_debate.right", outcomes: [{ result: "edu_grammar_debate.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
@@ -189,10 +189,10 @@ export const educationDecks = [
           kind: "one_time",
           prompt: "edu_university_lectures.prompt",
           options: {
-            // A bookish scholar (bookish >= 3) finds the lecture hall a delight,
+            // A bookish scholar (persBookish >= 3) finds the lecture hall a delight,
             // not a grind — the punishing study turns into a happiness gain.
             left: { label: "edu_university_lectures.left", outcomes: [
-              { if: { traits: { bookish: { min: 3 } } }, result: "edu_university_lectures.left.r1", effects: { vitals: { spirit: "++", happiness: "+" } } },
+              { if: { traits: { persBookish: { min: 3 } } }, result: "edu_university_lectures.left.r1", effects: { vitals: { spirit: "++", happiness: "+" } } },
               { result: "edu_university_lectures.left.r0", effects: { vitals: { spirit: "++", health: "-" } } },
             ] },
             right: { label: "edu_university_lectures.right", outcomes: [{ result: "edu_university_lectures.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },

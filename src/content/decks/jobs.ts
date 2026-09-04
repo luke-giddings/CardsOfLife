@@ -124,7 +124,7 @@ export const jobDecks = [
               // experience (except the outcome where it kills you).
               label: "job_labour_machine.left",
               outcomes: [
-                { if: { traits: { sporty: { min: 3 } } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { jobExperience: 1 } } },
+                { if: { traits: { persSporty: { min: 3 } } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { jobExperience: 1 } } },
                 { if: { vitals: { health: { min: 40 } } }, result: "job_labour_machine.left.r1", effects: { vitals: { health: "--", finances: "+" }, incTraits: { jobExperience: 1 } } },
                 { result: "job_labour_machine.left.r2", effects: { endGame: "health" } },
               ],

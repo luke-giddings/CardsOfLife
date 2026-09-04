@@ -69,19 +69,23 @@ export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education",
 // Add a field here and it is instantly usable (and type-checked) in content.
 export interface Traits {
   gender: "boy" | "girl";
-  knowsMartialArts: boolean;
+  // Learned abilities. `skill*` so the debug panel groups them under a Skills
+  // category. (Distinct from `jobSkill`, which is apprenticeship craftsmanship
+  // under the Jobs category.)
+  skillMartialArts: boolean;
   vaccinated: boolean;
   // Education. `edu*` so the debug panel groups it under an Education category.
   // The university savings pot, seeded in the baby deck — a "setup for the future".
   eduUniFund: boolean;
-  // Disposition counters (0..3). A baby who leans into it starts at the cap (3,
-  // = "fully" the trait); otherwise you build it up +1 at a time in youth. Cards
-  // that reward the trait gate on `{ min: 3 }`. (Backlog: more +1 sources so
-  // youth can actually reach 3, and more results that branch on the level.)
-  bookish: number;
-  sporty: number;
-  sweetTooth: boolean;
-  sociable: boolean;
+  // Personality / disposition. `pers*` so the debug panel groups them under a
+  // Personality category. The counters (0..3): a baby who leans into it starts
+  // at the cap (3, = "fully" the trait); otherwise you build it up +1 at a time
+  // in youth. Cards that reward the trait gate on `{ min: 3 }`. (Backlog: more +1
+  // sources so youth can actually reach 3, and more results that branch on level.)
+  persBookish: number;
+  persSporty: number;
+  persSweetTooth: boolean;
+  persSociable: boolean;
   // Sibling relationships (hidden; can go negative = rivalry). All `rel<Sibling>*`
   // so the debug panel groups them by sibling under a Relationships category:
   //   <sibling>Active = whether you have this sibling at all (set at the baby deck);
@@ -130,13 +134,13 @@ export interface Traits {
 
 export const DEFAULT_TRAITS: Traits = {
   gender: "boy",
-  knowsMartialArts: false,
+  skillMartialArts: false,
   vaccinated: false,
   eduUniFund: false,
-  bookish: 0,
-  sporty: 0,
-  sweetTooth: false,
-  sociable: false,
+  persBookish: 0,
+  persSporty: 0,
+  persSweetTooth: false,
+  persSociable: false,
   relBrotherActive: false,
   relBrotherLove: 0,
   relBrotherGrit: 0,
@@ -191,7 +195,7 @@ export interface Effect {
   // identical — sets trait values — but semantically "a bad thing", so the UI's
   // beneficial-choice ★ does NOT fire for it (and is suppressed if the outcome
   // also changes status, e.g. selling up → renting). Keep boons in setTraits so
-  // they still earn the star (vaccinated, sporty, …).
+  // they still earn the star (vaccinated, persSporty, …).
   setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
   endGame?: string; // ends the run with this ending id (see ENDINGS)

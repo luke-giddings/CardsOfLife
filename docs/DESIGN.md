@@ -110,19 +110,21 @@ Job/Housing are named states).
 Arbitrary persistent variables, set by effects and read by conditions **and
 results**:
 Traits carry **sensible prefixes** so the debug panel can group them:
-`edu*` (education), `job*` (work life), `flaw*` (burdens, set via `setFlaws`),
-and `rel<Sibling>*` (relationships, nested per sibling — Brother `relBrother*`,
+`pers*` (personality/disposition), `skill*` (learned abilities), `edu*`
+(education), `job*` (work life), `flaw*` (burdens, set via `setFlaws`), and
+`rel<Sibling>*` (relationships, nested per sibling — Brother `relBrother*`,
 Sister `relSister*`).
-- **Booleans:** `knowsMartialArts`, `vaccinated`, `eduUniFund`, `sweetTooth`,
-  `sociable`, `relBrotherActive`, `relSisterActive` (whether you have that
+- **Booleans:** `skillMartialArts`, `vaccinated`, `eduUniFund`, `persSweetTooth`,
+  `persSociable`, `relBrotherActive`, `relSisterActive` (whether you have that
   sibling), `jobReachedFactory`, and the burdens `flawOwesCharity`, `flawSoldUp`.
 - **Enum:** `gender` (boy/girl), chosen on the birth card.
 - **Counters:** `relBrotherLove`/`relSisterLove` (closeness, can go negative =
   rivalry), `relBrotherGrit`/`relBrotherArc` (his backbone / story cursor),
   `jobExperience` (years in the current job), `jobSkill` (apprentice
   craftsmanship), `jobStrikes`, `jobTimesChanged`, `numTimesPlayedLottery`;
-  **`sporty`/`bookish`** (0..3 disposition — a baby sets it to the cap, else
-  built +1 at a time in youth; reward cards gate on `{ min: 3 }`, see §18 backlog).
+  **`persSporty`/`persBookish`** (0..3 disposition — a baby sets it to the cap,
+  else built +1 at a time in youth; reward cards gate on `{ min: 3 }`, see §18
+  backlog).
 
 **Relationships are just Traits.** Character decks can later branch on
 thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setups"
@@ -138,7 +140,7 @@ keeps you alive through childhood hazards.
   ordered list of **outcomes**; the engine picks the **first whose conditions
   match** (author the last one unconditional as the fallback). So the same swipe
   can read/behave differently by Trait/Status (e.g. the bully card's
-  `knowsMartialArts` branch).
+  `skillMartialArts` branch).
 
 **Effects** an outcome can carry: vital magnitudes, set/clear Status, add/remove
 decks, set/inc Traits, and `endGame` (a scripted ending — used by hazards).
@@ -217,8 +219,8 @@ Childhood carries real, **earned** risk — never a pure random rug-pull. A haza
 appears at random, but **survival depends on prior preparation**:
 - **Fever** → survive if `vaccinated`, or health-hardy, or you can afford a
   doctor; else `endGame` (death).
-- **Runaway cart** → survive if `sporty`, or health-hardy.
-- **Factory loom** (workers only) → survive if `sporty`/hardy; refusing is safe
+- **Runaway cart** → survive if `persSporty`, or health-hardy.
+- **Factory loom** (workers only) → survive if `persSporty`/hardy; refusing is safe
   but costs pay.
 
 **The `rescue` mechanism (safety nets).** A first-class engine feature: a card
@@ -366,7 +368,7 @@ A **language** toggle switches English/Italian live.
 - **No dominant options:** within a card, no option should be strictly better
   than another on every axis — trade a gain in one dimension for a cost/less in
   another. A future-positive trait means slightly less "now"; a future-liability
-  trait (e.g. `sweetTooth`) can ride a bigger boost now.
+  trait (e.g. `persSweetTooth`) can ride a bigger boost now.
 - **Childhood options touch 2–3 vitals** (never just one), forcing balance.
 - **Baby is unloseable:** positive/neutral effects only.
 - **Magnitudes only** for player-facing vital moves (`+`/`++`/`-`/`--`).
@@ -783,7 +785,7 @@ Roughly in likely order. None of these are started.
   often a sacking actually lands. **To do:** replicate to the other job decks'
   loss cards if it feels good, and add more shirk→strike moments as those decks
   gain work cards.
-- **Disposition counters (`sporty`/`bookish`) — scaffolded, needs fleshing out.**
+- **Disposition counters (`persSporty`/`persBookish`) — scaffolded, needs fleshing out.**
   These changed from booleans to **0..3 counters**: the merged `baby_disposition`
   card sets one straight to the cap (3), and cards that reward the trait gate on
   `{ min: 3 }` (the loom `job_labour_machine`, `child_accident`, the two
@@ -851,7 +853,7 @@ Roughly in likely order. None of these are started.
   crossroads is *fixed* (a milestone at his life-stage age); other beats get a
   relaxed `[ageMin, ageMax]` window plus a milestone twin that force-fires at
   `ageMax` so the thread can't stall. **Flow:** Stage 0 childhood fillers (the bully
-  card keys off `knowsMartialArts`) → **Beat 1** school/work (matching *your own*
+  card keys off `skillMartialArts`) → **Beat 1** school/work (matching *your own*
   path, `job==studying` at the time, deepens Love; the opposite breeds resentment;
   sets branch arc 1=school / 2=work) → **Beat 2** a rift-or-bond in adolescence
   (varies on whether you still live with family; wide window) → **Beat 3** he makes

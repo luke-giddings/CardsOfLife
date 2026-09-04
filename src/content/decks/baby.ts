@@ -56,8 +56,8 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_disposition.prompt",
           options: {
-            left: { label: "baby_disposition.left", outcomes: [{ result: "baby_disposition.left.r0", effects: { vitals: { health: "+" }, setTraits: { sporty: 3 } } }] },
-            right: { label: "baby_disposition.right", outcomes: [{ result: "baby_disposition.right.r0", effects: { vitals: { spirit: "+" }, setTraits: { bookish: 3 } } }] },
+            left: { label: "baby_disposition.left", outcomes: [{ result: "baby_disposition.left.r0", effects: { vitals: { health: "+" }, setTraits: { persSporty: 3 } } }] },
+            right: { label: "baby_disposition.right", outcomes: [{ result: "baby_disposition.right.r0", effects: { vitals: { spirit: "+" }, setTraits: { persBookish: 3 } } }] },
             down: { label: "baby_disposition.down", outcomes: [{ result: "baby_disposition.down.r0", effects: { vitals: { health: "++", happiness: "++", spirit: "+" } } }] },
           },
         },
@@ -66,7 +66,7 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_grandma.prompt",
           options: {
-            left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { sweetTooth: true } } }] },
+            left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { persSweetTooth: true } } }] },
             right: { label: "baby_grandma.right", outcomes: [{ result: "baby_grandma.right.r0", effects: { vitals: { health: "+" } } }] },
             down: { label: "baby_grandma.down", outcomes: [{ result: "baby_grandma.down.r0", effects: { vitals: { finances: "++" } } }] },
           },
@@ -85,7 +85,7 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_nursery.prompt",
           options: {
-            left: { label: "baby_nursery.left", outcomes: [{ result: "baby_nursery.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { sociable: true } } }] },
+            left: { label: "baby_nursery.left", outcomes: [{ result: "baby_nursery.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { persSociable: true } } }] },
             right: { label: "baby_nursery.right", outcomes: [{ result: "baby_nursery.right.r0", effects: { vitals: { health: "+" } } }] },
           },
         },

@@ -16,7 +16,7 @@ export const childhoodDecks = [
           kind: "one_time",
           prompt: "child_martialarts.prompt",
           options: {
-            left: { label: "child_martialarts.left", outcomes: [{ result: "child_martialarts.left.r0", effects: { vitals: { spirit: "++", health: "+", finances: "-" }, setTraits: { knowsMartialArts: true } } }] },
+            left: { label: "child_martialarts.left", outcomes: [{ result: "child_martialarts.left.r0", effects: { vitals: { spirit: "++", health: "+", finances: "-" }, setTraits: { skillMartialArts: true } } }] },
             right: { label: "child_martialarts.right", outcomes: [{ result: "child_martialarts.right.r0", effects: { vitals: { happiness: "+", finances: "+", spirit: "-" } } }] },
           },
         },
@@ -29,7 +29,7 @@ export const childhoodDecks = [
             left: {
               label: "child_bully.left",
               outcomes: [
-                { if: { traits: { knowsMartialArts: true } }, result: "child_bully.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
+                { if: { traits: { skillMartialArts: true } }, result: "child_bully.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
                 { result: "child_bully.left.r1", effects: { vitals: { spirit: "+", happiness: "-", health: "--" } } },
               ],
             },
@@ -44,7 +44,7 @@ export const childhoodDecks = [
             // Going all-out also builds the sporty counter (+1) -- the first
             // youth source toward re-earning what a sporty baby got for free.
             // (Backlog: more +1 sources so youth can actually reach the cap.)
-            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" }, incTraits: { sporty: 1 } } }] },
+            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" }, incTraits: { persSporty: 1 } } }] },
             right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", spirit: "+", health: "-" } } }] },
           },
         },
@@ -83,7 +83,7 @@ export const childhoodDecks = [
             left: {
               label: "child_accident.left",
               outcomes: [
-                { if: { traits: { sporty: { min: 3 } } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
+                { if: { traits: { persSporty: { min: 3 } } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
                 { if: { vitals: { health: { min: 40 } } }, result: "child_accident.left.r1", effects: { vitals: { health: "--" } } },
                 { result: "child_accident.left.r2", effects: { endGame: "health" } },
               ],
