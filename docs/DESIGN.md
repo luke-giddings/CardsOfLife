@@ -819,18 +819,23 @@ Roughly in likely order. None of these are started.
   each real work events, promotion moments, and path-appropriate hazards so a
   career actually plays out rather than just ticking experience toward a promotion
   or a sacking. (Supersedes the terminal-tier note in the deck-density item.)
-- **Homeless deck & exits** — **[work-side focus]** `homeless` housing (reached by
-  begging off the hunger card, or running away from the workhouse) now has its own
-  health/happiness drift but **no deck and no way out** — a pure hardship spiral.
-  Give it a `home_homeless` deck (begging for coins, finding shelter, a soup
-  kitchen) and exits (a benefactor, a doss-house job → renting/apprentice),
-  mirroring what the workhouse now has.
+- **Homeless deck & exits** — **BUILT** (`home_homeless`, a `priority` deck owned
+  by `homeless` housing). Grim daily life (a charity meal to recover; a little
+  begged income so even the jobless inch toward a deposit) plus **four gated
+  exits**: rent a room again (finances ≥ 40 → renting); **back to your books** to
+  the next rung by credential+age (illiterate→board school ≤13, basic→grammar ≤18,
+  grammar→university 18–25 with the fund or savings ≥ 50), if your vitals have
+  recovered; the **workhouse** (a child's shelter of last resort, ≤ 13); and
+  **crawl home** (a teen 14–18 with no rent money → family). You also keep/seek
+  work via `job_unemployed` (also `priority`), so a wage builds toward the rent.
+  All gates/values are tunable. *(Possible follow-ups: a benefactor event; an
+  adult-age shelter fallback, since 19–25 destitute with < £40 have only the slow
+  beg/work grind.)*
 - **Eviction rescue — "turned out onto the streets" (adult finances net).**
   **BUILT** (`home_renting_eviction`, `rescue: "finances"`, `ageMin 18`): an adult
   renter who would go bankrupt is instead **evicted → `homeless`** (rescue floors
-  finances to 1, then you choose how you go). Still depends on the **homeless deck
-  & exits** above to not just be a slower death — until that lands, eviction buys
-  time but the streets have no way out.
+  finances to 1, then you choose how you go). The **homeless deck & exits** above
+  now give the streets a real way out rather than just a slower death.
 - **Renting deck** — first-pass `home_renting` deck is in (lodger, landlord,
   furnish, neighbour, quiet). Still wants: the step up to **buying** a place
   (toward the inheritance thread), and possibly a lodger as a persistent income

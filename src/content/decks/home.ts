@@ -381,8 +381,8 @@ export const homeDecks = [
             // Onto the streets — and off the parish books. `pauper` (the workhouse
             // occupation) owns no deck, so leaving it as-is would strand you with
             // no job cards to draw; flip to `unemployed` so the job_unemployed deck
-            // (the route back to work) comes with you. (The homeless *housing* deck
-            // is still Backlog — for now the unemployed deck is your way forward.)
+            // (the route back to work) comes with you. Housing homeless brings its
+            // own home_homeless deck (streets life + exits) alongside it.
             left: { label: "home_workhouse_runaway.left", outcomes: [{ result: "home_workhouse_runaway.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless", job: "unemployed" } } }] },
             // The SAME back-to-school escape as the apprentice card (same gate), on
             // this card too — the runaway has no upper age gate, so it widens the
@@ -406,6 +406,128 @@ export const homeDecks = [
             // your vitals off the floor, so the studying/keep drains don't kill you.
             down: { label: "home_workhouse_apprentice.down", if: { ageMax: 13, vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } } }, outcomes: [{ result: "home_workhouse_apprentice.down.r0", effects: { vitals: { happiness: "+" }, setStatus: { housing: "family", job: "studying" } } }] },
             right: { label: "home_workhouse_apprentice.right", outcomes: [{ result: "home_workhouse_apprentice.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+      ],
+    },
+
+    // --- The streets: active while housing = homeless. The hardest grind — a
+    //     health/happiness drain and none of a home's comforts. `priority` (like
+    //     the workhouse) so the escape routes own the draw instead of drowning
+    //     under other flavour. Two grim daily cards (a little begged income; a
+    //     charity meal to recover), then FOUR ways off the streets, each gated to
+    //     fit your age/means:
+    //       • rent a room again  (finances >= 40 → renting)
+    //       • back to your books (recovered enough → the next school rung by your
+    //         credential + age: basic <= 13, grammar <= 18, university 18–25 with
+    //         the fund or savings)
+    //       • the workhouse      (a child's shelter of last resort, age <= 13)
+    //       • crawl home         (a teen with no rent money, 14–18 → family)
+    //     You also keep/seek work via job_unemployed (also priority), so you can
+    //     earn your way toward the rent. All gates/values are tunable. ----------
+    {
+      id: "home_homeless",
+      title: "deck.home_homeless.title",
+      unlock: "deck.home_homeless.blurb",
+      priority: true,
+      cards: [
+        {
+          // A charity meal and a warm mission hall — recover a little, if you can
+          // stomach the sermon and the pity (a knock to your pride).
+          id: "home_homeless_charity",
+          kind: "filler",
+          prompt: "home_homeless_charity.prompt",
+          options: {
+            left: { label: "home_homeless_charity.left", outcomes: [{ result: "home_homeless_charity.left.r0", effects: { vitals: { health: "+", happiness: "+", spirit: "-" } } }] },
+            right: { label: "home_homeless_charity.right", outcomes: [{ result: "home_homeless_charity.right.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
+          },
+        },
+        {
+          // A little begged and scavenged coin — a slow trickle toward a deposit
+          // even with no work, at a cost to your dignity (or go without, keeping
+          // your pride but not your strength).
+          id: "home_homeless_beg",
+          kind: "filler",
+          prompt: "home_homeless_beg.prompt",
+          options: {
+            left: { label: "home_homeless_beg.left", outcomes: [{ result: "home_homeless_beg.left.r0", effects: { vitals: { finances: "+", spirit: "-", happiness: "-" } } }] },
+            right: { label: "home_homeless_beg.right", outcomes: [{ result: "home_homeless_beg.right.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
+          },
+        },
+        // --- Four ways off the streets. `filler`, so passing one up doesn't burn
+        //     it — it comes round again when you're readier. --------------------
+        {
+          // Save a deposit and first rent (finances >= 40 so the −10 rent drift
+          // doesn't sink you the moment you move in) → back to a rented room.
+          id: "home_homeless_room",
+          kind: "filler",
+          conditions: { vitals: { finances: { min: 40 } } },
+          prompt: "home_homeless_room.prompt",
+          options: {
+            left: { label: "home_homeless_room.left", outcomes: [{ result: "home_homeless_room.left.r0", effects: { vitals: { finances: "-", happiness: "++", spirit: "+" }, setStatus: { housing: "renting" } } }] },
+            right: { label: "home_homeless_room.right", outcomes: [{ result: "home_homeless_room.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+        {
+          // Back to your books — but only once you've clawed your vitals off the
+          // floor (recovered + a small fund), and to the rung your credential+age
+          // allow: a grammar-leaver to UNIVERSITY (18–25, needs the uni fund or
+          // savings ≥ 50), a basic-schooled child to GRAMMAR (<= 18), an
+          // unlettered child to the board school (<= 13). Each takes you home to
+          // study (housing → family, job → the schooling). The card itself is
+          // gated on a rung fitting (so it never draws as a dead decline when you
+          // topped out, or are too old / too far gone); the LEFT outcomes then
+          // route to whichever rung you qualify for.
+          id: "home_homeless_school",
+          kind: "filler",
+          conditions: {
+            vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } },
+            any: [
+              { status: { education: "illiterate" }, ageMax: 13 },
+              { status: { education: "basic" }, ageMax: 18 },
+              { status: { education: "grammar" }, ageMin: 18, ageMax: 25, any: [{ traits: { eduUniFund: true } }, { vitals: { finances: { min: 50 } } }] },
+            ],
+          },
+          prompt: "home_homeless_school.prompt",
+          options: {
+            left: {
+              label: "home_homeless_school.left",
+              outcomes: [
+                { if: { status: { education: "grammar" }, ageMin: 18, ageMax: 25 }, result: "home_homeless_school.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { housing: "family", job: "university" } } },
+                { if: { status: { education: "basic" }, ageMax: 18 }, result: "home_homeless_school.left.r1", effects: { vitals: { spirit: "+" }, setStatus: { housing: "family", job: "grammar_school" } } },
+                { result: "home_homeless_school.left.r2", effects: { vitals: { spirit: "+" }, setStatus: { housing: "family", job: "studying" } } },
+              ],
+            },
+            right: { label: "home_homeless_school.right", outcomes: [{ result: "home_homeless_school.right.r0", effects: { vitals: { spirit: "-" } } }] },
+          },
+        },
+        {
+          // The workhouse: a child's shelter of last resort (age <= 13, matching
+          // how you otherwise enter it). Gruel and a roof (health up) for your
+          // freedom (spirit down) → housing workhouse, job pauper, handing over
+          // the workhouse deck (with its own exits). The reciprocal of the runaway.
+          id: "home_homeless_workhouse",
+          kind: "filler",
+          conditions: { ageMax: 13 },
+          prompt: "home_homeless_workhouse.prompt",
+          options: {
+            left: { label: "home_homeless_workhouse.left", outcomes: [{ result: "home_homeless_workhouse.left.r0", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse", job: "pauper" } } }] },
+            right: { label: "home_homeless_workhouse.right", outcomes: [{ result: "home_homeless_workhouse.right.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
+          },
+        },
+        {
+          // Crawl home: for a teen (14–18) with no deposit for a room (finances <
+          // 40, so it only surfaces when renting is out of reach) — swallow your
+          // pride and go back to the family (health/happiness up, spirit down) →
+          // housing family. You keep looking for work from there (job unchanged).
+          // The humble fallback when the other exits can't help.
+          id: "home_homeless_family",
+          kind: "filler",
+          conditions: { ageMin: 14, ageMax: 18, vitals: { finances: { max: 39 } } },
+          prompt: "home_homeless_family.prompt",
+          options: {
+            left: { label: "home_homeless_family.left", outcomes: [{ result: "home_homeless_family.left.r0", effects: { vitals: { health: "+", happiness: "+", spirit: "-" }, setStatus: { housing: "family" } } }] },
+            right: { label: "home_homeless_family.right", outcomes: [{ result: "home_homeless_family.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
       ],

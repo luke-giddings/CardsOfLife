@@ -187,8 +187,9 @@ export const content = {
         owned_large: { label: "status.housing.owned_large", drift: { finances: -12, health: 9, spirit: 5, happiness: 2 }, addDecks: ["home_owned_large"] },
         owned_estate: { label: "status.housing.owned_estate", drift: { finances: -18, health: 11, spirit: 7, happiness: 4 }, addDecks: ["home_owned_estate"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
-        //   of all. (Its own deck & exits are Backlog.)
-        homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 } },
+        //   of all. Owns the home_homeless deck (grim daily life + four gated
+        //   exits: rent a room, back to school, the workhouse, or crawl home).
+        homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 }, addDecks: ["home_homeless"] },
         // — taken on by a master tradesman (housed and fed; see job=apprentice).
         apprentice: { label: "status.housing.apprentice" },
       },
