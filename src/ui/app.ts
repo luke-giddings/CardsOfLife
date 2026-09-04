@@ -494,20 +494,22 @@ export class Game {
       return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
     };
     // Explicit trait grouping. Most traits sit loose at the top; the rest fall
-    // into fixed categories — Education (`edu*`), Jobs (`job*`), and a
-    // Relationships category that nests per-sibling (Brother `relBrother*`, Sister
-    // `relSister*`). A collapsed group holding a non-default ("set") trait is
-    // bolded (has-active) so you can spot live state without expanding it.
+    // into fixed categories — Education (`edu*`), Jobs (`job*`), Flaws (`flaw*`,
+    // the burdens set via setFlaws), and a Relationships category that nests
+    // per-sibling (Brother `relBrother*`, Sister `relSister*`). A collapsed group
+    // holding a non-default ("set") trait is bolded (has-active) so you can spot
+    // live state without expanding it.
     type TEntry = [string, unknown];
     const isSet = ([, v]: TEntry): boolean =>
       typeof v === "number" ? v !== 0 : typeof v === "boolean" ? v : true;
-    const loose: TEntry[] = [], edu: TEntry[] = [], job: TEntry[] = [], tom: TEntry[] = [], sis: TEntry[] = [];
+    const loose: TEntry[] = [], edu: TEntry[] = [], job: TEntry[] = [], tom: TEntry[] = [], sis: TEntry[] = [], flaw: TEntry[] = [];
     for (const e of Object.entries(this.state.traits) as TEntry[]) {
       const k = e[0];
       if (k.startsWith("relBrother")) tom.push(e);
       else if (k.startsWith("relSister")) sis.push(e);
       else if (k.startsWith("edu")) edu.push(e);
       else if (k.startsWith("job")) job.push(e);
+      else if (k.startsWith("flaw")) flaw.push(e);
       else loose.push(e);
     }
     // A collapsible group of trait chips; `body` overrides the chip list (used to
@@ -526,6 +528,7 @@ export class Game {
       `<div class="dbg-traits">${loose.map(traitChip).join("")}</div>` +
       traitSec("trait:edu", "Education", edu) +
       traitSec("trait:job", "Jobs", job) +
+      traitSec("trait:flaw", "Flaws", flaw) +
       traitSec("trait:rel", "Relationships", [...tom, ...sis], `<div class="dbg-relgroups">${relBody}</div>`);
 
     // Debug controls: vitals, age, decks, milestone jumps.

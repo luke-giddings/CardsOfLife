@@ -120,7 +120,7 @@ export const childhoodDecks = [
           // of child_hunger. It fires (once) when a child would otherwise die of
           // ill health — a charity hospital takes them in. The rescue floors
           // health to 1; the ward mends you further (health ++) whatever you do,
-          // and you ALWAYS leave owing them (owesCharity — you used the net; the
+          // and you ALWAYS leave owing them (flawOwesCharity — you used the net; the
           // debt falls due in young adulthood). The three options differ only in
           // what small extra you take from the stay (spirit / happiness / a few
           // coins). Gated to age <= 13 (findRescue honours conditions), so from
@@ -131,9 +131,9 @@ export const childhoodDecks = [
           conditions: { ageMax: 13 },
           prompt: "child_charity_hospital.prompt",
           options: {
-            left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setFlaws: { owesCharity: true } } }] },
-            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "++", happiness: "+" }, setFlaws: { owesCharity: true } } }] },
-            down: { label: "child_charity_hospital.down", outcomes: [{ result: "child_charity_hospital.down.r0", effects: { vitals: { health: "++", finances: "+" }, setFlaws: { owesCharity: true } } }] },
+            left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setFlaws: { flawOwesCharity: true } } }] },
+            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "++", happiness: "+" }, setFlaws: { flawOwesCharity: true } } }] },
+            down: { label: "child_charity_hospital.down", outcomes: [{ result: "child_charity_hospital.down.r0", effects: { vitals: { health: "++", finances: "+" }, setFlaws: { flawOwesCharity: true } } }] },
           },
         },
 

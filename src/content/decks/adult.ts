@@ -61,16 +61,16 @@ export const adultDecks = [
         },
         {
           // The charity hospital's ledger, come due. Only surfaces if the
-          // childhood health rescue was taken (owesCharity), and recurs (filler)
+          // childhood health rescue was taken (flawOwesCharity), and recurs (filler)
           // until you settle up: pay it off (a real dent in your purse, but the
           // debt clears and your conscience with it) or turn the collector away
           // (keep the coin, at a cost to spirit — and he'll be back next year).
           id: "ya_charity_debt",
           kind: "filler",
-          conditions: { traits: { owesCharity: true } },
+          conditions: { traits: { flawOwesCharity: true } },
           prompt: "ya_charity_debt.prompt",
           options: {
-            left: { label: "ya_charity_debt.left", outcomes: [{ result: "ya_charity_debt.left.r0", effects: { vitals: { finances: "--", spirit: "+" }, setTraits: { owesCharity: false } } }] },
+            left: { label: "ya_charity_debt.left", outcomes: [{ result: "ya_charity_debt.left.r0", effects: { vitals: { finances: "--", spirit: "+" }, setTraits: { flawOwesCharity: false } } }] },
             right: { label: "ya_charity_debt.right", outcomes: [{ result: "ya_charity_debt.right.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
           },
         },

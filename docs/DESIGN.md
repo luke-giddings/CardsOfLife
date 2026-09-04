@@ -110,11 +110,12 @@ Job/Housing are named states).
 Arbitrary persistent variables, set by effects and read by conditions **and
 results**:
 Traits carry **sensible prefixes** so the debug panel can group them:
-`edu*` (education), `job*` (work life), and `rel<Sibling>*` (relationships,
-nested per sibling — Tom `relBrother*`, Sister `relSister*`).
+`edu*` (education), `job*` (work life), `flaw*` (burdens, set via `setFlaws`),
+and `rel<Sibling>*` (relationships, nested per sibling — Brother `relBrother*`,
+Sister `relSister*`).
 - **Booleans:** `knowsMartialArts`, `vaccinated`, `eduUniFund`, `sweetTooth`,
   `sociable`, `relBrotherActive`, `relSisterActive` (whether you have that
-  sibling), `jobReachedFactory`, and the burdens `owesCharity`, `soldUp`.
+  sibling), `jobReachedFactory`, and the burdens `flawOwesCharity`, `flawSoldUp`.
 - **Enum:** `gender` (boy/girl), chosen on the birth card.
 - **Counters:** `relBrotherLove`/`relSisterLove` (closeness, can go negative =
   rivalry), `relBrotherGrit`/`relBrotherArc` (his backbone / story cursor),
@@ -244,7 +245,7 @@ catches you *once, as a child*, and never again.
 (hence the condition-check above) — it covers the whole childhood window, up until
 the move-out card unlocks at 14 and adult life proper begins. When a child's
 health would hit 0, a charity hospital takes them in: the vital floors to 1, the
-ward mends you further (health `++`), and you **always incur `owesCharity`** (you
+ward mends you further (health `++`), and you **always incur `flawOwesCharity`** (you
 used the net; the debt comes due in young adulthood). It's a real choice only in
 what small extra you take from the stay — **spirit** (the sisters' care),
 **happiness** (a friend on the ward), or **a few coins** (odd jobs for the
@@ -376,7 +377,7 @@ Birth → babyhood (unloseable build-up, trait setups — incl. the `baby_dispos
 fork: sporty / bookish / neither) → **school-or-work** at 5 → childhood (shared
 events + home / education / occupation decks + hazards, genuinely failable), with
 two safety nets — the **workhouse** (finances) and the **charity hospital**
-(health, children up to 13, on `owesCharity` credit) → **coming-of-age at 18** (no longer
+(health, children up to 13, on `flawOwesCharity` credit) → **coming-of-age at 18** (no longer
 an ending; hands off into a young-adult life-event stage that continues with **no
 cap**) → **adulthood at 25** → **old age at 50**, each a life-event stage of its
 own. A **visible Age status** rides these transitions and applies the passive
@@ -632,7 +633,7 @@ claws these bonuses back into the treadmill equilibrium.
 
 **Finances net #2 — selling the house (adult; reuses `rescue`).** **BUILT** — one
 `home_sellup_*` rescue per owned-house deck; both options crash you to renting +
-`soldUp`, differing in pride (sell cleanly, happiness− spirit− / cling on,
+`flawSoldUp`, differing in pride (sell cleanly, happiness− spirit− / cling on,
 happiness−− spirit+); proceeds scale by tier (small `+`, large/estate `++`).
 Verified: no homeowner dies of finances — the net always catches. The house is
 stored wealth and the adult finances net. If **Finances would hit 0 while you own

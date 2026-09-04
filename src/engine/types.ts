@@ -122,10 +122,10 @@ export interface Traits {
   // Durable debt to the charity hospital that saved you as a small child (the
   // health rescue). Set when you take their care; the ledger comes due in young
   // adulthood, unlocking the repayment card until you clear it.
-  owesCharity: boolean;
+  flawOwesCharity: boolean;
   // Durable mark of shame: you were forced to sell your home to cover debts (the
   // sell-up rescue). Recorded for the end-of-run epitaph (Backlog).
-  soldUp: boolean;
+  flawSoldUp: boolean;
 }
 
 export const DEFAULT_TRAITS: Traits = {
@@ -149,8 +149,8 @@ export const DEFAULT_TRAITS: Traits = {
   jobSkill: 0,
   jobReachedFactory: false,
   jobStrikes: 0,
-  owesCharity: false,
-  soldUp: false,
+  flawOwesCharity: false,
+  flawSoldUp: false,
 };
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.
@@ -187,7 +187,7 @@ export interface Effect {
   addDecks?: string[];
   removeDecks?: string[]; // ids, or a trailing wildcard like "job_*"
   setTraits?: Partial<Traits>;
-  // Like setTraits, but for BURDENS (owesCharity, soldUp, …). Mechanically
+  // Like setTraits, but for BURDENS (flawOwesCharity, flawSoldUp, …). Mechanically
   // identical — sets trait values — but semantically "a bad thing", so the UI's
   // beneficial-choice ★ does NOT fire for it (and is suppressed if the outcome
   // also changes status, e.g. selling up → renting). Keep boons in setTraits so

@@ -13,6 +13,8 @@ const TRAIT_RENAMES: Record<string, keyof Traits> = {
   skill: "jobSkill",
   reachedFactory: "jobReachedFactory",
   numTimesChangedJob: "jobTimesChanged",
+  owesCharity: "flawOwesCharity",
+  soldUp: "flawSoldUp",
 };
 
 export function saveGame(state: GameState): void {
