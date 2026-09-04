@@ -534,8 +534,41 @@ export class Game {
     const ageCtl = `<div class="dbg-ctlrow"><span class="dbg-ctllabel">Age ${this.state.age}</span>
       <button data-age="-5">−5</button><button data-age="-1">−1</button>
       <button data-age="1">+1</button><button data-age="5">+5</button></div>`;
-    const deckCtl = content.decks
-      .map((dk) => `<button class="dbg-deck ${this.state.activeDecks.includes(dk.id) ? "on" : ""}" data-deck="${dk.id}">${dk.id}</button>`)
+    // Decks, grouped into collapsible headers so the (long) list stays tidy.
+    // A group whose header is COLLAPSED but which contains an active deck is
+    // marked `has-active` — CSS bolds it so you can see it's live without
+    // expanding. Order and labels are fixed; anything unmatched falls to "Other".
+    const deckGroupOrder = ["age", "edu", "job", "home", "rel", "misc"] as const;
+    const deckGroupLabel: Record<string, string> = {
+      age: "Age", edu: "Education", job: "Jobs", home: "Home", rel: "Relationships", misc: "Other",
+    };
+    const deckGroupOf = (id: string): string =>
+      id.startsWith("age_") ? "age"
+      : id.startsWith("edu_") ? "edu"
+      : id.startsWith("job_") ? "job"
+      : id.startsWith("home_") ? "home"
+      : id.startsWith("rel_") || id === "sibling" ? "rel"
+      : "misc";
+    const deckBtn = (id: string): string =>
+      `<button class="dbg-deck ${this.state.activeDecks.includes(id) ? "on" : ""}" data-deck="${id}">${id}</button>`;
+    const decksByGroup = new Map<string, string[]>();
+    for (const dk of content.decks) {
+      const g = deckGroupOf(dk.id);
+      const arr = decksByGroup.get(g) ?? [];
+      if (arr.length === 0) decksByGroup.set(g, arr);
+      arr.push(dk.id);
+    }
+    const deckCtl = deckGroupOrder
+      .filter((g) => decksByGroup.has(g))
+      .map((g) => {
+        const ids = decksByGroup.get(g)!;
+        const secId = `deck:${g}`;
+        const active = ids.some((id) => this.state.activeDecks.includes(id));
+        return `<details class="dbg-sec dbg-subsec" ${this.debugOpen.has(secId) ? "open" : ""}>
+          <summary class="${active ? "has-active" : ""}" data-sec="${secId}">${deckGroupLabel[g]} · ${ids.length}</summary>
+          <div class="dbg-decks">${ids.map(deckBtn).join("")}</div>
+        </details>`;
+      })
       .join("");
     const milestoneCtl = ALL_CARDS.filter((c) => c.kind === "milestone")
       .map((c) => `<button data-card="${c.id}" data-action="skip">${c.id}</button>`)
@@ -589,7 +622,7 @@ export class Game {
       sec("vitals", "Vitals", `<div class="dbg-ctl">${vitalCtl}</div>`) +
       sec("age", "Age", `<div class="dbg-ctl">${ageCtl}</div>`) +
       sec("traits", "Traits — tap to toggle", traitHtml) +
-      sec("decks", "Decks — tap to add / remove", `<div class="dbg-decks">${deckCtl}</div>`) +
+      sec("decks", "Decks — tap to add / remove", deckCtl) +
       sec("milestones", "Skip to milestone", `<div class="dbg-decks">${milestoneCtl}</div>`) +
       sec("pool", `Draw pool — age ${this.state.age} · tap a card to inspect`, `<div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`) +
       sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail) +

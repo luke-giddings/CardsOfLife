@@ -204,6 +204,9 @@ body {
 /* Nested trait groups: indented, no bottom gap, muted summary. */
 .dbg-subsec { margin: 0 0 2px 10px; }
 .dbg-subsec > summary { text-transform: none; letter-spacing: 0.04em; color: var(--muted, #9a8) ; }
+/* A collapsed group that has an active deck inside: bold (and brighter) so
+   you can spot it without expanding. Expanded, it reads normally. */
+.dbg-subsec:not([open]) > summary.has-active { font-weight: 700; color: var(--ink); }
 .dbg-row {
   padding: 3px 0;
   cursor: pointer;
