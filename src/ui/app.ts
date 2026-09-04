@@ -383,6 +383,14 @@ export class Game {
     // the post-change per-turn drain.
     const projected = structuredClone(this.state);
     if (outcome.effects) applyEffect(projected, outcome.effects, content);
+    // Mirror chooseDirection: a non-filler card is consumed THIS turn, BEFORE the
+    // game-over/rescue check runs — so the card you're answering can't be its own
+    // safety net. Mark it used in the projection, or findRescue below would count
+    // the current rescue card and promise a 🛡 that won't exist when you swipe.
+    const cur = this.card;
+    if (cur && cur.kind !== "filler") {
+      projected.usedCards[cur.id] = (projected.usedCards[cur.id] ?? 0) + 1;
+    }
     projected.age += 1; // the turn advances before drift + the game-over/rescue check
     const drift = totalDrift(projected, content);
     let chips = "";

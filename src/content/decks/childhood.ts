@@ -110,7 +110,13 @@ export const childhoodDecks = [
           rescue: "finances",
           prompt: "child_hunger.prompt",
           options: {
-            left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless" } } }] },
+            // Onto the streets: destitute means your old life ends too. Drop to
+            // `unemployed` (not just homeless) so a costly occupation — university
+            // tuition especially — stops draining finances the instant the rescue
+            // floors you to 1 (which would kill you again next turn, with the
+            // one-shot net already spent). Also hands over the job_unemployed deck
+            // as your way forward. Housing homeless keeps the streets harsh.
+            left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" } } }] },
             right: { label: "child_hunger.right", outcomes: [{ result: "child_hunger.right.r0", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse", job: "pauper" } } }] },
           },
         },
