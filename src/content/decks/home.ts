@@ -236,8 +236,8 @@ export const homeDecks = [
           rescue: "finances",
           prompt: "home_sellup_small.prompt",
           options: {
-            left: { label: "home_sellup_small.left", outcomes: [{ result: "home_sellup_small.left.r0", effects: { vitals: { finances: "+", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
-            right: { label: "home_sellup_small.right", outcomes: [{ result: "home_sellup_small.right.r0", effects: { vitals: { finances: "+", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            left: { label: "home_sellup_small.left", outcomes: [{ result: "home_sellup_small.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            right: { label: "home_sellup_small.right", outcomes: [{ result: "home_sellup_small.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
           },
         },
       ],
@@ -258,14 +258,16 @@ export const homeDecks = [
         },
         {
           // Sell-up net for the large house — sells for more than the small
-          // (finances "++" proceeds vs "+").
+          // (finances "+++" proceeds vs "++"). A proper cushion: you crash to
+          // renting (often jobless), so the proceeds have to carry you for
+          // years while you find your feet again.
           id: "home_sellup_large",
           kind: "one_time",
           rescue: "finances",
           prompt: "home_sellup_large.prompt",
           options: {
-            left: { label: "home_sellup_large.left", outcomes: [{ result: "home_sellup_large.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
-            right: { label: "home_sellup_large.right", outcomes: [{ result: "home_sellup_large.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            left: { label: "home_sellup_large.left", outcomes: [{ result: "home_sellup_large.left.r0", effects: { vitals: { finances: "+++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            right: { label: "home_sellup_large.right", outcomes: [{ result: "home_sellup_large.right.r0", effects: { vitals: { finances: "+++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
           },
         },
       ],
@@ -286,14 +288,15 @@ export const homeDecks = [
         },
         {
           // Sell-up net for the estate — the highest fall, and the biggest sale
-          // (finances "++" proceeds, floored highest of the three).
+          // ("sells for a fortune": finances "++++" proceeds, floored highest of
+          // the three, effectively topping the purse right up).
           id: "home_sellup_estate",
           kind: "one_time",
           rescue: "finances",
           prompt: "home_sellup_estate.prompt",
           options: {
-            left: { label: "home_sellup_estate.left", outcomes: [{ result: "home_sellup_estate.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
-            right: { label: "home_sellup_estate.right", outcomes: [{ result: "home_sellup_estate.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            left: { label: "home_sellup_estate.left", outcomes: [{ result: "home_sellup_estate.left.r0", effects: { vitals: { finances: "++++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
+            right: { label: "home_sellup_estate.right", outcomes: [{ result: "home_sellup_estate.right.r0", effects: { vitals: { finances: "++++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { soldUp: true } } }] },
           },
         },
       ],

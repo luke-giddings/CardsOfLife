@@ -22,10 +22,12 @@ export const VITAL_MAX = 100;
 // in-between values. Tweak the point values here in one place; add more levels
 // as balancing needs them. "+++" is a HUGE one-off swing (~4 turns of a typical
 // +12 wage) — used for the criminal path's rare, random big scores, which have
-// to pay for the long dry spells between them.
-export type Magnitude = "---" | "--" | "-" | "+" | "++" | "+++";
+// to pay for the long dry spells between them. "++++" is a life-changing sum
+// (a whole vital bar) — the sale of an estate, and the like.
+export type Magnitude = "---" | "--" | "-" | "+" | "++" | "+++" | "++++";
 // Flat point steps for the fixed magnitudes.
 export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "---">, number> = {
+  "++++": 100,
   "+++": 50,
   "++": 25,
   "+": 10,
