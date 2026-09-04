@@ -854,7 +854,11 @@ Roughly in likely order. None of these are started.
   in old age (a Love×Grit grid of bittersweet endings). **Both-siblings space** via
   `CardOption.if` on `hasBrother && hasSister`: a "share the burden" 3rd option at
   Beat 4 and a "take sides" clash. Sister will be her *own* story (`rel_sis`,
-  `relSisterArc`/`relSisterGrit`), not a reskin. **Built so far: Stage 0 + Beat 1.**
+  `relSisterArc`/`relSisterGrit`), not a reskin. **Built so far: Tom's full arc —
+  Stage 0 childhood + Beats 1–6 (crossroads → rift → making his way → the
+  reciprocal reckoning → settled years → a Love×Grit fate ending).** The
+  both-siblings `CardOption.if` options and the whole `rel_sis` story are still to
+  come.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
 - **Richer end-of-run epitaph / scoring** — cause of death, life recap, a score
