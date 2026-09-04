@@ -495,7 +495,7 @@ export class Game {
     };
     // Explicit trait grouping. Most traits sit loose at the top; the rest fall
     // into fixed categories — Education (`edu*`), Jobs (`job*`), and a
-    // Relationships category that nests per-sibling (Tom `relBrother*`, Sister
+    // Relationships category that nests per-sibling (Brother `relBrother*`, Sister
     // `relSister*`). A collapsed group holding a non-default ("set") trait is
     // bolded (has-active) so you can spot live state without expanding it.
     type TEntry = [string, unknown];
@@ -521,7 +521,7 @@ export class Game {
         ${inner}
       </details>`;
     };
-    const relBody = traitSec("trait:rel:tom", "Tom", tom) + traitSec("trait:rel:sis", "Sister", sis);
+    const relBody = traitSec("trait:rel:bro", "Brother", tom) + traitSec("trait:rel:sis", "Sister", sis);
     const traitHtml =
       `<div class="dbg-traits">${loose.map(traitChip).join("")}</div>` +
       traitSec("trait:edu", "Education", edu) +
