@@ -59,7 +59,7 @@ export const childhoodDecks = [
             left: {
               label: "child_fever.left",
               outcomes: [
-                { if: { traits: { vaccinated: true } }, result: "child_fever.left.r0", effects: { vitals: { health: "-" } } },
+                { if: { traits: { skillVaccinated: true } }, result: "child_fever.left.r0", effects: { vitals: { health: "-" } } },
                 { if: { vitals: { health: { min: 30 } } }, result: "child_fever.left.r1", effects: { vitals: { health: "--" } } },
                 { result: "child_fever.left.r2", effects: { endGame: "health" } },
               ],

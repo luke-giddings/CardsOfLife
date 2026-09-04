@@ -33,7 +33,7 @@ full tone pass comes once the decks are complete.
 |---|---|
 | **Vital** | One of four bars (0–100). Any at 0 = game over. |
 | **Status** | A persistent side-state (Job/occupation, Housing, Education, Lifestyle). Applies per-turn **drift** and gates content; can own decks. |
-| **Trait** | Hidden state — booleans, enums, counters (e.g. `vaccinated`, `gender`, `relBrotherLove`). |
+| **Trait** | Hidden state — booleans, enums, counters (e.g. `skillVaccinated`, `gender`, `relBrotherLove`). |
 | **Card** | One year. A **front** (prompt + 2–4 options) and a **back** (the result). |
 | **Outcome** | One resolution of an option: result text + effects, optionally condition-gated. |
 | **Deck** | A named set of cards, switched on/off as life progresses. |
@@ -114,21 +114,23 @@ Traits carry **sensible prefixes** so the debug panel can group them:
 (education), `job*` (work life), `flaw*` (burdens, set via `setFlaws`), and
 `rel<Sibling>*` (relationships, nested per sibling — Brother `relBrother*`,
 Sister `relSister*`).
-- **Booleans:** `skillMartialArts`, `vaccinated`, `eduUniFund`, `persSweetTooth`,
-  `persSociable`, `relBrotherActive`, `relSisterActive` (whether you have that
-  sibling), `jobReachedFactory`, and the burdens `flawOwesCharity`, `flawSoldUp`.
-- **Enum:** `gender` (boy/girl), chosen on the birth card.
+- **Booleans:** `skillMartialArts`, `skillVaccinated`, `eduUniFund`,
+  `persSweetTooth`, `persSociable`, `relBrotherActive`, `relSisterActive` (whether
+  you have that sibling), `jobReachedFactory`, and the burdens `flawOwesCharity`,
+  `flawSoldUp`.
+- **Enum:** `gender` (boy/girl), chosen on the birth card — currently unused, so
+  left ungrouped until it has a purpose.
 - **Counters:** `relBrotherLove`/`relSisterLove` (closeness, can go negative =
   rivalry), `relBrotherGrit`/`relBrotherArc` (his backbone / story cursor),
   `jobExperience` (years in the current job), `jobSkill` (apprentice
-  craftsmanship), `jobStrikes`, `jobTimesChanged`, `numTimesPlayedLottery`;
+  craftsmanship), `jobStrikes`, `jobTimesChanged`;
   **`persSporty`/`persBookish`** (0..3 disposition — a baby sets it to the cap,
   else built +1 at a time in youth; reward cards gate on `{ min: 3 }`, see §18
   backlog).
 
 **Relationships are just Traits.** Character decks can later branch on
 thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setups"
-(vaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
+(skillVaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
 keeps you alive through childhood hazards.
 
 ## 8. Cards: front and back
@@ -217,7 +219,7 @@ rest are silent to avoid double interstitials).
 
 Childhood carries real, **earned** risk — never a pure random rug-pull. A hazard
 appears at random, but **survival depends on prior preparation**:
-- **Fever** → survive if `vaccinated`, or health-hardy, or you can afford a
+- **Fever** → survive if `skillVaccinated`, or health-hardy, or you can afford a
   doctor; else `endGame` (death).
 - **Runaway cart** → survive if `persSporty`, or health-hardy.
 - **Factory loom** (workers only) → survive if `persSporty`/hardy; refusing is safe
@@ -302,7 +304,7 @@ fire given the current state. Two extra markers:
   hospital's `ageMax` resolve correctly), so you can tell "real death" from
   "you'd be floored but survive, this once".
 - A gold **★** marks a **beneficial path change beyond the numbers** — a new
-  job/home/education (`setStatus`), a **boon trait** (`setTraits` — vaccinated,
+  job/home/education (`setStatus`), a **boon trait** (`setTraits` — skillVaccinated,
   sporty, a uni fund…), or a life-stage deck swap — so a rewarding option (seize
   the apprenticeship; buy the house; get vaccinated) doesn't look weaker than a
   plain sibling that only moves a stat. The star reads as *good*, so a trait that
@@ -766,7 +768,7 @@ Roughly in likely order. None of these are started.
   - `brother_` → `brother_has`, `brother_relationship`, + brother-storyline traits;
     `sister_` likewise (splits the current `has*`/`rel*` pairs into per-sibling groups)
   - `finance_` → `finance_uniFund`
-  - top-level singletons stay ungrouped (e.g. `vaccinated`)
+  - top-level singletons stay ungrouped (e.g. `gender`)
   Do it as one focused pass (rename + reference update + recursive tree) rather
   than piecemeal, to avoid mixed conventions.
 - **Highest-tier-reached cache (job re-entry)** — `jobReachedFactory` (bool, set by

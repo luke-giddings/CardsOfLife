@@ -69,11 +69,12 @@ export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education",
 // Add a field here and it is instantly usable (and type-checked) in content.
 export interface Traits {
   gender: "boy" | "girl";
-  // Learned abilities. `skill*` so the debug panel groups them under a Skills
-  // category. (Distinct from `jobSkill`, which is apprenticeship craftsmanship
-  // under the Jobs category.)
+  // Learned abilities / protections. `skill*` so the debug panel groups them
+  // under a Skills category. (Distinct from `jobSkill`, which is apprenticeship
+  // craftsmanship under the Jobs category.) `skillVaccinated` = smallpox immunity
+  // bought in the baby deck; it helps you survive the childhood fever hazard.
   skillMartialArts: boolean;
-  vaccinated: boolean;
+  skillVaccinated: boolean;
   // Education. `edu*` so the debug panel groups it under an Education category.
   // The university savings pot, seeded in the baby deck — a "setup for the future".
   eduUniFund: boolean;
@@ -99,7 +100,6 @@ export interface Traits {
   relBrotherArc: number;
   relSisterActive: boolean;
   relSisterLove: number;
-  numTimesPlayedLottery: number;
   // Work life. All `job*` so the debug panel groups them under a Jobs category.
   // Times you've switched jobs over the run (an epitaph/flavour counter).
   jobTimesChanged: number;
@@ -135,7 +135,7 @@ export interface Traits {
 export const DEFAULT_TRAITS: Traits = {
   gender: "boy",
   skillMartialArts: false,
-  vaccinated: false,
+  skillVaccinated: false,
   eduUniFund: false,
   persBookish: 0,
   persSporty: 0,
@@ -147,7 +147,6 @@ export const DEFAULT_TRAITS: Traits = {
   relBrotherArc: 0,
   relSisterActive: false,
   relSisterLove: 0,
-  numTimesPlayedLottery: 0,
   jobTimesChanged: 0,
   jobExperience: 0,
   jobSkill: 0,
@@ -195,7 +194,7 @@ export interface Effect {
   // identical — sets trait values — but semantically "a bad thing", so the UI's
   // beneficial-choice ★ does NOT fire for it (and is suppressed if the outcome
   // also changes status, e.g. selling up → renting). Keep boons in setTraits so
-  // they still earn the star (vaccinated, persSporty, …).
+  // they still earn the star (skillVaccinated, persSporty, …).
   setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
   endGame?: string; // ends the run with this ending id (see ENDINGS)
