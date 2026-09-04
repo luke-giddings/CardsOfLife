@@ -16,7 +16,7 @@ export const adultDecks = [
       cards: [
         {
           id: "ya_courting",
-          kind: "filler",
+          kind: "one_time",
           prompt: "ya_courting.prompt",
           options: {
             left: { label: "ya_courting.left", outcomes: [{ result: "ya_courting.left.r0", effects: { vitals: { happiness: "++", finances: "-" } } }] },
@@ -25,7 +25,7 @@ export const adultDecks = [
         },
         {
           id: "ya_tavern",
-          kind: "filler",
+          kind: "one_time",
           prompt: "ya_tavern.prompt",
           options: {
             left: { label: "ya_tavern.left", outcomes: [{ result: "ya_tavern.left.r0", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } }] },
@@ -34,7 +34,7 @@ export const adultDecks = [
         },
         {
           id: "ya_thrift",
-          kind: "filler",
+          kind: "one_time",
           prompt: "ya_thrift.prompt",
           options: {
             left: { label: "ya_thrift.left", outcomes: [{ result: "ya_thrift.left.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
@@ -43,7 +43,7 @@ export const adultDecks = [
         },
         {
           id: "ya_ambition",
-          kind: "filler",
+          kind: "one_time",
           prompt: "ya_ambition.prompt",
           options: {
             left: { label: "ya_ambition.left", outcomes: [{ result: "ya_ambition.left.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
@@ -52,7 +52,7 @@ export const adultDecks = [
         },
         {
           id: "ya_faith",
-          kind: "filler",
+          kind: "one_time",
           prompt: "ya_faith.prompt",
           options: {
             left: { label: "ya_faith.left", outcomes: [{ result: "ya_faith.left.r0", effects: { vitals: { spirit: "++", happiness: "-" } } }] },
