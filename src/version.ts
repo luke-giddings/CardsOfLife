@@ -1,4 +1,4 @@
 // On-screen build label. Bump these when it helps to tell builds apart on the
 // phone; the git SHA + time are appended automatically (see vite.config.ts).
 export const APP_VERSION = "0.1";
-export const BUILD_DESC = "status-chip drift symbols are now authored (driftShown) instead of computed from the raw drift numbers, so tuning values won't silently flip the +/− visuals; renting now reads £- (not £--), and its -10 number is unchanged";
+export const BUILD_DESC = "every status chip's drift is now pinned to a single pip per vital (driftShown), so the whole board reads as clean single-step nudges (direction only) and the magnitudes live in the numbers you tune. Note: old age now shows ♥- like adulthood (was ♥--) — bump its driftShown if you want it heavier";
