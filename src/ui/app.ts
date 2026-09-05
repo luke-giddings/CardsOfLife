@@ -321,15 +321,20 @@ export class Game {
       let drift = "";
       for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
         if (!dv) continue;
-        // Show the STRENGTH of the drift, not just its sign: 1–3 symbols by
-        // magnitude (a heavier drain reads heavier — e.g. old age ♥−− vs
-        // adulthood ♥−), mirroring the +/++/+++ vocabulary on the cards. The
-        // single-symbol band runs to 7 so the game's ubiquitous −5 "baseline"
-        // cost (study/keep/workhouse) reads as one −, not a heavy −−; the double
-        // band (8–15) is for genuinely bigger drains (old age −8, renting −10).
-        const mag = Math.abs(dv) >= 16 ? 3 : Math.abs(dv) >= 8 ? 2 : 1;
-        const sym = (dv > 0 ? "+" : "−").repeat(mag);
-        drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${dv > 0 ? "dgood" : "dbad"}">${sym}</span></span>`;
+        // Show the STRENGTH of the drift, not just its sign: 1–3 symbols (a
+        // heavier drain reads heavier — e.g. old age ♥−− vs adulthood ♥−),
+        // mirroring the +/++/+++ vocabulary on the cards. The displayed strength
+        // is AUTHORED per state via `driftShown` (decoupled from the raw number,
+        // so tuning values never silently flips the visual). Where a vital has no
+        // override we fall back to deriving it from |drift|: |v| >= 16 → 3,
+        // >= 8 → 2, else 1 (the single band runs to 7 so the ubiquitous −5
+        // "baseline" cost reads as one −).
+        const shown = state?.driftShown?.[vk as VitalKey];
+        const good = shown ? shown.startsWith("+") : dv > 0;
+        const sym = shown
+          ? shown.split("-").join("−")
+          : (dv > 0 ? "+" : "−").repeat(Math.abs(dv) >= 16 ? 3 : Math.abs(dv) >= 8 ? 2 : 1);
+        drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${good ? "dgood" : "dbad"}">${sym}</span></span>`;
       }
       chips += `<span class="chip"><b>${t(STATUS_LABEL[kind])}</b> ${label}${drift}</span>`;
     }

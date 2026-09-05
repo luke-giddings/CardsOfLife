@@ -173,7 +173,7 @@ export const content = {
         // the health recovery, not continued free savings — you only get ahead
         // again on a better wage (promotion/apprenticeship) or the renting deck's
         // income cards (a lodger, etc.). Owns the home_renting deck.
-        renting: { label: "status.housing.renting", drift: { finances: -10, health: 5 }, addDecks: ["home_renting"] },
+        renting: { label: "status.housing.renting", drift: { finances: -10, health: 5 }, driftShown: { finances: "-", health: "+" }, addDecks: ["home_renting"] },
         // Owned homes: the adult housing ladder above renting. Each is BOUGHT
         // (offered when finances >= 75, cost "---" = keep ~1/3) and gives a
         // permanent, rising vital bonus (health, then spirit, then happiness).

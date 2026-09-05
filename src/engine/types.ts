@@ -271,9 +271,20 @@ export interface Deck {
 }
 
 // --- Status definitions ------------------------------------------------------
+// How a drift reads on the status chip: a signed 1–3-symbol strength, authored
+// independently of the raw drift number. Detaches the visual from the maths so
+// you can tune drift values without a number nudging across a display threshold
+// and silently changing how many +/− show. Mirrors the card +/++/+++ vocabulary.
+export type DriftShown = "+" | "++" | "+++" | "-" | "--" | "---";
+
 export interface StatusStateDef {
   label?: StringId;                      // display name id (defaults to the key)
   drift?: Partial<Record<VitalKey, number>>;
+  // Per-vital override for how `drift` READS on the chip (see DriftShown). When a
+  // vital is listed here the chip shows exactly this, ignoring the number's size
+  // (the sign, too, comes from the token). Omitted vitals fall back to deriving
+  // the strength from |drift| (|v| >= 16 → 3, >= 8 → 2, else 1).
+  driftShown?: Partial<Record<VitalKey, DriftShown>>;
   addDecks?: string[];                   // decks owned while in this state
   // (job states) A "between jobs" state — entering it preserves the `experience`
   // counter and the job it was earned in, so a sacking→re-hire into the SAME job

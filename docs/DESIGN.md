@@ -77,12 +77,15 @@ nudges and drift use raw numbers (they're not player-facing bar moves).
 
 A Status does two jobs: **drift** (a fixed per-turn effect on Vitals) and
 **gating/deck-ownership** (a state can `addDecks`). Drift is shown to the player
-on the status chip as **icon + a 1–3-symbol strength** by magnitude (|v| ≥ 16 →
-`+++`/`−−−`, ≥ 8 → `++`/`−−`, else `+`/`−`), so a heavier drain reads heavier —
-e.g. old age *♥−−* (−8) vs adulthood *♥−* (−3). The single band runs to 7 on
-purpose: the game's ubiquitous **−5 "baseline" cost** (study, family keep,
-workhouse, unemployment) should read as one *−*, not a heavy *−−* — so a fresh
-undergrad shows *✦− £−*, not *✦−− £−−*. (Mirrors the `+/++/+++` card vocabulary.)
+on the status chip as **icon + a 1–3-symbol strength**, mirroring the `+/++/+++`
+card vocabulary, so a heavier drain reads heavier — e.g. old age *♥−−* vs
+adulthood *♥−*. **The displayed strength is authored, not computed** — a state
+gives `driftShown` per vital (e.g. renting `{ finances: "-" }`), so tuning the
+raw drift numbers never nudges a value across a threshold and silently flips the
+visual. Where a state omits `driftShown` for a vital, the strength falls back to
+being derived from the magnitude (|v| ≥ 16 → 3, ≥ 8 → 2, else 1; the single band
+runs to 7 so the ubiquitous **−5 "baseline" cost** reads as one *−*). Renting is
+pinned to *£−* (its −10 rent line would otherwise read *£−−*).
 
 | Status | States (so far) | Notes |
 |---|---|---|
