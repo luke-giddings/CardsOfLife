@@ -78,6 +78,10 @@ export interface Traits {
   // Education. `edu*` so the debug panel groups it under an Education category.
   // The university savings pot, seeded in the baby deck — a "setup for the future".
   eduUniFund: boolean;
+  // Set once you've taken up a place at university (spending the fund or your
+  // savings). Distinguishes a former undergraduate — who can RETURN to finish,
+  // e.g. off the streets — from a fresh grammar-leaver who never went.
+  eduWasUndergraduate: boolean;
   // Personality / disposition. `pers*` so the debug panel groups them under a
   // Personality category. The counters (0..3): a baby who leans into it starts
   // at the cap (3, = "fully" the trait); otherwise you build it up +1 at a time
@@ -137,6 +141,7 @@ export const DEFAULT_TRAITS: Traits = {
   skillMartialArts: false,
   skillVaccinated: false,
   eduUniFund: false,
+  eduWasUndergraduate: false,
   persBookish: 0,
   persSporty: 0,
   persSweetTooth: false,

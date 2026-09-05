@@ -470,14 +470,15 @@ export const homeDecks = [
         },
         {
           // Back to your books — but only once you've clawed your vitals off the
-          // floor (recovered + a small fund), and to the rung your credential+age
-          // allow: a grammar-leaver to UNIVERSITY (18–25, needs the uni fund or
-          // savings ≥ 50), a basic-schooled child to GRAMMAR (<= 18), an
-          // unlettered child to the board school (<= 13). Each takes you home to
-          // study (housing → family, job → the schooling). The card itself is
-          // gated on a rung fitting (so it never draws as a dead decline when you
-          // topped out, or are too old / too far gone); the LEFT outcomes then
-          // route to whichever rung you qualify for.
+          // floor (recovered), and to the rung your credential+age allow: a former
+          // undergraduate RETURNS to UNIVERSITY to finish (18–25, `eduWasUndergraduate`
+          // — the uni fund was already spent getting in the first time, so it's the
+          // "been there before" marker that qualifies you, not the fund), a
+          // basic-schooled child to GRAMMAR (<= 18), an unlettered child to the
+          // board school (<= 13). Each takes you home to study (housing → family,
+          // job → the schooling). The card is gated on a rung fitting (so it never
+          // draws as a dead decline when you topped out, or are too old / too far
+          // gone); the LEFT outcomes then route to whichever rung you qualify for.
           id: "home_homeless_school",
           kind: "filler",
           conditions: {
@@ -485,7 +486,7 @@ export const homeDecks = [
             any: [
               { status: { education: "illiterate" }, ageMax: 13 },
               { status: { education: "basic" }, ageMax: 18 },
-              { status: { education: "grammar" }, ageMin: 18, ageMax: 25, any: [{ traits: { eduUniFund: true } }, { vitals: { finances: { min: 50 } } }] },
+              { status: { education: "grammar" }, ageMin: 18, ageMax: 25, traits: { eduWasUndergraduate: true } },
             ],
           },
           prompt: "home_homeless_school.prompt",
@@ -493,7 +494,7 @@ export const homeDecks = [
             left: {
               label: "home_homeless_school.left",
               outcomes: [
-                { if: { status: { education: "grammar" }, ageMin: 18, ageMax: 25 }, result: "home_homeless_school.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { housing: "family", job: "university" } } },
+                { if: { status: { education: "grammar" }, traits: { eduWasUndergraduate: true }, ageMin: 18, ageMax: 25 }, result: "home_homeless_school.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { housing: "family", job: "university" } } },
                 { if: { status: { education: "basic" }, ageMax: 18 }, result: "home_homeless_school.left.r1", effects: { vitals: { spirit: "+" }, setStatus: { housing: "family", job: "grammar_school" } } },
                 { result: "home_homeless_school.left.r2", effects: { vitals: { spirit: "+" }, setStatus: { housing: "family", job: "studying" } } },
               ],

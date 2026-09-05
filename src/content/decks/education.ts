@@ -166,8 +166,8 @@ export const educationDecks = [
               label: "edu_grammar_leaver.left",
               if: { any: [{ traits: { eduUniFund: true } }, { vitals: { finances: { min: 50 } } }] },
               outcomes: [
-                { if: { traits: { eduUniFund: true } }, result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduUniFund: false } } },
-                { result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" } } },
+                { if: { traits: { eduUniFund: true } }, result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduUniFund: false, eduWasUndergraduate: true } } },
+                { result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
               ],
             },
             right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "clerk" } } }] },

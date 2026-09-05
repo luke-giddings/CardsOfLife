@@ -115,6 +115,7 @@ Traits carry **sensible prefixes** so the debug panel can group them:
 `rel<Sibling>*` (relationships, nested per sibling — Brother `relBrother*`,
 Sister `relSister*`).
 - **Booleans:** `skillMartialArts`, `skillVaccinated`, `eduUniFund`,
+  `eduWasUndergraduate` (took up a uni place — lets a dropout return to finish),
   `persSweetTooth`, `persSociable`, `relBrotherActive`, `relSisterActive` (whether
   you have that sibling), `jobReachedFactory`, and the burdens `flawOwesCharity`,
   `flawSoldUp`.
@@ -822,15 +823,15 @@ Roughly in likely order. None of these are started.
 - **Homeless deck & exits** — **BUILT** (`home_homeless`, a `priority` deck owned
   by `homeless` housing). Grim daily life (a charity meal to recover; a little
   begged income so even the jobless inch toward a deposit) plus **four gated
-  exits**: rent a room again (finances ≥ 40 → renting); **back to your books** to
-  the next rung by credential+age (illiterate→board school ≤13, basic→grammar ≤18,
-  grammar→university 18–25 with the fund or savings ≥ 50), if your vitals have
-  recovered; the **workhouse** (a child's shelter of last resort, ≤ 13); and
-  **crawl home** (a teen 14–18 with no rent money → family). You also keep/seek
-  work via `job_unemployed` (also `priority`), so a wage builds toward the rent.
-  All gates/values are tunable. *(Possible follow-ups: a benefactor event; an
-  adult-age shelter fallback, since 19–25 destitute with < £40 have only the slow
-  beg/work grind.)*
+  exits**, once your vitals have recovered: rent a room again (finances ≥ 40 →
+  renting); **back to your books** to the rung your credential+age allow
+  (illiterate→board school ≤13, basic→grammar ≤18, and a **former undergraduate**
+  — `eduWasUndergraduate`, since the uni fund was already spent getting in —
+  **returns to university** to finish, 18–25); the **workhouse** (a child's
+  shelter of last resort, ≤ 13 only); and **crawl home** (a teen 14–18 with no
+  rent money → family). You also keep/seek work via `job_unemployed` (also
+  `priority`), so a wage builds toward the rent. All gates/values are tunable.
+  *(Possible follow-up: a benefactor event.)*
 - **Eviction rescue — "turned out onto the streets" (adult finances net).**
   **BUILT** (`home_renting_eviction`, `rescue: "finances"`, `ageMin 18`): an adult
   renter who would go bankrupt is instead **evicted → `homeless`** (rescue floors
