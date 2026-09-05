@@ -77,16 +77,19 @@ nudges and drift use raw numbers (they're not player-facing bar moves).
 
 A Status does two jobs: **drift** (a fixed per-turn effect on Vitals) and
 **gating/deck-ownership** (a state can `addDecks`). Drift is shown to the player
-on the status chip as **icon + a 1–3-symbol strength**, in the same `+/++/+++`
+on the status chip as **icon + a 1–4-symbol strength**, in the same `+/++/+++`
 vocabulary as the cards. **The displayed strength is authored, not computed** —
-each state gives `driftShown` per vital (e.g. renting `{ finances: "-" }`),
-completely decoupled from the raw drift number, so tuning values never nudges a
-symbol count and silently flips the visual. Every drifting state is currently
-pinned to a **single pip per vital** (the chip shows the *direction* of each
-drift at one symbol — *£− ♥+* — and the magnitude lives in the number), giving a
-clean, uniform board; author `"++"`/`"--"` on a state if you later want one to
-read heavier than its neighbours. A vital with no `driftShown` override falls
-back to deriving the strength from the magnitude (|v| ≥ 16 → 3, ≥ 8 → 2, else 1).
+each state gives `driftShown` per vital, completely decoupled from the raw drift
+number, so tuning values never nudges a symbol count and silently flips the
+visual. The convention is **ladder position, not magnitude**: each rung up a
+progression shows one more symbol, so a ladder reads as clean single steps —
+housing finances renting *£−* → small *£−−* → large *£−−−* → estate *£−−−−* (and
+the owned-home comforts step up the same way); each career's wage *£+* / *£++* /
+*£+++* by tier; old age *♥−−* one step past adulthood *♥−*. A vital whose value
+is constant across a ladder's tiers (e.g. the factory/gang health drain) stays a
+single pip; the escalation is in the number. A vital with no `driftShown`
+override falls back to deriving the strength from the magnitude (|v| ≥ 16 → 3,
+≥ 8 → 2, else 1).
 
 | Status | States (so far) | Notes |
 |---|---|---|

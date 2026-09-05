@@ -271,11 +271,14 @@ export interface Deck {
 }
 
 // --- Status definitions ------------------------------------------------------
-// How a drift reads on the status chip: a signed 1–3-symbol strength, authored
+// How a drift reads on the status chip: a signed 1–4-symbol strength, authored
 // independently of the raw drift number. Detaches the visual from the maths so
 // you can tune drift values without a number nudging across a display threshold
-// and silently changing how many +/− show. Mirrors the card +/++/+++ vocabulary.
-export type DriftShown = "+" | "++" | "+++" | "-" | "--" | "---";
+// and silently changing how many +/− show. The convention is LADDER POSITION,
+// not magnitude: each rung up a progression shows one more symbol — housing
+// finances renting − / small −− / large −−− / estate −−−−; a career's wage +/++/+++
+// by tier. Mirrors the card +/++/+++ vocabulary.
+export type DriftShown = "+" | "++" | "+++" | "++++" | "-" | "--" | "---" | "----";
 
 export interface StatusStateDef {
   label?: StringId;                      // display name id (defaults to the key)

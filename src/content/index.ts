@@ -75,7 +75,7 @@ export const content = {
         child: { label: "status.age.child", drift: { happiness: 2 }, driftShown: { happiness: "+" } },
         young_adult: { label: "status.age.young_adult" },
         adult: { label: "status.age.adult", drift: { health: -3 }, driftShown: { health: "-" } },
-        old_age: { label: "status.age.old_age", drift: { health: -8 }, driftShown: { health: "-" } },
+        old_age: { label: "status.age.old_age", drift: { health: -8 }, driftShown: { health: "--" } },
       },
     },
     job: {
@@ -113,8 +113,8 @@ export const content = {
         // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
         // crosses you onto the skilled ladder.
         child_labourer: { label: "status.job.child_labourer", drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"] },
-        factory: { label: "status.job.factory", drift: { finances: 13, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_factory"] },
-        gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_gangmaster"] },
+        factory: { label: "status.job.factory", drift: { finances: 13, health: -5 }, driftShown: { finances: "++", health: "-" }, addDecks: ["job_factory"] },
+        gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, driftShown: { finances: "+++", health: "-" }, addDecks: ["job_gangmaster"] },
 
         // --- SKILLED (credential: journeyman → master; safe; high ceiling) -
         // Apprentice is a low-stipend, TIME-LIMITED indenture entered by a
@@ -124,8 +124,8 @@ export const content = {
         // housing, no rent), so it still nets +5 — the dues-paying phase whose
         // real reward is the journeyman/master pay to come.
         apprentice: { label: "status.job.apprentice", drift: { finances: 5 }, driftShown: { finances: "+" }, addDecks: ["job_apprentice"] },
-        journeyman: { label: "status.job.journeyman", drift: { finances: 18 }, driftShown: { finances: "+" }, addDecks: ["job_journeyman"] },
-        master: { label: "status.job.master", drift: { finances: 28 }, driftShown: { finances: "+" }, addDecks: ["job_master"] },
+        journeyman: { label: "status.job.journeyman", drift: { finances: 18 }, driftShown: { finances: "++" }, addDecks: ["job_journeyman"] },
+        master: { label: "status.job.master", drift: { finances: 28 }, driftShown: { finances: "+++" }, addDecks: ["job_master"] },
 
         // --- EDUCATED: THREE separate ladders, one per credential, each its own
         // three-rung world (entry job by the school leaver / job offer; promotions
@@ -137,21 +137,21 @@ export const content = {
         // Wages rise along each ladder, and the university (medicine) ladder tops
         // out highest of all — the reward for the rare degree. All values tunable.
         shophand: { label: "status.job.shophand", drift: { finances: 12 }, driftShown: { finances: "+" }, addDecks: ["job_shop"] },
-        shopkeeper: { label: "status.job.shopkeeper", drift: { finances: 18, happiness: -3 }, driftShown: { finances: "+", happiness: "-" }, addDecks: ["job_shopkeeper"] },
-        merchant: { label: "status.job.merchant", drift: { finances: 28, spirit: -3 }, driftShown: { finances: "+", spirit: "-" }, addDecks: ["job_merchant"] },
+        shopkeeper: { label: "status.job.shopkeeper", drift: { finances: 18, happiness: -3 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_shopkeeper"] },
+        merchant: { label: "status.job.merchant", drift: { finances: 28, spirit: -3 }, driftShown: { finances: "+++", spirit: "-" }, addDecks: ["job_merchant"] },
         clerk: { label: "status.job.clerk", drift: { finances: 16, happiness: -5 }, driftShown: { finances: "+", happiness: "-" }, addDecks: ["job_clerk"] },
-        chief_clerk: { label: "status.job.chief_clerk", drift: { finances: 22, happiness: -5 }, driftShown: { finances: "+", happiness: "-" }, addDecks: ["job_chief_clerk"] },
-        solicitor: { label: "status.job.solicitor", drift: { finances: 28, happiness: -5, spirit: -5 }, driftShown: { finances: "+", happiness: "-", spirit: "-" }, addDecks: ["job_solicitor"] },
+        chief_clerk: { label: "status.job.chief_clerk", drift: { finances: 22, happiness: -5 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_chief_clerk"] },
+        solicitor: { label: "status.job.solicitor", drift: { finances: 28, happiness: -5, spirit: -5 }, driftShown: { finances: "+++", happiness: "-", spirit: "-" }, addDecks: ["job_solicitor"] },
         physician_junior: { label: "status.job.physician_junior", drift: { finances: 14, health: -3 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_physician_junior"] },
-        physician: { label: "status.job.physician", drift: { finances: 30, happiness: -5 }, driftShown: { finances: "+", happiness: "-" }, addDecks: ["job_physician"] },
-        physician_eminent: { label: "status.job.physician_eminent", drift: { finances: 42, happiness: -5, spirit: -5 }, driftShown: { finances: "+", happiness: "-", spirit: "-" }, addDecks: ["job_physician_eminent"] },
+        physician: { label: "status.job.physician", drift: { finances: 30, happiness: -5 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_physician"] },
+        physician_eminent: { label: "status.job.physician_eminent", drift: { finances: 42, happiness: -5, spirit: -5 }, driftShown: { finances: "+++", happiness: "-", spirit: "-" }, addDecks: ["job_physician_eminent"] },
 
         // --- CRIMINAL (no credential; earn-now via big scores; arrest risk) -
         // Pickpocket has NO wage (0 drift) — money & experience come only from
         // "score" cards. Burglar and fence add a small wage on top of the scores.
         pickpocket: { label: "status.job.pickpocket", addDecks: ["job_criminal"] },
         burglar: { label: "status.job.burglar", drift: { finances: 5, spirit: -5 }, driftShown: { finances: "+", spirit: "-" }, addDecks: ["job_burglar"] },
-        fence: { label: "status.job.fence", drift: { finances: 10, spirit: -5 }, driftShown: { finances: "+", spirit: "-" }, addDecks: ["job_fence"] },
+        fence: { label: "status.job.fence", drift: { finances: 10, spirit: -5 }, driftShown: { finances: "++", spirit: "-" }, addDecks: ["job_fence"] },
       },
     },
     housing: {
@@ -183,9 +183,9 @@ export const content = {
         // only a top income (solicitor/master) can run — overreach and the drain
         // pulls you toward the sell-up rescue. Each owns a deck that hosts the
         // offer of the NEXT tier up ("rebuild to 75, spend down, rebuild").
-        owned_small: { label: "status.housing.owned_small", drift: { finances: -10, health: 7, spirit: 3 }, driftShown: { finances: "-", health: "+", spirit: "+" }, addDecks: ["home_owned_small"] },
-        owned_large: { label: "status.housing.owned_large", drift: { finances: -12, health: 9, spirit: 5, happiness: 2 }, driftShown: { finances: "-", health: "+", spirit: "+", happiness: "+" }, addDecks: ["home_owned_large"] },
-        owned_estate: { label: "status.housing.owned_estate", drift: { finances: -18, health: 11, spirit: 7, happiness: 4 }, driftShown: { finances: "-", health: "+", spirit: "+", happiness: "+" }, addDecks: ["home_owned_estate"] },
+        owned_small: { label: "status.housing.owned_small", drift: { finances: -10, health: 7, spirit: 3 }, driftShown: { finances: "--", health: "+", spirit: "+" }, addDecks: ["home_owned_small"] },
+        owned_large: { label: "status.housing.owned_large", drift: { finances: -12, health: 9, spirit: 5, happiness: 2 }, driftShown: { finances: "---", health: "++", spirit: "++", happiness: "+" }, addDecks: ["home_owned_large"] },
+        owned_estate: { label: "status.housing.owned_estate", drift: { finances: -18, health: 11, spirit: 7, happiness: 4 }, driftShown: { finances: "----", health: "+++", spirit: "+++", happiness: "++" }, addDecks: ["home_owned_estate"] },
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. Owns the home_homeless deck (grim daily life + four gated
         //   exits: rent a room, back to school, the workhouse, or crawl home).
@@ -232,8 +232,8 @@ export const content = {
         default: {},
         frugal: { label: "status.lifestyle.frugal", drift: { happiness: -4 }, driftShown: { happiness: "-" } },
         modest: { label: "status.lifestyle.modest", drift: { finances: -3, happiness: 2 }, driftShown: { finances: "-", happiness: "+" } },
-        comfortable: { label: "status.lifestyle.comfortable", drift: { finances: -8, happiness: 5, health: -1 }, driftShown: { finances: "-", happiness: "+", health: "-" } },
-        lavish: { label: "status.lifestyle.lavish", drift: { finances: -15, happiness: 9, health: -8, spirit: -4 }, driftShown: { finances: "-", happiness: "+", health: "-", spirit: "-" } },
+        comfortable: { label: "status.lifestyle.comfortable", drift: { finances: -8, happiness: 5, health: -1 }, driftShown: { finances: "--", happiness: "+", health: "-" } },
+        lavish: { label: "status.lifestyle.lavish", drift: { finances: -15, happiness: 9, health: -8, spirit: -4 }, driftShown: { finances: "---", happiness: "++", health: "--", spirit: "-" } },
       },
     },
   },
