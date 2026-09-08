@@ -62,8 +62,8 @@ export const ENDINGS: Record<string, Ending> = {
 };
 
 // --- Statuses: persistent side-states that drift Vitals and gate content. ----
-export type StatusKind = "age" | "job" | "housing" | "education" | "lifestyle";
-export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education", "lifestyle"];
+export type StatusKind = "age" | "job" | "housing" | "education" | "lifestyle" | "pet";
+export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education", "lifestyle", "pet"];
 
 // --- Traits: hidden state. Booleans, enums, counters. ------------------------
 // Add a field here and it is instantly usable (and type-checked) in content.
@@ -134,6 +134,17 @@ export interface Traits {
   // Durable mark of shame: you were forced to sell your home to cover debts (the
   // sell-up rescue). Recorded for the end-of-run epitaph (Backlog).
   flawSoldUp: boolean;
+  // Pets. `pet*` so the debug panel groups them under a Pets category. There are
+  // two pets (one at a time): a cat (a HAPPINESS companion) and a dog (a SPIRIT
+  // companion), each with its own age/love pair. `pet<X>Age` ticks up each year
+  // you keep that pet (via the pet status state's `tick`); the pet deck's passing
+  // milestone fires when it reaches old age. `pet<X>Love` is how well you treat
+  // it — neglect drives it down until the animal runs off (the runaway milestone,
+  // which removes the pet before old age so a mistreated one never reaches passing).
+  petCatAge: number;
+  petCatLove: number;
+  petDogAge: number;
+  petDogLove: number;
 }
 
 export const DEFAULT_TRAITS: Traits = {
@@ -159,6 +170,10 @@ export const DEFAULT_TRAITS: Traits = {
   jobStrikes: 0,
   flawOwesCharity: false,
   flawSoldUp: false,
+  petCatAge: 0,
+  petCatLove: 0,
+  petDogAge: 0,
+  petDogLove: 0,
 };
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.
@@ -262,6 +277,13 @@ export interface Card {
   // full money with nowhere to go) always surfaces the chance to spend it. The
   // card still appears normally in the pool below the cap.
   force?: VitalKey;
+  // Rarity gate (0..1): even once its `conditions` hold, the card only enters the
+  // draw pool on a fresh per-year dice roll (value < chance). Omitted = always in
+  // the pool (chance 1). Pair with `one_time` for a rare once-in-a-life surprise
+  // that competes in the pool the year it lands — e.g. a pet's litter, which is
+  // gated to the middle of its life and only rarely turns up. The roll consumes
+  // rng (threaded through the draw), so a save resumes the same sequence.
+  chance?: number;
 }
 
 export interface Deck {
@@ -289,6 +311,12 @@ export type DriftShown = "+" | "++" | "+++" | "++++" | "-" | "--" | "---" | "---
 export interface StatusStateDef {
   label?: StringId;                      // display name id (defaults to the key)
   drift?: Partial<Record<VitalKey, number>>;
+  // Per-turn TRAIT increments while in this state — drift's counterpart for
+  // counters (parallels `drift` for vitals, applied the same turns). Used to age
+  // a pet toward the end of its life (pet=cat ticks `petCatAge`), so a lifespan
+  // milestone can fire ~N years on. Runs even during the babyhood `noDrift`
+  // grace period (a pet isn't around then anyway).
+  tick?: Partial<Record<NumericTraitKey, number>>;
   // Per-vital override for how `drift` READS on the chip (see DriftShown). When a
   // vital is listed here the chip shows exactly this, ignoring the number's size
   // (the sign, too, comes from the token). Omitted vitals fall back to deriving

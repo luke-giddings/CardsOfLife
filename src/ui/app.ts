@@ -63,6 +63,7 @@ const STATUS_LABEL: Record<StatusKind, StringId> = {
   housing: "statuskind.housing",
   education: "statuskind.education",
   lifestyle: "statuskind.lifestyle",
+  pet: "statuskind.pet",
 };
 
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point
@@ -311,7 +312,9 @@ export class Game {
       if (kind === "age") {
         // The life-stage chip is always shown — from birth onward it's the one
         // status that means something in babyhood too.
-      } else if (kind === "lifestyle") {
+      } else if (kind === "lifestyle" || kind === "pet") {
+        // Reserved chips: shown only once they leave their neutral start (lifestyle
+        // "default" / pet "none") — i.e. once you actually have a lifestyle or a pet.
         if (value === content.start.statuses[kind]) continue;
       } else if (!inChildhood) {
         continue;
@@ -515,7 +518,7 @@ export class Game {
     type TEntry = [string, unknown];
     const isSet = ([, v]: TEntry): boolean =>
       typeof v === "number" ? v !== 0 : typeof v === "boolean" ? v : true;
-    const loose: TEntry[] = [], pers: TEntry[] = [], skill: TEntry[] = [], edu: TEntry[] = [], job: TEntry[] = [], tom: TEntry[] = [], sis: TEntry[] = [], flaw: TEntry[] = [];
+    const loose: TEntry[] = [], pers: TEntry[] = [], skill: TEntry[] = [], edu: TEntry[] = [], job: TEntry[] = [], tom: TEntry[] = [], sis: TEntry[] = [], flaw: TEntry[] = [], pet: TEntry[] = [];
     for (const e of Object.entries(this.state.traits) as TEntry[]) {
       const k = e[0];
       if (k.startsWith("relBrother")) tom.push(e);
@@ -525,6 +528,7 @@ export class Game {
       else if (k.startsWith("edu")) edu.push(e);
       else if (k.startsWith("job")) job.push(e);
       else if (k.startsWith("flaw")) flaw.push(e);
+      else if (k.startsWith("pet")) pet.push(e);
       else loose.push(e);
     }
     // A collapsible group of trait chips; `body` overrides the chip list (used to
@@ -545,6 +549,7 @@ export class Game {
       traitSec("trait:skill", "Skills", skill) +
       traitSec("trait:edu", "Education", edu) +
       traitSec("trait:job", "Jobs", job) +
+      traitSec("trait:pet", "Pets", pet) +
       traitSec("trait:flaw", "Flaws", flaw) +
       traitSec("trait:rel", "Relationships", [...tom, ...sis], `<div class="dbg-relgroups">${relBody}</div>`);
 
@@ -563,9 +568,9 @@ export class Game {
     // A group whose header is COLLAPSED but which contains an active deck is
     // marked `has-active` — CSS bolds it so you can see it's live without
     // expanding. Order and labels are fixed; anything unmatched falls to "Other".
-    const deckGroupOrder = ["age", "edu", "job", "home", "rel", "misc"] as const;
+    const deckGroupOrder = ["age", "edu", "job", "home", "rel", "pet", "misc"] as const;
     const deckGroupLabel: Record<string, string> = {
-      age: "Age", edu: "Education", job: "Jobs", home: "Home", rel: "Relationships", misc: "Other",
+      age: "Age", edu: "Education", job: "Jobs", home: "Home", rel: "Relationships", pet: "Pets", misc: "Other",
     };
     const deckGroupOf = (id: string): string =>
       id.startsWith("age_") ? "age"
@@ -573,6 +578,7 @@ export class Game {
       : id.startsWith("job_") ? "job"
       : id.startsWith("home_") ? "home"
       : id.startsWith("rel_") || id === "sibling" ? "rel"
+      : id.startsWith("pet_") ? "pet"
       : "misc";
     const deckBtn = (id: string): string =>
       `<button class="dbg-deck ${this.state.activeDecks.includes(id) ? "on" : ""}" data-deck="${id}">${id}</button>`;
@@ -942,6 +948,8 @@ export class Game {
       colour.push(t(tr.relBrotherLove >= 30 ? "ui.proseBrotherClose" : tr.relBrotherLove >= 0 ? "ui.proseBrotherPeace" : "ui.proseBrotherEstranged"));
     if (tr.relSisterActive)
       colour.push(t(tr.relSisterLove >= 30 ? "ui.proseSisterClose" : tr.relSisterLove >= 0 ? "ui.proseSisterPeace" : "ui.proseSisterEstranged"));
+    if (st.pet === "cat") colour.push(t("ui.proseCat"));
+    else if (st.pet === "dog") colour.push(t("ui.proseDog"));
     if (tr.skillMartialArts) colour.push(t("ui.proseMartial"));
     if (tr.flawOwesCharity) colour.push(t("ui.proseOwedCharity"));
 

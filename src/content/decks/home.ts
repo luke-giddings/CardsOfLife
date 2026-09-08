@@ -42,12 +42,15 @@ export const homeDecks = [
           },
         },
         {
+          // The stray cat — an acquisition card: "take it in" grants the pet
+          // status (cat), which owns the pet_cat deck and its steady comfort/cost.
+          // Gated pet=none so you can't take in a second while you have one.
           id: "home_family_pet",
           kind: "one_time",
-          conditions: { ageMax: 17 },
+          conditions: { ageMax: 17, status: { pet: "none" } },
           prompt: "home_family_pet.prompt",
           options: {
-            left: { label: "home_family_pet.left", outcomes: [{ result: "home_family_pet.left.r0", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
+            left: { label: "home_family_pet.left", outcomes: [{ result: "home_family_pet.left.r0", effects: { vitals: { happiness: "+" }, setStatus: { pet: "cat" }, setTraits: { petCatLove: 2, petCatAge: 0 } } }] },
             right: { label: "home_family_pet.right", outcomes: [{ result: "home_family_pet.right.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
           },
         },

@@ -115,11 +115,23 @@ export function drawCard(
   );
   if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };
 
-  // Rescue cards are never drawn normally — only via the pending-rescue path.
-  const eligible = cards.filter(
-    (c) => c.kind !== "milestone" && !c.rescue && isEligible(c, state, content),
-  );
-  if (eligible.length === 0) return { card: null, state };
+  // Rescue cards are never drawn normally — only via the pending-rescue path. A
+  // `chance` card must also pass a fresh per-year dice roll to enter the pool (a
+  // rare event — see Card.chance); the rolls consume rng, threaded through to the
+  // final pick below and persisted even when nothing is drawn, so a save resumes
+  // the same sequence.
+  let rng = state.rng;
+  const eligible: Card[] = [];
+  for (const c of cards) {
+    if (c.kind === "milestone" || c.rescue || !isEligible(c, state, content)) continue;
+    if (c.chance !== undefined) {
+      const r = nextRandom(rng);
+      rng = r.state;
+      if (r.value >= c.chance) continue;
+    }
+    eligible.push(c);
+  }
+  if (eligible.length === 0) return { card: null, state: { ...state, rng } };
   const pool = focusPool(eligible, content);
 
   // Avoid repeating the immediately-previous card when there's a choice.
@@ -129,7 +141,7 @@ export function drawCard(
     if (filtered.length > 0) choices = filtered;
   }
 
-  const roll = nextRandom(state.rng);
+  const roll = nextRandom(rng);
   const pick = choices[Math.floor(roll.value * choices.length)];
   return { card: pick, state: { ...state, rng: roll.state, lastCardId: pick.id } };
 }
@@ -308,6 +320,19 @@ function applyDrift(state: GameState, content: Content): void {
   }
 }
 
+// Per-turn TRAIT increments from the active status states (see StatusStateDef.tick).
+// Drift's counterpart for counters — e.g. a cat ages `petCatAge` a year at a time.
+function applyTick(state: GameState, content: Content): void {
+  for (const kind of Object.keys(state.statuses) as StatusKind[]) {
+    const st = content.statuses[kind]?.states[state.statuses[kind]];
+    if (!st?.tick) continue;
+    for (const [k, v] of Object.entries(st.tick)) {
+      const key = k as keyof typeof state.traits;
+      (state.traits[key] as number) = (state.traits[key] as number) + (v ?? 0);
+    }
+  }
+}
+
 const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
 
 // A one-shot safety-net card for a vital: `rescue === vital`, not yet used,
@@ -367,6 +392,7 @@ export function chooseDirection(
 
   state.age += 1;
   applyDrift(state, content);
+  applyTick(state, content);
   checkGameOver(state, content);
   return { state, result: outcome.result };
 }
@@ -376,6 +402,7 @@ export function quietYear(prev: GameState): { state: GameState; result: string }
   const state = structuredClone(prev);
   state.age += 1;
   applyDrift(state, CONTENT);
+  applyTick(state, CONTENT);
   checkGameOver(state, CONTENT);
   return { state, result: "A quiet, uneventful year passes." };
 }

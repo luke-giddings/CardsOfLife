@@ -7,6 +7,7 @@ import {
   educationDecks,
   jobDecks,
   siblingDecks,
+  petDecks,
 } from "./decks/index.ts";
 
 // ---------------------------------------------------------------------------
@@ -50,7 +51,7 @@ export const content = {
     // Start low and even — babyhood is where the meters get built up (unevenly,
     // by your choices), ready for the child deck to start spending them.
     vitals: { finances: 20, happiness: 20, health: 20, spirit: 20 },
-    statuses: { age: "baby", job: "infant", housing: "family", education: "illiterate", lifestyle: "default" },
+    statuses: { age: "baby", job: "infant", housing: "family", education: "illiterate", lifestyle: "default", pet: "none" },
     decks: ["age_baby"],
     traits: {},
   },
@@ -236,6 +237,34 @@ export const content = {
         lavish: { label: "status.lifestyle.lavish", drift: { finances: -15, happiness: 9, health: -8, spirit: -4 }, driftShown: { finances: "---", happiness: "++", health: "--", spirit: "-" } },
       },
     },
+
+    // A PET. A little steady joy for a little steady cost — and, one day, a loss.
+    // Two kinds, one at a time: a CAT leans into HAPPINESS (cheaper, aloof) and a
+    // DOG into SPIRIT (a touch dearer to keep, devoted). Acquired by a card (the
+    // childhood stray cat, or the pet shop, where you pick either), which sets the
+    // pet state and seeds its love; each state owns its own small positive deck and
+    // `tick`s its age a year at a time so the deck's passing milestone can fire in
+    // old age. Hidden chip while "none".
+    pet: {
+      id: "pet",
+      states: {
+        none: {},
+        cat: {
+          label: "status.pet.cat",
+          drift: { happiness: 3, finances: -2 },
+          driftShown: { happiness: "+", finances: "-" },
+          tick: { petCatAge: 1 },
+          addDecks: ["pet_cat"],
+        },
+        dog: {
+          label: "status.pet.dog",
+          drift: { spirit: 3, finances: -3 },
+          driftShown: { spirit: "+", finances: "-" },
+          tick: { petDogAge: 1 },
+          addDecks: ["pet_dog"],
+        },
+      },
+    },
   },
 
   decks: [
@@ -246,6 +275,7 @@ export const content = {
     ...educationDecks,
     ...jobDecks,
     ...siblingDecks,
+    ...petDecks,
   ],
 } satisfies Content;
 

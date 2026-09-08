@@ -131,7 +131,9 @@ Sister `relSister*`).
 - **Counters:** `relBrotherLove`/`relSisterLove` (closeness, can go negative =
   rivalry), `relBrotherGrit`/`relBrotherArc` (his backbone / story cursor),
   `jobExperience` (years in the current job), `jobSkill` (apprentice
-  craftsmanship), `jobStrikes`, `jobTimesChanged`;
+  craftsmanship), `jobStrikes`, `jobTimesChanged`; `petCatAge`/`petDogAge` (years
+  you've kept that pet — tick up via the pet status, drive its old-age passing) and
+  `petCatLove`/`petDogLove` (how well you treat it — neglect sends it running);
   **`persSporty`/`persBookish`** (0..3 disposition — a baby sets it to the cap,
   else built +1 at a time in youth; reward cards gate on `{ min: 3 }`, see §18
   backlog).
@@ -388,6 +390,22 @@ A **language** toggle switches English/Italian live.
   short past-tense `log.<name>` string (EN+IT). It's stamped with the card's age
   and shown on the end-of-run "milestones". Durable facts (final trade/home,
   vaccinated, sold up…) are read from end-state — don't `remember` those.
+- **`tick` for time-based state:** a status STATE may carry `tick: { <trait>: n }`,
+  which increments that counter every turn it's active (drift's counterpart for
+  traits). Used to age a pet (`pet="cat"` ticks `petCatAge`, `pet="dog"` ticks
+  `petDogAge`) so a milestone can fire N years on. Reach for it whenever something
+  needs to happen "so many years after X" — record the counter with `tick`, gate the
+  payoff card on it.
+- **`chance` for rare cards:** a card may carry `chance: 0..1` — even once its
+  `conditions` hold, it only enters the draw pool on a fresh per-year roll. It sits
+  at the very bottom of the draw order (milestones and `force` still jump ahead), so
+  it only thins ordinary flavour. Pair it with `one_time` for a rare once-a-life
+  surprise (the pet litters, `pet_cat_kittens`/`pet_dog_puppies`, gated to mid-life
+  ages 4–7). The real rarity is `chance × (1 / pool size)` per eligible year, so it's
+  much rarer than `chance` alone — `scripts/sim.ts` now reports draw-pool size by
+  life stage (mean ~13–14 in child/adult) precisely so this can be tuned. The roll
+  consumes RNG threaded through the draw, so a save resumes the same sequence; the
+  debug draw-pile does NOT roll it (a chance card shows there whenever eligible).
 ## 16. Current scope (built)
 
 Birth → babyhood (unloseable build-up, trait setups — incl. the `baby_disposition`
@@ -891,6 +909,24 @@ Roughly in likely order. None of these are started.
   bond keeps developing into adulthood, and so the recap can draw on richer
   moments (a reconciliation, a falling-out, a death) rather than only the final
   love value. Related to the sibling arc + the school-friendship deck above.
+- **Pets** — **BUILT (first pass): cat & dog.** A `pet` status (`none`/`cat`/`dog`),
+  one at a time, each with its own small positive deck. The **cat** (`pet_cat`) leans
+  on **happiness** (drift ☺+ £−); the **dog** (`pet_dog`) leans on **spirit** (✦+ £−,
+  a touch dearer to keep). Acquired via the childhood **stray cat**, or the **pet
+  shop** — a shared 3-option card (cat / dog / walk away) offered once each in young
+  adulthood, adulthood and old age, all gated `pet="none"`. Each ages a year at a
+  time (`tick petCatAge`/`petDogAge`) and, at ~12 years, the **passing** milestone
+  fires — grieve (big hit, pet gone) or carry on with a kitten/pup (smaller hit +
+  cost, clock resets). Neglect (chiefly refusing the **vet**) drives its love down
+  until it **runs away** first (a lesser loss, and it can't then reach old age). A
+  rare mid-life **litter** (`chance`-gated, ages 4–7) offers coin (sell) or a reset
+  clock (keep one). A pet kept to the end gets a line in the epitaph. **Balance
+  note:** in random play almost no one reaches `old_age` (see `scripts/sim.ts`), so
+  the 12-year passing and the litter window are seldom hit — revisit pet lifespan or
+  overall survivability if pets should feel more present. **To do:** more pets (a
+  caged bird; a horse for the well-off), richer per-pet content, and station-gated
+  pets (an estate-owner's hounds). Lifespan/values all tunable (cat & dog = 12y;
+  litter `chance` = 0.5, most of the rarity coming from pool competition).
 - **Legacy / inheritance across runs** — if you owned a house *and* had an heir,
   the **next run starts in that house** (and maybe with some money/traits).
   Implemented as a shim: on the end screen write an `inheritance` record to

@@ -1,7 +1,19 @@
 // Decks — domain group: adult. Split out of content/index.ts; assembled there.
 // Player-facing text is by STRING ID (tables in src/i18n); typed
 // `satisfies Deck[]` so a misspelled id is still a compile error.
-import type { Deck } from "../../engine/types.ts";
+import type { CardOptions, Deck } from "../../engine/types.ts";
+
+// The three pet-shop cards (young adult / adult / old age) offer the SAME choice —
+// a cat (a HAPPINESS companion), a dog (a SPIRIT companion), or walk away — and
+// differ only in their prompt text, so they share this one option block to stay in
+// lockstep. Each card is one_time and gated pet=none (one pet at a time); the two
+// pets seed love 3 (a chosen, well-bonded animal) and reset their age clock.
+// Card definitions are never mutated, so sharing the object by reference is safe.
+const petshopOptions: CardOptions = {
+  left: { label: "petshop.cat", outcomes: [{ result: "petshop.cat.r0", effects: { vitals: { finances: "-", happiness: "+" }, setStatus: { pet: "cat" }, setTraits: { petCatLove: 3, petCatAge: 0 } } }] },
+  right: { label: "petshop.dog", outcomes: [{ result: "petshop.dog.r0", effects: { vitals: { finances: "-", spirit: "+" }, setStatus: { pet: "dog" }, setTraits: { petDogLove: 3, petDogAge: 0 } } }] },
+  down: { label: "petshop.none", outcomes: [{ result: "petshop.none.r0" }] },
+};
 
 export const adultDecks = [
 
@@ -64,6 +76,15 @@ export const adultDecks = [
             left: { label: "ya_charity_debt.left", outcomes: [{ result: "ya_charity_debt.left.r0", effects: { vitals: { finances: "--", spirit: "+" }, setTraits: { flawOwesCharity: false } } }] },
             right: { label: "ya_charity_debt.right", outcomes: [{ result: "ya_charity_debt.right.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
           },
+        },
+        {
+          // The pet-seller's stall — a chance to take on a cat or a dog (or
+          // neither) in young adulthood. Shared 3-option block; gated pet=none.
+          id: "youngadult_petshop",
+          kind: "one_time",
+          conditions: { status: { pet: "none" } },
+          prompt: "youngadult_petshop.prompt",
+          options: petshopOptions,
         },
         {
           // Into full adulthood (25): the young_adult stage hands off to the
@@ -217,6 +238,16 @@ export const adultDecks = [
           },
         },
         {
+          // The pet shop again in the settled middle years — for those who never
+          // took the childhood stray or a young-adult pet (or whose animal has
+          // since gone). Cat, dog, or walk on. Shared 3-option block; gated pet=none.
+          id: "adult_petshop",
+          kind: "one_time",
+          conditions: { status: { pet: "none" } },
+          prompt: "adult_petshop.prompt",
+          options: petshopOptions,
+        },
+        {
           // Into old age (50): the age status flips to `old_age`, whose heavier
           // health drift is the steepening decline of the final years, and the
           // adult deck hands off to the old-age deck. Both choices transition;
@@ -325,6 +356,15 @@ export const adultDecks = [
             left: { label: "old_charity.left", outcomes: [{ result: "old_charity.left.r0", effects: { vitals: { spirit: "++", finances: "-" } } }] },
             right: { label: "old_charity.right", outcomes: [{ result: "old_charity.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
           },
+        },
+        {
+          // A companion for the quiet last years — the house feels emptier now. Cat,
+          // dog, or neither. Shared 3-option block; gated pet=none.
+          id: "oldage_petshop",
+          kind: "one_time",
+          conditions: { status: { pet: "none" } },
+          prompt: "oldage_petshop.prompt",
+          options: petshopOptions,
         },
       ],
     },
