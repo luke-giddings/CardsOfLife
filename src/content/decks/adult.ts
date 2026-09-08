@@ -97,7 +97,7 @@ export const adultDecks = [
       cards: [
         {
           id: "adult_family",
-          kind: "filler",
+          kind: "one_time",
           prompt: "adult_family.prompt",
           options: {
             left: { label: "adult_family.left", outcomes: [{ result: "adult_family.left.r0", effects: { vitals: { happiness: "++", finances: "-" } } }] },
@@ -106,7 +106,7 @@ export const adultDecks = [
         },
         {
           id: "adult_duty",
-          kind: "filler",
+          kind: "one_time",
           prompt: "adult_duty.prompt",
           options: {
             left: { label: "adult_duty.left", outcomes: [{ result: "adult_duty.left.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
@@ -118,7 +118,7 @@ export const adultDecks = [
           // in need. A money-vs-conscience trade — help and feel the better for
           // it, or keep your coin and let it gnaw.
           id: "adult_friend",
-          kind: "filler",
+          kind: "one_time",
           prompt: "adult_friend.prompt",
           options: {
             left: { label: "adult_friend.left", outcomes: [{ result: "adult_friend.left.r0", effects: { vitals: { finances: "-", spirit: "+", happiness: "+" } } }] },
@@ -130,7 +130,7 @@ export const adultDecks = [
           // doctor (money for a surer recovery) or trust it passes (save the coin,
           // risk your health).
           id: "adult_ail",
-          kind: "filler",
+          kind: "one_time",
           prompt: "adult_ail.prompt",
           options: {
             left: { label: "adult_ail.left", outcomes: [{ result: "adult_ail.left.r0", effects: { vitals: { finances: "-", health: "+" } } }] },
@@ -141,7 +141,7 @@ export const adultDecks = [
           // A supper with the town's better sort — spend to be seen (happiness) or
           // keep a quiet, thrifty night in (spirit, a little coin saved).
           id: "adult_society",
-          kind: "filler",
+          kind: "one_time",
           prompt: "adult_society.prompt",
           options: {
             left: { label: "adult_society.left", outcomes: [{ result: "adult_society.left.r0", effects: { vitals: { finances: "-", happiness: "+" } } }] },

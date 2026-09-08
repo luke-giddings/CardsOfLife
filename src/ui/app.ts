@@ -915,30 +915,40 @@ export class Game {
     const log = this.state.log ?? [];
     const saw = (id: StringId) => log.some((e) => e.id === id);
     const owned = st.housing.startsWith("owned_");
+    const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
-    // --- A life in brief. Durable station facts read from end-state, plus a few
-    //     NOTABLE, story-aware lines that read the transient life-log against the
-    //     final state (e.g. ruin-then-recovery). Routine, every-game milestones
-    //     (moving out, going up to university) are deliberately NOT listed —
-    //     they're already implied by the final station. --------------------------
-    const brief: string[] = [`<li>${t(tr.gender === "girl" ? "ui.bornGirl" : "ui.bornBoy")}</li>`];
-    const stat = (labelId: StringId, value: string) =>
-      `<li><b>${t(labelId)}</b> ${value}</li>`;
-    if (st.job !== "infant") brief.push(stat("ui.recapTrade", t(`status.job.${st.job}` as StringId)));
-    if (st.education !== "illiterate") brief.push(stat("ui.recapSchooling", t(`status.education.${st.education}` as StringId)));
-    brief.push(stat("ui.recapHome", t(`status.housing.${st.housing}` as StringId)));
-    if (st.lifestyle !== "default") brief.push(stat("ui.recapLife", t(`status.lifestyle.${st.lifestyle}` as StringId)));
-    // The fortune arc: how selling up (a fall) reads depends on where you ended.
-    if (tr.flawSoldUp && owned) brief.push(`<li>${t("ui.recapRoseAgain")}</li>`);
-    else if (tr.flawSoldUp) brief.push(`<li>${t("ui.recapSoldUp")}</li>`);
-    // Notable hardship / darkness worth remembering (from the life-log).
-    if (saw("log.workhouse")) brief.push(`<li>${t("ui.recapWorkhouse")}</li>`);
-    else if (saw("log.streets")) brief.push(`<li>${t("ui.recapStreets")}</li>`);
-    if (saw("log.crime")) brief.push(`<li>${t("ui.recapCrime")}</li>`);
-    // Durable marks.
-    if (tr.skillMartialArts) brief.push(`<li>${t("ui.recapMartial")}</li>`);
-    if (tr.skillVaccinated) brief.push(`<li>${t("ui.recapVaccinated")}</li>`);
-    if (tr.flawOwesCharity) brief.push(`<li>${t("ui.recapOwedCharity")}</li>`);
+    // --- A life in brief, as PROSE (not a stat list). Two short paragraphs woven
+    //     from end-state and the transient life-log, so the same fact reads
+    //     differently by how the life ended (ruin → recovery, and so on). Routine,
+    //     every-game beats (moving out, going up to university) aren't spelled out
+    //     — they're implied by the final station. --------------------------------
+    // Trades worth naming (schooling-jobs are covered by the schooling line;
+    // criminal/none are covered elsewhere or not at all).
+    const skipTrade = new Set(["infant", "pauper", "unemployed", "studying", "grammar_school", "university", "pickpocket", "burglar", "fence"]);
+
+    const life: string[] = [`${t(tr.gender === "girl" ? "ui.bornGirl" : "ui.bornBoy")}.`];
+    if (st.education === "university") life.push(t("ui.proseUni"));
+    else if (st.education === "grammar") life.push(t("ui.proseGrammar"));
+    if (!skipTrade.has(st.job)) life.push(tf("ui.proseTrade", { job: lower(t(`status.job.${st.job}` as StringId)) }));
+    life.push(t(`ui.proseHome.${st.housing}` as StringId));
+    if (tr.flawSoldUp && owned) life.push(t("ui.proseRoseAgain"));
+    else if (tr.flawSoldUp) life.push(t("ui.proseSoldUp"));
+
+    const colour: string[] = [];
+    if (saw("log.workhouse")) colour.push(t("ui.proseWorkhouse"));
+    else if (saw("log.streets")) colour.push(t("ui.proseStreets"));
+    if (saw("log.crime")) colour.push(t("ui.proseCrime"));
+    if (tr.relBrotherActive)
+      colour.push(t(tr.relBrotherLove >= 30 ? "ui.proseBrotherClose" : tr.relBrotherLove >= 0 ? "ui.proseBrotherPeace" : "ui.proseBrotherEstranged"));
+    if (tr.relSisterActive)
+      colour.push(t(tr.relSisterLove >= 30 ? "ui.proseSisterClose" : tr.relSisterLove >= 0 ? "ui.proseSisterPeace" : "ui.proseSisterEstranged"));
+    if (tr.skillMartialArts) colour.push(t("ui.proseMartial"));
+    if (tr.flawOwesCharity) colour.push(t("ui.proseOwedCharity"));
+
+    const paras = [life, colour]
+      .filter((p) => p.length)
+      .map((p) => `<p class="end-recap-p">${p.join(" ")}</p>`)
+      .join("");
 
     const wrap = document.createElement("div");
     wrap.className = "end";
@@ -950,7 +960,7 @@ export class Game {
       <p class="end-blurb">${t(ending.blurb)}</p>
       ${ageLine}
       <div class="end-sec">${t("ui.recapHeader")}</div>
-      <ul class="end-recap">${brief.join("")}</ul>`;
+      ${paras}`;
     const b = document.createElement("button");
     b.className = "continue";
     b.textContent = t("ui.newLife");

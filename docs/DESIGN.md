@@ -859,11 +859,14 @@ Roughly in likely order. None of these are started.
   offer + the sell-up net), so owning grand homes has little to *do*. Each wants
   its own set of station-appropriate life events (servants, society, upkeep,
   scandal).
-- **Later-life content density** — the adult/old-age life-stage decks are thin
-  (`age_adult` now has family/duty/friend/ail/society; `age_old_age` still just
-  rest/legacy/grandchildren), so long runs repeat cards. Wants more one-shot life
-  events per stage — and, per the family split below, **housing- and station-aware
-  variety** so the middle years don't feel same-y.
+- **Later-life content density** — the life-stage decks are now all **one-shots**
+  (`age_adult` = family/duty/friend/ail/society; `age_young_adult` likewise;
+  `age_old_age` still just rest/legacy/grandchildren, and still `filler`). One-shots
+  mean no repeats, but a long adult stretch (25–50) burns through five cards fast
+  and then leans on the job/home/lifestyle decks + quiet years. Wants **more**
+  one-shot life events per stage — and, per the family split, **housing- and
+  station-aware variety** so the middle years don't feel same-y. (Old age could go
+  one-shot too, once it has enough cards.)
 - **Adult-at-home vs childhood family life** — **BUILT (first pass).** The
   childhood `home_family` cards (sweets, pet, fair, scrump, chores, market) are
   gated `ageMax 17`; a grown-adult-under-the-parental-roof set (`home_family_keep`,
@@ -878,6 +881,14 @@ Roughly in likely order. None of these are started.
   `edu_basicschool` "new pupil looking to share a desk" card should open a small
   friendship arc/deck (a schoolmate you keep or drift from), à la the sibling
   thread, rather than being a one-off vitals trade.
+- **Relationships told through their own cards + a life-story recap** — the epitaph
+  now carries a **relationship strand** (a line on how things stood with your
+  brother Tom / your sister at the end, by their love axis). Extend this: give the
+  key relationships (Tom, the sister, a spouse/friend later) their own occasional
+  *story* cards through the middle years — not just the childhood beats — so the
+  bond keeps developing into adulthood, and so the recap can draw on richer
+  moments (a reconciliation, a falling-out, a death) rather than only the final
+  love value. Related to the sibling arc + the school-friendship deck above.
 - **Legacy / inheritance across runs** — if you owned a house *and* had an heir,
   the **next run starts in that house** (and maybe with some money/traits).
   Implemented as a shim: on the end screen write an `inheritance` record to
@@ -915,19 +926,19 @@ Roughly in likely order. None of these are started.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
 - **Richer end-of-run epitaph** — **BUILT (first pass).** The end screen shows the
-  cause/framing (ending), age reached, and **"a life in brief"**: the durable
-  station facts from end-state (final trade / schooling / home / living) plus a
-  few **notable, story-aware lines**. **No number score** (deliberately dropped —
-  felt reductive) and **no flat milestones list** (routine every-game events like
-  moving out or going up to university aren't worth listing — they're implied by
-  the final station). Instead the recap reads the transient life-log **against**
-  the final state, so *how* an event reads depends on where you ended — the
+  cause/framing (ending), age reached, and **"a life in brief"** written as **short
+  prose** (two little paragraphs, not a bullet/stat list — deliberately). **No
+  number score** (dropped — felt reductive). The prose is composed from end-state +
+  the transient life-log, so *how* a fact reads depends on where you ended — the
   headline case being the **fortune arc**: `flawSoldUp` + still owning at the end →
-  "clawed your way back to a home of your own"; `flawSoldUp` + not → "ruined, and
-  never won it back". Notable non-derivable darkness is surfaced from the log
-  (`remember` effect → `state.log`, see §15): the **workhouse**, the **streets**
-  (child_hunger, the runaway, eviction), a **criminal spell**. Durable marks
-  (martial arts, vaccinated, died owing the charity) come from traits.
+  "…clawed your way back to a home of your own"; `flawSoldUp` + not → "…lost it all
+  to your debts". Para 1 = station (born, schooling if grammar/uni, trade, final
+  home, fortune arc); para 2 = colour (workhouse / streets / a criminal spell from
+  the log; a **relationship strand** — how things stood with your brother Tom / your
+  sister by their love axis; and marks like handling yourself in a scrap or dying
+  owing the charity). Routine every-game beats (moving out, going up to university)
+  aren't spelled out — they're implied by the station. `remember` effect → `state.log`
+  (see §15) still supplies the non-derivable darkness.
   **To do:** more story-aware combinations as content grows (a "rose from the
   workhouse to …" line; job-peak / reaching the top of a trade; marriage/children
   when they exist); richer prose; maybe a shareable summary.
