@@ -234,7 +234,7 @@ export const adultDecks = [
           prompt: "adult_legacy_windfall.prompt",
           options: {
             left: { label: "adult_legacy_windfall.left", outcomes: [{ result: "adult_legacy_windfall.left.r0", effects: { vitals: { finances: "++", happiness: "-" } } }] },
-            right: { label: "adult_legacy_windfall.right", outcomes: [{ result: "adult_legacy_windfall.right.r0", effects: { vitals: { finances: "+", happiness: "++" } } }] },
+            right: { label: "adult_legacy_windfall.right", outcomes: [{ result: "adult_legacy_windfall.right.r0", effects: { vitals: { finances: "-", happiness: "++" } } }] },
           },
         },
         {

@@ -20,23 +20,25 @@ export const petDecks = [
       unlock: "deck.pet_cat.blurb",
       cards: [
         {
-          // Kindness raises love; brushing it off lowers it.
+          // A trade, not a gift: indulge the cat (comfort + bond) or get on with
+          // paid work (coin, but the bond cools a little).
           id: "pet_cat_play",
           kind: "one_time",
           prompt: "pet_cat_play.prompt",
           options: {
             left: { label: "pet_cat_play.left", outcomes: [{ result: "pet_cat_play.left.r0", effects: { vitals: { happiness: "+", spirit: "+" }, incTraits: { petCatLove: 1 } } }] },
-            right: { label: "pet_cat_play.right", outcomes: [{ result: "pet_cat_play.right.r0", effects: { vitals: { happiness: "-" }, incTraits: { petCatLove: -1 } } }] },
+            right: { label: "pet_cat_play.right", outcomes: [{ result: "pet_cat_play.right.r0", effects: { vitals: { finances: "+" }, incTraits: { petCatLove: -1 } } }] },
           },
         },
         {
-          // Pure flavour — a cat's grim little gift.
+          // Pet or working animal: dote on your little hunter (happiness/spirit) or
+          // put it to earning its keep as a ratter (coin, but less of a companion).
           id: "pet_cat_mouse",
           kind: "one_time",
           prompt: "pet_cat_mouse.prompt",
           options: {
             left: { label: "pet_cat_mouse.left", outcomes: [{ result: "pet_cat_mouse.left.r0", effects: { vitals: { happiness: "+", spirit: "+" } } }] },
-            right: { label: "pet_cat_mouse.right", outcomes: [{ result: "pet_cat_mouse.right.r0", effects: { vitals: { happiness: "-", health: "-" } } }] },
+            right: { label: "pet_cat_mouse.right", outcomes: [{ result: "pet_cat_mouse.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
           },
         },
         {
@@ -124,23 +126,26 @@ export const petDecks = [
       unlock: "deck.pet_dog.blurb",
       cards: [
         {
-          // A walk together: spirit and health if you go, a small pang if you don't.
+          // A trade: walk it (spirit + health + bond) or keep at paid work instead
+          // (coin, but the bond cools a little).
           id: "pet_dog_walk",
           kind: "one_time",
           prompt: "pet_dog_walk.prompt",
           options: {
             left: { label: "pet_dog_walk.left", outcomes: [{ result: "pet_dog_walk.left.r0", effects: { vitals: { spirit: "+", health: "+" }, incTraits: { petDogLove: 1 } } }] },
-            right: { label: "pet_dog_walk.right", outcomes: [{ result: "pet_dog_walk.right.r0", effects: { vitals: { spirit: "-" }, incTraits: { petDogLove: -1 } } }] },
+            right: { label: "pet_dog_walk.right", outcomes: [{ result: "pet_dog_walk.right.r0", effects: { vitals: { finances: "+" }, incTraits: { petDogLove: -1 } } }] },
           },
         },
         {
-          // The dog earns its keep — flavour, with a sting if you ignore its warning.
+          // The dog earns its keep. Heed its warning (up in the night — spirit +
+          // happiness, the house kept safe) or hush it for a full night's sleep
+          // (health, but the coal-store's robbed by morning). A genuine trade.
           id: "pet_dog_guard",
           kind: "one_time",
           prompt: "pet_dog_guard.prompt",
           options: {
             left: { label: "pet_dog_guard.left", outcomes: [{ result: "pet_dog_guard.left.r0", effects: { vitals: { spirit: "+", happiness: "+" } } }] },
-            right: { label: "pet_dog_guard.right", outcomes: [{ result: "pet_dog_guard.right.r0", effects: { vitals: { spirit: "-", finances: "-" } } }] },
+            right: { label: "pet_dog_guard.right", outcomes: [{ result: "pet_dog_guard.right.r0", effects: { vitals: { health: "+", finances: "-" } } }] },
           },
         },
         {
