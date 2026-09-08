@@ -203,6 +203,12 @@ export interface Effect {
   setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
   endGame?: string; // ends the run with this ending id (see ENDINGS)
+  // Record a MEMORABLE life event for the end-of-run recap: pushes { age, id } to
+  // state.log when this outcome fires. Use for TRANSIENT moments the final state
+  // won't show (went to the workhouse, ran away, moved out, a promotion) — durable
+  // facts (final job/home, vaccinated, sold up…) are read straight from end-state,
+  // so they don't need a `remember`. The id is a StringId (a short past-tense line).
+  remember?: StringId;
   // Return housing to whatever it was before you entered the master's house (see
   // GameState.housingBeforeApprentice). Used by the apprenticeship exits so the
   // job ladder never silently grants or strips housing — you go back where you
@@ -322,6 +328,13 @@ export interface Content {
 }
 
 // --- Runtime game state (this is what gets saved) ----------------------------
+// One dated entry in the life-log (see Effect.remember), rendered on the
+// end-of-run recap as the run's "milestones".
+export interface LifeEvent {
+  age: number;
+  id: StringId;
+}
+
 export interface GameState {
   age: number;
   vitals: Vitals;
@@ -336,4 +349,5 @@ export interface GameState {
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;
   endReason?: string;                 // ENDINGS id (vital key, or a named ending)
+  log: LifeEvent[];                   // dated memorable events, for the end recap
 }

@@ -618,12 +618,49 @@ body {
   line-height: 1.5;
 }
 .end-line { margin: 0; }
+.end-score {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.end-score b { color: var(--ink); font-size: 1rem; }
+.end-sec {
+  margin-top: 6px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
 .end-recap {
   margin: 4px 0 8px;
   padding-left: 18px;
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.7;
+}
+.end-recap b { color: var(--ink); font-weight: 600; margin-right: 4px; }
+.end-log {
+  margin: 4px 0 8px;
+  padding-left: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.end-log li { display: flex; gap: 10px; }
+.end-log-age {
+  flex: none;
+  min-width: 1.6em;
+  text-align: right;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--faint);
 }
 
 .version {

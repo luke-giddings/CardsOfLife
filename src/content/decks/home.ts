@@ -156,7 +156,7 @@ export const homeDecks = [
           conditions: { ageMin: 14, vitals: { finances: { min: 50 } } },
           prompt: "home_family_moveout.prompt",
           options: {
-            left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "renting" } } }] },
+            left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "renting" }, remember: "log.movedout" } }] },
             right: { label: "home_family_moveout.right", outcomes: [{ result: "home_family_moveout.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
@@ -232,7 +232,7 @@ export const homeDecks = [
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_small.prompt",
           options: {
-            left: { label: "home_buy_small.left", outcomes: [{ result: "home_buy_small.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_small" } } }] },
+            left: { label: "home_buy_small.left", outcomes: [{ result: "home_buy_small.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_small" }, remember: "log.boughthome" } }] },
             right: { label: "home_buy_small.right", outcomes: [{ result: "home_buy_small.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
@@ -457,7 +457,7 @@ export const homeDecks = [
             // no job cards to draw; flip to `unemployed` so the job_unemployed deck
             // (the route back to work) comes with you. Housing homeless brings its
             // own home_homeless deck (streets life + exits) alongside it.
-            left: { label: "home_workhouse_runaway.left", outcomes: [{ result: "home_workhouse_runaway.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless", job: "unemployed" } } }] },
+            left: { label: "home_workhouse_runaway.left", outcomes: [{ result: "home_workhouse_runaway.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.ranaway" } }] },
             // The SAME back-to-school escape as the apprentice card (same gate), on
             // this card too — the runaway has no upper age gate, so it widens the
             // window to ~7–13 without adding a new card to the deck.
@@ -471,7 +471,7 @@ export const homeDecks = [
           conditions: { ageMin: 10 },
           prompt: "home_workhouse_apprentice.prompt",
           options: {
-            left: { label: "home_workhouse_apprentice.left", outcomes: [{ result: "home_workhouse_apprentice.left.r0", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" } } }] },
+            left: { label: "home_workhouse_apprentice.left", outcomes: [{ result: "home_workhouse_apprentice.left.r0", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" }, remember: "log.apprenticed" } }] },
             // A way back to SCHOOL — leave the workhouse for the family home and
             // resume your letters (job → studying, its edu deck; housing → family).
             // Shown only while you're still school-age (<= 13, before the leaver at
@@ -538,7 +538,7 @@ export const homeDecks = [
           conditions: { vitals: { finances: { min: 40 } } },
           prompt: "home_homeless_room.prompt",
           options: {
-            left: { label: "home_homeless_room.left", outcomes: [{ result: "home_homeless_room.left.r0", effects: { vitals: { finances: "-", happiness: "++", spirit: "+" }, setStatus: { housing: "renting" } } }] },
+            left: { label: "home_homeless_room.left", outcomes: [{ result: "home_homeless_room.left.r0", effects: { vitals: { finances: "-", happiness: "++", spirit: "+" }, setStatus: { housing: "renting" }, remember: "log.offstreets" } }] },
             right: { label: "home_homeless_room.right", outcomes: [{ result: "home_homeless_room.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },

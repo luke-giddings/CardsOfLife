@@ -73,7 +73,7 @@ export const jobDecks = [
           kind: "filler",
           prompt: "job_unemployed_fagin.prompt",
           options: {
-            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" } } }] },
+            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, remember: "log.crime" } }] },
             right: { label: "job_unemployed_fagin.right", outcomes: [{ result: "job_unemployed_fagin.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },

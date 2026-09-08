@@ -116,8 +116,8 @@ export const childhoodDecks = [
             // floors you to 1 (which would kill you again next turn, with the
             // one-shot net already spent). Also hands over the job_unemployed deck
             // as your way forward. Housing homeless keeps the streets harsh.
-            left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" } } }] },
-            right: { label: "child_hunger.right", outcomes: [{ result: "child_hunger.right.r0", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse", job: "pauper" } } }] },
+            left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }] },
+            right: { label: "child_hunger.right", outcomes: [{ result: "child_hunger.right.r0", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse", job: "pauper" }, remember: "log.workhouse" } }] },
           },
         },
         {

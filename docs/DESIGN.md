@@ -382,7 +382,12 @@ A **language** toggle switches English/Italian live.
 - **Childhood options touch 2–3 vitals** (never just one), forcing balance.
 - **Baby is unloseable:** positive/neutral effects only.
 - **Magnitudes only** for player-facing vital moves (`+`/`++`/`-`/`--`).
-
+- **`remember` for the epitaph:** when an outcome marks a *memorable, transient*
+  life event (a status change the final state won't reveal — the workhouse, running
+  away, moving out, a promotion), add `remember: "log.<name>"` to its effects and a
+  short past-tense `log.<name>` string (EN+IT). It's stamped with the card's age
+  and shown on the end-of-run "milestones". Durable facts (final trade/home,
+  vaccinated, sold up…) are read from end-state — don't `remember` those.
 ## 16. Current scope (built)
 
 Birth → babyhood (unloseable build-up, trait setups — incl. the `baby_disposition`
@@ -738,13 +743,12 @@ Roughly in likely order. None of these are started.
   credentials), and **(a) is now DONE:** each credential opens its own distinct
   ladder — Commerce (basic) / Clerkly-Law (grammar) / Medicine (university, top
   pay) — with per-credential entry (leaver / graduation / job-offer all route by
-  credential), so a graduate no longer starts at shophand (see §6). Still to do:
-  **(b) balance the path so university is
-  actually attainable** — a steered sim reaches university only ~0.8% / graduates
-  ~0.3%, because tuition (−5 grammar, −5 uni) plus the family keep drains you
-  below the `finances ≥ 50` gate, and mortality during the studying years is
-  high. Levers: lower/stagger tuition, make the income cards pay more, soften the
-  gate, make `eduUniFund` more common or more powerful, or a scholarship route.
+  credential), so a graduate no longer starts at shophand (see §6). **(b)
+  attainability — likely a NON-ISSUE:** an old *steered* sim reached university
+  only ~0.8%, but in real playtest you can get to and through university fairly
+  consistently if you aim for it, so that sim was pessimistic/naive. Keep an eye on
+  it, but no rebalance planned. Levers if it ever does need softening: tuition,
+  income cards, the `finances ≥ 50` gate, `eduUniFund` frequency, a scholarship.
 - **Adult economy (§17b)** — the whole post-childhood game: job ladders (4
   education levels; matched 3-tier manual/criminal/educated paths), houses as
   `---` purchases behind rising Finances gates, lifestyle tiers, and the
@@ -910,8 +914,20 @@ Roughly in likely order. None of these are started.
   come.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
-- **Richer end-of-run epitaph / scoring** — cause of death, life recap, a score
-  to make runs feel distinct and replayable.
+- **Richer end-of-run epitaph / scoring** — **BUILT (first pass).** The end
+  screen now shows: the cause/framing (ending), age reached, a **life score**
+  (a transparent starter formula — age + avg vitals + education rank + owned-home
+  bonus + 5×milestones, all tunable), **"a life in brief"** derived from
+  end-state (final trade / schooling / home / living, plus durable flags:
+  vaccinated, learned to fight, ruined & sold up, died owing the charity), and a
+  dated **"milestones"** list. Milestones come from a new **`remember` effect**
+  (`Effect.remember: StringId` → pushes `{age, id}` to `state.log`; see §15) —
+  used for *transient* events the final state won't show. **Seeded so far:** the
+  streets, the workhouse, running away, getting off the streets, apprenticeship,
+  moving out, buying a home, university, falling into crime, a sibling's birth.
+  **To do:** `remember` more moments as decks grow (esp. job promotions / reaching
+  the top of a trade; marriage/children when those exist); richer prose; maybe a
+  shareable summary.
 - **Full tone/writing pass** — once the decks are complete, sweep all cards for
   a consistent Victorian voice and a final balance/dominance check.
 - **Italian gender agreement** — Italian forces gender agreement on the player

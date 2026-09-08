@@ -32,6 +32,7 @@ export function initGame(content: Content): GameState {
     usedCards: {},
     rng: randomSeed(),
     over: false,
+    log: [],
   };
 }
 
@@ -266,6 +267,11 @@ export function applyEffect(state: GameState, effect: Effect, content: Content):
       const key = k as VitalKey;
       state.vitals[key] = clampVital(applyMagnitude(state.vitals[key], mag as Magnitude));
     }
+  }
+  if (effect.remember) {
+    // Stamp the memory at the CURRENT age — applyEffect runs before the turn's
+    // age+1, so state.age is the age shown on the card being answered.
+    (state.log ??= []).push({ age: state.age, id: effect.remember });
   }
   if (effect.endGame) {
     state.over = true;
