@@ -42,15 +42,6 @@ export const adultDecks = [
           },
         },
         {
-          id: "ya_ambition",
-          kind: "one_time",
-          prompt: "ya_ambition.prompt",
-          options: {
-            left: { label: "ya_ambition.left", outcomes: [{ result: "ya_ambition.left.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
-            right: { label: "ya_ambition.right", outcomes: [{ result: "ya_ambition.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
-          },
-        },
-        {
           id: "ya_faith",
           kind: "one_time",
           prompt: "ya_faith.prompt",
@@ -123,12 +114,38 @@ export const adultDecks = [
           },
         },
         {
-          id: "adult_toil",
+          // Non-work life event (work belongs on the job decks): an old friend
+          // in need. A money-vs-conscience trade — help and feel the better for
+          // it, or keep your coin and let it gnaw.
+          id: "adult_friend",
           kind: "filler",
-          prompt: "adult_toil.prompt",
+          prompt: "adult_friend.prompt",
           options: {
-            left: { label: "adult_toil.left", outcomes: [{ result: "adult_toil.left.r0", effects: { vitals: { finances: "+", health: "-" } } }] },
-            right: { label: "adult_toil.right", outcomes: [{ result: "adult_toil.right.r0", effects: { vitals: { health: "+", finances: "-" } } }] },
+            left: { label: "adult_friend.left", outcomes: [{ result: "adult_friend.left.r0", effects: { vitals: { finances: "-", spirit: "+", happiness: "+" } } }] },
+            right: { label: "adult_friend.right", outcomes: [{ result: "adult_friend.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // A bout of ill health — the adult years' quiet tax made a card. Pay the
+          // doctor (money for a surer recovery) or trust it passes (save the coin,
+          // risk your health).
+          id: "adult_ail",
+          kind: "filler",
+          prompt: "adult_ail.prompt",
+          options: {
+            left: { label: "adult_ail.left", outcomes: [{ result: "adult_ail.left.r0", effects: { vitals: { finances: "-", health: "+" } } }] },
+            right: { label: "adult_ail.right", outcomes: [{ result: "adult_ail.right.r0", effects: { vitals: { health: "-", spirit: "+" } } }] },
+          },
+        },
+        {
+          // A supper with the town's better sort — spend to be seen (happiness) or
+          // keep a quiet, thrifty night in (spirit, a little coin saved).
+          id: "adult_society",
+          kind: "filler",
+          prompt: "adult_society.prompt",
+          options: {
+            left: { label: "adult_society.left", outcomes: [{ result: "adult_society.left.r0", effects: { vitals: { finances: "-", happiness: "+" } } }] },
+            right: { label: "adult_society.right", outcomes: [{ result: "adult_society.right.r0", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
           },
         },
         {

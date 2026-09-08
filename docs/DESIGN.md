@@ -849,6 +849,31 @@ Roughly in likely order. None of these are started.
   (toward the inheritance thread), and possibly a lodger as a persistent income
   status. The **apprentice/master** life still wants its own deck. Part of the
   broader **house decks** work below.
+- **Owned-home life decks** — `home_owned_small` now has a first couple of life
+  cards (`home_small_hearth`, `home_small_neighbour`) alongside the buy-up offer;
+  `home_owned_large` and `home_owned_estate` are still **stubs** (only the buy-up
+  offer + the sell-up net), so owning grand homes has little to *do*. Each wants
+  its own set of station-appropriate life events (servants, society, upkeep,
+  scandal).
+- **Later-life content density** — the adult/old-age life-stage decks are thin
+  (`age_adult` now has family/duty/friend/ail/society; `age_old_age` still just
+  rest/legacy/grandchildren), so long runs repeat cards. Wants more one-shot life
+  events per stage — and, per the family split below, **housing- and station-aware
+  variety** so the middle years don't feel same-y.
+- **Adult-at-home vs childhood family life** — **BUILT (first pass).** The
+  childhood `home_family` cards (sweets, pet, fair, scrump, chores, market) are
+  gated `ageMax 17`; a grown-adult-under-the-parental-roof set (`home_family_keep`,
+  `_nag`, `_roof` — the friction of still living at home) is gated `ageMin 18`.
+  Wants: more of each, and maybe the same age-split treatment applied elsewhere.
+- **Non-work vs job separation** — life-stage decks should stay *non-work*
+  (`adult_toil`, a push-hard-at-the-job card, became `adult_friend`); recurring
+  *work* flavour belongs on the per-job decks. Backlog: seed more one-shot work
+  events into the individual `job_*` decks (each currently leans on its promotion
+  + a day-in-the-life card).
+- **"New pupil" → a school-friendship relationship deck** — the
+  `edu_basicschool` "new pupil looking to share a desk" card should open a small
+  friendship arc/deck (a schoolmate you keep or drift from), à la the sibling
+  thread, rather than being a one-off vitals trade.
 - **Legacy / inheritance across runs** — if you owned a house *and* had an heir,
   the **next run starts in that house** (and maybe with some money/traits).
   Implemented as a shim: on the end screen write an `inheritance` record to

@@ -12,6 +12,7 @@ export const homeDecks = [
         {
           id: "home_family_chores",
           kind: "one_time",
+          conditions: { ageMax: 17 },
           prompt: "home_family_chores.prompt",
           options: {
             left: { label: "home_family_chores.left", outcomes: [{ result: "home_family_chores.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" } } }] },
@@ -21,6 +22,7 @@ export const homeDecks = [
         {
           id: "home_family_sweets",
           kind: "one_time",
+          conditions: { ageMax: 17 },
           prompt: "home_family_sweets.prompt",
           options: {
             left: {
@@ -42,6 +44,7 @@ export const homeDecks = [
         {
           id: "home_family_pet",
           kind: "one_time",
+          conditions: { ageMax: 17 },
           prompt: "home_family_pet.prompt",
           options: {
             left: { label: "home_family_pet.left", outcomes: [{ result: "home_family_pet.left.r0", effects: { vitals: { happiness: "++", health: "+", finances: "-" } } }] },
@@ -51,6 +54,7 @@ export const homeDecks = [
         {
           id: "home_family_market",
           kind: "one_time",
+          conditions: { ageMax: 17 },
           prompt: "home_family_market.prompt",
           options: {
             left: { label: "home_family_market.left", outcomes: [{ result: "home_family_market.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
@@ -60,6 +64,7 @@ export const homeDecks = [
         {
           id: "home_family_fair",
           kind: "one_time",
+          conditions: { ageMax: 17 },
           prompt: "home_family_fair.prompt",
           options: {
             left: { label: "home_family_fair.left", outcomes: [{ result: "home_family_fair.left.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },
@@ -87,10 +92,55 @@ export const homeDecks = [
         {
           id: "home_family_scrump",
           kind: "one_time",
+          conditions: { ageMax: 17 },
           prompt: "home_family_scrump.prompt",
           options: {
             left: { label: "home_family_scrump.left", outcomes: [{ result: "home_family_scrump.left.r0", effects: { vitals: { happiness: "++", finances: "+", health: "-" } } }] },
             right: { label: "home_family_scrump.right", outcomes: [{ result: "home_family_scrump.right.r0", effects: { vitals: { spirit: "++", happiness: "-", health: "+" } } }] },
+          },
+        },
+
+        // --- Grown and still at home (18+). The other face of family life: the
+        //     quiet friction of an adult under a parent's roof. Gated ageMin 18 so
+        //     they only surface once the childhood cards above have aged out —
+        //     the "stress of still living with your parents" the move-out card is
+        //     the escape from. -------------------------------------------------
+        {
+          // Your keep, now expected in coin. Pay your way (a dent in the purse, but
+          // you hold your head up) or dodge it (keep the money, live on sufferance).
+          id: "home_family_keep",
+          kind: "one_time",
+          conditions: { ageMin: 18 },
+          prompt: "home_family_keep.prompt",
+          options: {
+            left: { label: "home_family_keep.left", outcomes: [{ result: "home_family_keep.left.r0", effects: { vitals: { finances: "-", happiness: "+" } } }] },
+            right: { label: "home_family_keep.right", outcomes: [{ result: "home_family_keep.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // "When will you wed?" — the endless questioning at every meal. Change the
+          // subject and keep the peace (a quiet drain), or have the row out (a
+          // release of spirit, a colder house after).
+          id: "home_family_nag",
+          kind: "one_time",
+          conditions: { ageMin: 18 },
+          prompt: "home_family_nag.prompt",
+          options: {
+            left: { label: "home_family_nag.left", outcomes: [{ result: "home_family_nag.left.r0", effects: { vitals: { happiness: "-" } } }] },
+            right: { label: "home_family_nag.right", outcomes: [{ result: "home_family_nag.right.r0", effects: { vitals: { spirit: "+", happiness: "--" } } }] },
+          },
+        },
+        {
+          // Their roof, their rules — a grown adult with a curfew. Live by them
+          // (harmony bought with your independence) or come and go as you please
+          // (your own master, at the cost of a happy house).
+          id: "home_family_roof",
+          kind: "one_time",
+          conditions: { ageMin: 18 },
+          prompt: "home_family_roof.prompt",
+          options: {
+            left: { label: "home_family_roof.left", outcomes: [{ result: "home_family_roof.left.r0", effects: { vitals: { spirit: "-", happiness: "+" } } }] },
+            right: { label: "home_family_roof.right", outcomes: [{ result: "home_family_roof.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
         {
@@ -212,6 +262,30 @@ export const homeDecks = [
     {
       id: "home_owned_small",
       cards: [
+        {
+          // Owning a modest house of your own — small comforts and small cares.
+          // Make it a proper home (spend to furnish it snug) or live plainly and
+          // keep the coppers.
+          id: "home_small_hearth",
+          kind: "one_time",
+          prompt: "home_small_hearth.prompt",
+          options: {
+            left: { label: "home_small_hearth.left", outcomes: [{ result: "home_small_hearth.left.r0", effects: { vitals: { finances: "-", happiness: "+", health: "+" } } }] },
+            right: { label: "home_small_hearth.right", outcomes: [{ result: "home_small_hearth.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // The folk over the garden wall. Be neighbourly (a warmer street, the
+          // odd shilling lent) or keep yourself to yourself (your peace, their cold
+          // shoulder).
+          id: "home_small_neighbour",
+          kind: "one_time",
+          prompt: "home_small_neighbour.prompt",
+          options: {
+            left: { label: "home_small_neighbour.left", outcomes: [{ result: "home_small_neighbour.left.r0", effects: { vitals: { happiness: "+", finances: "-" } } }] },
+            right: { label: "home_small_neighbour.right", outcomes: [{ result: "home_small_neighbour.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
         {
           id: "home_buy_large",
           kind: "filler",
