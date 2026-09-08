@@ -913,8 +913,14 @@ export class Game {
     const tr = this.state.traits;
     const st = this.state.statuses;
     const log = this.state.log ?? [];
+    const saw = (id: StringId) => log.some((e) => e.id === id);
+    const owned = st.housing.startsWith("owned_");
 
-    // --- A life in brief: the durable facts, read straight from end-state. ---
+    // --- A life in brief. Durable station facts read from end-state, plus a few
+    //     NOTABLE, story-aware lines that read the transient life-log against the
+    //     final state (e.g. ruin-then-recovery). Routine, every-game milestones
+    //     (moving out, going up to university) are deliberately NOT listed —
+    //     they're already implied by the final station. --------------------------
     const brief: string[] = [`<li>${t(tr.gender === "girl" ? "ui.bornGirl" : "ui.bornBoy")}</li>`];
     const stat = (labelId: StringId, value: string) =>
       `<li><b>${t(labelId)}</b> ${value}</li>`;
@@ -922,26 +928,17 @@ export class Game {
     if (st.education !== "illiterate") brief.push(stat("ui.recapSchooling", t(`status.education.${st.education}` as StringId)));
     brief.push(stat("ui.recapHome", t(`status.housing.${st.housing}` as StringId)));
     if (st.lifestyle !== "default") brief.push(stat("ui.recapLife", t(`status.lifestyle.${st.lifestyle}` as StringId)));
+    // The fortune arc: how selling up (a fall) reads depends on where you ended.
+    if (tr.flawSoldUp && owned) brief.push(`<li>${t("ui.recapRoseAgain")}</li>`);
+    else if (tr.flawSoldUp) brief.push(`<li>${t("ui.recapSoldUp")}</li>`);
+    // Notable hardship / darkness worth remembering (from the life-log).
+    if (saw("log.workhouse")) brief.push(`<li>${t("ui.recapWorkhouse")}</li>`);
+    else if (saw("log.streets")) brief.push(`<li>${t("ui.recapStreets")}</li>`);
+    if (saw("log.crime")) brief.push(`<li>${t("ui.recapCrime")}</li>`);
+    // Durable marks.
     if (tr.skillMartialArts) brief.push(`<li>${t("ui.recapMartial")}</li>`);
     if (tr.skillVaccinated) brief.push(`<li>${t("ui.recapVaccinated")}</li>`);
-    if (tr.flawSoldUp) brief.push(`<li>${t("ui.recapSoldUp")}</li>`);
     if (tr.flawOwesCharity) brief.push(`<li>${t("ui.recapOwedCharity")}</li>`);
-
-    // --- Milestones: the dated life-log (transient events cards `remember`ed). -
-    const milestones = log.length
-      ? `<div class="end-sec">${t("ui.milestonesHeader")}</div>
-         <ul class="end-log">${log
-           .map((e) => `<li><span class="end-log-age">${e.age}</span> ${t(e.id)}</li>`)
-           .join("")}</ul>`
-      : "";
-
-    // --- A single, transparent life score (a starter formula, tunable). Rewards
-    //     a long, healthy, well-stationed and eventful life. -------------------
-    const v = this.state.vitals;
-    const vitalsAvg = Math.round((v.finances + v.happiness + v.health + v.spirit) / 4);
-    const eduRank = Math.max(0, ["illiterate", "basic", "grammar", "university"].indexOf(st.education));
-    const ownBonus = st.housing === "owned_estate" ? 40 : st.housing === "owned_large" ? 25 : st.housing === "owned_small" ? 15 : 0;
-    const score = this.state.age + vitalsAvg + eduRank * 10 + ownBonus + log.length * 5;
 
     const wrap = document.createElement("div");
     wrap.className = "end";
@@ -952,10 +949,8 @@ export class Game {
       <div class="end-title">${t(ending.title)}</div>
       <p class="end-blurb">${t(ending.blurb)}</p>
       ${ageLine}
-      <div class="end-score">${t("ui.lifeScore")} <b>${score}</b></div>
       <div class="end-sec">${t("ui.recapHeader")}</div>
-      <ul class="end-recap">${brief.join("")}</ul>
-      ${milestones}`;
+      <ul class="end-recap">${brief.join("")}</ul>`;
     const b = document.createElement("button");
     b.className = "continue";
     b.textContent = t("ui.newLife");

@@ -914,20 +914,23 @@ Roughly in likely order. None of these are started.
   come.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
-- **Richer end-of-run epitaph / scoring** — **BUILT (first pass).** The end
-  screen now shows: the cause/framing (ending), age reached, a **life score**
-  (a transparent starter formula — age + avg vitals + education rank + owned-home
-  bonus + 5×milestones, all tunable), **"a life in brief"** derived from
-  end-state (final trade / schooling / home / living, plus durable flags:
-  vaccinated, learned to fight, ruined & sold up, died owing the charity), and a
-  dated **"milestones"** list. Milestones come from a new **`remember` effect**
-  (`Effect.remember: StringId` → pushes `{age, id}` to `state.log`; see §15) —
-  used for *transient* events the final state won't show. **Seeded so far:** the
-  streets, the workhouse, running away, getting off the streets, apprenticeship,
-  moving out, buying a home, university, falling into crime, a sibling's birth.
-  **To do:** `remember` more moments as decks grow (esp. job promotions / reaching
-  the top of a trade; marriage/children when those exist); richer prose; maybe a
-  shareable summary.
+- **Richer end-of-run epitaph** — **BUILT (first pass).** The end screen shows the
+  cause/framing (ending), age reached, and **"a life in brief"**: the durable
+  station facts from end-state (final trade / schooling / home / living) plus a
+  few **notable, story-aware lines**. **No number score** (deliberately dropped —
+  felt reductive) and **no flat milestones list** (routine every-game events like
+  moving out or going up to university aren't worth listing — they're implied by
+  the final station). Instead the recap reads the transient life-log **against**
+  the final state, so *how* an event reads depends on where you ended — the
+  headline case being the **fortune arc**: `flawSoldUp` + still owning at the end →
+  "clawed your way back to a home of your own"; `flawSoldUp` + not → "ruined, and
+  never won it back". Notable non-derivable darkness is surfaced from the log
+  (`remember` effect → `state.log`, see §15): the **workhouse**, the **streets**
+  (child_hunger, the runaway, eviction), a **criminal spell**. Durable marks
+  (martial arts, vaccinated, died owing the charity) come from traits.
+  **To do:** more story-aware combinations as content grows (a "rose from the
+  workhouse to …" line; job-peak / reaching the top of a trade; marriage/children
+  when they exist); richer prose; maybe a shareable summary.
 - **Full tone/writing pass** — once the decks are complete, sweep all cards for
   a consistent Victorian voice and a final balance/dominance check.
 - **Italian gender agreement** — Italian forces gender agreement on the player
