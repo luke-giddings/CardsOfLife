@@ -149,6 +149,74 @@ export const adultDecks = [
           },
         },
         {
+          // A match is proposed. Marry and set up a household (joy, but a wedding
+          // and a home cost) — or keep your independence and your coin.
+          id: "adult_wed",
+          kind: "one_time",
+          prompt: "adult_wed.prompt",
+          options: {
+            left: { label: "adult_wed.left", outcomes: [{ result: "adult_wed.left.r0", effects: { vitals: { happiness: "++", finances: "-" } } }] },
+            right: { label: "adult_wed.right", outcomes: [{ result: "adult_wed.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // Little ones about the house. Dote on them (joy, but hungry mouths and
+          // sleepless nights) or raise them hard and set them to earning.
+          id: "adult_children",
+          kind: "one_time",
+          prompt: "adult_children.prompt",
+          options: {
+            left: { label: "adult_children.left", outcomes: [{ result: "adult_children.left.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },
+            right: { label: "adult_children.right", outcomes: [{ result: "adult_children.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // The gin-shop's warm glow after a hard day. Drown your cares (a night's
+          // cheer, at a cost to purse and body) or walk on by (sober pride).
+          id: "adult_drink",
+          kind: "one_time",
+          prompt: "adult_drink.prompt",
+          options: {
+            left: { label: "adult_drink.left", outcomes: [{ result: "adult_drink.left.r0", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } }] },
+            right: { label: "adult_drink.right", outcomes: [{ result: "adult_drink.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // The chapel asks more of you — time, devotion, a tithe. Give yourself to
+          // it (spirit, for the coin in the plate) or keep your Sundays your own.
+          id: "adult_chapel",
+          kind: "one_time",
+          prompt: "adult_chapel.prompt",
+          options: {
+            left: { label: "adult_chapel.left", outcomes: [{ result: "adult_chapel.left.r0", effects: { vitals: { spirit: "++", finances: "-" } } }] },
+            right: { label: "adult_chapel.right", outcomes: [{ result: "adult_chapel.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // A bitter quarrel with a neighbour. Swallow your pride and make peace
+          // (a happier street, a bruised ego) or win the feud (satisfaction, at a
+          // cost to your peace and your nerves).
+          id: "adult_quarrel",
+          kind: "one_time",
+          prompt: "adult_quarrel.prompt",
+          options: {
+            left: { label: "adult_quarrel.left", outcomes: [{ result: "adult_quarrel.left.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+            right: { label: "adult_quarrel.right", outcomes: [{ result: "adult_quarrel.right.r0", effects: { vitals: { spirit: "+", happiness: "-", health: "-" } } }] },
+          },
+        },
+        {
+          // A modest legacy from a distant relation. Keep it all to yourself
+          // (a fatter purse, a meaner heart) or share it round the family (less
+          // coin, a warmer house).
+          id: "adult_legacy_windfall",
+          kind: "one_time",
+          prompt: "adult_legacy_windfall.prompt",
+          options: {
+            left: { label: "adult_legacy_windfall.left", outcomes: [{ result: "adult_legacy_windfall.left.r0", effects: { vitals: { finances: "++", happiness: "-" } } }] },
+            right: { label: "adult_legacy_windfall.right", outcomes: [{ result: "adult_legacy_windfall.right.r0", effects: { vitals: { finances: "+", happiness: "++" } } }] },
+          },
+        },
+        {
           // Into old age (50): the age status flips to `old_age`, whose heavier
           // health drift is the steepening decline of the final years, and the
           // adult deck hands off to the old-age deck. Both choices transition;
@@ -177,7 +245,7 @@ export const adultDecks = [
       cards: [
         {
           id: "old_rest",
-          kind: "filler",
+          kind: "one_time",
           prompt: "old_rest.prompt",
           options: {
             left: { label: "old_rest.left", outcomes: [{ result: "old_rest.left.r0", effects: { vitals: { health: "+", finances: "-" } } }] },
@@ -186,7 +254,7 @@ export const adultDecks = [
         },
         {
           id: "old_legacy",
-          kind: "filler",
+          kind: "one_time",
           prompt: "old_legacy.prompt",
           options: {
             left: { label: "old_legacy.left", outcomes: [{ result: "old_legacy.left.r0", effects: { vitals: { spirit: "++", finances: "-" } } }] },
@@ -195,11 +263,67 @@ export const adultDecks = [
         },
         {
           id: "old_grandchildren",
-          kind: "filler",
+          kind: "one_time",
           prompt: "old_grandchildren.prompt",
           options: {
             left: { label: "old_grandchildren.left", outcomes: [{ result: "old_grandchildren.left.r0", effects: { vitals: { happiness: "++", health: "-" } } }] },
             right: { label: "old_grandchildren.right", outcomes: [{ result: "old_grandchildren.right.r0", effects: { vitals: { health: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // Setting your affairs in order — the will. Divide it fairly among your
+          // kin (a clear conscience) or keep a tight grip on every penny to the last.
+          id: "old_will",
+          kind: "one_time",
+          prompt: "old_will.prompt",
+          options: {
+            left: { label: "old_will.left", outcomes: [{ result: "old_will.left.r0", effects: { vitals: { spirit: "+", happiness: "+" } } }] },
+            right: { label: "old_will.right", outcomes: [{ result: "old_will.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // The young gather to hear the old days. Spin them grand tales (a joy, if
+          // a tiring one) or let yourself dwell on the roads not taken.
+          id: "old_tales",
+          kind: "one_time",
+          prompt: "old_tales.prompt",
+          options: {
+            left: { label: "old_tales.left", outcomes: [{ result: "old_tales.left.r0", effects: { vitals: { happiness: "++", health: "-" } } }] },
+            right: { label: "old_tales.right", outcomes: [{ result: "old_tales.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // The cold settles in your chest each winter now. Take to your bed, warm
+          // and idle (kinder on the body, harder on the spirit) or keep going.
+          id: "old_ailment",
+          kind: "one_time",
+          prompt: "old_ailment.prompt",
+          options: {
+            left: { label: "old_ailment.left", outcomes: [{ result: "old_ailment.left.r0", effects: { vitals: { health: "+", spirit: "-" } } }] },
+            right: { label: "old_ailment.right", outcomes: [{ result: "old_ailment.right.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
+          },
+        },
+        {
+          // Thoughts turn to the hereafter. Make your peace with it (a settled
+          // soul, a soberer heart) or refuse to dwell — live for what days are left.
+          id: "old_peace",
+          kind: "one_time",
+          prompt: "old_peace.prompt",
+          options: {
+            left: { label: "old_peace.left", outcomes: [{ result: "old_peace.left.r0", effects: { vitals: { spirit: "++", happiness: "-" } } }] },
+            right: { label: "old_peace.right", outcomes: [{ result: "old_peace.right.r0", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
+          },
+        },
+        {
+          // A last chance to leave a mark — endow a kindness, a bequest to the
+          // parish. Give generously (a lighter soul, a lighter purse) or keep it
+          // all for your heirs.
+          id: "old_charity",
+          kind: "one_time",
+          prompt: "old_charity.prompt",
+          options: {
+            left: { label: "old_charity.left", outcomes: [{ result: "old_charity.left.r0", effects: { vitals: { spirit: "++", finances: "-" } } }] },
+            right: { label: "old_charity.right", outcomes: [{ result: "old_charity.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
           },
         },
       ],

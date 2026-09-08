@@ -859,14 +859,16 @@ Roughly in likely order. None of these are started.
   offer + the sell-up net), so owning grand homes has little to *do*. Each wants
   its own set of station-appropriate life events (servants, society, upkeep,
   scandal).
-- **Later-life content density** — the life-stage decks are now all **one-shots**
-  (`age_adult` = family/duty/friend/ail/society; `age_young_adult` likewise;
-  `age_old_age` still just rest/legacy/grandchildren, and still `filler`). One-shots
-  mean no repeats, but a long adult stretch (25–50) burns through five cards fast
-  and then leans on the job/home/lifestyle decks + quiet years. Wants **more**
-  one-shot life events per stage — and, per the family split, **housing- and
-  station-aware variety** so the middle years don't feel same-y. (Old age could go
-  one-shot too, once it has enough cards.)
+- **Later-life content density** — **first fleshing pass DONE.** All the life-stage
+  decks are now one-shots: `age_adult` has 11 events (family, duty, friend, ail,
+  society, wed, children, drink, chapel, quarrel, legacy-windfall), `age_old_age`
+  has 8 (rest, legacy, grandchildren, will, tales, ailment, peace, charity — the
+  old fillers converted to one-shots), `age_young_adult` has 4 + the charity-debt
+  filler. That covers a normal run comfortably. Still wants: **more** for very long
+  lives, a top-up for `age_young_adult` (thin at 4), and — the bigger idea —
+  **housing- and station-aware variety** (events that read differently for a
+  labourer vs a merchant, a renter vs an estate-owner) so the middle years feel
+  shaped by your station, not generic.
 - **Adult-at-home vs childhood family life** — **BUILT (first pass).** The
   childhood `home_family` cards (sweets, pet, fair, scrump, chores, market) are
   gated `ageMax 17`; a grown-adult-under-the-parental-roof set (`home_family_keep`,
