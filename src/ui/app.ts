@@ -944,8 +944,16 @@ export class Game {
     if (saw("log.workhouse")) colour.push(t("ui.proseWorkhouse"));
     else if (saw("log.streets")) colour.push(t("ui.proseStreets"));
     if (saw("log.crime")) colour.push(t("ui.proseCrime"));
-    if (tr.relBrotherActive)
-      colour.push(t(tr.relBrotherLove >= 30 ? "ui.proseBrotherClose" : tr.relBrotherLove >= 0 ? "ui.proseBrotherPeace" : "ui.proseBrotherEstranged"));
+    if (tr.relBrotherActive) {
+      // Read both axes: a bitter bond reads estranged; a warm-but-absent one reads
+      // "drifted" (you loved him, but let the years pull you apart); otherwise close
+      // (near and loved) or a quiet peace.
+      const bro = tr.relBrotherLove < 0 ? "ui.proseBrotherEstranged"
+        : tr.relBrotherLove >= 30 && tr.relBrotherDistance < 25 ? "ui.proseBrotherClose"
+        : tr.relBrotherLove >= 15 && tr.relBrotherDistance >= 25 ? "ui.proseBrotherDrifted"
+        : "ui.proseBrotherPeace";
+      colour.push(t(bro));
+    }
     if (tr.relSisterActive)
       colour.push(t(tr.relSisterLove >= 30 ? "ui.proseSisterClose" : tr.relSisterLove >= 0 ? "ui.proseSisterPeace" : "ui.proseSisterEstranged"));
     if (st.pet === "cat") colour.push(t("ui.proseCat"));

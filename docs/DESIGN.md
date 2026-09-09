@@ -128,9 +128,10 @@ Sister `relSister*`).
   `flawSoldUp`.
 - **Enum:** `gender` (boy/girl), chosen on the birth card — currently unused, so
   left ungrouped until it has a purpose.
-- **Counters:** `relBrotherLove`/`relSisterLove` (closeness, can go negative =
-  rivalry), `relBrotherGrit`/`relBrotherArc` (his backbone / story cursor),
-  `relBrotherAge` (Tom's own age — ticked up by the rel_bro deck from the year he's
+- **Counters:** `relBrotherLove`/`relSisterLove` (bond warmth, can go negative =
+  rivalry), `relBrotherGrit` (his backbone), `relBrotherDistance` (how present
+  you've been — ticked UP each year, pulled DOWN when you engage a Tom card; high =
+  drifted apart), `relBrotherAge` (Tom's own age — ticked up by the rel_bro deck from the year he's
   born, so his beats fire at his age not yours; e.g. the crossroads at 5),
   `jobExperience` (years in the current job), `jobSkill` (apprentice
   craftsmanship), `jobStrikes`, `jobTimesChanged`; `petCatAge`/`petDogAge` (years
@@ -943,30 +944,32 @@ Roughly in likely order. None of these are started.
   in a *later* run, without cheapening it within a single life. Related: the
   deferred **"continue as your child"** thread.
 - **Sibling story arc (rel_bro = Tom; rel_sis later)** — a *story-driven*
-  relationship deck, one beat at a time, meant to make you feel the bond. Machinery:
-  a per-sibling **arc cursor** (`relBrotherArc`) points at the armed beat (only that
-  beat is eligible → never spammy), and two hidden axes carry the story —
-  **`relBrotherLove`** (closeness) and **`relBrotherGrit`** (his backbone, shaped by
-  whether you cushion or toughen him). Later beats read *both* axes so it's never a
-  flat help=good / refuse=bad. **Gating differs by beat:** the school-or-work
-  crossroads is *fixed* (a milestone at his life-stage age); other beats get a
-  relaxed `[ageMin, ageMax]` window plus a milestone twin that force-fires at
-  `ageMax` so the thread can't stall. **Flow:** Stage 0 childhood fillers (the bully
-  card keys off `skillMartialArts`) → **Beat 1** school/work (matching *your own*
-  path, `job==studying` at the time, deepens Love; the opposite breeds resentment;
-  sets branch arc 1=school / 2=work) → **Beat 2** a rift-or-bond in adolescence
-  (varies on whether you still live with family; wide window) → **Beat 3** he makes
-  his way (branch on path + grit) → **Beat 4** the reckoning, *reciprocal* — if
-  you're comfortable you shelter/back him, if you're destitute (workhouse/streets)
-  a well-loved Tom comes for *you* → **Beat 5** settled years → **Beat 6** his fate
-  in old age (a Love×Grit grid of bittersweet endings). **Both-siblings space** via
-  `CardOption.if` on `relBrotherActive && relSisterActive`: a "share the burden" 3rd option at
-  Beat 4 and a "take sides" clash. Sister will be her *own* story (`rel_sis`,
-  `relSisterArc`/`relSisterGrit`), not a reskin. **Built so far: Tom's full arc —
-  Stage 0 childhood + Beats 1–6 (crossroads → rift → making his way → the
-  reciprocal reckoning → settled years → a Love×Grit fate ending).** The
-  both-siblings `CardOption.if` options and the whole `rel_sis` story are still to
-  come.
+  relationship deck meant to make you feel the bond. **No cursor:** beats live in
+  non-overlapping WINDOWS of Tom's own life (`relBrotherAge`, ticked by the deck) and
+  are drawn organically, so which you catch — and when — varies run to run. Three
+  hidden axes carry it: **`relBrotherLove`** (bond warmth, from your choices),
+  **`relBrotherGrit`** (his backbone, from your choices), and **`relBrotherDistance`**
+  (how present you've been — the deck ticks it UP every year and every Tom card you
+  engage pulls it DOWN). The key move: **a missed beat isn't a dead end, it's drift.**
+  Distance climbs while you're away, so the beats you *do* catch (and the finale) read
+  colder — "you drifted apart" is a distinct outcome from "you fell out". Beats branch
+  on love + distance so the same choice lands warmer when you've been present and
+  colder when you haven't. **Flow:** Stage 0 childhood fillers → **Beat 1** school/work
+  crossroads (a milestone at his age 5, the same fork you faced; matching *your own*
+  path deepens Love; sets `relBrotherSchooled`) → **Beat 2** an adolescent rift
+  (distance-branched) → **Beat 3** he makes his way (grit) → **Beat 4** the reckoning,
+  *reciprocal* — comfortable, you shelter him; destitute, a well-loved Tom comes for
+  *you* (`relBrotherReckoned` de-dupes the two housing forms) → **Beat 5** settled
+  years (distance-branched) → **Beat 6** his fate in old age (a **Love × Distance**
+  grid of endings, from a life shared to the last, through a bittersweet reunion after
+  drifting, to a cold farewell). Plus **estrangement**: if love collapses (≤ −25) from
+  your own cruel choices — never bad luck — a milestone ends the arc coldly. Terminal
+  beats set `relBrotherStoryDone` (the deck goes dormant); the end-of-run epitaph reads
+  love × distance (close / drifted / peace / estranged). **Built: Tom's full arc.**
+  Still to come: **both-siblings** interplay via `CardOption.if` on
+  `relBrotherActive && relSisterActive` (a "share the burden" / "take sides" beat), and
+  the sister's own story (`rel_sis`), not a reskin. Distance branches on more beats
+  (crisis, way) are an easy future add.
 - **Work path tuning** — child-labour drift is deliberately harsh (−5); decide
   whether to soften to −3 to make the gamble more tempting.
 - **Richer end-of-run epitaph** — **BUILT (first pass).** The end screen shows the

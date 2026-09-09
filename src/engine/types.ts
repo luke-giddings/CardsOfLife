@@ -92,20 +92,25 @@ export interface Traits {
   persSweetTooth: boolean;
   persSociable: boolean;
   // Sibling relationships (hidden; can go negative = rivalry). All `rel<Sibling>*`
-  // so the debug panel groups them by sibling under a Relationships category:
-  //   <sibling>Active = whether you have this sibling at all (set at the baby deck);
-  //   <sibling>Love   = closeness with you;
-  //   <sibling>Grit   = their own backbone/independence (cushion vs toughen);
-  //   <sibling>Arc    = the story cursor (which beat is armed / which branch).
-  // See the rel_bro deck (Tom). The sister gets Grit/Arc when her story is built.
-  relBrotherActive: boolean;
-  relBrotherLove: number;
-  relBrotherGrit: number;
-  relBrotherArc: number;
-  // Tom's own age in years, ticked up each year the rel_bro deck is active (via
-  // Deck.tick) from the year he's born (baby_brother). Lets his story beats fire at
-  // HIS age rather than yours — e.g. the school-or-work crossroads at age 5.
-  relBrotherAge: number;
+  // so the debug panel groups them by sibling under a Relationships category.
+  // Tom's arc (rel_bro deck) has NO fixed cursor: his beats fire in windows of HIS
+  // life (relBrotherAge), drawn organically, so which you catch varies run to run.
+  // Two independent axes carry the relationship — LOVE (the warmth of the bond,
+  // shaped by the QUALITY of your choices) and DISTANCE (how PRESENT you've been,
+  // which climbs by itself and only falls when you show up) — and later beats read
+  // both, so a missed beat bends the story (you drifted) instead of ending it.
+  relBrotherActive: boolean; // whether you have a brother at all (set at the baby deck)
+  relBrotherLove: number;    // bond quality: warm (+) ↔ bitter (−), shaped by your choices
+  relBrotherGrit: number;    // his backbone/independence, shaped by your choices
+  relBrotherAge: number;     // his age, ticked up each year by the rel_bro deck (Deck.tick)
+  // How PRESENT you've been in his life: 0 = close at hand, rising = drifting apart.
+  // The rel_bro deck ticks it UP every year (you drift just by living your own life);
+  // every Tom card you engage pulls it back DOWN (you showed up). Distinct from love:
+  // you can be close-hearted yet absent (drifted), or ever-present yet rivalrous.
+  relBrotherDistance: number;
+  relBrotherSchooled: boolean;  // his crossroads branch: true = you sent him to school, false = to work
+  relBrotherReckoned: boolean;  // the adult "reckoning" beat has happened (its two housing variants can't both fire)
+  relBrotherStoryDone: boolean; // his arc has concluded (finale or estrangement) — the deck goes dormant
   relSisterActive: boolean;
   relSisterLove: number;
   // Work life. All `job*` so the debug panel groups them under a Jobs category.
@@ -164,8 +169,11 @@ export const DEFAULT_TRAITS: Traits = {
   relBrotherActive: false,
   relBrotherLove: 0,
   relBrotherGrit: 0,
-  relBrotherArc: 0,
   relBrotherAge: 0,
+  relBrotherDistance: 0,
+  relBrotherSchooled: false,
+  relBrotherReckoned: false,
+  relBrotherStoryDone: false,
   relSisterActive: false,
   relSisterLove: 0,
   jobTimesChanged: 0,
