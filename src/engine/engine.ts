@@ -320,16 +320,23 @@ function applyDrift(state: GameState, content: Content): void {
   }
 }
 
-// Per-turn TRAIT increments from the active status states (see StatusStateDef.tick).
-// Drift's counterpart for counters — e.g. a cat ages `petCatAge` a year at a time.
+// Per-turn TRAIT increments from active status states (StatusStateDef.tick) AND
+// active decks (Deck.tick). Drift's counterpart for counters — e.g. a cat ages
+// `petCatAge` a year at a time (status), and Tom ages `relBrotherAge` a year at a
+// time while the rel_bro deck is active (deck).
 function applyTick(state: GameState, content: Content): void {
-  for (const kind of Object.keys(state.statuses) as StatusKind[]) {
-    const st = content.statuses[kind]?.states[state.statuses[kind]];
-    if (!st?.tick) continue;
-    for (const [k, v] of Object.entries(st.tick)) {
+  const add = (tick: Partial<Record<string, number>>): void => {
+    for (const [k, v] of Object.entries(tick)) {
       const key = k as keyof typeof state.traits;
       (state.traits[key] as number) = (state.traits[key] as number) + (v ?? 0);
     }
+  };
+  for (const kind of Object.keys(state.statuses) as StatusKind[]) {
+    const st = content.statuses[kind]?.states[state.statuses[kind]];
+    if (st?.tick) add(st.tick);
+  }
+  for (const deck of content.decks) {
+    if (deck.tick && state.activeDecks.includes(deck.id)) add(deck.tick);
   }
 }
 

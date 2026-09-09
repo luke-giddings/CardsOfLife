@@ -102,6 +102,10 @@ export interface Traits {
   relBrotherLove: number;
   relBrotherGrit: number;
   relBrotherArc: number;
+  // Tom's own age in years, ticked up each year the rel_bro deck is active (via
+  // Deck.tick) from the year he's born (baby_brother). Lets his story beats fire at
+  // HIS age rather than yours — e.g. the school-or-work crossroads at age 5.
+  relBrotherAge: number;
   relSisterActive: boolean;
   relSisterLove: number;
   // Work life. All `job*` so the debug panel groups them under a Jobs category.
@@ -161,6 +165,7 @@ export const DEFAULT_TRAITS: Traits = {
   relBrotherLove: 0,
   relBrotherGrit: 0,
   relBrotherArc: 0,
+  relBrotherAge: 0,
   relSisterActive: false,
   relSisterLove: 0,
   jobTimesChanged: 0,
@@ -292,6 +297,12 @@ export interface Deck {
   title?: StringId;  // shown when this deck is unlocked for the first time
   unlock?: StringId; // blurb for the first-time unlock announcement
   noDrift?: boolean; // while active, status drift is suspended (unloseable grace, e.g. babyhood)
+  // Per-turn TRAIT increments while this deck is active — the deck-level counterpart
+  // of StatusStateDef.tick (see applyTick). Use to age something tied to a deck's
+  // lifetime rather than a status: the rel_bro deck ticks `relBrotherAge` from the
+  // year Tom is born (the deck is added then and never removed) so his beats can
+  // fire at his age. Runs every turn the deck is active, babyhood grace included.
+  tick?: Partial<Record<NumericTraitKey, number>>;
   // An "urgent" deck: while it is active, its eligible cards OWN the draw pool —
   // incidental flavour from other active decks is suppressed so you can escape
   // the state (unemployment, the workhouse) instead of drifting in it for years.

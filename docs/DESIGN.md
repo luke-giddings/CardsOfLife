@@ -130,6 +130,8 @@ Sister `relSister*`).
   left ungrouped until it has a purpose.
 - **Counters:** `relBrotherLove`/`relSisterLove` (closeness, can go negative =
   rivalry), `relBrotherGrit`/`relBrotherArc` (his backbone / story cursor),
+  `relBrotherAge` (Tom's own age — ticked up by the rel_bro deck from the year he's
+  born, so his beats fire at his age not yours; e.g. the crossroads at 5),
   `jobExperience` (years in the current job), `jobSkill` (apprentice
   craftsmanship), `jobStrikes`, `jobTimesChanged`; `petCatAge`/`petDogAge` (years
   you've kept that pet — tick up via the pet status, drive its old-age passing) and
@@ -390,12 +392,16 @@ A **language** toggle switches English/Italian live.
   short past-tense `log.<name>` string (EN+IT). It's stamped with the card's age
   and shown on the end-of-run "milestones". Durable facts (final trade/home,
   vaccinated, sold up…) are read from end-state — don't `remember` those.
-- **`tick` for time-based state:** a status STATE may carry `tick: { <trait>: n }`,
-  which increments that counter every turn it's active (drift's counterpart for
-  traits). Used to age a pet (`pet="cat"` ticks `petCatAge`, `pet="dog"` ticks
-  `petDogAge`) so a milestone can fire N years on. Reach for it whenever something
-  needs to happen "so many years after X" — record the counter with `tick`, gate the
-  payoff card on it.
+- **`tick` for time-based state:** a status STATE — or a whole DECK — may carry
+  `tick: { <trait>: n }`, which increments that counter every turn it's active
+  (drift's counterpart for traits). Status-tick ages a pet (`pet="cat"` ticks
+  `petCatAge`, `pet="dog"` ticks `petDogAge`); deck-tick ages something tied to a
+  deck's lifetime rather than a status — the `rel_bro` deck ticks `relBrotherAge`
+  from the year Tom is born (the deck is added then and never removed), so his beats
+  can fire at his age (the school-or-work crossroads at 5) instead of the player's.
+  Both run every turn the state/deck is active, babyhood grace included. Reach for it
+  whenever something needs to happen "so many years after X" — record the counter
+  with `tick`, gate the payoff card on it.
 - **`chance` for rare cards:** a card may carry `chance: 0..1` — even once its
   `conditions` hold, it only enters the draw pool on a fresh per-year roll. It sits
   at the very bottom of the draw order (milestones and `force` still jump ahead), so

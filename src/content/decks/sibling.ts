@@ -18,14 +18,18 @@ export const siblingDecks = [
       id: "rel_bro",
       title: "deck.rel_bro.title",
       unlock: "deck.rel_bro.blurb",
+      // Tom ages a year at a time from the year he's born (this deck is added by
+      // baby_brother and never removed), so his beats fire at HIS age, not yours.
+      tick: { relBrotherAge: 1 },
       cards: [
         // --- STAGE 0: little Tom. Warm childhood fillers, only while he's small
-        //     (relBrotherArc 0) and you're young (ageMax 8). Each shapes his Love
-        //     (your bond) AND his Grit (his backbone) — the nuance starts here. ---
+        //     (relBrotherArc 0, and he's under 5 — before his own school-or-work
+        //     crossroads). Each shapes his Love (your bond) AND his Grit (his
+        //     backbone) — the nuance starts here. ---
         {
           id: "rel_bro_play",
           kind: "one_time",
-          conditions: { traits: { relBrotherArc: 0 }, ageMax: 8 },
+          conditions: { traits: { relBrotherArc: 0, relBrotherAge: { max: 4 } } },
           prompt: "rel_bro_play.prompt",
           options: {
             left: { label: "rel_bro_play.left", outcomes: [{ result: "rel_bro_play.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relBrotherLove: 10 } } }] },
@@ -35,7 +39,7 @@ export const siblingDecks = [
         {
           id: "rel_bro_bully",
           kind: "one_time",
-          conditions: { traits: { relBrotherArc: 0 }, ageMax: 8 },
+          conditions: { traits: { relBrotherArc: 0, relBrotherAge: { max: 4 } } },
           prompt: "rel_bro_bully.prompt",
           options: {
             left: {
@@ -54,7 +58,7 @@ export const siblingDecks = [
         {
           id: "rel_bro_share",
           kind: "one_time",
-          conditions: { traits: { relBrotherArc: 0 }, ageMax: 8 },
+          conditions: { traits: { relBrotherArc: 0, relBrotherAge: { max: 4 } } },
           prompt: "rel_bro_share.prompt",
           options: {
             left: { label: "rel_bro_share.left", outcomes: [{ result: "rel_bro_share.left.r0", effects: { vitals: { health: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -3 } } }] },
@@ -62,16 +66,17 @@ export const siblingDecks = [
           },
         },
 
-        // --- BEAT 1: Tom's crossroads (school or work). FIXED timing — a milestone
-        //     that fires when he reaches the age (your age >= 8) if not already
-        //     drawn. Matching your OWN path (are you a scholar now, job==studying?)
-        //     deepens the bond; the opposite breeds resentment. Sets his branch:
-        //     arc 1 = school, arc 2 = work (work also hardens his grit). --------
+        // --- BEAT 1: Tom's crossroads (school or work). Fires as a milestone when
+        //     TOM turns 5 (relBrotherAge >= 5) — the same age you faced the fork —
+        //     tracked by the deck's `tick`, so it's tied to his life, not yours.
+        //     Matching your OWN path (are you a scholar now, job==studying?) deepens
+        //     the bond; the opposite breeds resentment. Sets his branch: arc 1 =
+        //     school, arc 2 = work (work also hardens his grit). --------
         {
           id: "rel_bro_crossroads",
           kind: "milestone",
           priority: 40,
-          conditions: { traits: { relBrotherArc: 0 }, ageMin: 8 },
+          conditions: { traits: { relBrotherArc: 0, relBrotherAge: { min: 5 } } },
           prompt: "rel_bro_crossroads.prompt",
           options: {
             left: {
