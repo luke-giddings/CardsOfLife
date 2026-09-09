@@ -417,8 +417,10 @@ export class Game {
       const rescued = lethal && !!findRescue(projected, content, key);
       // The player only ever sees +/− bars. Flat tokens map their dashes to −; the
       // proportional slash tokens (a scaling spend) render as minus bars by severity
-      // ("/" ≈ −−, "//" ≈ −−−) rather than showing the authoring slashes.
-      const sym = mag === "//" ? "−−−" : mag === "/" ? "−−" : mag!.split("-").join("−");
+      // ("/" ≈ −−, "//" ≈ −−−) rather than showing the authoring slashes. Guarded on
+      // `mag` — a vital can be lethal (from drift) on a card that doesn't touch it,
+      // in which case only the skull/shield below is shown and `sym` is unused.
+      const sym = !mag ? "" : mag === "//" ? "−−−" : mag === "/" ? "−−" : mag.split("-").join("−");
       const body = lethal
         ? rescued
           ? `<span class="ep-rescue" title="You'd hit 0 — but a safety net would catch you (once)">🛡</span>`
