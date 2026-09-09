@@ -159,7 +159,7 @@ export const homeDecks = [
           conditions: { ageMin: 14, vitals: { finances: { min: 50 } } },
           prompt: "home_family_moveout.prompt",
           options: {
-            left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "renting" } } }] },
+            left: { label: "home_family_moveout.left", outcomes: [{ result: "home_family_moveout.left.r0", effects: { vitals: { finances: "//", happiness: "+", spirit: "+" }, setStatus: { housing: "renting" } } }] },
             right: { label: "home_family_moveout.right", outcomes: [{ result: "home_family_moveout.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
@@ -221,7 +221,7 @@ export const homeDecks = [
         },
         {
           // The rung up from renting: buy a place of your own. OFFERED (not
-          // forced) once you've saved (finances >= 75); the "---" cost keeps ~a
+          // forced) once you've saved (finances >= 75); the "//" cost keeps ~a
           // third of your money — a huge felt hit — but you own it: modest upkeep
           // and a real health/spirit bonus (the owned_small status). A genuine
           // choice — commit the savings, or hold your money and keep renting.
@@ -235,7 +235,7 @@ export const homeDecks = [
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_small.prompt",
           options: {
-            left: { label: "home_buy_small.left", outcomes: [{ result: "home_buy_small.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_small" } } }] },
+            left: { label: "home_buy_small.left", outcomes: [{ result: "home_buy_small.left.r0", effects: { vitals: { finances: "//", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_small" } } }] },
             right: { label: "home_buy_small.right", outcomes: [{ result: "home_buy_small.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
@@ -260,7 +260,7 @@ export const homeDecks = [
     },
 
     // --- Owned homes: the adult housing ladder. Each owned-tier deck hosts the
-    //     offer of the NEXT tier up (finances >= 75, "---" cost) — buying is a
+    //     offer of the NEXT tier up (finances >= 75, "//" cost) — buying is a
     //     "rebuild to 75, spend down, rebuild" cycle. The estate is the top. ---
     {
       id: "home_owned_small",
@@ -296,7 +296,7 @@ export const homeDecks = [
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_large.prompt",
           options: {
-            left: { label: "home_buy_large.left", outcomes: [{ result: "home_buy_large.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_large" } } }] },
+            left: { label: "home_buy_large.left", outcomes: [{ result: "home_buy_large.left.r0", effects: { vitals: { finances: "//", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_large" } } }] },
             right: { label: "home_buy_large.right", outcomes: [{ result: "home_buy_large.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },
@@ -329,7 +329,7 @@ export const homeDecks = [
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_estate.prompt",
           options: {
-            left: { label: "home_buy_estate.left", outcomes: [{ result: "home_buy_estate.left.r0", effects: { vitals: { finances: "---", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_estate" } } }] },
+            left: { label: "home_buy_estate.left", outcomes: [{ result: "home_buy_estate.left.r0", effects: { vitals: { finances: "//", happiness: "+", spirit: "+" }, setStatus: { housing: "owned_estate" } } }] },
             right: { label: "home_buy_estate.right", outcomes: [{ result: "home_buy_estate.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },

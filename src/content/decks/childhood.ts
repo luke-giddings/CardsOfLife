@@ -57,19 +57,23 @@ export const childhoodDecks = [
           prompt: "child_fever.prompt",
           options: {
             left: {
+              // Fight it through: immune if vaccinated (a scratch); otherwise the
+              // fever deals a grievous "---" blow — you pull through only if your
+              // health was high enough, else it takes you (netted for a child).
               label: "child_fever.left",
               outcomes: [
                 { if: { traits: { skillVaccinated: true } }, result: "child_fever.left.r0", effects: { vitals: { health: "-" } } },
-                { if: { vitals: { health: { min: 30 } } }, result: "child_fever.left.r1", effects: { vitals: { health: "--" } } },
-                { result: "child_fever.left.r2", effects: { vitals: { health: "----" } } },
+                { result: "child_fever.left.r1", effects: { vitals: { health: "---" } } },
               ],
             },
             right: {
+              // Send for the doctor: affordable care (finances >= 30) sees you
+              // through; otherwise you go without and the fever deals the grievous
+              // "---" blow.
               label: "child_fever.right",
               outcomes: [
                 { if: { vitals: { finances: { min: 30 } } }, result: "child_fever.right.r0", effects: { vitals: { finances: "--", health: "-" } } },
-                { if: { vitals: { health: { min: 30 } } }, result: "child_fever.right.r1", effects: { vitals: { health: "--" } } },
-                { result: "child_fever.right.r2", effects: { vitals: { health: "----" } } },
+                { result: "child_fever.right.r1", effects: { vitals: { health: "---" } } },
               ],
             },
           },
@@ -81,21 +85,23 @@ export const childhoodDecks = [
           prompt: "child_accident.prompt",
           options: {
             left: {
+              // Leap clear: a clean escape if you're agile (sporty); otherwise the
+              // cart deals a grievous "---" blow (−40) — you live only if your
+              // health was high, else it's fatal (netted for a child). High
+              // risk/reward: brilliant if sporty, deadly if not.
               label: "child_accident.left",
               outcomes: [
                 { if: { traits: { persSporty: { min: 3 } } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
-                { if: { vitals: { health: { min: 40 } } }, result: "child_accident.left.r1", effects: { vitals: { health: "--" } } },
-                { result: "child_accident.left.r2", effects: { vitals: { health: "----" } } },
+                { result: "child_accident.left.r1", effects: { vitals: { health: "---" } } },
               ],
             },
             right: {
-              // A clumsier, toughness-based dodge: survives from a lower health
-              // floor than the leap, but always costs you — the safer call when
-              // you're not sporty, while the leap stays best for the agile.
+              // Throw yourself aside: no clean escape, but a smaller "--" blow (−25)
+              // than the leap — survivable from a lower health floor, the safer call
+              // when you're not agile (still fatal if you were already frail).
               label: "child_accident.right",
               outcomes: [
-                { if: { vitals: { health: { min: 30 } } }, result: "child_accident.right.r0", effects: { vitals: { health: "-", happiness: "-" } } },
-                { result: "child_accident.right.r1", effects: { vitals: { health: "----" } } },
+                { result: "child_accident.right.r0", effects: { vitals: { health: "--", happiness: "-" } } },
               ],
             },
           },

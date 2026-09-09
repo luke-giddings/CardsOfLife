@@ -176,7 +176,7 @@ export const content = {
         // income cards (a lodger, etc.). Owns the home_renting deck.
         renting: { label: "status.housing.renting", drift: { finances: -10, health: 5 }, driftShown: { finances: "-", health: "+" }, addDecks: ["home_renting"] },
         // Owned homes: the adult housing ladder above renting. Each is BOUGHT
-        // (offered when finances >= 75, cost "---" = keep ~1/3) and gives a
+        // (offered when finances >= 75, cost "//" = keep ~1/3) and gives a
         // permanent, rising vital bonus (health, then spirit, then happiness).
         // Upkeep SCALES UP with the tier and crosses ABOVE the −10 rent for the
         // larger homes, so a bigger house needs a bigger wage to sustain: a

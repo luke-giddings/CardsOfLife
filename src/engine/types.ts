@@ -17,35 +17,38 @@ export const VITAL_KEYS: VitalKey[] = ["finances", "happiness", "health", "spiri
 export const VITAL_MIN = 0;
 export const VITAL_MAX = 100;
 
-// Vital changes are expressed in readable magnitude "steps", not raw numbers,
-// so the player sees a small ("+") vs a large ("++") move rather than muddy
-// in-between values. Tweak the point values here in one place; add more levels
-// as balancing needs them. "+++" is a HUGE one-off swing (~4 turns of a typical
-// +12 wage) — used for the criminal path's rare, random big scores, which have
-// to pay for the long dry spells between them. "++++" is a life-changing sum
-// (a whole vital bar) — the sale of an estate, and the like. "----" is a MORTAL
-// blow: it drops the vital to 0, so the run ends there UNLESS a rescue net catches
-// it (see findRescue) — this is how a sudden catastrophe (a runaway cart, a fever,
-// a factory machine) kills you, routed through the same vital-hit-0 death path as
-// everything else rather than an out-of-band instant kill.
-export type Magnitude = "----" | "---" | "--" | "-" | "+" | "++" | "+++" | "++++";
-// Flat point steps for the fixed magnitudes.
-export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "---">, number> = {
+// Vital changes are readable magnitude "steps", not raw numbers. Two families:
+//  • FLAT steps — a fixed number of points: gains +/++/+++/++++ (+10/+25/+50/+100)
+//    and losses -/--/--- (−10/−25/−40). The everyday vocabulary. ("+++" is a huge
+//    one-off swing, ~4 turns of a typical wage — the criminal path's rare big
+//    scores; "++++" is a life-changing sum, ~a whole bar — the sale of an estate.
+//    "---" is the biggest flat loss — a grievous blow, e.g. a childhood hazard you
+//    weren't prepared for: fatal only if the vital was already low.)
+//  • PROPORTIONAL steps — a fraction of the CURRENT value, for costs that should
+//    scale with what you have (buying up the housing ladder): "/" keeps a half,
+//    "//" keeps a third (loses two-thirds). Written with slashes so they read as
+//    "divide" and are never confused with a flat loss. (A "*" times-family is
+//    reserved for a future proportional GAIN; none exists yet.) Proportional
+//    results floor at 1, so a purchase gated behind a floor can't itself game-over.
+// The PLAYER only ever sees +/− bars (the card preview and status chips render the
+// slash tokens as minus bars); the slashes are purely an authoring convenience.
+export type Magnitude = "//" | "/" | "---" | "--" | "-" | "+" | "++" | "+++" | "++++";
+// Flat point steps ("/" and "//" are proportional — handled in applyMagnitude).
+export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "/" | "//">, number> = {
   "++++": 100,
   "+++": 50,
   "++": 25,
   "+": 10,
   "-": -10,
   "--": -25,
-  "----": -100, // drops any vital (max 100) to 0 — see the "----" note above
+  "---": -40,
 };
-// Apply a magnitude to a value (unclamped). Most are flat steps; "---" is the
-// PROPORTIONAL "big purchase" cost — it keeps ~a third (loses two thirds), used
-// for buying housing (moving out, and the house tiers). Floored at 1 so it can
-// never reach 0 from a positive value — a card gated behind a floor condition
-// can't game-over.
+// Apply a magnitude to a value (unclamped). Flat steps add their points; the
+// proportional slashes keep a fraction of the current value, floored at 1 so they
+// can never reach 0 from a positive value.
 export function applyMagnitude(value: number, mag: Magnitude): number {
-  if (mag === "---") return Math.max(1, Math.round(value / 3));
+  if (mag === "//") return Math.max(1, Math.round(value / 3)); // keep a third
+  if (mag === "/") return Math.max(1, Math.round(value / 2));  // keep a half
   return value + MAGNITUDE_POINTS[mag];
 }
 

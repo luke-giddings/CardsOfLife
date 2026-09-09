@@ -415,11 +415,15 @@ export class Game {
       // one-shot rescue would fire (charity hospital, sell-up, eviction…), show a
       // STRUCK-THROUGH skull — you'd be floored but survive (this once).
       const rescued = lethal && !!findRescue(projected, content, key);
+      // The player only ever sees +/− bars. Flat tokens map their dashes to −; the
+      // proportional slash tokens (a scaling spend) render as minus bars by severity
+      // ("/" ≈ −−, "//" ≈ −−−) rather than showing the authoring slashes.
+      const sym = mag === "//" ? "−−−" : mag === "/" ? "−−" : mag!.split("-").join("−");
       const body = lethal
         ? rescued
           ? `<span class="ep-rescue" title="You'd hit 0 — but a safety net would catch you (once)">🛡</span>`
           : `<span class="dbad ep-end" title="This would be fatal">☠</span>`
-        : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${mag!.split("-").join("−")}</span>`;
+        : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${sym}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
     // A BENEFICIAL path change beyond the vital numbers gets a "special" star —

@@ -58,16 +58,33 @@ Start values are **20 each** (low and even); babyhood builds them up.
 ## 5. Magnitude system
 
 Card vital changes are **not raw numbers** — they use readable magnitude steps,
-so every bar move is a clearly-perceptible size (no muddy +10-vs-+15):
+so every bar move is a clearly-perceptible size (no muddy +10-vs-+15). Two families:
+
+**Flat steps** (a fixed number of points):
 
 | Token | Points |
 |---|---|
-| `+++` | +50 — a **huge one-off swing** (~4 turns of a typical wage). Used for the criminal path's rare, random big scores, which have to pay for the dry spells between them. |
+| `++++` | +100 — a **life-changing sum** (~a whole bar), e.g. the sale of an estate. |
+| `+++` | +50 — a **huge one-off swing** (~4 turns of a typical wage). The criminal path's rare big scores. |
 | `++` | +25 |
 | `+` | +10 |
 | `-` | −10 |
 | `--` | −25 |
-| `---` | **keep ~⅓ (lose two thirds)** — the proportional "big purchase" cost (moving out, buying a house). Self-scaling and floored at 1, so it can't reach 0 from a positive value (a floor-gated card can't game-over). |
+| `---` | −40 — the **biggest flat loss**, a grievous blow (a childhood hazard you weren't ready for): fatal only if the vital was already low. |
+
+**Proportional steps** (a fraction of the *current* value — for costs that scale
+with what you have). Written with **slashes** so they read as "divide" and are
+never confused with a flat loss; floored at 1, so a floor-gated card can't
+game-over:
+
+| Token | Effect |
+|---|---|
+| `/` | keep ~½ (lose half) — *reserved; unused so far* |
+| `//` | keep ~⅓ (lose two thirds) — the "big purchase" cost (moving out, buying a house). |
+
+(A `*` "times" family is reserved for a future proportional **gain**; none exists
+yet.) **The player only ever sees `+`/`−` bars** — the slash tokens render as minus
+bars in the card preview, and status chips use `+`/`−` (`driftShown`) directly.
 
 Point values live in one place (`MAGNITUDE_POINTS`, `types.ts`) — balancing is a
 single table, and more levels can be added later. Relationship
@@ -160,8 +177,9 @@ keeps you alive through childhood hazards.
 **Effects** an outcome can carry: vital magnitudes, set/clear Status, add/remove
 decks, and set/inc Traits. There is no out-of-band "end the run" effect: death is
 ALWAYS a vital hitting 0 (checkGameOver), so it's uniformly caught by the rescue
-nets. A hazard that should be fatal deals the `"----"` **mortal blow** to a vital
-(drops it to 0), which then dies or is netted like any other collapse.
+nets. A hazard that should be dangerous deals the `"---"` **grievous blow** (−40)
+to a vital — fatal only if that vital was already low, which then dies or is netted
+like any other collapse.
 
 **Design rules for options** (see §15).
 
@@ -235,14 +253,17 @@ rest are silent to avoid double interstitials).
 
 Childhood carries real, **earned** risk — never a pure random rug-pull. A hazard
 appears at random, but **survival depends on prior preparation**:
-- **Fever** → survive if `skillVaccinated`, or health-hardy, or you can afford a
-  doctor; else the `"----"` mortal blow (health → 0).
-- **Runaway cart** → survive if `persSporty`, or health-hardy; else the mortal blow.
-- **Factory loom** (workers only) → survive if `persSporty`/hardy; refusing is safe
-  but costs pay; else the mortal blow.
+- **Fever** → survive if `skillVaccinated`, or you can afford a doctor; else the
+  `"---"` grievous blow (−40 health) — fatal only if your health was already low.
+- **Runaway cart** → clean escape if `persSporty` (the leap); else the grievous
+  blow. The "throw yourself aside" dodge is a smaller `"--"` hit from a lower floor.
+- **Factory loom** (workers only) → clean if `persSporty`; refusing is safe but
+  costs pay; else the grievous blow.
 
-Because the fail is now a vital hitting 0 (not a scripted end), the **childhood
-charity-hospital net catches it** just like an ill-health collapse: a child taken
+The blow simply drops health, so the "am I hardy enough?" check *is* the size of the
+hit vs. your current health — no separate health-threshold branch needed. And
+because the fail is a vital hitting 0, the **childhood charity-hospital net catches
+it** just like an ill-health collapse: a child taken
 by the fever, run over, or caught in the loom is carried to the ward (survives once,
 owes the debt), while past 13 — the net gone — the same blow is fatal.
 
@@ -632,7 +653,7 @@ pickpocket / burglar / fence.
 
 ### Houses — a `---` purchase behind a rising gate, then cheap upkeep
 
-Buying a house reuses the existing **`---` (halve current Finances)** magnitude,
+Buying a house reuses the proportional **`//` (keep ~⅓ of current Finances)** magnitude,
 gated behind a **rising Finances threshold**. Each purchase is therefore a huge,
 felt hit (≥50% of your money) but self-scaling (halving always leaves headroom;
 you re-accumulate toward the next gate). The rising gate is the "have I made it
@@ -755,8 +776,8 @@ estate, having lived comfortably, aged 71."* No arithmetic.
   untimed choice card. Not yet decided.)
 - **Prison** (criminal only) — a survivable heavy-drain status, released to the
   illiterate floor; the `rescue` mechanism can make a first petty arrest "prison,
-  then out" rather than fatal. Serious crime could still be fatal — the `"----"`
-  mortal blow (gallows / transportation), caught only if a net applies.
+  then out" rather than fatal. Serious crime could still be fatal — a heavy `"---"`
+  grievous blow (gallows / transportation), caught only if a net applies.
 - **Experience trait** — the per-job year counter that drives promotion.
 - **Cross-run persistence** (own the house on a later run) — **explicitly out of
   scope for now**; the single-run loop closes without it. Possible future
