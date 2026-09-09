@@ -100,7 +100,7 @@ export const EN = {
   "baby_schooling.right.r0": "Long hours in the din for a few coins in the family pot.",
 
   // ---- CHILDHOOD --------------------------------------------------------
-  "child_martialarts.prompt": "Old Tom, a retired prizefighter, offers to teach the local lads to box.",
+  "child_martialarts.prompt": "Old Jack, a retired prizefighter, offers to teach the local lads to box.",
   "child_martialarts.left": "Learn to box",
   "child_martialarts.left.r0": "Fists up, chin down. You learn to handle yourself — for a few coins.",
   "child_martialarts.right": "Keep your head down",
@@ -1409,7 +1409,7 @@ export const IT: Record<StringId, string> = {
   "baby_schooling.right.r0": "Lunghe ore nel frastuono per qualche moneta nel bilancio di famiglia.",
 
   // ---- CHILDHOOD --------------------------------------------------------
-  "child_martialarts.prompt": "Il vecchio Tom, un ex pugile, si offre di insegnare a boxare ai ragazzi del quartiere.",
+  "child_martialarts.prompt": "Il vecchio Jack, un ex pugile, si offre di insegnare a boxare ai ragazzi del quartiere.",
   "child_martialarts.left": "Imparare a boxare",
   "child_martialarts.left.r0": "Pugni alti, mento basso. Impari a difenderti — per qualche moneta.",
   "child_martialarts.right": "Non farti notare",
