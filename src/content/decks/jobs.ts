@@ -323,6 +323,15 @@ export const jobDecks = [
     },
     {
       id: "job_apprentice",
+      // A `priority` deck: while you're apprenticed, the draw focuses on the trade
+      // (bench tasks, then the trial) and other flavour is paused — you're living at
+      // the master's, a focused ~4-year indenture. This is what makes the trial
+      // "come round on its own": without it the single trial card competes with the
+      // whole age/sibling pool and an apprentice could idle for a random decade (or
+      // never qualify). Milestones (turning 25, etc.) still fire; the paused one-shot
+      // cards aren't lost, they resume once you leave. Not heavy-handed — priority
+      // focuses the DRAW, it doesn't force the sit/beg/quit decision.
+      priority: true,
       cards: [
         // THE COURSE: five one-shot bench tasks. Each ticks a year of `experience`
         // (time served) whichever way you choose; only the WORK-HARD (left) option
@@ -377,9 +386,11 @@ export const jobDecks = [
         },
         {
           // THE TRIAL. A plain (filler) card that unlocks at experience >= 3 and
-          // then sits in the draw pool — no milestone forcing needed: the five
-          // bench cards are one-shots, so as they deplete the trial is what's left
-          // to draw, and it comes round on its own. Judged on SKILL, not health:
+          // then sits in the draw pool. Because the deck is `priority` (see below),
+          // the draw is focused on the apprenticeship while it's active, so the five
+          // one-shot bench cards deplete quickly and the trial comes round on its own
+          // within a few years — no milestone forcing needed, and you can't be left
+          // idling as an apprentice for a random decade. Judged on SKILL, not health:
           // work hard on 3 of the five bench tasks (skill >= 3) and your piece passes.
           //   left  Sit the trial → PASS (skill >= 3) → journeyman job +
           //         `journeyman` credential; else FAIL → unemployed, no credential.
