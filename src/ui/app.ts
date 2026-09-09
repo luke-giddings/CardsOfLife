@@ -422,7 +422,6 @@ export class Game {
         : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${mag!.split("-").join("−")}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
-    if (outcome.effects?.endGame) chips += `<span class="ep-v ep-end" title="This choice can end the run">☠</span>`;
     // A BENEFICIAL path change beyond the vital numbers gets a "special" star —
     // so a rewarding choice (seize the apprenticeship, buy the house, get
     // vaccinated) doesn't look weaker than a plain sibling that only moves a stat.
@@ -1200,7 +1199,6 @@ function fmtEffect(e?: Effect): string {
   if (e.addDecks) parts.push(`+deck ${e.addDecks.join(",")}`);
   if (e.removeDecks) parts.push(`−deck ${e.removeDecks.join(",")}`);
   if (e.restoreHousing) parts.push("housing=restore");
-  if (e.endGame) parts.push(`END:${e.endGame}`);
   return parts.join(", ") || "—";
 }
 

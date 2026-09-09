@@ -121,12 +121,14 @@ export const jobDecks = [
           options: {
             left: {
               // Working the machine is a shift like any other — it ticks
-              // experience (except the outcome where it kills you).
+              // experience, unless it maims you: the last outcome is a mortal blow
+              // ("----" health → 0), caught by the childhood charity-hospital net if
+              // you're still a child, fatal once you're grown and past it.
               label: "job_labour_machine.left",
               outcomes: [
                 { if: { traits: { persSporty: { min: 3 } } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { jobExperience: 1 } } },
                 { if: { vitals: { health: { min: 40 } } }, result: "job_labour_machine.left.r1", effects: { vitals: { health: "--", finances: "+" }, incTraits: { jobExperience: 1 } } },
-                { result: "job_labour_machine.left.r2", effects: { endGame: "health" } },
+                { result: "job_labour_machine.left.r2", effects: { vitals: { health: "----" } } },
               ],
             },
             right: { label: "job_labour_machine.right", outcomes: [{ result: "job_labour_machine.right.r0", effects: { vitals: { finances: "-", happiness: "-", health: "-" }, incTraits: { jobExperience: 1, jobStrikes: 1 } } }] },

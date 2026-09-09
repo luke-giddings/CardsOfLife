@@ -61,7 +61,7 @@ export const childhoodDecks = [
               outcomes: [
                 { if: { traits: { skillVaccinated: true } }, result: "child_fever.left.r0", effects: { vitals: { health: "-" } } },
                 { if: { vitals: { health: { min: 30 } } }, result: "child_fever.left.r1", effects: { vitals: { health: "--" } } },
-                { result: "child_fever.left.r2", effects: { endGame: "health" } },
+                { result: "child_fever.left.r2", effects: { vitals: { health: "----" } } },
               ],
             },
             right: {
@@ -69,7 +69,7 @@ export const childhoodDecks = [
               outcomes: [
                 { if: { vitals: { finances: { min: 30 } } }, result: "child_fever.right.r0", effects: { vitals: { finances: "--", health: "-" } } },
                 { if: { vitals: { health: { min: 30 } } }, result: "child_fever.right.r1", effects: { vitals: { health: "--" } } },
-                { result: "child_fever.right.r2", effects: { endGame: "health" } },
+                { result: "child_fever.right.r2", effects: { vitals: { health: "----" } } },
               ],
             },
           },
@@ -85,7 +85,7 @@ export const childhoodDecks = [
               outcomes: [
                 { if: { traits: { persSporty: { min: 3 } } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
                 { if: { vitals: { health: { min: 40 } } }, result: "child_accident.left.r1", effects: { vitals: { health: "--" } } },
-                { result: "child_accident.left.r2", effects: { endGame: "health" } },
+                { result: "child_accident.left.r2", effects: { vitals: { health: "----" } } },
               ],
             },
             right: {
@@ -95,7 +95,7 @@ export const childhoodDecks = [
               label: "child_accident.right",
               outcomes: [
                 { if: { vitals: { health: { min: 30 } } }, result: "child_accident.right.r0", effects: { vitals: { health: "-", happiness: "-" } } },
-                { result: "child_accident.right.r1", effects: { endGame: "health" } },
+                { result: "child_accident.right.r1", effects: { vitals: { health: "----" } } },
               ],
             },
           },

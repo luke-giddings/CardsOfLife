@@ -158,7 +158,10 @@ keeps you alive through childhood hazards.
   `skillMartialArts` branch).
 
 **Effects** an outcome can carry: vital magnitudes, set/clear Status, add/remove
-decks, set/inc Traits, and `endGame` (a scripted ending — used by hazards).
+decks, and set/inc Traits. There is no out-of-band "end the run" effect: death is
+ALWAYS a vital hitting 0 (checkGameOver), so it's uniformly caught by the rescue
+nets. A hazard that should be fatal deals the `"----"` **mortal blow** to a vital
+(drops it to 0), which then dies or is netted like any other collapse.
 
 **Design rules for options** (see §15).
 
@@ -233,10 +236,15 @@ rest are silent to avoid double interstitials).
 Childhood carries real, **earned** risk — never a pure random rug-pull. A hazard
 appears at random, but **survival depends on prior preparation**:
 - **Fever** → survive if `skillVaccinated`, or health-hardy, or you can afford a
-  doctor; else `endGame` (death).
-- **Runaway cart** → survive if `persSporty`, or health-hardy.
+  doctor; else the `"----"` mortal blow (health → 0).
+- **Runaway cart** → survive if `persSporty`, or health-hardy; else the mortal blow.
 - **Factory loom** (workers only) → survive if `persSporty`/hardy; refusing is safe
-  but costs pay.
+  but costs pay; else the mortal blow.
+
+Because the fail is now a vital hitting 0 (not a scripted end), the **childhood
+charity-hospital net catches it** just like an ill-health collapse: a child taken
+by the fever, run over, or caught in the loom is carried to the ward (survives once,
+owes the debt), while past 13 — the net gone — the same blow is fatal.
 
 **The `rescue` mechanism (safety nets).** A first-class engine feature: a card
 can carry `rescue: <vital>`. When that vital would hit 0, instead of a game-over
@@ -281,8 +289,9 @@ high-risk/high-reward gamble (money via drift, but a real chance it kills you);
 
 ## 12. End of run
 
-The run ends when any Vital hits 0, or a hazard's `endGame` fires. The end
-screen names the ending and shows a short recap.
+The run ends when any Vital hits 0 (a hazard's mortal blow drops one there like
+anything else) and no rescue net catches it. The end screen names the ending
+(by the vital that gave out) and shows a short recap.
 
 **Reaching 18 is no longer an ending** — it's a **coming-of-age transition**
 (`child_adult` milestone): it hands off the `childhood` deck and adds the
@@ -746,8 +755,8 @@ estate, having lived comfortably, aged 71."* No arithmetic.
   untimed choice card. Not yet decided.)
 - **Prison** (criminal only) — a survivable heavy-drain status, released to the
   illiterate floor; the `rescue` mechanism can make a first petty arrest "prison,
-  then out" rather than fatal. Serious crime could still `endGame` (gallows /
-  transportation).
+  then out" rather than fatal. Serious crime could still be fatal — the `"----"`
+  mortal blow (gallows / transportation), caught only if a net applies.
 - **Experience trait** — the per-job year counter that drives promotion.
 - **Cross-run persistence** (own the house on a later run) — **explicitly out of
   scope for now**; the single-run loop closes without it. Possible future

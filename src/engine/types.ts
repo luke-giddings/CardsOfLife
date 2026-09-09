@@ -23,8 +23,12 @@ export const VITAL_MAX = 100;
 // as balancing needs them. "+++" is a HUGE one-off swing (~4 turns of a typical
 // +12 wage) — used for the criminal path's rare, random big scores, which have
 // to pay for the long dry spells between them. "++++" is a life-changing sum
-// (a whole vital bar) — the sale of an estate, and the like.
-export type Magnitude = "---" | "--" | "-" | "+" | "++" | "+++" | "++++";
+// (a whole vital bar) — the sale of an estate, and the like. "----" is a MORTAL
+// blow: it drops the vital to 0, so the run ends there UNLESS a rescue net catches
+// it (see findRescue) — this is how a sudden catastrophe (a runaway cart, a fever,
+// a factory machine) kills you, routed through the same vital-hit-0 death path as
+// everything else rather than an out-of-band instant kill.
+export type Magnitude = "----" | "---" | "--" | "-" | "+" | "++" | "+++" | "++++";
 // Flat point steps for the fixed magnitudes.
 export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "---">, number> = {
   "++++": 100,
@@ -33,6 +37,7 @@ export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "---">, number> = {
   "+": 10,
   "-": -10,
   "--": -25,
+  "----": -100, // drops any vital (max 100) to 0 — see the "----" note above
 };
 // Apply a magnitude to a value (unclamped). Most are flat steps; "---" is the
 // PROPORTIONAL "big purchase" cost — it keeps ~a third (loses two thirds), used
@@ -230,7 +235,6 @@ export interface Effect {
   // they still earn the star (skillVaccinated, persSporty, …).
   setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
-  endGame?: string; // ends the run with this ending id (see ENDINGS)
   // Record a MEMORABLE life event for the end-of-run recap: pushes { age, id } to
   // state.log when this outcome fires. Use for TRANSIENT moments the final state
   // won't show (went to the workhouse, ran away, moved out, a promotion) — durable

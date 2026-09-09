@@ -285,10 +285,9 @@ export function applyEffect(state: GameState, effect: Effect, content: Content):
     // age+1, so state.age is the age shown on the card being answered.
     (state.log ??= []).push({ age: state.age, id: effect.remember });
   }
-  if (effect.endGame) {
-    state.over = true;
-    state.endReason = effect.endGame;
-  }
+  // (No out-of-band "end the game" effect: death is always a vital hitting 0,
+  // handled uniformly by checkGameOver + the rescue nets. A card that should be
+  // fatal deals the "----" mortal blow to a vital instead — see applyMagnitude.)
 }
 
 // Sum of every active status state's per-turn drift.
