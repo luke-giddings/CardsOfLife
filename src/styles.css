@@ -151,6 +151,12 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  left: 50%;
+  /* keep the label on one line, centred, and never wide enough to run into the
+     corners where the vertical side-labels sit */
+  white-space: nowrap;
+  max-width: calc(100% - 108px);
+  text-align: center;
 }
 .edge-up { flex-direction: column; }
 .edge-down { flex-direction: column-reverse; }
@@ -184,8 +190,9 @@ body {
   line-height: 1.5;
   color: var(--muted);
 }
+/* With debug on, sit the card at the top and let the page scroll down to the
+   panel — rather than shrinking the card (which cramped the labels/prompt). */
 .debug-on .stage { justify-content: flex-start; }
-.debug-on .flip { height: min(38vh, 320px); }
 .dbg-sec { margin-bottom: 10px; }
 .dbg-sec > summary {
   cursor: pointer;
@@ -425,17 +432,23 @@ body {
   justify-content: center;
   padding: 18px 0;
 }
+/* The end-of-run and unlock screens can be tall (a long recap) — top-align them
+   so nothing is clipped above the fold and the page scrolls cleanly to the end. */
+.stage:has(.end),
+.stage:has(.unlock-card) { justify-content: flex-start; }
 
 .scene {
   perspective: 1300px;
   position: relative;
-  touch-action: none;
+  /* NB: no touch-action:none here — only the swipeable card FACE (.front/.flip)
+     locks touch. Leaving the scene/holder scrollable means the page can still be
+     scrolled from around the card, and non-card screens (the end/unlock cards,
+     which live in the scene) scroll normally so the debug panel below is reachable. */
 }
 
 .holder {
   transition: transform 0.32s ease, opacity 0.32s ease;
   will-change: transform, opacity;
-  touch-action: none;
 }
 
 .flip {
@@ -482,23 +495,31 @@ body {
   margin-bottom: 16px;
 }
 .prompt {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   line-height: 1.42;
   font-weight: 600;
   margin: 0;
+  /* Reserve gutters for the edge labels so the prompt can never overlap them:
+     top/bottom clear the up/down labels (and their easy-mode vital previews),
+     left/right clear the vertical side labels (up to two wrapped columns). */
+  padding: 40px 22px;
   text-wrap: balance;
   white-space: pre-line;
   flex: 1 1 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .result {
-  font-size: 1.28rem;
+  font-size: 1.24rem;
   line-height: 1.5;
   margin: 0;
   flex: 1 1 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .tap-cue {
   margin-top: 16px;
@@ -511,7 +532,7 @@ body {
 /* choice labels along the edges — big and bold: the key thing to read */
 .edge {
   position: absolute;
-  font-size: 1.18rem;
+  font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: 0.01em;
   color: var(--muted);
