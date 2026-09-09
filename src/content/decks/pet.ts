@@ -26,29 +26,31 @@ export const petDecks = [
           kind: "one_time",
           prompt: "pet_cat_play.prompt",
           options: {
-            left: { label: "pet_cat_play.left", outcomes: [{ result: "pet_cat_play.left.r0", effects: { vitals: { happiness: "+", spirit: "+" }, incTraits: { petCatLove: 1 } } }] },
+            left: { label: "pet_cat_play.left", outcomes: [{ result: "pet_cat_play.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { petCatLove: 1 } } }] },
             right: { label: "pet_cat_play.right", outcomes: [{ result: "pet_cat_play.right.r0", effects: { vitals: { finances: "+" }, incTraits: { petCatLove: -1 } } }] },
           },
         },
         {
-          // Pet or working animal: dote on your little hunter (happiness/spirit) or
-          // put it to earning its keep as a ratter (coin, but less of a companion).
+          // Pet or working animal: dote on your little hunter (happiness) or put it
+          // to earning its keep as a ratter (coin, but less of a companion).
           id: "pet_cat_mouse",
           kind: "one_time",
           prompt: "pet_cat_mouse.prompt",
           options: {
-            left: { label: "pet_cat_mouse.left", outcomes: [{ result: "pet_cat_mouse.left.r0", effects: { vitals: { happiness: "+", spirit: "+" } } }] },
+            left: { label: "pet_cat_mouse.left", outcomes: [{ result: "pet_cat_mouse.left.r0", effects: { vitals: { happiness: "+" } } }] },
             right: { label: "pet_cat_mouse.right", outcomes: [{ result: "pet_cat_mouse.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
           },
         },
         {
-          // The warm comfort of a cat on your lap — or the coin lost when you shoo
-          // it off to get back to work.
+          // A cat on your lap by the fire: an even mirror trade — keep it there for
+          // the comfort (happiness) at the cost of the hour's earnings (finances−),
+          // or shoo it off to get back to work (coin) and lose the cosy moment and a
+          // little of the bond.
           id: "pet_cat_lap",
           kind: "one_time",
           prompt: "pet_cat_lap.prompt",
           options: {
-            left: { label: "pet_cat_lap.left", outcomes: [{ result: "pet_cat_lap.left.r0", effects: { vitals: { happiness: "+", spirit: "+" }, incTraits: { petCatLove: 1 } } }] },
+            left: { label: "pet_cat_lap.left", outcomes: [{ result: "pet_cat_lap.left.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { petCatLove: 1 } } }] },
             right: { label: "pet_cat_lap.right", outcomes: [{ result: "pet_cat_lap.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { petCatLove: -1 } } }] },
           },
         },
@@ -74,8 +76,8 @@ export const petDecks = [
           conditions: { traits: { petCatLove: { max: -1 } } },
           prompt: "pet_cat_runaway.prompt",
           options: {
-            left: { label: "pet_cat_runaway.left", outcomes: [{ result: "pet_cat_runaway.left.r0", effects: { vitals: { happiness: "-" }, setStatus: { pet: "none" } } }] },
-            right: { label: "pet_cat_runaway.right", outcomes: [{ result: "pet_cat_runaway.right.r0", effects: { vitals: { happiness: "-", health: "-", spirit: "+" }, setStatus: { pet: "none" } } }] },
+            left: { label: "pet_cat_runaway.left", outcomes: [{ result: "pet_cat_runaway.left.r0", effects: { vitals: { happiness: "--" }, setStatus: { pet: "none" } } }] },
+            right: { label: "pet_cat_runaway.right", outcomes: [{ result: "pet_cat_runaway.right.r0", effects: { vitals: { happiness: "-", health: "-" }, setStatus: { pet: "none" } } }] },
           },
         },
         {
@@ -137,25 +139,27 @@ export const petDecks = [
           },
         },
         {
-          // The dog earns its keep. Heed its warning (up in the night — spirit +
-          // happiness, the house kept safe) or hush it for a full night's sleep
-          // (health, but the coal-store's robbed by morning). A genuine trade.
+          // The dog earns its keep — an even trade. Heed its warning (up in the
+          // night: the satisfaction of a house kept safe, spirit, at the cost of the
+          // lost sleep, health−) or hush it for a full night's rest (health) and find
+          // the coal-store robbed by morning (finances−).
           id: "pet_dog_guard",
           kind: "one_time",
           prompt: "pet_dog_guard.prompt",
           options: {
-            left: { label: "pet_dog_guard.left", outcomes: [{ result: "pet_dog_guard.left.r0", effects: { vitals: { spirit: "+", happiness: "+" } } }] },
+            left: { label: "pet_dog_guard.left", outcomes: [{ result: "pet_dog_guard.left.r0", effects: { vitals: { spirit: "+", health: "-" } } }] },
             right: { label: "pet_dog_guard.right", outcomes: [{ result: "pet_dog_guard.right.r0", effects: { vitals: { health: "+", finances: "-" } } }] },
           },
         },
         {
-          // Loyal comfort after a hard day — the dog's spirit gift, or the coin
-          // saved by shooing it back to its corner.
+          // Loyal comfort after a hard day: an even mirror trade — sit with it (the
+          // dog's spirit gift) at the cost of the evening's work (finances−), or shoo
+          // it back to its corner for the coin, losing the comfort and a little bond.
           id: "pet_dog_companion",
           kind: "one_time",
           prompt: "pet_dog_companion.prompt",
           options: {
-            left: { label: "pet_dog_companion.left", outcomes: [{ result: "pet_dog_companion.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, incTraits: { petDogLove: 1 } } }] },
+            left: { label: "pet_dog_companion.left", outcomes: [{ result: "pet_dog_companion.left.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { petDogLove: 1 } } }] },
             right: { label: "pet_dog_companion.right", outcomes: [{ result: "pet_dog_companion.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { petDogLove: -1 } } }] },
           },
         },
@@ -181,8 +185,8 @@ export const petDecks = [
           conditions: { traits: { petDogLove: { max: -1 } } },
           prompt: "pet_dog_runaway.prompt",
           options: {
-            left: { label: "pet_dog_runaway.left", outcomes: [{ result: "pet_dog_runaway.left.r0", effects: { vitals: { happiness: "-", spirit: "-" }, setStatus: { pet: "none" } } }] },
-            right: { label: "pet_dog_runaway.right", outcomes: [{ result: "pet_dog_runaway.right.r0", effects: { vitals: { happiness: "-", health: "-", spirit: "+" }, setStatus: { pet: "none" } } }] },
+            left: { label: "pet_dog_runaway.left", outcomes: [{ result: "pet_dog_runaway.left.r0", effects: { vitals: { spirit: "--" }, setStatus: { pet: "none" } } }] },
+            right: { label: "pet_dog_runaway.right", outcomes: [{ result: "pet_dog_runaway.right.r0", effects: { vitals: { spirit: "-", health: "-" }, setStatus: { pet: "none" } } }] },
           },
         },
         {
