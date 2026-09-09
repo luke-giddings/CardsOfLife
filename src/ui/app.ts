@@ -583,8 +583,22 @@ export class Game {
       : id.startsWith("rel_") || id === "sibling" ? "rel"
       : id.startsWith("pet_") ? "pet"
       : "misc";
+    // How many cards in a deck could still be drawn (not exhausted) — regardless of
+    // whether they're eligible THIS turn. Filler is inexhaustible (∞); one_time /
+    // milestone count copies left.
+    const deckRemaining = (id: string): string => {
+      const deck = content.decks.find((d) => d.id === id);
+      if (!deck) return "0";
+      let finite = 0;
+      let hasFiller = false;
+      for (const c of deck.cards) {
+        if (c.kind === "filler") { hasFiller = true; continue; }
+        if ((this.state.usedCards[c.id] ?? 0) < (c.copies ?? 1)) finite++;
+      }
+      return hasFiller ? `${finite}+` : `${finite}`;
+    };
     const deckBtn = (id: string): string =>
-      `<button class="dbg-deck ${this.state.activeDecks.includes(id) ? "on" : ""}" data-deck="${id}">${id}</button>`;
+      `<button class="dbg-deck ${this.state.activeDecks.includes(id) ? "on" : ""}" data-deck="${id}">${id} (${deckRemaining(id)})</button>`;
     const decksByGroup = new Map<string, string[]>();
     for (const dk of content.decks) {
       const g = deckGroupOf(dk.id);
@@ -658,7 +672,7 @@ export class Game {
       sec("traits", "Traits — tap to toggle", traitHtml) +
       sec("decks", "Decks — tap to add / remove", deckCtl) +
       sec("milestones", "Skip to milestone", `<div class="dbg-decks">${milestoneCtl}</div>`) +
-      sec("pool", `Draw pool — age ${this.state.age} · tap a card to inspect`, `<div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`) +
+      sec("pool", `Draw pool — ${pool.length} card${pool.length === 1 ? "" : "s"} · tap a card to inspect`, `<div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`) +
       sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail) +
       sec("history", `History — tap to rewind (${this.history.length})`, `<div class="dbg-list">${histRows || "<div>(nothing played yet)</div>"}</div>`);
   }
