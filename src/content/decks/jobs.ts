@@ -206,7 +206,9 @@ export const jobDecks = [
           conditions: { ageMin: 13, ageMax: 18, vitals: { spirit: { min: 70 } } },
           prompt: "job_labour_apprenticeship.prompt",
           options: {
-            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
+            // Taking the break is its own reward (the ★ path change) — no vital
+            // bonus on top. The years of graft to qualify are the price you pay.
+            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { setStatus: { job: "apprentice", housing: "apprentice" } } }] },
             right: { label: "job_labour_apprenticeship.right", outcomes: [{ result: "job_labour_apprenticeship.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
           },
         },
@@ -219,7 +221,7 @@ export const jobDecks = [
           conditions: { ageMin: 13, ageMax: 18, vitals: { happiness: { min: 70 } } },
           prompt: "job_labour_apprenticeship_favour.prompt",
           options: {
-            left: { label: "job_labour_apprenticeship_favour.left", outcomes: [{ result: "job_labour_apprenticeship_favour.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { job: "apprentice", housing: "apprentice" } } }] },
+            left: { label: "job_labour_apprenticeship_favour.left", outcomes: [{ result: "job_labour_apprenticeship_favour.left.r0", effects: { setStatus: { job: "apprentice", housing: "apprentice" } } }] },
             right: { label: "job_labour_apprenticeship_favour.right", outcomes: [{ result: "job_labour_apprenticeship_favour.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
           },
         },
@@ -364,7 +366,7 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_tools.prompt",
           options: {
-            left: { label: "job_apprentice_tools.left", outcomes: [{ result: "job_apprentice_tools.left.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { jobExperience: 1, jobSkill: 1 } } }] },
+            left: { label: "job_apprentice_tools.left", outcomes: [{ result: "job_apprentice_tools.left.r0", effects: { vitals: { happiness: "-", health: "-" }, incTraits: { jobExperience: 1, jobSkill: 1 } } }] },
             right: { label: "job_apprentice_tools.right", outcomes: [{ result: "job_apprentice_tools.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { jobExperience: 1 } } }] },
           },
         },
@@ -374,7 +376,7 @@ export const jobDecks = [
           prompt: "job_apprentice_market.prompt",
           options: {
             left: { label: "job_apprentice_market.left", outcomes: [{ result: "job_apprentice_market.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { jobExperience: 1, jobSkill: 1 } } }] },
-            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
           },
         },
         {
@@ -382,7 +384,7 @@ export const jobDecks = [
           kind: "one_time",
           prompt: "job_apprentice_lesson.prompt",
           options: {
-            left: { label: "job_apprentice_lesson.left", outcomes: [{ result: "job_apprentice_lesson.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { jobExperience: 1, jobSkill: 1 } } }] },
+            left: { label: "job_apprentice_lesson.left", outcomes: [{ result: "job_apprentice_lesson.left.r0", effects: { vitals: { spirit: "-", happiness: "-" }, incTraits: { jobExperience: 1, jobSkill: 1 } } }] },
             right: { label: "job_apprentice_lesson.right", outcomes: [{ result: "job_apprentice_lesson.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { jobExperience: 1 } } }] },
           },
         },
@@ -420,7 +422,7 @@ export const jobDecks = [
               ],
             },
             right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
-            down: { label: "job_apprentice_qualify.down", if: { traits: { jobExperience: { max: 4 }, jobSkill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0" }] },
+            down: { label: "job_apprentice_qualify.down", if: { traits: { jobExperience: { max: 4 }, jobSkill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
           },
         },
         {

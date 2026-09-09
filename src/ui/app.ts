@@ -633,6 +633,14 @@ export class Game {
       for (const dir of DIRECTIONS) {
         const opt = sel.options[dir];
         if (!opt) continue;
+        // Option-level `if` decides whether the whole swipe is even OFFERED this
+        // turn (unlike the outcome-level `if`s below, which pick between results
+        // once you've swiped). Surface it so a debug reader can see WHY a choice
+        // like "Beg for more time" has vanished, not just guess.
+        const shown = meets(opt.if, this.state, content);
+        const vis = opt.if
+          ? `<span class="dbg-optif ${shown ? "match" : "hidden"}">${shown ? "shown" : "HIDDEN"} if ${fmtCond(opt.if)}</span>`
+          : "";
         let outs = "";
         for (const o of opt.outcomes) {
           const matches = meets(o.if, this.state, content);
@@ -641,7 +649,7 @@ export class Game {
             <span class="dbg-cond">${cond}</span> → ${fmtEffect(o.effects)}
             <span class="dbg-res">“${t(o.result)}”</span></div>`;
         }
-        opts += `<div class="dbg-choice"><b>${dir} · ${t(opt.label)}</b>${outs}</div>`;
+        opts += `<div class="dbg-choice ${opt.if && !shown ? "opt-hidden" : ""}"><b>${dir} · ${t(opt.label)}</b> ${vis}${outs}</div>`;
       }
       detail = `<div class="dbg-prompt">${t(sel.prompt).replace(/\n+/g, " ")}</div>${opts}`;
     }

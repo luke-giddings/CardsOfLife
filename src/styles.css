@@ -314,6 +314,10 @@ body {
 .dbg-out.match { opacity: 1; }
 .dbg-out .dbg-cond { color: var(--gold); }
 .dbg-out .dbg-res { color: var(--faint); }
+.dbg-optif { font-size: 0.85em; }
+.dbg-optif.match { color: var(--faint); }
+.dbg-optif.hidden { color: var(--bad, #c0392b); font-weight: 700; }
+.dbg-choice.opt-hidden b { opacity: 0.55; }
 .age-num {
   font-size: 1.6rem;
   font-weight: 800;
