@@ -42,7 +42,7 @@ export const babyDecks = [
           prompt: "baby_uncle.prompt",
           options: {
             left: { label: "baby_uncle.left", outcomes: [{ result: "baby_uncle.left.r0", effects: { vitals: { happiness: "++" } } }] },
-            right: { label: "baby_uncle.right", outcomes: [{ result: "baby_uncle.right.r0", effects: { vitals: { finances: "+" }, setTraits: { eduUniFund: true } } }] },
+            right: { label: "baby_uncle.right", outcomes: [{ result: "baby_uncle.right.r0", effects: { setTraits: { eduUniFund: true } } }] },
             down: { label: "baby_uncle.down", outcomes: [{ result: "baby_uncle.down.r0", effects: { vitals: { health: "++" } } }] },
           },
         },
