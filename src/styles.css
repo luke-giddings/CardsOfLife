@@ -543,6 +543,10 @@ body {
 .edge-right {
   top: 50%;
   writing-mode: vertical-rl;
+  /* one column — never wrap the vertical side labels; a slightly smaller face
+     keeps even a long label on a single line within the card height */
+  white-space: nowrap;
+  font-size: 0.95rem;
 }
 .edge-left { left: 10px; transform: translateY(-50%) rotate(180deg); }
 .edge-right { right: 10px; transform: translateY(-50%); }
