@@ -250,6 +250,17 @@ function changeStatus(
   if (kind === "job" && value === "apprentice" && previous !== "apprentice") {
     state.traits.jobSkill = 0;
   }
+  // You cannot still be a CHILD labourer once you are no longer a child: coming of
+  // age moves you onto the adult unskilled rung (the factory), however little time
+  // you had served. The experience-gated job_labour_factory card is the EARLY route
+  // onto that rung, not the only one — turning eighteen is the other. Also stamps
+  // jobReachedFactory, or a later spell of unemployment could not offer the factory
+  // back (that option is gated on having been there). Recursing is safe: the nested
+  // call's kind is `job`, not `age`.
+  if (kind === "age" && value === "young_adult" && state.statuses.job === "child_labourer") {
+    changeStatus(state, "job", "factory", content);
+    state.traits.jobReachedFactory = true;
+  }
   // Gaol SUSPENDS your way of living — nobody keeps a lavish (or even a frugal)
   // household from a cell. Going in stows the lifestyle and drops you to the
   // neutral `default` (no drift, hidden chip); coming out restores exactly what

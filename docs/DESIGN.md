@@ -658,6 +658,16 @@ How the gates realise this:
 > physician → consulting physician (the highest pay in the game). Your credential
 > decides which ladder you enter; you climb within it by experience.
 
+**Coming of age ends child labour.** The age-18 milestone moves a `child_labourer`
+onto the adult unskilled rung (`factory`) whatever their experience — the
+experience-gated `job_labour_factory` card is the *early* route there, turning
+eighteen is the other — so nobody is still a *child* labourer at 25. It lives in
+`changeStatus` (so both swipes of the milestone, and any future route into
+young adulthood, get it) and is guarded on the job actually being
+`child_labourer`, so it never overwrites a job you already climbed to. It also
+stamps `jobReachedFactory`, or a later spell of unemployment could not offer the
+factory back.
+
 **Criminal path plays differently — no wage, big scores (built, tier 1).** Unlike
 the wage-drift paths, the criminal tier has **0 drift**: no passive income at all.
 Money comes *only* from pulling **"score" cards** in the deck — each a big one-off

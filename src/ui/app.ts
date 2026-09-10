@@ -66,6 +66,19 @@ const STATUS_LABEL: Record<StatusKind, StringId> = {
   pet: "statuskind.pet",
 };
 
+// Debug stepper size per numeric trait: how far the −/+ buttons move it. Derived
+// from what the CONTENT actually does to each trait — ages, experience, skill,
+// strikes, pet love, criminality and years all move a point at a time, so 1 is
+// the sane default. Only the relationship meters swing in big increments (love
+// ±2..30, grit/distance ±2..10), where a step of 1 is tedious to drive to a
+// threshold. Anything not listed steps by 1.
+const TRAIT_STEP: Record<string, number> = {
+  relBrotherLove: 10,
+  relSisterLove: 10,
+  relBrotherGrit: 5,
+  relBrotherDistance: 5,
+};
+
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point
 const MAX_TILT = 70; // the tilt asymptotes toward this as you drag to the edge; release flips the rest
 const TILT_EASE = 55; // drag distance (px) at which tilt reaches half of MAX_TILT — higher = gentler
@@ -519,9 +532,7 @@ export class Game {
     // to toggle.
     const traitChip = ([k, v]: [string, unknown]): string => {
       if (typeof v === "number") {
-        // Experience counts single years (thresholds ~3–4); the relationship
-        // counters move in larger steps — so scale the debug step per trait.
-        const step = k === "jobExperience" ? 1 : 10;
+        const step = TRAIT_STEP[k] ?? 1;
         return `<span class="dbg-trait ${v !== 0 ? "set" : ""}">${k}=${v}
           <button data-trait="${k}" data-tdelta="-${step}">−</button>
           <button data-trait="${k}" data-tdelta="${step}">+</button></span>`;
