@@ -377,6 +377,20 @@ export class Game {
     else this.beginTurn();
   }
 
+  // Values a RESULT string may interpolate with {braces}. Read AFTER the choice
+  // has been applied, so e.g. `sentence` is the term you were just given, not
+  // the heat you carried in. Deliberately a tiny, explicit set: `tf` leaves any
+  // placeholder it does not recognise alone, so a typo renders literally rather
+  // than throwing, and every string without braces is untouched.
+  private resultVars(): Record<string, string | number> {
+    const years = this.state.traits.criminality;
+    return {
+      // Pre-formatted so each language handles its own plural (and the arrest
+      // cards can read naturally: "hands you down a single year" / "7 years").
+      sentence: years === 1 ? t("ui.termYear") : tf("ui.termYears", { n: years }),
+    };
+  }
+
   // --- choice previews (hidden in "hard mode") -------------------------------------------------------------
 
   // The vital-symbol deltas of the outcome that would actually fire for a
@@ -648,7 +662,7 @@ export class Game {
           const cond = o.if ? `if ${fmtCond(o.if)}` : "default";
           outs += `<div class="dbg-out ${matches ? "match" : ""}">
             <span class="dbg-cond">${cond}</span> → ${fmtEffect(o.effects)}
-            <span class="dbg-res">“${t(o.result)}”</span></div>`;
+            <span class="dbg-res">“${tf(o.result, this.resultVars())}”</span></div>`;
         }
         opts += `<div class="dbg-choice ${opt.if && !shown ? "opt-hidden" : ""}"><b>${dir} · ${t(opt.label)}</b> ${vis}${outs}</div>`;
       }
@@ -882,7 +896,7 @@ export class Game {
     const flip = this.flip;
     const back = flip.querySelector<HTMLElement>(".back .result")!;
     const backFace = flip.querySelector<HTMLElement>(".back")!;
-    back.textContent = t(res.result as StringId);
+    back.textContent = tf(res.result as StringId, this.resultVars());
     backFace.style.transform =
       dir === "up" || dir === "down" ? "rotateX(180deg)" : "rotateY(180deg)";
 

@@ -836,7 +836,7 @@ export const EN = {
   "job_criminal_nicked.left": "Bolt and run",
   "job_criminal_nicked.left.r0": "You drop the loot and leg it — lungs burning, purse light, bruised from the chase, but free and back on the streets tomorrow.",
   "job_criminal_nicked.right": "Come quietly",
-  "job_criminal_nicked.right.r0": "No mercy this time. The magistrate hands you a sentence, and the gaol gate clangs shut behind you.",
+  "job_criminal_nicked.right.r0": "No mercy this time. The magistrate sends you down for {sentence}, and the gaol gate clangs shut behind you.",
   "crime_giveup.opt": "Give up the life of crime",
   "crime_giveup.r0": "You walk away from all of it — no more looking over your shoulder, no more blood money. Penniless and unemployed, but a great weight lifts off your soul.",
 
@@ -910,7 +910,7 @@ export const EN = {
   "job_burglar_nicked.left": "Bribe your way out",
   "job_burglar_nicked.left.r0": "A bribe to the right hand and the charge quietly vanishes. You're back on the job — but it's cost you a small fortune.",
   "job_burglar_nicked.right": "Take the sentence",
-  "job_burglar_nicked.right.r0": "The judge hands down his sentence. The gaol gate swings shut behind you.",
+  "job_burglar_nicked.right.r0": "The judge sends you down for {sentence}. The gaol gate swings shut behind you.",
   "deck.prison.title": "Gaol",
   "deck.prison.blurb": "The gate clangs shut behind you. Four walls, a hard bed, and nothing to do but serve your time.",
   "status.job.convict": "Convict",
@@ -1119,7 +1119,7 @@ export const EN = {
   "job_fence_raid.left": "Bribe your way clear",
   "job_fence_raid.left.r0": "A fat purse to the inspector and you're merely 'a witness'. The receiving-house stays open — but that purse is gone for good.",
   "job_fence_raid.right": "Take the fall",
-  "job_fence_raid.right.r0": "They make an example of you. The receiving-house is shut up and the gaol gate closes behind you.",
+  "job_fence_raid.right.r0": "They make an example of you: {sentence} for receiving. The house is shut up and the gaol gate closes behind you.",
 
   // ---- BROTHER: Tom (rel_bro story arc) ---------------------------------
   "rel_bro_play.prompt": "Tom trails after you, desperate to be let in on your games.",
@@ -1322,6 +1322,8 @@ export const EN = {
   "ui.tapBegin": "Tap to begin",
   "ui.newChapter": "A new chapter",
   "ui.reachedYears": "You reached <b>{n}</b> years.",
+  "ui.termYear": "a single year",
+  "ui.termYears": "{n} years",
   "ui.newLife": "New life",
   "ui.bornBoy": "Born a boy",
   "ui.bornGirl": "Born a girl",
@@ -2175,7 +2177,7 @@ export const IT: Record<StringId, string> = {
   "job_criminal_nicked.left": "Scappare di corsa",
   "job_criminal_nicked.left.r0": "Molli il bottino e scappi — i polmoni in fiamme, il borsello leggero, pesto dalla fuga, ma libero e di nuovo in strada domani.",
   "job_criminal_nicked.right": "Arrenderti",
-  "job_criminal_nicked.right.r0": "Nessuna pietà stavolta. Il giudice ti condanna, e il cancello della prigione si chiude con un fragore alle tue spalle.",
+  "job_criminal_nicked.right.r0": "Nessuna pietà stavolta. Il giudice ti condanna a {sentence}, e il cancello della prigione si chiude con un fragore alle tue spalle.",
   "crime_giveup.opt": "Abbandonare la vita criminale",
   "crime_giveup.r0": "Lasci tutto alle spalle — niente più sguardi da sopra la spalla, niente più denaro sporco. Al verde e senza lavoro, ma un grande peso ti si toglie dall'anima.",
 
@@ -2249,7 +2251,7 @@ export const IT: Record<StringId, string> = {
   "job_burglar_nicked.left": "Corrompere per uscirne",
   "job_burglar_nicked.left.r0": "Una bustarella alla mano giusta e l'accusa svanisce in silenzio. Torni al lavoro — ma ti è costata un piccolo patrimonio.",
   "job_burglar_nicked.right": "Accettare la condanna",
-  "job_burglar_nicked.right.r0": "Il giudice emette la sua condanna. Il cancello della prigione si chiude alle tue spalle.",
+  "job_burglar_nicked.right.r0": "Il giudice ti condanna a {sentence}. Il cancello della prigione si chiude alle tue spalle.",
   "deck.prison.title": "Prigione",
   "deck.prison.blurb": "Il cancello si chiude alle tue spalle con un fragore. Quattro mura, un letto duro, e nient'altro da fare che scontare la pena.",
   "status.job.convict": "Detenuto",
@@ -2458,7 +2460,7 @@ export const IT: Record<StringId, string> = {
   "job_fence_raid.left": "Comprarti la libertà",
   "job_fence_raid.left.r0": "Una borsa piena all'ispettore e sei solo 'un testimone'. La ricettazione resta aperta — ma quella borsa è persa per sempre.",
   "job_fence_raid.right": "Prenderti la colpa",
-  "job_fence_raid.right.r0": "Fanno di te un esempio. La ricettazione viene chiusa e il cancello della prigione si chiude alle tue spalle.",
+  "job_fence_raid.right.r0": "Fanno di te un esempio: {sentence} per ricettazione. Il locale viene chiuso e il cancello della prigione si chiude alle tue spalle.",
 
   // ---- BROTHER: Tom (rel_bro story arc) ---------------------------------
   "rel_bro_play.prompt": "Tom ti trotta dietro, morto dalla voglia di essere ammesso ai tuoi giochi.",
@@ -2661,6 +2663,8 @@ export const IT: Record<StringId, string> = {
   "ui.tapBegin": "Tocca per iniziare",
   "ui.newChapter": "Un nuovo capitolo",
   "ui.reachedYears": "Sei arrivato a <b>{n}</b> anni.",
+  "ui.termYear": "un solo anno",
+  "ui.termYears": "{n} anni",
   "ui.newLife": "Nuova vita",
   "ui.bornBoy": "Nato maschio",
   "ui.bornGirl": "Nata femmina",

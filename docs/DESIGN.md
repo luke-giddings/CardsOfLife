@@ -684,7 +684,11 @@ you can leave the life but can't dabble back into it.
 joining the gang) ticks a **`criminality`** counter — your accumulated heat —
 and it scales with the TIER of the crime: pickpocket **+1**, burglar **+2**,
 fence **+3**. Climbing the criminal ladder therefore builds heat two or three
-times faster per job, so the big earners draw the long sentences. The
+times faster per job, so the big earners draw the long sentences. The arrest
+results **name the term** ("sends you down for 5 years"): result strings are
+rendered through `tf` with a small set of live state values (see `resultVars`),
+so any result can interpolate `{braces}` — `{sentence}` is pre-formatted per
+language so the singular reads "a single year", not "1 years". The
 **arrest** cards — one per criminal tier (pickpocket "nicked", burglar "nicked",
 fence "raid") — then offer the same two roads: *evade* ("bolt and run" / "bribe your
 way out" / "bribe your way clear") keeps you in the trade at a heavier cost —
