@@ -488,7 +488,7 @@ export class Game {
         <div class="dbg-line">
           <span class="dbg-mark">${mark}</span>
           <span class="dbg-id">${c.id}</span>
-          <span class="dbg-kind">${c.kind}</span>
+          <span class="dbg-kind">${c.kind}${c.weight && c.weight !== 1 ? ` ×${c.weight}` : ""}</span>
           <button class="dbg-draw" data-card="${c.id}" data-action="force" title="Force this card next">draw ▶</button>
         </div>
         ${note ? `<div class="dbg-note">needs ${note}</div>` : ""}

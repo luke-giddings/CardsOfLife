@@ -454,6 +454,10 @@ export const jobDecks = [
           // between them. Backing off gains nothing but a clear conscience.
           id: "job_criminal_job",
           kind: "filler",
+          // The score IS the wage (pickpocket has no drift income), so it must
+          // surface often enough to live on despite competing with a dozen
+          // age/home/sibling cards — see Card.weight.
+          weight: 3,
           prompt: "job_criminal_job.prompt",
           options: {
             left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
@@ -465,6 +469,7 @@ export const jobDecks = [
           // heavier spirit cost; walking away leaves you empty-handed but calm.
           id: "job_criminal_score",
           kind: "filler",
+          weight: 3,
           prompt: "job_criminal_score.prompt",
           options: {
             left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { jobExperience: 1 } } }] },
@@ -475,6 +480,10 @@ export const jobDecks = [
           // Promotion to burglar once experienced enough (>= 3): the big time.
           id: "job_criminal_promote",
           kind: "filler",
+          // The escape hatch to burglar (which finally has a wage) is one card in
+          // a big pool, so weight it too or it stays buried and the pickpocket
+          // never climbs out.
+          weight: 3,
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_criminal_promote.prompt",
           options: {
@@ -801,6 +810,9 @@ export const jobDecks = [
         {
           id: "job_burglar_job",
           kind: "filler",
+          // Same as the pickpocket: the score is the real money (the burglar's
+          // wage is only a trickle), so keep it surfacing.
+          weight: 3,
           prompt: "job_burglar_job.prompt",
           options: {
             left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
@@ -812,6 +824,7 @@ export const jobDecks = [
           // risk. Experience-gated.
           id: "job_burglar_promote",
           kind: "filler",
+          weight: 3,
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_burglar_promote.prompt",
           options: {
@@ -840,6 +853,7 @@ export const jobDecks = [
           // lie low. Small wage from the status drift on top.
           id: "job_fence_deal",
           kind: "filler",
+          weight: 3,
           prompt: "job_fence_deal.prompt",
           options: {
             left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },

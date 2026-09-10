@@ -304,6 +304,14 @@ export interface Card {
   // gated to the middle of its life and only rarely turns up. The roll consumes
   // rng (threaded through the draw), so a save resumes the same sequence.
   chance?: number;
+  // Draw WEIGHT: relative likelihood of being picked once in the pool (default 1).
+  // A weight of 3 makes a card 3x as likely as a plain card on any given turn,
+  // WITHOUT excluding the rest of the pool (unlike a `priority` deck). Use it when
+  // a few essential cards would otherwise drown in incidental flavour — e.g. the
+  // criminal's "score" cards, which are the whole income yet compete against a
+  // dozen age/home/sibling cards. It biases the random pick only; eligibility,
+  // `chance`, milestones and priority decks all resolve first, unchanged.
+  weight?: number;
 }
 
 export interface Deck {

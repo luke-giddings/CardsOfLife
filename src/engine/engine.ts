@@ -141,8 +141,18 @@ export function drawCard(
     if (filtered.length > 0) choices = filtered;
   }
 
+  // Weighted random pick: a card's `weight` (default 1) scales its share of the
+  // draw, so a few essential cards can surface often without excluding the rest
+  // of the pool. One rng value is consumed whatever the weights, so the sequence
+  // stays deterministic. With all weights 1 this is a plain uniform pick.
   const roll = nextRandom(rng);
-  const pick = choices[Math.floor(roll.value * choices.length)];
+  const totalWeight = choices.reduce((s, c) => s + (c.weight ?? 1), 0);
+  let cursor = roll.value * totalWeight;
+  let pick = choices[choices.length - 1];
+  for (const c of choices) {
+    cursor -= c.weight ?? 1;
+    if (cursor < 0) { pick = c; break; }
+  }
   return { card: pick, state: { ...state, rng: roll.state, lastCardId: pick.id } };
 }
 

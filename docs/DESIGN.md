@@ -199,7 +199,15 @@ adding/removing decks and gating are trivial filters.
   You can't spend six years unemployed drawing "a day at the fair"; the job-hunt
   cards surface until you're out. (Falls back to the full pool when no priority
   deck is active — so it costs nothing in normal life and scales to post-18.)
-- Otherwise a **random** eligible non-milestone card is drawn.
+- Otherwise a **random** eligible non-milestone card is drawn — a **weighted**
+  random pick: a card's `Card.weight` (default 1) scales its share of the draw, so
+  a few essential cards can surface often **without excluding the rest of the pool**
+  (the middle ground between `priority`, which is exclusive, and a flat pool, which
+  dilutes). Used for the criminal's *score* and *promote* cards: the pickpocket has
+  no wage, so the scores **are** the income yet compete with ~15 other cards; at
+  `weight: 3` they come up ~1 turn in 5 and the path is livable again
+  (see `scripts/sim.ts`-style tuning). Weight biases only the final pick —
+  eligibility, `chance`, milestones and priority decks all resolve first.
 - **No card repeats twice in a row** (when alternatives exist).
 - **Draw-and-discard:** a played card is consumed, unless it's **filler**
   (returns to the pool). `one_time` cards carry `copies` = max occurrences.
