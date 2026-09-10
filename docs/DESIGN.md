@@ -208,7 +208,14 @@ adding/removing decks and gating are trivial filters.
   `weight: 3` they come up ~1 turn in 5 and the path is livable again
   (see `scripts/sim.ts`-style tuning). Weight biases only the final pick —
   eligibility, `chance`, milestones and priority decks all resolve first.
-- **No card repeats twice in a row** (when alternatives exist).
+- **No card repeats twice in a row** (when alternatives exist). NOTE this rule
+  filters by card **id** and ignores `weight`, so it can starve a small
+  `priority` pool: with a deck of one heavy repeatable + two one-offs, the year
+  after every repeat was *guaranteed* to be a one-off (nothing else was left),
+  bypassing the weight entirely on alternate turns. The fix is a **duplicate
+  card under a second id** sharing one options body and one set of strings —
+  see the prison deck's two `prison_time` copies, which also doubles the
+  repeatable's share against the one-offs.
 - **Draw-and-discard:** a played card is consumed, unless it's **filler**
   (returns to the pool). `one_time` cards carry `copies` = max occurrences.
 

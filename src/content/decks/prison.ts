@@ -5,7 +5,49 @@
 // releases you (onto the streets, jobless) when it reaches 0. Two one-offs colour
 // the stretch: a break-out (leave a wanted fugitive) and meeting a cellmate
 // (BACKLOG: opens a dedicated relationship deck, still to be designed).
-import type { Deck } from "../../engine/types.ts";
+import type { CardOptions, Deck } from "../../engine/types.ts";
+
+// The three swipes of a year served, shared by BOTH copies of the card below.
+//   left  endure quietly — costs spirit
+//   right throw yourself into the work — happiness up, health down
+//   down  prison labour, only when skint (finances <= 20): pays "+" (+10) against
+//         gaol's -5 finances drift. Netting +5 lifts you back over the gate, which
+//         hides the option again — a soft FLOOR, not an income, so inside (where
+//         you can't earn any other way) money oscillates in a low, non-lethal band
+//         instead of bleeding to 0.
+// Every swipe serves the year (criminality -1). On the LAST year (criminality <= 1)
+// each instead releases you to the streets with the counter cleared; the labour
+// swipe still pays out then, so you don't walk free penniless for having worked it.
+const RELEASE = {
+  setTraits: { criminality: 0 },
+  setStatus: { housing: "homeless", job: "unemployed" },
+  remember: "log.released",
+} as const;
+
+const doTimeOptions: CardOptions = {
+  left: {
+    label: "prison_time.left",
+    outcomes: [
+      { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE } },
+      { result: "prison_time.left.r0", effects: { incTraits: { criminality: -1 }, vitals: { spirit: "-" } } },
+    ],
+  },
+  right: {
+    label: "prison_time.right",
+    outcomes: [
+      { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE } },
+      { result: "prison_time.right.r0", effects: { incTraits: { criminality: -1 }, vitals: { happiness: "+", health: "-" } } },
+    ],
+  },
+  down: {
+    label: "prison_time.down",
+    if: { vitals: { finances: { max: 20 } } },
+    outcomes: [
+      { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE, vitals: { finances: "+" } } },
+      { result: "prison_time.down.r0", effects: { incTraits: { criminality: -1 }, vitals: { finances: "+" } } },
+    ],
+  },
+};
 
 export const prisonDecks = [
   {
@@ -14,51 +56,16 @@ export const prisonDecks = [
     unlock: "deck.prison.blurb",
     priority: true,
     cards: [
-      {
-        // Doing your time. Weighted ×5 so it dominates the tiny priority pool and
-        // the sentence actually counts down instead of stalling behind the one-offs.
-        // Both swipes serve a year and knock a point off `criminality`; the LAST
-        // year (criminality ≤ 1) releases you — onto the streets (homeless) and
-        // jobless, with the counter cleared. Neither option dominates: endure
-        // quietly (spirit −) or throw yourself into the work (happiness + but the
-        // labour wears you down, health −).
-        id: "prison_time",
-        kind: "filler",
-        weight: 5,
-        prompt: "prison_time.prompt",
-        options: {
-          left: {
-            label: "prison_time.left",
-            outcomes: [
-              { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { setTraits: { criminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.released" } },
-              { result: "prison_time.left.r0", effects: { incTraits: { criminality: -1 }, vitals: { spirit: "-" } } },
-            ],
-          },
-          right: {
-            label: "prison_time.right",
-            outcomes: [
-              { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { setTraits: { criminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.released" } },
-              { result: "prison_time.right.r0", effects: { incTraits: { criminality: -1 }, vitals: { happiness: "+", health: "-" } } },
-            ],
-          },
-          // A third swipe that only appears once you're SKINT (finances <= 20):
-          // prison labour for pennies. It pays "+" (+10) against gaol's -5 finances
-          // drift, so taking it nets +5 and lifts you back over the gate — which
-          // then hides the option again. That gives a soft FLOOR: inside you can't
-          // earn any other way, so instead of bleeding to 0 (death) your money
-          // oscillates in a low, non-lethal band. Still a year served, so it counts
-          // down criminality like the others — and pays out on the release turn too,
-          // so you don't walk out penniless for having worked your last year.
-          down: {
-            label: "prison_time.down",
-            if: { vitals: { finances: { max: 20 } } },
-            outcomes: [
-              { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { vitals: { finances: "+" }, setTraits: { criminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.released" } },
-              { result: "prison_time.down.r0", effects: { incTraits: { criminality: -1 }, vitals: { finances: "+" } } },
-            ],
-          },
-        },
-      },
+      // Doing your time — TWO IDENTICAL COPIES, both weight 5, sharing one options
+      // body and one set of strings. The duplicate is load-bearing, not sloppiness:
+      // the draw's "never the same card twice in a row" rule filters by card id, so
+      // with a single copy the year after every year served was GUARANTEED to be one
+      // of the two one-offs (they were the only cards left in the pool) — the ×5
+      // weight was bypassed entirely on alternate turns and the break-out fired
+      // almost immediately. With a second copy, time-serving can follow
+      // time-serving: after one is drawn the other still holds 5/7 of the pool.
+      { id: "prison_time", kind: "filler", weight: 5, prompt: "prison_time.prompt", options: doTimeOptions },
+      { id: "prison_time_again", kind: "filler", weight: 5, prompt: "prison_time.prompt", options: doTimeOptions },
       {
         // The break-out: a one-shot chance over the wall. Freedom now and the
         // remaining sentence wiped, but you leave a WANTED man (flawWanted —
