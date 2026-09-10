@@ -250,6 +250,21 @@ function changeStatus(
   if (kind === "job" && value === "apprentice" && previous !== "apprentice") {
     state.traits.jobSkill = 0;
   }
+  // Gaol SUSPENDS your way of living — nobody keeps a lavish (or even a frugal)
+  // household from a cell. Going in stows the lifestyle and drops you to the
+  // neutral `default` (no drift, hidden chip); coming out restores exactly what
+  // you had. Done here rather than on the cards so every route in/out (sentence
+  // served, break-out) behaves the same and can't forget it. Recursing into
+  // changeStatus is safe: the nested call's kind is `lifestyle`, not `housing`.
+  if (kind === "housing" && value === "prison" && previous !== "prison") {
+    state.lifestyleBeforePrison = state.statuses.lifestyle;
+    changeStatus(state, "lifestyle", "default", content);
+  } else if (kind === "housing" && previous === "prison" && value !== "prison") {
+    if (state.lifestyleBeforePrison !== undefined) {
+      changeStatus(state, "lifestyle", state.lifestyleBeforePrison, content);
+      state.lifestyleBeforePrison = undefined;
+    }
+  }
 }
 
 export function applyEffect(state: GameState, effect: Effect, content: Content): void {

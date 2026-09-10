@@ -47,13 +47,15 @@ export const prisonDecks = [
         // The break-out: a one-shot chance over the wall. Freedom now and the
         // remaining sentence wiped, but you leave a WANTED man (flawWanted —
         // BACKLOG: use it for harder honest work / a re-arrest risk / the epitaph).
-        // Declining costs a bruising and you stay to serve your time.
+        // Declining is FREE: you're already in gaol and already paying for it
+        // (prison drift + the year this card costs you) — turning down a risk you
+        // never had to take shouldn't be punished on top.
         id: "prison_escape",
         kind: "one_time",
         prompt: "prison_escape.prompt",
         options: {
           left: { label: "prison_escape.left", outcomes: [{ result: "prison_escape.left.r0", effects: { setFlaws: { flawWanted: true }, setTraits: { criminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, vitals: { spirit: "+", health: "-" }, remember: "log.escaped" } }] },
-          right: { label: "prison_escape.right", outcomes: [{ result: "prison_escape.right.r0", effects: { vitals: { health: "-", happiness: "-" } } }] },
+          right: { label: "prison_escape.right", outcomes: [{ result: "prison_escape.right.r0" }] },
         },
       },
       {

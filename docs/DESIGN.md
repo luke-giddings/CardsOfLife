@@ -679,7 +679,11 @@ joining the gang) ticks a **`criminality`** counter — your accumulated heat. T
 "bribe your way out") keeps you in the trade at a heavier cost — dropped loot and a
 battering, or a fortune in bribes — while *submit* ("come quietly" / "take the
 sentence") sends you to **gaol**: a new `housing: prison` + `job: convict` state
-that also **strips your pet**. Prison is a `priority` deck of three cards: **"do
+that also **strips your pet** and **suspends your lifestyle** (nobody keeps a
+lavish household from a cell — it stows the tier and drops you to the neutral
+`default`, restoring exactly what you had on release). The suspend/restore lives in
+`changeStatus` (via `lifestyleBeforePrison`), not on the cards, so every route in
+and out — sentence served or break-out — behaves identically. Prison is a `priority` deck of three cards: **"do
 your time"** (weight ×5) counts `criminality` down a year at a time and, on the
 last year, **releases you onto the streets** (homeless + unemployed, counter
 cleared) — so the more crimes you profited from, the longer the reckoning; a

@@ -424,6 +424,7 @@ export interface GameState {
   lastCardId?: string;                // to avoid drawing the same card twice in a row
   experienceJob?: string;             // the job the current `jobExperience` was earned in (see changeStatus)
   housingBeforeApprentice?: string;   // housing to return to on leaving apprenticeship (see changeStatus / restoreHousing)
+  lifestyleBeforePrison?: string;     // lifestyle to return to on release from gaol (see changeStatus)
   pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;
