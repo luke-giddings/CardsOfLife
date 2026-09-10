@@ -920,6 +920,8 @@ export const EN = {
   "prison_time.left.r0": "You serve quietly, as invisible as you can manage. Another year ticked off — and a little more of your spirit with it.",
   "prison_time.right": "Throw yourself into the work",
   "prison_time.right.r0": "You take every task the wardens offer — it passes the time and lifts the gloom, though the labour grinds you down.",
+  "prison_time.down": "Work the prison labour",
+  "prison_time.down.r0": "Picking oakum and breaking stone from dawn to dusk, for pennies the warders grudgingly hand over. It is something, and something beats nothing.",
   "prison_time.release": "The gate swings open at last. Your time is served — and you step out onto the streets with nothing but the clothes on your back.",
   "prison_escape.prompt": "A loose bar, a bribed guard, a moonless night — a chance to go over the wall. Take it?",
   "prison_escape.left": "Break out",
@@ -1115,9 +1117,9 @@ export const EN = {
   "job_fence_deal.right.r0": "Too hot to handle. You send them on and keep your neck clear.",
   "job_fence_raid.prompt": "The police raid the receiving-house at last. There's stolen goods on every shelf.",
   "job_fence_raid.left": "Bribe your way clear",
-  "job_fence_raid.left.r0": "A fat purse to the inspector and you're merely 'a witness'. Poorer, but free.",
+  "job_fence_raid.left.r0": "A fat purse to the inspector and you're merely 'a witness'. The receiving-house stays open — but that purse is gone for good.",
   "job_fence_raid.right": "Take the fall",
-  "job_fence_raid.right.r0": "They make an example of you. You lose the trade and a piece of yourself with it.",
+  "job_fence_raid.right.r0": "They make an example of you. The receiving-house is shut up and the gaol gate closes behind you.",
 
   // ---- BROTHER: Tom (rel_bro story arc) ---------------------------------
   "rel_bro_play.prompt": "Tom trails after you, desperate to be let in on your games.",
@@ -2254,6 +2256,8 @@ export const IT: Record<StringId, string> = {
   "prison_time.left.r0": "Sconti la pena in silenzio, invisibile per quanto puoi. Un altro anno passato — e con esso un altro po' del tuo spirito.",
   "prison_time.right": "Buttarti nel lavoro",
   "prison_time.right.r0": "Accetti ogni incarico dei secondini — fa passare il tempo e alleggerisce il grigiore, anche se la fatica ti logora.",
+  "prison_time.down": "Lavorare ai lavori forzati",
+  "prison_time.down.r0": "Sfilacci stoppa e spacchi pietre dall'alba al tramonto, per pochi spiccioli che i secondini ti allungano di malavoglia. È qualcosa, e qualcosa è meglio di niente.",
   "prison_time.release": "Il cancello finalmente si apre. La pena è scontata — ed esci in strada senza nulla addosso se non i tuoi vestiti.",
   "prison_escape.prompt": "Una sbarra allentata, una guardia corrotta, una notte senza luna — un'occasione per scavalcare il muro. La cogli?",
   "prison_escape.left": "Evadere",
@@ -2449,9 +2453,9 @@ export const IT: Record<StringId, string> = {
   "job_fence_deal.right.r0": "Troppo scottante. Li mandi via e ti tieni il collo pulito.",
   "job_fence_raid.prompt": "La polizia irrompe finalmente nella ricettazione. C'è refurtiva su ogni scaffale.",
   "job_fence_raid.left": "Comprarti la libertà",
-  "job_fence_raid.left.r0": "Una borsa piena all'ispettore e sei solo 'un testimone'. Più povero, ma libero.",
+  "job_fence_raid.left.r0": "Una borsa piena all'ispettore e sei solo 'un testimone'. La ricettazione resta aperta — ma quella borsa è persa per sempre.",
   "job_fence_raid.right": "Prenderti la colpa",
-  "job_fence_raid.right.r0": "Fanno di te un esempio. Perdi il traffico e un pezzo di te stesso.",
+  "job_fence_raid.right.r0": "Fanno di te un esempio. La ricettazione viene chiusa e il cancello della prigione si chiude alle tue spalle.",
 
   // ---- BROTHER: Tom (rel_bro story arc) ---------------------------------
   "rel_bro_play.prompt": "Tom ti trotta dietro, morto dalla voglia di essere ammesso ai tuoi giochi.",

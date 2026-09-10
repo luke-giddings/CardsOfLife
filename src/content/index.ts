@@ -201,7 +201,11 @@ export const content = {
         //   arrest cards (which also set job=convict and strip any pet); left when
         //   the sentence — the `criminality` counter — is served down to 0, out
         //   onto the streets (homeless + unemployed).
-        prison: { label: "status.housing.prison", drift: { happiness: -4, health: -3 }, driftShown: { happiness: "-", health: "-" }, addDecks: ["prison"] },
+        //   Money bleeds slowly inside too (fines, garnished goods, nothing coming
+        //   in) — but the prison deck's "do your time" card offers prison labour
+        //   once you're skint, which out-earns this drain, so the drain is a slow
+        //   squeeze rather than a death sentence for a long stretch.
+        prison: { label: "status.housing.prison", drift: { happiness: -4, health: -3, finances: -5 }, driftShown: { happiness: "-", health: "-", finances: "-" }, addDecks: ["prison"] },
         // — taken on by a master tradesman (housed and fed; see job=apprentice).
         apprentice: { label: "status.housing.apprentice" },
       },

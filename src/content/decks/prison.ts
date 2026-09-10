@@ -41,6 +41,22 @@ export const prisonDecks = [
               { result: "prison_time.right.r0", effects: { incTraits: { criminality: -1 }, vitals: { happiness: "+", health: "-" } } },
             ],
           },
+          // A third swipe that only appears once you're SKINT (finances <= 20):
+          // prison labour for pennies. It pays "+" (+10) against gaol's -5 finances
+          // drift, so taking it nets +5 and lifts you back over the gate — which
+          // then hides the option again. That gives a soft FLOOR: inside you can't
+          // earn any other way, so instead of bleeding to 0 (death) your money
+          // oscillates in a low, non-lethal band. Still a year served, so it counts
+          // down criminality like the others — and pays out on the release turn too,
+          // so you don't walk out penniless for having worked your last year.
+          down: {
+            label: "prison_time.down",
+            if: { vitals: { finances: { max: 20 } } },
+            outcomes: [
+              { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { vitals: { finances: "+" }, setTraits: { criminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.released" } },
+              { result: "prison_time.down.r0", effects: { incTraits: { criminality: -1 }, vitals: { finances: "+" } } },
+            ],
+          },
         },
       },
       {

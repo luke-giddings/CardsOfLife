@@ -675,10 +675,11 @@ you can leave the life but can't dabble back into it.
 
 **Crime, arrest & prison.** Every crime you pull (a score card's left swipe, and
 joining the gang) ticks a **`criminality`** counter — your accumulated heat. The
-**arrest** cards then offer two roads: *evade* (pickpocket "bolt and run" / burglar
-"bribe your way out") keeps you in the trade at a heavier cost — dropped loot and a
-battering, or a fortune in bribes — while *submit* ("come quietly" / "take the
-sentence") sends you to **gaol**: a new `housing: prison` + `job: convict` state
+**arrest** cards — one per criminal tier (pickpocket "nicked", burglar "nicked",
+fence "raid") — then offer the same two roads: *evade* ("bolt and run" / "bribe your
+way out" / "bribe your way clear") keeps you in the trade at a heavier cost —
+dropped loot and a battering, or a fortune in bribes — while *submit* ("come
+quietly" / "take the sentence" / "take the fall") sends you to **gaol**: a new `housing: prison` + `job: convict` state
 that also **strips your pet** and **suspends your lifestyle** (nobody keeps a
 lavish household from a cell — it stows the tier and drops you to the neutral
 `default`, restoring exactly what you had on release). The suspend/restore lives in
@@ -686,7 +687,12 @@ lavish household from a cell — it stows the tier and drops you to the neutral
 and out — sentence served or break-out — behaves identically. Prison is a `priority` deck of three cards: **"do
 your time"** (weight ×5) counts `criminality` down a year at a time and, on the
 last year, **releases you onto the streets** (homeless + unemployed, counter
-cleared) — so the more crimes you profited from, the longer the reckoning; a
+cleared). Gaol also bleeds money slowly (−5: fines, nothing coming in), so "do your
+time" carries a third swipe — **prison labour** — that only appears once you're
+skint (finances ≤ 20) and pays `+` (+10) against that −5. Taking it nets +5 and
+lifts you back over the gate, which hides the option again: the result is a soft
+**floor** rather than an income, so inside — where you can't earn any other way —
+your money oscillates in a low, non-lethal band instead of bleeding to 0 — so the more crimes you profited from, the longer the reckoning; a
 one-shot **break-out** (frees you but latches `flawWanted`); and a one-shot **meet
 your cellmate**. The `criminality`-as-sentence loop means a prolific career ends in
 a long stretch, while a small-timer serves a year or two.

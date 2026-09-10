@@ -1,4 +1,4 @@
 // On-screen build label. Bump these when it helps to tell builds apart on the
 // phone; the git SHA + time are appended automatically (see vite.config.ts).
 export const APP_VERSION = "0.1";
-export const BUILD_DESC = "prison polish: gaol now also puts your lifestyle on hold (no lavish living from a cell) and hands it straight back when you walk out — whether you served your time or went over the wall. Turning down the break-out is free now; you're already inside, that's punishment enough";
+export const BUILD_DESC = "gaol now bleeds money slowly — but when you're skint, 'do your time' offers prison labour that earns just enough to hold you at a low, non-lethal float. The fence's raid now works like the other arrests too: bribe clear and keep the trade, or take the fall and go down";

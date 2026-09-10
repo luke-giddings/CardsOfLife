@@ -890,8 +890,12 @@ export const jobDecks = [
           kind: "filler",
           prompt: "job_fence_raid.prompt",
           options: {
-            left: { label: "job_fence_raid.left", outcomes: [{ result: "job_fence_raid.left.r0", effects: { vitals: { finances: "--", health: "-" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_fence_raid.right", outcomes: [{ result: "job_fence_raid.right.r0", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            // Same evade-or-submit shape as the other two arrests: bribe clear and
+            // the receiving-house stays open (you keep the trade) at a fortune's
+            // cost; take the fall and it's gaol — the criminality-length stretch,
+            // losing job, home and pet.
+            left: { label: "job_fence_raid.left", outcomes: [{ result: "job_fence_raid.left.r0", effects: { vitals: { finances: "---", health: "-" } } }] },
+            right: { label: "job_fence_raid.right", outcomes: [{ result: "job_fence_raid.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { housing: "prison", job: "convict", pet: "none" } } }] },
           },
         },
       ],
