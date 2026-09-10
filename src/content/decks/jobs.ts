@@ -76,7 +76,7 @@ export const jobDecks = [
           conditions: { traits: { jobRenouncedCrime: false } },
           prompt: "job_unemployed_fagin.prompt",
           options: {
-            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, remember: "log.crime" } }] },
+            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, incTraits: { criminality: 1 }, remember: "log.crime" } }] },
             right: { label: "job_unemployed_fagin.right", outcomes: [{ result: "job_unemployed_fagin.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
@@ -91,9 +91,12 @@ export const jobDecks = [
           },
         },
         {
-          // Painful: the family's patience wears thin.
+          // Painful: the family's patience wears thin. Only while you still live
+          // under their roof — "the family's patience" means nothing once you've
+          // moved out.
           id: "job_unemployed_family",
           kind: "one_time",
+          conditions: { status: { housing: "family" } },
           prompt: "job_unemployed_family.prompt",
           options: {
             left: { label: "job_unemployed_family.left", outcomes: [{ result: "job_unemployed_family.left.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
@@ -463,7 +466,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_criminal_job.prompt",
           options: {
-            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
             right: { label: "job_criminal_job.right", outcomes: [{ result: "job_criminal_job.right.r0", effects: { vitals: { spirit: "+" } } }] },
             // Walk away for good: a big spirit boost and back to honest joblessness,
             // but it latches jobRenouncedCrime so the underworld never reopens (the
@@ -480,7 +483,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_criminal_score.prompt",
           options: {
-            left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { jobExperience: 1 } } }] },
+            left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
             right: { label: "job_criminal_score.right", outcomes: [{ result: "job_criminal_score.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
@@ -511,7 +514,10 @@ export const jobDecks = [
             // but the escape costs more than coming quietly does — dropped loot and
             // a battering from the chase.
             left: { label: "job_criminal_nicked.left", outcomes: [{ result: "job_criminal_nicked.left.r0", effects: { vitals: { finances: "--", health: "--", happiness: "-" } } }] },
-            right: { label: "job_criminal_nicked.right", outcomes: [{ result: "job_criminal_nicked.right.r0", effects: { vitals: { health: "-", happiness: "-", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
+            // Come quietly → gaol. You serve a sentence the length of your
+            // accumulated `criminality` (the prison deck counts it down). Losing
+            // your job, your home AND your pet in one stroke.
+            right: { label: "job_criminal_nicked.right", outcomes: [{ result: "job_criminal_nicked.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { housing: "prison", job: "convict", pet: "none" } } }] },
           },
         },
       ],
@@ -827,7 +833,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_burglar_job.prompt",
           options: {
-            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
             right: { label: "job_burglar_job.right", outcomes: [{ result: "job_burglar_job.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
@@ -846,14 +852,18 @@ export const jobDecks = [
           },
         },
         {
-          // Caught on a job: worse than a pickpocket's nicking (a real prison
-          // status is Backlog) — dumped back to unemployed, badly shaken.
+          // Caught on a housebreaking — a serious charge. Bribe your way clear
+          // (keep the trade, but it costs a fortune) or take the sentence (gaol:
+          // the criminality-length stretch, losing job/home/pet).
           id: "job_burglar_nicked",
           kind: "filler",
           prompt: "job_burglar_nicked.prompt",
           options: {
-            left: { label: "job_burglar_nicked.left", outcomes: [{ result: "job_burglar_nicked.left.r0", effects: { vitals: { finances: "--", health: "--" }, setStatus: { job: "unemployed" } } }] },
-            right: { label: "job_burglar_nicked.right", outcomes: [{ result: "job_burglar_nicked.right.r0", effects: { vitals: { health: "-", spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
+            // Bribe: you stay a burglar (charge made to vanish) but it empties your
+            // purse — a heavier price than the pickpocket's bolt, befitting the
+            // bigger charge.
+            left: { label: "job_burglar_nicked.left", outcomes: [{ result: "job_burglar_nicked.left.r0", effects: { vitals: { finances: "---", health: "-" } } }] },
+            right: { label: "job_burglar_nicked.right", outcomes: [{ result: "job_burglar_nicked.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { housing: "prison", job: "convict", pet: "none" } } }] },
           },
         },
       ],
@@ -869,7 +879,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_fence_deal.prompt",
           options: {
-            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
             right: { label: "job_fence_deal.right", outcomes: [{ result: "job_fence_deal.right.r0", effects: { vitals: { spirit: "+" } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },

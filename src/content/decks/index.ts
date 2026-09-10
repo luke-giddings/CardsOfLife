@@ -7,3 +7,4 @@ export { educationDecks } from "./education.ts";
 export { jobDecks } from "./jobs.ts";
 export { siblingDecks } from "./sibling.ts";
 export { petDecks } from "./pet.ts";
+export { prisonDecks } from "./prison.ts";

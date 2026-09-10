@@ -8,6 +8,7 @@ import {
   jobDecks,
   siblingDecks,
   petDecks,
+  prisonDecks,
 } from "./decks/index.ts";
 
 // ---------------------------------------------------------------------------
@@ -153,6 +154,10 @@ export const content = {
         pickpocket: { label: "status.job.pickpocket", addDecks: ["job_criminal"] },
         burglar: { label: "status.job.burglar", drift: { finances: 5, spirit: -5 }, driftShown: { finances: "+", spirit: "-" }, addDecks: ["job_burglar"] },
         fence: { label: "status.job.fence", drift: { finances: 10, spirit: -5 }, driftShown: { finances: "++", spirit: "-" }, addDecks: ["job_fence"] },
+        // Behind bars — "job" while serving a sentence. No wage, no deck of its own
+        // (the prison DECK hangs off the housing=prison state); the grim drift lives
+        // on that housing state. Set alongside housing=prison by the arrest cards.
+        convict: { label: "status.job.convict" },
       },
     },
     housing: {
@@ -191,6 +196,12 @@ export const content = {
         //   of all. Owns the home_homeless deck (grim daily life + four gated
         //   exits: rent a room, back to school, the workhouse, or crawl home).
         homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 }, driftShown: { health: "-", happiness: "-" }, addDecks: ["home_homeless"] },
+        // — gaoled. A grim happiness/health drain and its own `priority` prison
+        //   deck (do your time, break out, or meet a cellmate). Entered from the
+        //   arrest cards (which also set job=convict and strip any pet); left when
+        //   the sentence — the `criminality` counter — is served down to 0, out
+        //   onto the streets (homeless + unemployed).
+        prison: { label: "status.housing.prison", drift: { happiness: -4, health: -3 }, driftShown: { happiness: "-", health: "-" }, addDecks: ["prison"] },
         // — taken on by a master tradesman (housed and fed; see job=apprentice).
         apprentice: { label: "status.housing.apprentice" },
       },
@@ -276,6 +287,7 @@ export const content = {
     ...jobDecks,
     ...siblingDecks,
     ...petDecks,
+    ...prisonDecks,
   ],
 } satisfies Content;
 

@@ -143,6 +143,12 @@ export interface Traits {
   // this latches true and the criminal offer (job_unemployed_fagin) never appears
   // again — a one-way door out of the underworld.
   jobRenouncedCrime: boolean;
+  // Accumulated "heat": +1 each crime you pull (the score cards). When you're
+  // caught and gaoled it becomes your SENTENCE LENGTH — the prison deck's "do your
+  // time" card decrements it a year at a time, and you walk free when it hits 0.
+  // So the more you profited from crime, the longer the reckoning. Reset on
+  // release. Lives loose in the debug panel (not a job-only stat).
+  criminality: number;
   // Standing with your current employer (0 = model worker). Rises when you shirk
   // and each time you grovel to keep your job; a high count means the foreman
   // won't hear your pleading. Resets to 0 on any job change (a fresh reputation
@@ -155,6 +161,10 @@ export interface Traits {
   // Durable mark of shame: you were forced to sell your home to cover debts (the
   // sell-up rescue). Recorded for the end-of-run epitaph (Backlog).
   flawSoldUp: boolean;
+  // You broke out of prison rather than serving your time — a fugitive. Latched by
+  // the prison escape card. BACKLOG: use in other checks (harder to land honest
+  // work, a chance of re-arrest, a grimmer epitaph). Unused for now beyond being set.
+  flawWanted: boolean;
   // Pets. `pet*` so the debug panel groups them under a Pets category. There are
   // two pets (one at a time): a cat (a HAPPINESS companion) and a dog (a SPIRIT
   // companion), each with its own age/love pair. `pet<X>Age` ticks up each year
@@ -193,9 +203,11 @@ export const DEFAULT_TRAITS: Traits = {
   jobSkill: 0,
   jobReachedFactory: false,
   jobRenouncedCrime: false,
+  criminality: 0,
   jobStrikes: 0,
   flawOwesCharity: false,
   flawSoldUp: false,
+  flawWanted: false,
   petCatAge: 0,
   petCatLove: 0,
   petDogAge: 0,

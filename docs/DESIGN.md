@@ -671,10 +671,26 @@ The spirit cost is the path's real killer — a committed criminal mostly dies o
 every score card carries a third swipe, **"Give up the life of crime"**: a big
 spirit boost (`+++`) and back to honest unemployment, but it latches
 `jobRenouncedCrime` — a **one-way door** that hides the Fagin offer forever, so
-you can leave the life but can't dabble back into it. The **arrest** card's
-"bolt and run" now keeps you *in* the trade (you kept your liberty) at a heavier
-cost — dropped loot and a battering — versus "come quietly", which is gentler
-per-hit but ends the career (→ unemployed).
+you can leave the life but can't dabble back into it.
+
+**Crime, arrest & prison.** Every crime you pull (a score card's left swipe, and
+joining the gang) ticks a **`criminality`** counter — your accumulated heat. The
+**arrest** cards then offer two roads: *evade* (pickpocket "bolt and run" / burglar
+"bribe your way out") keeps you in the trade at a heavier cost — dropped loot and a
+battering, or a fortune in bribes — while *submit* ("come quietly" / "take the
+sentence") sends you to **gaol**: a new `housing: prison` + `job: convict` state
+that also **strips your pet**. Prison is a `priority` deck of three cards: **"do
+your time"** (weight ×5) counts `criminality` down a year at a time and, on the
+last year, **releases you onto the streets** (homeless + unemployed, counter
+cleared) — so the more crimes you profited from, the longer the reckoning; a
+one-shot **break-out** (frees you but latches `flawWanted`); and a one-shot **meet
+your cellmate**. The `criminality`-as-sentence loop means a prolific career ends in
+a long stretch, while a small-timer serves a year or two.
+
+Backlog on the prison system: **`flawWanted`** is set by the break-out but not yet
+*used* — it should make honest work harder to land, carry a re-arrest risk, and
+colour the epitaph. And **"meet your cellmate"** should open a dedicated **cellmate
+relationship deck** (to be designed) rather than the one-off comfort it grants now.
 
 ### Houses — a `---` purchase behind a rising gate, then cheap upkeep
 

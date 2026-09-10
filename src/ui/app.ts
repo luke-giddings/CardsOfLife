@@ -582,7 +582,7 @@ export class Game {
       id.startsWith("age_") ? "age"
       : id.startsWith("edu_") ? "edu"
       : id.startsWith("job_") ? "job"
-      : id.startsWith("home_") ? "home"
+      : id.startsWith("home_") || id === "prison" ? "home"
       : id.startsWith("rel_") || id === "sibling" ? "rel"
       : id.startsWith("pet_") ? "pet"
       : "misc";
