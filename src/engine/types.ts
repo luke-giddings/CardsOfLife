@@ -139,6 +139,10 @@ export interface Traits {
   // straight there. (Stopgap: will fold into a per-path "highest tier reached"
   // cache when adult job re-entry lands.)
   jobReachedFactory: boolean;
+  // Once you renounce the life of crime (the "give up" swipe on a score card),
+  // this latches true and the criminal offer (job_unemployed_fagin) never appears
+  // again — a one-way door out of the underworld.
+  jobRenouncedCrime: boolean;
   // Standing with your current employer (0 = model worker). Rises when you shirk
   // and each time you grovel to keep your job; a high count means the foreman
   // won't hear your pleading. Resets to 0 on any job change (a fresh reputation
@@ -188,6 +192,7 @@ export const DEFAULT_TRAITS: Traits = {
   jobExperience: 0,
   jobSkill: 0,
   jobReachedFactory: false,
+  jobRenouncedCrime: false,
   jobStrikes: 0,
   flawOwesCharity: false,
   flawSoldUp: false,

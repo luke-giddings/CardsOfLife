@@ -663,7 +663,18 @@ nothing but a clear conscience. (The £ figures in the table above are the
 lumps, not drift.) Each score now pays `+++` (+50) — a big enough lump that the
 rare, random score cards actually cover the dry spells between them (a normal wage
 is ~+12/turn, so a score ≈ 4 turns' pay). Applied to every score card across
-pickpocket / burglar / fence.
+pickpocket / burglar / fence. Score cards are `weight: 3` so they surface often
+enough to live on despite the fat adult draw pool (see §9).
+
+The spirit cost is the path's real killer — a committed criminal mostly dies of
+**despair**, since crimes drain spirit and nothing on the path restores it. So
+every score card carries a third swipe, **"Give up the life of crime"**: a big
+spirit boost (`+++`) and back to honest unemployment, but it latches
+`jobRenouncedCrime` — a **one-way door** that hides the Fagin offer forever, so
+you can leave the life but can't dabble back into it. The **arrest** card's
+"bolt and run" now keeps you *in* the trade (you kept your liberty) at a heavier
+cost — dropped loot and a battering — versus "come quietly", which is gentler
+per-hit but ends the career (→ unemployed).
 
 ### Houses — a `---` purchase behind a rising gate, then cheap upkeep
 

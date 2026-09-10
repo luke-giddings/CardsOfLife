@@ -68,9 +68,12 @@ export const jobDecks = [
           },
         },
         {
-          // The criminal offer (Oliver Twist): quick money, at a price.
+          // The criminal offer (Oliver Twist): quick money, at a price. Never
+          // shown once you've renounced the life on a score card — that door
+          // stays shut (see jobRenouncedCrime).
           id: "job_unemployed_fagin",
           kind: "filler",
+          conditions: { traits: { jobRenouncedCrime: false } },
           prompt: "job_unemployed_fagin.prompt",
           options: {
             left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, remember: "log.crime" } }] },
@@ -462,6 +465,11 @@ export const jobDecks = [
           options: {
             left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
             right: { label: "job_criminal_job.right", outcomes: [{ result: "job_criminal_job.right.r0", effects: { vitals: { spirit: "+" } } }] },
+            // Walk away for good: a big spirit boost and back to honest joblessness,
+            // but it latches jobRenouncedCrime so the underworld never reopens (the
+            // fagin offer is gated on it). Shared label/result across the criminal
+            // score cards. The ★ comes from the job change.
+            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {
@@ -474,6 +482,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { jobExperience: 1 } } }] },
             right: { label: "job_criminal_score.right", outcomes: [{ result: "job_criminal_score.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {
@@ -498,7 +507,10 @@ export const jobDecks = [
           kind: "filler",
           prompt: "job_criminal_nicked.prompt",
           options: {
-            left: { label: "job_criminal_nicked.left", outcomes: [{ result: "job_criminal_nicked.left.r0", effects: { vitals: { finances: "--", health: "-" }, setStatus: { job: "unemployed" } } }] },
+            // Bolt: you keep your liberty AND stay in the game (still a pickpocket),
+            // but the escape costs more than coming quietly does — dropped loot and
+            // a battering from the chase.
+            left: { label: "job_criminal_nicked.left", outcomes: [{ result: "job_criminal_nicked.left.r0", effects: { vitals: { finances: "--", health: "--", happiness: "-" } } }] },
             right: { label: "job_criminal_nicked.right", outcomes: [{ result: "job_criminal_nicked.right.r0", effects: { vitals: { health: "-", happiness: "-", spirit: "-" }, setStatus: { job: "unemployed" } } }] },
           },
         },
@@ -817,6 +829,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
             right: { label: "job_burglar_job.right", outcomes: [{ result: "job_burglar_job.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {
@@ -858,6 +871,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
             right: { label: "job_fence_deal.right", outcomes: [{ result: "job_fence_deal.right.r0", effects: { vitals: { spirit: "+" } } }] },
+            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {

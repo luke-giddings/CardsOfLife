@@ -1,4 +1,4 @@
 // On-screen build label. Bump these when it helps to tell builds apart on the
 // phone; the git SHA + time are appended automatically (see vite.config.ts).
 export const APP_VERSION = "0.1";
-export const BUILD_DESC = "fix: a card's gain and the year's drift are now added together before the 0–100 cap, instead of the card being capped first. Lets you actually bank a full purse (so 'move out' / 'buy a house' fire at 100 even when your rent outpaces your wage)";
+export const BUILD_DESC = "crime: every score card gets a 3rd swipe, 'Give up the life of crime' — a big spirit lift and out to honest work, but the door shuts behind you (no going back). And bolting from an arrest now keeps you in the game (heavier hit) rather than dumping you into unemployment";

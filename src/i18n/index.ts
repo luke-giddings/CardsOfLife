@@ -834,9 +834,11 @@ export const EN = {
 
   "job_criminal_nicked.prompt": "A constable's hand closes on your collar mid-lift. You're nicked.",
   "job_criminal_nicked.left": "Bolt and run",
-  "job_criminal_nicked.left.r0": "You drop the loot and leg it — lungs burning, purse empty, but free.",
+  "job_criminal_nicked.left.r0": "You drop the loot and leg it — lungs burning, purse light, bruised from the chase, but free and back on the streets tomorrow.",
   "job_criminal_nicked.right": "Come quietly",
   "job_criminal_nicked.right.r0": "A night in the cells and a magistrate's lecture. You're let off — this time.",
+  "crime_giveup.opt": "Give up the life of crime",
+  "crime_giveup.r0": "You walk away from all of it — no more looking over your shoulder, no more blood money. Penniless and unemployed, but a great weight lifts off your soul.",
 
   // ---- JOB EVENTS & PROMOTIONS -------------------------------------------
   "job_shop_day.prompt": "A long day at the counter: a wealthy customer wants your whole afternoon fetching and carrying.",
@@ -2143,9 +2145,11 @@ export const IT: Record<StringId, string> = {
 
   "job_criminal_nicked.prompt": "La mano di un poliziotto ti afferra il colletto a metà colpo. Sei preso.",
   "job_criminal_nicked.left": "Scappare di corsa",
-  "job_criminal_nicked.left.r0": "Molli il bottino e scappi — i polmoni in fiamme, il borsello vuoto, ma libero.",
+  "job_criminal_nicked.left.r0": "Molli il bottino e scappi — i polmoni in fiamme, il borsello leggero, pesto dalla fuga, ma libero e di nuovo in strada domani.",
   "job_criminal_nicked.right": "Arrenderti",
   "job_criminal_nicked.right.r0": "Una notte in cella e la ramanzina del giudice. Ti lasciano andare — per questa volta.",
+  "crime_giveup.opt": "Abbandonare la vita criminale",
+  "crime_giveup.r0": "Lasci tutto alle spalle — niente più sguardi da sopra la spalla, niente più denaro sporco. Al verde e senza lavoro, ma un grande peso ti si toglie dall'anima.",
 
   // ---- JOB EVENTS & PROMOTIONS -------------------------------------------
   "job_shop_day.prompt": "Una lunga giornata al banco: un cliente facoltoso vuole tutto il tuo pomeriggio per portargli la merce.",
