@@ -681,7 +681,10 @@ spirit boost (`+++`) and back to honest unemployment, but it latches
 you can leave the life but can't dabble back into it.
 
 **Crime, arrest & prison.** Every crime you pull (a score card's left swipe, and
-joining the gang) ticks a **`criminality`** counter — your accumulated heat. The
+joining the gang) ticks a **`criminality`** counter — your accumulated heat —
+and it scales with the TIER of the crime: pickpocket **+1**, burglar **+2**,
+fence **+3**. Climbing the criminal ladder therefore builds heat two or three
+times faster per job, so the big earners draw the long sentences. The
 **arrest** cards — one per criminal tier (pickpocket "nicked", burglar "nicked",
 fence "raid") — then offer the same two roads: *evade* ("bolt and run" / "bribe your
 way out" / "bribe your way clear") keeps you in the trade at a heavier cost —

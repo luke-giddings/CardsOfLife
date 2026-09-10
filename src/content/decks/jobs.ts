@@ -463,6 +463,9 @@ export const jobDecks = [
           // The score IS the wage (pickpocket has no drift income), so it must
           // surface often enough to live on despite competing with a dozen
           // age/home/sibling cards — see Card.weight.
+          // CRIMINALITY scales with the TIER of the crime — pickpocket +1,
+          // burglar +2, fence +3 — so climbing the criminal ladder builds heat
+          // (and so a sentence) far faster than petty thieving ever does.
           weight: 3,
           prompt: "job_criminal_job.prompt",
           options: {
@@ -833,7 +836,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_burglar_job.prompt",
           options: {
-            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
+            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 2 } } }] },
             right: { label: "job_burglar_job.right", outcomes: [{ result: "job_burglar_job.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
@@ -879,7 +882,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_fence_deal.prompt",
           options: {
-            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
+            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 3 } } }] },
             right: { label: "job_fence_deal.right", outcomes: [{ result: "job_fence_deal.right.r0", effects: { vitals: { spirit: "+" } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
