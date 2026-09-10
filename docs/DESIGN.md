@@ -724,7 +724,7 @@ one-shot **break-out** (frees you but latches `flawWanted`); and a one-shot **me
 your cellmate**. The `jobCriminality`-as-sentence loop means a prolific career ends in
 a long stretch, while a small-timer serves a year or two.
 
-Total time inside is tallied in **`yearsInGaol`** — ticked by the prison housing
+Total time inside is tallied in **`flawYearsInGaol`** — ticked by the prison housing
 state (so it counts cellmate/escape years, not just the ones "do your time"
 resolved) plus one for the exit turn, since `applyEffect` moves you out before
 `applyTick` runs and would otherwise miss the very year you walk free in. It

@@ -39,6 +39,13 @@ export const siblingDecks = [
           options: {
             left: { label: "rel_bro_play.left", outcomes: [{ result: "rel_bro_play.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherDistance: -6 } } }] },
             right: { label: "rel_bro_play.right", outcomes: [{ result: "rel_bro_play.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 4, relBrotherGrit: 6, relBrotherDistance: -6 } } }] },
+            // The COLD third option. The two above are both kinds of caring (take him
+            // along, or make him stand on his own feet); without a genuinely unkind
+            // swipe the childhood beats could only ever push love UP, so a player
+            // deliberately shutting Tom out had no way to express it and the
+            // estrangement ending was unreachable. Note distance is NOT pulled down
+            // here: you did not show up at all, you avoided him.
+            down: { label: "rel_bro_play.down", outcomes: [{ result: "rel_bro_play.down.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10 } } }] },
           },
         },
         {
@@ -58,6 +65,10 @@ export const siblingDecks = [
               ],
             },
             right: { label: "rel_bro_bully.right", outcomes: [{ result: "rel_bro_bully.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 10, relBrotherLove: 2, relBrotherDistance: -6 } } }] },
+            // Cold: you were THERE and did nothing. The deepest cut of the three, and
+            // the only gain is the beating you did not take. Grit still rises — he
+            // learns nobody is coming — but bitterly.
+            down: { label: "rel_bro_bully.down", outcomes: [{ result: "rel_bro_bully.down.r0", effects: { vitals: { happiness: "-" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
           },
         },
         {
@@ -68,6 +79,10 @@ export const siblingDecks = [
           options: {
             left: { label: "rel_bro_share.left", outcomes: [{ result: "rel_bro_share.left.r0", effects: { vitals: { health: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -3, relBrotherDistance: -6 } } }] },
             right: { label: "rel_bro_share.right", outcomes: [{ result: "rel_bro_share.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 4, relBrotherGrit: 6, relBrotherDistance: -6 } } }] },
+            // Cold, and genuinely tempting: unlike the other two this one PAYS you —
+            // a fed, warm night — so it is a real trade of the bond for your own skin
+            // rather than a pure cruelty button.
+            down: { label: "rel_bro_share.down", outcomes: [{ result: "rel_bro_share.down.r0", effects: { vitals: { health: "+" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
           },
         },
 
@@ -86,13 +101,13 @@ export const siblingDecks = [
               label: "rel_bro_crossroads.left", // send Tom to school
               outcomes: [
                 { if: { status: { job: "studying" } }, result: "rel_bro_crossroads.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { relBrotherSchooled: true }, incTraits: { relBrotherLove: 12, relBrotherDistance: -10 } } },
-                { result: "rel_bro_crossroads.left.r1", effects: { vitals: { spirit: "+" }, setTraits: { relBrotherSchooled: true }, incTraits: { relBrotherLove: -10, relBrotherDistance: -10 } } },
+                { result: "rel_bro_crossroads.left.r1", effects: { vitals: { spirit: "+" }, setTraits: { relBrotherSchooled: true }, incTraits: { relBrotherLove: -5, relBrotherDistance: -10 } } },
               ],
             },
             right: {
               label: "rel_bro_crossroads.right", // put Tom to work
               outcomes: [
-                { if: { status: { job: "studying" } }, result: "rel_bro_crossroads.right.r0", effects: { vitals: { finances: "+" }, setTraits: { relBrotherSchooled: false }, incTraits: { relBrotherLove: -10, relBrotherGrit: 8, relBrotherDistance: -10 } } },
+                { if: { status: { job: "studying" } }, result: "rel_bro_crossroads.right.r0", effects: { vitals: { finances: "+" }, setTraits: { relBrotherSchooled: false }, incTraits: { relBrotherLove: -5, relBrotherGrit: 8, relBrotherDistance: -10 } } },
                 { result: "rel_bro_crossroads.right.r1", effects: { vitals: { finances: "+" }, setTraits: { relBrotherSchooled: false }, incTraits: { relBrotherLove: 12, relBrotherGrit: 8, relBrotherDistance: -10 } } },
               ],
             },
@@ -278,18 +293,21 @@ export const siblingDecks = [
           id: "rel_bro_estranged",
           kind: "milestone",
           priority: 60,
-          // The bar is the AGE gate, not a deeper love threshold. This deck's love
-          // floor is about -25 in practice: the two big early negatives (the baby
-          // cold-shoulder -15 and a crossroads rebuff -10) reach it, and three of the
-          // childhood beats (play, bully, share) offer NO negative option at all, so
-          // they drag love back UP however coldly you play. Measured over cruel
-          // playthroughs: -25 fires 54%, -30 only 6%, -50 literally never. So instead
-          // of demanding a depth the deck cannot reach, the gate holds until Tom is
-          // 12 — you must still be at -25 after those warm childhood beats have had
-          // their say, which takes sustained coldness rather than two early answers.
-          // (If this should ever need MORE rebuffs, give play/bully/share a negative
-          // option — lowering the threshold alone just makes the card disappear.)
-          conditions: { traits: { relBrotherStoryDone: false, relBrotherLove: { max: -25 }, relBrotherAge: { min: 12 } } },
+          // Losing Tom must be something you DO, never something that happens to you.
+          // Two guards. (1) The love bar sits below what the two early cold answers can
+          // reach between them — the baby cold-shoulder (-15) plus a crossroads
+          // mismatch (-5) bottoms out at -20 — so those two can never estrange him,
+          // however the draws fall. Reaching -30 needs at least one more deliberate
+          // rebuff (the `down` swipes on play/bully/share). (2) Tom must be 12, so it
+          // lands as a considered break, not a childhood accident.
+          // Measured over full lives: always choosing the coldest option reaches this
+          // 31% of the time, a random player 3%, always choosing the kindest 0%.
+          // (Those cold swipes were added FOR this. Without them the three childhood
+          // beats could only push love UP, so NO threshold satisfying (1) was
+          // reachable — at -25 a deliberately cold player saw this just 6% of the
+          // time. Lowering the number alone trades a rare ending for an unfair one;
+          // the deck needed real ways to push him away.)
+          conditions: { traits: { relBrotherStoryDone: false, relBrotherLove: { max: -30 }, relBrotherAge: { min: 12 } } },
           prompt: "rel_bro_estranged.prompt",
           options: {
             left: { label: "rel_bro_estranged.left", outcomes: [{ result: "rel_bro_estranged.left.r0", effects: { vitals: { spirit: "-" }, setTraits: { relBrotherStoryDone: true } } }] },
