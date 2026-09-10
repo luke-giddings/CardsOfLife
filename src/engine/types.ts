@@ -148,7 +148,7 @@ export interface Traits {
   // time" card decrements it a year at a time, and you walk free when it hits 0.
   // So the more you profited from crime, the longer the reckoning. Reset on
   // release. Lives loose in the debug panel (not a job-only stat).
-  criminality: number;
+  jobCriminality: number;
   // Total years spent behind bars, across EVERY sentence — ticked by the
   // housing=prison state, so it counts escape/cellmate years too, not just the
   // ones the "do your time" card resolved. Read by the end-of-run epilogue.
@@ -207,7 +207,7 @@ export const DEFAULT_TRAITS: Traits = {
   jobSkill: 0,
   jobReachedFactory: false,
   jobRenouncedCrime: false,
-  criminality: 0,
+  jobCriminality: 0,
   yearsInGaol: 0,
   jobStrikes: 0,
   flawOwesCharity: false,
@@ -266,11 +266,6 @@ export interface Effect {
   // facts (final job/home, vaccinated, sold up…) are read straight from end-state,
   // so they don't need a `remember`. The id is a StringId (a short past-tense line).
   remember?: StringId;
-  // Return housing to whatever it was before you entered the master's house (see
-  // GameState.housingBeforeApprentice). Used by the apprenticeship exits so the
-  // job ladder never silently grants or strips housing — you go back where you
-  // came from (family/renting/…). Falls back to `renting` if nothing was saved.
-  restoreHousing?: boolean;
 }
 
 // --- Cards -------------------------------------------------------------------
@@ -385,6 +380,10 @@ export interface StatusStateDef {
   // cell). Content names both the kind and the value it collapses to, so the
   // engine never has to know a status VALUE — see changeStatus.
   suspends?: Partial<Record<StatusKind, string>>;
+  // Traits stamped when you ENTER this state. The declarative counterpart of
+  // `keepExperience`: a fresh apprenticeship starts with no craftsmanship
+  // (`jobSkill: 0`), whatever route brought you to the bench.
+  enterTraits?: Partial<Traits>;
   // (job states) A "between jobs" state — entering it preserves the `experience`
   // counter and the job it was earned in, so a sacking→re-hire into the SAME job
   // doesn't wipe your progress. See changeStatus.
@@ -434,7 +433,6 @@ export interface GameState {
   usedCards: Record<string, number>; // card id -> times played
   lastCardId?: string;                // to avoid drawing the same card twice in a row
   experienceJob?: string;             // the job the current `jobExperience` was earned in (see changeStatus)
-  housingBeforeApprentice?: string;   // housing to return to on leaving apprenticeship (see changeStatus / restoreHousing)
   // Status values stashed by a state that `suspends` them, handed back on leaving.
   suspendedStatuses?: Partial<Record<StatusKind, string>>;
   pendingRescue?: string;             // a rescue card id to force on the next draw

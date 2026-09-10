@@ -690,7 +690,7 @@ spirit boost (`+++`) and back to honest unemployment, but it latches
 you can leave the life but can't dabble back into it.
 
 **Crime, arrest & prison.** Every crime you pull (a score card's left swipe, and
-joining the gang) ticks a **`criminality`** counter — your accumulated heat —
+joining the gang) ticks a **`jobCriminality`** counter — your accumulated heat —
 and it scales with the TIER of the crime: pickpocket **+1**, burglar **+2**,
 fence **+3**. Climbing the criminal ladder therefore builds heat two or three
 times faster per job, so the big earners draw the long sentences. The arrest
@@ -712,7 +712,7 @@ general primitive, declared in content**: a state lists which other status KINDS
 it overrides and what they collapse to (gaol: `suspends: { lifestyle: "default" }`).
 The engine stashes what you had and hands it back on leaving, so it never has to
 know a status VALUE — that keeps content rules out of `changeStatus`. Prison is a `priority` deck of three cards: **"do
-your time"** (weight ×5) counts `criminality` down a year at a time and, on the
+your time"** (weight ×5) counts `jobCriminality` down a year at a time and, on the
 last year, **releases you onto the streets** (homeless + unemployed, counter
 cleared). Gaol also bleeds money slowly (−5: fines, nothing coming in), so "do your
 time" carries a third swipe — **prison labour** — that only appears once you're
@@ -721,7 +721,7 @@ lifts you back over the gate, which hides the option again: the result is a soft
 **floor** rather than an income, so inside — where you can't earn any other way —
 your money oscillates in a low, non-lethal band instead of bleeding to 0 — so the more crimes you profited from, the longer the reckoning; a
 one-shot **break-out** (frees you but latches `flawWanted`); and a one-shot **meet
-your cellmate**. The `criminality`-as-sentence loop means a prolific career ends in
+your cellmate**. The `jobCriminality`-as-sentence loop means a prolific career ends in
 a long stretch, while a small-timer serves a year or two.
 
 Total time inside is tallied in **`yearsInGaol`** — ticked by the prison housing

@@ -125,7 +125,11 @@ export const content = {
         // Apprentice keeps a low stipend (+5) but is HOUSED FREE (apprentice
         // housing, no rent), so it still nets +5 — the dues-paying phase whose
         // real reward is the journeyman/master pay to come.
-        apprentice: { label: "status.job.apprentice", drift: { finances: 5 }, driftShown: { finances: "+" }, addDecks: ["job_apprentice"] },
+        // Being apprenticed SUSPENDS your housing: you live under the master's roof for
+        // the indenture, and whatever home you had is stashed and handed straight back
+        // when the job ends — however it ends (qualified, failed, quit, workshop shut).
+        // `enterTraits` starts the craftsmanship counter fresh each time you take a bench.
+        apprentice: { label: "status.job.apprentice", drift: { finances: 5 }, driftShown: { finances: "+" }, suspends: { housing: "apprentice" }, enterTraits: { jobSkill: 0 }, addDecks: ["job_apprentice"] },
         journeyman: { label: "status.job.journeyman", drift: { finances: 18 }, driftShown: { finances: "++" }, addDecks: ["job_journeyman"] },
         master: { label: "status.job.master", drift: { finances: 28 }, driftShown: { finances: "+++" }, addDecks: ["job_master"] },
 
@@ -199,7 +203,7 @@ export const content = {
         // — gaoled. A grim happiness/health drain and its own `priority` prison
         //   deck (do your time, break out, or meet a cellmate). Entered from the
         //   arrest cards (which also set job=convict and strip any pet); left when
-        //   the sentence — the `criminality` counter — is served down to 0, out
+        //   the sentence — the `jobCriminality` counter — is served down to 0, out
         //   onto the streets (homeless + unemployed).
         //   Money bleeds slowly inside too (fines, garnished goods, nothing coming
         //   in) — but the prison deck's "do your time" card offers prison labour

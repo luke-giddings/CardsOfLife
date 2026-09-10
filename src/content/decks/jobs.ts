@@ -76,7 +76,7 @@ export const jobDecks = [
           conditions: { traits: { jobRenouncedCrime: false } },
           prompt: "job_unemployed_fagin.prompt",
           options: {
-            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, incTraits: { criminality: 1 }, remember: "log.crime" } }] },
+            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, incTraits: { jobCriminality: 1 }, remember: "log.crime" } }] },
             right: { label: "job_unemployed_fagin.right", outcomes: [{ result: "job_unemployed_fagin.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
@@ -214,7 +214,7 @@ export const jobDecks = [
           options: {
             // Taking the break is its own reward (the ★ path change) — no vital
             // bonus on top. The years of graft to qualify are the price you pay.
-            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { setStatus: { job: "apprentice", housing: "apprentice" } } }] },
+            left: { label: "job_labour_apprenticeship.left", outcomes: [{ result: "job_labour_apprenticeship.left.r0", effects: { setStatus: { job: "apprentice" } } }] },
             right: { label: "job_labour_apprenticeship.right", outcomes: [{ result: "job_labour_apprenticeship.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
           },
         },
@@ -227,7 +227,7 @@ export const jobDecks = [
           conditions: { ageMin: 13, ageMax: 18, vitals: { happiness: { min: 70 } } },
           prompt: "job_labour_apprenticeship_favour.prompt",
           options: {
-            left: { label: "job_labour_apprenticeship_favour.left", outcomes: [{ result: "job_labour_apprenticeship_favour.left.r0", effects: { setStatus: { job: "apprentice", housing: "apprentice" } } }] },
+            left: { label: "job_labour_apprenticeship_favour.left", outcomes: [{ result: "job_labour_apprenticeship_favour.left.r0", effects: { setStatus: { job: "apprentice" } } }] },
             right: { label: "job_labour_apprenticeship_favour.right", outcomes: [{ result: "job_labour_apprenticeship_favour.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
           },
         },
@@ -415,19 +415,20 @@ export const jobDecks = [
           kind: "filler",
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_apprentice_qualify.prompt",
-          // Leaving the master's roof (pass or fail) returns you to whatever
-          // housing you had BEFORE the apprenticeship (`restoreHousing`) — the
-          // job ladder never silently grants or strips a home. You climb the
-          // housing ladder separately, on its own cards.
+          // Leaving the master's roof (pass or fail) returns you to whatever housing
+          // you had BEFORE the apprenticeship — automatically, because the
+          // job=apprentice state `suspends` housing (see content/index.ts). The job
+          // ladder never silently grants or strips a home; you climb the housing
+          // ladder separately, on its own cards.
           options: {
             left: {
               label: "job_apprentice_qualify.left",
               outcomes: [
-                { if: { traits: { jobSkill: { min: 3 } } }, result: "job_apprentice_qualify.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "journeyman", education: "journeyman" }, restoreHousing: true } },
-                { result: "job_apprentice_qualify.left.r1", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } },
+                { if: { traits: { jobSkill: { min: 3 } } }, result: "job_apprentice_qualify.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { job: "journeyman", education: "journeyman" } } },
+                { result: "job_apprentice_qualify.left.r1", effects: { vitals: { spirit: "--", happiness: "-" }, setStatus: { job: "unemployed" } } },
               ],
             },
-            right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
+            right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" } } }] },
             down: { label: "job_apprentice_qualify.down", if: { traits: { jobExperience: { max: 4 }, jobSkill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
           },
         },
@@ -441,8 +442,8 @@ export const jobDecks = [
           id: "job_apprentice_end",
           kind: "one_time",
           options: {
-            left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
-            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" }, restoreHousing: true } }] },
+            left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
+            right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
             down: { label: "job_apprentice_end.down", outcomes: [{ result: "job_apprentice_end.down.r0", effects: { vitals: { finances: "-", happiness: "-" } } }] },
           },
           prompt: "job_apprentice_end.prompt",
@@ -469,7 +470,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_criminal_job.prompt",
           options: {
-            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
+            left: { label: "job_criminal_job.left", outcomes: [{ result: "job_criminal_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, jobCriminality: 1 } } }] },
             right: { label: "job_criminal_job.right", outcomes: [{ result: "job_criminal_job.right.r0", effects: { vitals: { spirit: "+" } } }] },
             // Walk away for good: a big spirit boost and back to honest joblessness,
             // but it latches jobRenouncedCrime so the underworld never reopens (the
@@ -486,7 +487,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_criminal_score.prompt",
           options: {
-            left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { jobExperience: 1, criminality: 1 } } }] },
+            left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { jobExperience: 1, jobCriminality: 1 } } }] },
             right: { label: "job_criminal_score.right", outcomes: [{ result: "job_criminal_score.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
@@ -518,7 +519,7 @@ export const jobDecks = [
             // a battering from the chase.
             left: { label: "job_criminal_nicked.left", outcomes: [{ result: "job_criminal_nicked.left.r0", effects: { vitals: { finances: "--", health: "--", happiness: "-" } } }] },
             // Come quietly → gaol. You serve a sentence the length of your
-            // accumulated `criminality` (the prison deck counts it down). Losing
+            // accumulated `jobCriminality` (the prison deck counts it down). Losing
             // your job, your home AND your pet in one stroke.
             right: { label: "job_criminal_nicked.right", outcomes: [{ result: "job_criminal_nicked.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { housing: "prison", job: "convict", pet: "none" } } }] },
           },
@@ -836,7 +837,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_burglar_job.prompt",
           options: {
-            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 2 } } }] },
+            left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, jobCriminality: 2 } } }] },
             right: { label: "job_burglar_job.right", outcomes: [{ result: "job_burglar_job.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
@@ -857,7 +858,7 @@ export const jobDecks = [
         {
           // Caught on a housebreaking — a serious charge. Bribe your way clear
           // (keep the trade, but it costs a fortune) or take the sentence (gaol:
-          // the criminality-length stretch, losing job/home/pet).
+          // the jobCriminality-length stretch, losing job/home/pet).
           id: "job_burglar_nicked",
           kind: "filler",
           prompt: "job_burglar_nicked.prompt",
@@ -882,7 +883,7 @@ export const jobDecks = [
           weight: 3,
           prompt: "job_fence_deal.prompt",
           options: {
-            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, criminality: 3 } } }] },
+            left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, jobCriminality: 3 } } }] },
             right: { label: "job_fence_deal.right", outcomes: [{ result: "job_fence_deal.right.r0", effects: { vitals: { spirit: "+" } } }] },
             down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
@@ -895,7 +896,7 @@ export const jobDecks = [
           options: {
             // Same evade-or-submit shape as the other two arrests: bribe clear and
             // the receiving-house stays open (you keep the trade) at a fortune's
-            // cost; take the fall and it's gaol — the criminality-length stretch,
+            // cost; take the fall and it's gaol — the jobCriminality-length stretch,
             // losing job, home and pet.
             left: { label: "job_fence_raid.left", outcomes: [{ result: "job_fence_raid.left.r0", effects: { vitals: { finances: "---", health: "-" } } }] },
             right: { label: "job_fence_raid.right", outcomes: [{ result: "job_fence_raid.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { housing: "prison", job: "convict", pet: "none" } } }] },

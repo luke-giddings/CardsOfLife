@@ -68,7 +68,7 @@ const STATUS_LABEL: Record<StatusKind, StringId> = {
 
 // Debug stepper size per numeric trait: how far the −/+ buttons move it. Derived
 // from what the CONTENT actually does to each trait — ages, experience, skill,
-// strikes, pet love, criminality and years all move a point at a time, so 1 is
+// strikes, pet love, jobCriminality and years all move a point at a time, so 1 is
 // the sane default. Only the relationship meters swing in big increments (love
 // ±2..30, grit/distance ±2..10), where a step of 1 is tedious to drive to a
 // threshold. Anything not listed steps by 1.
@@ -396,7 +396,7 @@ export class Game {
   // placeholder it does not recognise alone, so a typo renders literally rather
   // than throwing, and every string without braces is untouched.
   private resultVars(): Record<string, string | number> {
-    const years = this.state.traits.criminality;
+    const years = this.state.traits.jobCriminality;
     return {
       // Pre-formatted so each language handles its own plural (and the arrest
       // cards can read naturally: "hands you down a single year" / "7 years").
@@ -1257,7 +1257,6 @@ function fmtEffect(e?: Effect): string {
   if (e.incTraits) for (const [k, v] of Object.entries(e.incTraits)) parts.push(`${k}+=${v}`);
   if (e.addDecks) parts.push(`+deck ${e.addDecks.join(",")}`);
   if (e.removeDecks) parts.push(`−deck ${e.removeDecks.join(",")}`);
-  if (e.restoreHousing) parts.push("housing=restore");
   return parts.join(", ") || "—";
 }
 

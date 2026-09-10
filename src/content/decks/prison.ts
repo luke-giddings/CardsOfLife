@@ -1,6 +1,6 @@
 // Deck — prison. Owned by the housing=prison state (set by the arrest cards). A
 // `priority` deck: while you're inside, doing your time owns the draw. Your
-// SENTENCE is the `criminality` counter you built up from the crimes you pulled —
+// SENTENCE is the `jobCriminality` counter you built up from the crimes you pulled —
 // the heavily weighted "do your time" card counts it down a year at a time and
 // releases you (onto the streets, jobless) when it reaches 0. Two one-offs colour
 // the stretch: a break-out (leave a wanted fugitive) and meeting a cellmate
@@ -15,7 +15,7 @@ import type { CardOptions, Deck } from "../../engine/types.ts";
 //         hides the option again — a soft FLOOR, not an income, so inside (where
 //         you can't earn any other way) money oscillates in a low, non-lethal band
 //         instead of bleeding to 0.
-// Every swipe serves the year (criminality -1). On the LAST year (criminality <= 1)
+// Every swipe serves the year (jobCriminality -1). On the LAST year (jobCriminality <= 1)
 // each instead releases you to the streets with the counter cleared; the labour
 // swipe still pays out then, so you don't walk free penniless for having worked it.
 // The release turn counts as a year inside too: applyEffect moves you out BEFORE
@@ -23,7 +23,7 @@ import type { CardOptions, Deck } from "../../engine/types.ts";
 // in. Without this a 1-year sentence would record 0 years served and the epilogue
 // would never mention gaol at all.
 const RELEASE = {
-  setTraits: { criminality: 0 },
+  setTraits: { jobCriminality: 0 },
   incTraits: { yearsInGaol: 1 },
   setStatus: { housing: "homeless", job: "unemployed" },
   remember: "log.released",
@@ -33,23 +33,23 @@ const doTimeOptions: CardOptions = {
   left: {
     label: "prison_time.left",
     outcomes: [
-      { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE } },
-      { result: "prison_time.left.r0", effects: { incTraits: { criminality: -1 }, vitals: { spirit: "-" } } },
+      { if: { traits: { jobCriminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE } },
+      { result: "prison_time.left.r0", effects: { incTraits: { jobCriminality: -1 }, vitals: { spirit: "-" } } },
     ],
   },
   right: {
     label: "prison_time.right",
     outcomes: [
-      { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE } },
-      { result: "prison_time.right.r0", effects: { incTraits: { criminality: -1 }, vitals: { happiness: "+", health: "-" } } },
+      { if: { traits: { jobCriminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE } },
+      { result: "prison_time.right.r0", effects: { incTraits: { jobCriminality: -1 }, vitals: { happiness: "+", health: "-" } } },
     ],
   },
   down: {
     label: "prison_time.down",
     if: { vitals: { finances: { max: 20 } } },
     outcomes: [
-      { if: { traits: { criminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE, vitals: { finances: "+" } } },
-      { result: "prison_time.down.r0", effects: { incTraits: { criminality: -1 }, vitals: { finances: "+" } } },
+      { if: { traits: { jobCriminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE, vitals: { finances: "+" } } },
+      { result: "prison_time.down.r0", effects: { incTraits: { jobCriminality: -1 }, vitals: { finances: "+" } } },
     ],
   },
 };
@@ -82,7 +82,7 @@ export const prisonDecks = [
         kind: "one_time",
         prompt: "prison_escape.prompt",
         options: {
-          left: { label: "prison_escape.left", outcomes: [{ result: "prison_escape.left.r0", effects: { setFlaws: { flawWanted: true }, setTraits: { criminality: 0 }, incTraits: { yearsInGaol: 1 }, setStatus: { housing: "homeless", job: "unemployed" }, vitals: { spirit: "+", health: "-" }, remember: "log.escaped" } }] },
+          left: { label: "prison_escape.left", outcomes: [{ result: "prison_escape.left.r0", effects: { setFlaws: { flawWanted: true }, setTraits: { jobCriminality: 0 }, incTraits: { yearsInGaol: 1 }, setStatus: { housing: "homeless", job: "unemployed" }, vitals: { spirit: "+", health: "-" }, remember: "log.escaped" } }] },
           right: { label: "prison_escape.right", outcomes: [{ result: "prison_escape.right.r0" }] },
         },
       },

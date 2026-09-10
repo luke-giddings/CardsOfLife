@@ -278,11 +278,18 @@ export const siblingDecks = [
           id: "rel_bro_estranged",
           kind: "milestone",
           priority: 60,
-          // A HIGH bar: only a bridge burned deliberately, over years, ends the arc
-          // this way. -25 was reachable from two cold choices (the baby cold-shoulder
-          // alone is -15), which closed Tom off before the story had really begun.
-          // -50 takes roughly four deliberate rebuffs, and Tom must be into his teens.
-          conditions: { traits: { relBrotherStoryDone: false, relBrotherLove: { max: -50 }, relBrotherAge: { min: 12 } } },
+          // The bar is the AGE gate, not a deeper love threshold. This deck's love
+          // floor is about -25 in practice: the two big early negatives (the baby
+          // cold-shoulder -15 and a crossroads rebuff -10) reach it, and three of the
+          // childhood beats (play, bully, share) offer NO negative option at all, so
+          // they drag love back UP however coldly you play. Measured over cruel
+          // playthroughs: -25 fires 54%, -30 only 6%, -50 literally never. So instead
+          // of demanding a depth the deck cannot reach, the gate holds until Tom is
+          // 12 — you must still be at -25 after those warm childhood beats have had
+          // their say, which takes sustained coldness rather than two early answers.
+          // (If this should ever need MORE rebuffs, give play/bully/share a negative
+          // option — lowering the threshold alone just makes the card disappear.)
+          conditions: { traits: { relBrotherStoryDone: false, relBrotherLove: { max: -25 }, relBrotherAge: { min: 12 } } },
           prompt: "rel_bro_estranged.prompt",
           options: {
             left: { label: "rel_bro_estranged.left", outcomes: [{ result: "rel_bro_estranged.left.r0", effects: { vitals: { spirit: "-" }, setTraits: { relBrotherStoryDone: true } } }] },
