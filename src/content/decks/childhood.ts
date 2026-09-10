@@ -159,8 +159,24 @@ export const childhoodDecks = [
           conditions: { ageMin: 18 },
           prompt: "child_adult.prompt",
           options: {
-            left: { label: "child_adult.left", outcomes: [{ result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } }] },
-            right: { label: "child_adult.right", outcomes: [{ result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } }] },
+            left: { label: "child_adult.left", outcomes: [
+              // A CHILD labourer cannot stay one into adulthood: coming of age puts
+              // you on the grown men's shift (the adult unskilled rung). The
+              // experience-gated job_labour_factory card is the early route there;
+              // turning eighteen is the other. jobReachedFactory is stamped so a
+              // later spell of unemployment can offer the factory back.
+              { if: { status: { job: "child_labourer" } }, result: "child_adult.left.r1", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal", job: "factory" }, setTraits: { jobReachedFactory: true }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
+              { result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
+            ] },
+            right: { label: "child_adult.right", outcomes: [
+              // A CHILD labourer cannot stay one into adulthood: coming of age puts
+              // you on the grown men's shift (the adult unskilled rung). The
+              // experience-gated job_labour_factory card is the early route there;
+              // turning eighteen is the other. jobReachedFactory is stamped so a
+              // later spell of unemployment can offer the factory back.
+              { if: { status: { job: "child_labourer" } }, result: "child_adult.right.r1", effects: { vitals: { health: "+", finances: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal", job: "factory" }, setTraits: { jobReachedFactory: true }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
+              { result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
+            ] },
           },
         },
       ],

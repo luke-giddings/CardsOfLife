@@ -379,6 +379,12 @@ export interface StatusStateDef {
   // the strength from |drift| (|v| >= 16 → 3, >= 8 → 2, else 1).
   driftShown?: Partial<Record<VitalKey, DriftShown>>;
   addDecks?: string[];                   // decks owned while in this state
+  // While you are in this state, these OTHER status kinds are forced to the given
+  // value, and whatever you had is stashed and handed back when you leave. Gaol
+  // uses it to suspend your lifestyle (nobody keeps a lavish household from a
+  // cell). Content names both the kind and the value it collapses to, so the
+  // engine never has to know a status VALUE — see changeStatus.
+  suspends?: Partial<Record<StatusKind, string>>;
   // (job states) A "between jobs" state — entering it preserves the `experience`
   // counter and the job it was earned in, so a sacking→re-hire into the SAME job
   // doesn't wipe your progress. See changeStatus.
@@ -429,7 +435,8 @@ export interface GameState {
   lastCardId?: string;                // to avoid drawing the same card twice in a row
   experienceJob?: string;             // the job the current `jobExperience` was earned in (see changeStatus)
   housingBeforeApprentice?: string;   // housing to return to on leaving apprenticeship (see changeStatus / restoreHousing)
-  lifestyleBeforePrison?: string;     // lifestyle to return to on release from gaol (see changeStatus)
+  // Status values stashed by a state that `suspends` them, handed back on leaving.
+  suspendedStatuses?: Partial<Record<StatusKind, string>>;
   pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent
   over: boolean;

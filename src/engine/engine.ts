@@ -250,30 +250,21 @@ function changeStatus(
   if (kind === "job" && value === "apprentice" && previous !== "apprentice") {
     state.traits.jobSkill = 0;
   }
-  // You cannot still be a CHILD labourer once you are no longer a child: coming of
-  // age moves you onto the adult unskilled rung (the factory), however little time
-  // you had served. The experience-gated job_labour_factory card is the EARLY route
-  // onto that rung, not the only one — turning eighteen is the other. Also stamps
-  // jobReachedFactory, or a later spell of unemployment could not offer the factory
-  // back (that option is gated on having been there). Recursing is safe: the nested
-  // call's kind is `job`, not `age`.
-  if (kind === "age" && value === "young_adult" && state.statuses.job === "child_labourer") {
-    changeStatus(state, "job", "factory", content);
-    state.traits.jobReachedFactory = true;
-  }
-  // Gaol SUSPENDS your way of living — nobody keeps a lavish (or even a frugal)
-  // household from a cell. Going in stows the lifestyle and drops you to the
-  // neutral `default` (no drift, hidden chip); coming out restores exactly what
-  // you had. Done here rather than on the cards so every route in/out (sentence
-  // served, break-out) behaves the same and can't forget it. Recursing into
-  // changeStatus is safe: the nested call's kind is `lifestyle`, not `housing`.
-  if (kind === "housing" && value === "prison" && previous !== "prison") {
-    state.lifestyleBeforePrison = state.statuses.lifestyle;
-    changeStatus(state, "lifestyle", "default", content);
-  } else if (kind === "housing" && previous === "prison" && value !== "prison") {
-    if (state.lifestyleBeforePrison !== undefined) {
-      changeStatus(state, "lifestyle", state.lifestyleBeforePrison, content);
-      state.lifestyleBeforePrison = undefined;
+  // A state may SUSPEND other status kinds while you are in it (see
+  // StatusStateDef.suspends): entering stashes what you had and forces the
+  // declared value, leaving hands it straight back. Content names the kinds and
+  // values, so no status VALUE is hardcoded here. Recursion is safe — a state
+  // never suspends its own kind.
+  if (value !== previous) {
+    for (const k of Object.keys(oldState?.suspends ?? {}) as StatusKind[]) {
+      const stashed = state.suspendedStatuses?.[k];
+      if (stashed === undefined) continue;
+      delete state.suspendedStatuses![k];
+      changeStatus(state, k, stashed, content);
+    }
+    for (const [k, forced] of Object.entries(newState?.suspends ?? {}) as [StatusKind, string][]) {
+      (state.suspendedStatuses ??= {})[k] = state.statuses[k];
+      changeStatus(state, k, forced, content);
     }
   }
 }

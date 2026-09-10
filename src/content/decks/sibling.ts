@@ -278,11 +278,20 @@ export const siblingDecks = [
           id: "rel_bro_estranged",
           kind: "milestone",
           priority: 60,
-          conditions: { traits: { relBrotherStoryDone: false, relBrotherLove: { max: -25 }, relBrotherAge: { min: 8 } } },
+          // A HIGH bar: only a bridge burned deliberately, over years, ends the arc
+          // this way. -25 was reachable from two cold choices (the baby cold-shoulder
+          // alone is -15), which closed Tom off before the story had really begun.
+          // -50 takes roughly four deliberate rebuffs, and Tom must be into his teens.
+          conditions: { traits: { relBrotherStoryDone: false, relBrotherLove: { max: -50 }, relBrotherAge: { min: 12 } } },
           prompt: "rel_bro_estranged.prompt",
           options: {
             left: { label: "rel_bro_estranged.left", outcomes: [{ result: "rel_bro_estranged.left.r0", effects: { vitals: { spirit: "-" }, setTraits: { relBrotherStoryDone: true } } }] },
-            right: { label: "rel_bro_estranged.right", outcomes: [{ result: "rel_bro_estranged.right.r0", effects: { vitals: { finances: "-", spirit: "-" }, setTraits: { relBrotherStoryDone: true }, incTraits: { relBrotherLove: 6 } } }] },
+            // Reaching for him does NOT end the story — that was backwards. It costs
+            // real coin and pride and buys back a big chunk of love, pulling you off
+            // the estrangement threshold so the remaining beats (rift, reckoning,
+            // fate) can still play out. The card is a milestone, so it is consumed
+            // either way and will not nag you again.
+            right: { label: "rel_bro_estranged.right", outcomes: [{ result: "rel_bro_estranged.right.r0", effects: { vitals: { finances: "-", spirit: "-" }, incTraits: { relBrotherLove: 30 } } }] },
           },
         },
       ],

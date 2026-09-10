@@ -661,12 +661,11 @@ How the gates realise this:
 **Coming of age ends child labour.** The age-18 milestone moves a `child_labourer`
 onto the adult unskilled rung (`factory`) whatever their experience — the
 experience-gated `job_labour_factory` card is the *early* route there, turning
-eighteen is the other — so nobody is still a *child* labourer at 25. It lives in
-`changeStatus` (so both swipes of the milestone, and any future route into
-young adulthood, get it) and is guarded on the job actually being
-`child_labourer`, so it never overwrites a job you already climbed to. It also
-stamps `jobReachedFactory`, or a later spell of unemployment could not offer the
-factory back.
+eighteen is the other — so nobody is still a *child* labourer at 25. It lives on the milestone CARD as a conditional outcome gated on
+`job = child_labourer`, so it can never overwrite a job you already climbed to
+(a pupil, an apprentice, an early factory promotion) and it gets its own result
+line. It also stamps `jobReachedFactory`, or a later spell of unemployment could
+not offer the factory back.
 
 **Criminal path plays differently — no wage, big scores (built, tier 1).** Unlike
 the wage-drift paths, the criminal tier has **0 drift**: no passive income at all.
@@ -707,8 +706,12 @@ quietly" / "take the sentence" / "take the fall") sends you to **gaol**: a new `
 that also **strips your pet** and **suspends your lifestyle** (nobody keeps a
 lavish household from a cell — it stows the tier and drops you to the neutral
 `default`, restoring exactly what you had on release). The suspend/restore lives in
-`changeStatus` (via `lifestyleBeforePrison`), not on the cards, so every route in
-and out — sentence served or break-out — behaves identically. Prison is a `priority` deck of three cards: **"do
+`changeStatus` (via `StatusStateDef.suspends`), not on the cards, so every route
+in and out — sentence served or break-out — behaves identically. **`suspends` is a
+general primitive, declared in content**: a state lists which other status KINDS
+it overrides and what they collapse to (gaol: `suspends: { lifestyle: "default" }`).
+The engine stashes what you had and hands it back on leaving, so it never has to
+know a status VALUE — that keeps content rules out of `changeStatus`. Prison is a `priority` deck of three cards: **"do
 your time"** (weight ×5) counts `criminality` down a year at a time and, on the
 last year, **releases you onto the streets** (homeless + unemployed, counter
 cleared). Gaol also bleeds money slowly (−5: fines, nothing coming in), so "do your

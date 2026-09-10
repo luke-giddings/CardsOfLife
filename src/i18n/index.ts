@@ -152,6 +152,8 @@ export const EN = {
   "child_adult.left.r0": "The world is wide and you are young in it. Whatever comes, you'll meet it gladly.",
   "child_adult.right": "Steel yourself",
   "child_adult.right.r0": "You've learned life gives nothing freely. Jaw set, you square up to the years ahead.",
+  "child_adult.left.r1": "The world is wide and you are young in it. The foreman moves you off the children's work and onto the grown men's shift — a man's wage, and a man's hours.",
+  "child_adult.right.r1": "You've learned life gives nothing freely. The foreman moves you off the children's work and onto the grown men's shift — a man's wage, and a man's hours.",
 
   // ---- YOUNG ADULTHOOD (18–~25) -----------------------------------------
   "deck.young_adult.title": "The Prime of Life",
@@ -1189,11 +1191,11 @@ export const EN = {
   "rel_bro_fate.right.r0": "You don't intrude. He made his own way in the world without you, and did well by it — you're proud of him, with a quiet pang for the distance.",
   "rel_bro_fate.right.r1": "You send word but keep away. A dutiful, distant farewell to a brother you somehow never quite kept hold of.",
   "rel_bro_fate.right.r2": "Word reaches you late: Tom came to a bad end, alone, and no one thought to call you. It sits heavy, and always will.",
-  "rel_bro_estranged.prompt": "It has curdled past mending. Tom returns your letters unopened; when your paths cross, he looks through you as though you were a stranger.",
+  "rel_bro_estranged.prompt": "It has curdled. Tom returns your letters unopened; when your paths cross, he looks through you as though you were a stranger.",
   "rel_bro_estranged.left": "Let it lie",
   "rel_bro_estranged.left.r0": "You stop trying. Whatever you were to each other is over, and the silence where a brother should be never quite stops aching.",
   "rel_bro_estranged.right": "Try to make amends",
-  "rel_bro_estranged.right.r0": "You swallow your pride and your coin to reach him — and win, at best, a cold civility. The brother is gone; only a wary acquaintance remains.",
+  "rel_bro_estranged.right.r0": "You swallow your pride and your coin to reach him. It is stiff going, and slow, and it costs you dearly — but he answers. The door is not shut after all.",
 
   // ---- SIBLING (sister placeholder; brother is rel_bro) ------------------
   "sibling_play.prompt": "Your little sibling is begging you to come and play.",
@@ -1493,6 +1495,8 @@ export const IT: Record<StringId, string> = {
   "child_adult.left.r0": "Il mondo è vasto e tu sei giovane. Qualunque cosa venga, la accoglierai con gioia.",
   "child_adult.right": "Farsi forza",
   "child_adult.right.r0": "Hai imparato che la vita non regala nulla. Con la mascella serrata, affronti gli anni a venire.",
+  "child_adult.left.r1": "Il mondo è vasto e tu sei giovane. Il caposquadra ti toglie dal lavoro dei ragazzi e ti mette nel turno degli uomini — paga da uomo, e orari da uomo.",
+  "child_adult.right.r1": "Hai imparato che la vita non regala nulla. Il caposquadra ti toglie dal lavoro dei ragazzi e ti mette nel turno degli uomini — paga da uomo, e orari da uomo.",
 
   // ---- GIOVENTÙ ADULTA (18–~25) -----------------------------------------
   "deck.young_adult.title": "Il Fiore degli Anni",
@@ -2530,11 +2534,11 @@ export const IT: Record<StringId, string> = {
   "rel_bro_fate.right.r0": "Non ti intrometti. Si è fatto la sua strada nel mondo senza di te, e bene — sei fiero di lui, con una fitta silenziosa per la distanza.",
   "rel_bro_fate.right.r1": "Mandi un messaggio ma resti lontano. Un addio doveroso e distante a un fratello che in qualche modo non hai mai davvero trattenuto.",
   "rel_bro_fate.right.r2": "La notizia ti arriva tardi: Tom è finito male, solo, e nessuno ha pensato di chiamarti. Ti pesa, e ti peserà sempre.",
-  "rel_bro_estranged.prompt": "Si è guastato oltre ogni rimedio. Tom ti rimanda le lettere non aperte; quando vi incrociate, ti guarda attraverso come fossi un estraneo.",
+  "rel_bro_estranged.prompt": "Si è guastato. Tom ti rimanda le lettere non aperte; quando vi incrociate, ti guarda attraverso come fossi un estraneo.",
   "rel_bro_estranged.left": "Lasciar perdere",
   "rel_bro_estranged.left.r0": "Smetti di provarci. Qualunque cosa siate stati l'uno per l'altro è finita, e il silenzio dove dovrebbe esserci un fratello non smette mai davvero di dolere.",
   "rel_bro_estranged.right": "Cercare di rimediare",
-  "rel_bro_estranged.right.r0": "Ingoi l'orgoglio e apri la borsa per raggiungerlo — e ottieni, al massimo, una fredda cortesia. Il fratello non c'è più; resta solo una conoscenza guardinga.",
+  "rel_bro_estranged.right.r0": "Ingoi l'orgoglio e apri la borsa per raggiungerlo. È faticoso, e lento, e ti costa caro — ma lui risponde. La porta non è chiusa, dopotutto.",
 
   // ---- SIBLING (sister placeholder; brother is rel_bro) ------------------
   "sibling_play.prompt": "Il tuo fratellino ti implora di andare a giocare.",
