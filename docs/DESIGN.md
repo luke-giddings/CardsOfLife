@@ -895,6 +895,15 @@ Roughly in likely order. None of these are started.
   designed; **deliberately deferred** so childhood content is written and
   balanced first. Starts with the **age-18 leaver branch** (choose first job /
   apprenticeship / further study).
+- **Two-choice vs three-choice sweep** — the game is currently **178 two-swipe
+  cards to 18 three-swipe** ones, and the third swipe has been added ad hoc where a
+  card needed it (the criminal "give up the life", the apprentice "beg for more
+  time", prison labour, Tom's cold childhood options). Worth a deliberate pass
+  asking which cards *want* a third option and which are honest binaries — a down
+  swipe is the natural home for the costly escape hatch, the cowardly way out, or
+  the choice that trades a relationship for a vital. Note the distribution is very
+  uneven by deck: `adult`, `education` and `pet` have **none** at all, while `jobs`
+  has 8. Not urgent; a texture/consistency question rather than a balance one.
 - **Deck-density pass, once the run extends past 18** — a deck-size audit (job/
   home/edu/core) flagged things that can't be judged on a 13-year window and are
   deferred until there's a real runway: (a) **`home_renting` wants ~1 filler** —
