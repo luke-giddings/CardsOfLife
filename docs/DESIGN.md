@@ -212,8 +212,14 @@ adding/removing decks and gating are trivial filters.
 - **Draw-and-discard:** a played card is consumed, unless it's **filler**
   (returns to the pool). `one_time` cards carry `copies` = max occurrences.
 
-Per-turn order: pick card → resolve outcome → apply effects → age +1 → apply
-Status **drift** (after effects) → check game-over.
+Per-turn order: pick card → resolve outcome → apply effects (raw) → age +1 →
+apply Status **drift** (raw) → **clamp all vitals once** → check game-over.
+The single clamp is deliberate: the card's change and the turn's drift are summed
+onto the raw value and clamped together, so a card gain isn't capped to 100 before
+a negative drift eats it (otherwise a **force-at-max** spend — move out / buy a
+house at a full purse — can never trigger, because housing drift always pulls
+finances back below the cap the same turn), and symmetrically a mortal blow isn't
+floored to 0 and then quietly undone by positive drift.
 
 ## 10. Decks & progression
 

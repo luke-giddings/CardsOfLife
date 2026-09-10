@@ -287,7 +287,11 @@ export function applyEffect(state: GameState, effect: Effect, content: Content):
   if (effect.vitals) {
     for (const [k, mag] of Object.entries(effect.vitals)) {
       const key = k as VitalKey;
-      state.vitals[key] = clampVital(applyMagnitude(state.vitals[key], mag as Magnitude));
+      // Apply RAW (unclamped) — the turn's single clamp happens after drift too
+      // (see clampVitals). Clamping here would cap a card's gain to 100 before a
+      // negative drift eats into it, which made every force-at-max spend card
+      // (move out / buy a house at a full purse) impossible to reach.
+      state.vitals[key] = applyMagnitude(state.vitals[key], mag as Magnitude);
     }
   }
   if (effect.remember) {
@@ -325,8 +329,18 @@ export function totalDrift(state: GameState, content: Content): Partial<Vitals> 
 function applyDrift(state: GameState, content: Content): void {
   const drift = totalDrift(state, content);
   for (const key of VITAL_KEYS) {
-    if (drift[key]) state.vitals[key] = clampVital(state.vitals[key] + drift[key]!);
+    if (drift[key]) state.vitals[key] = state.vitals[key] + drift[key]!; // raw; clamped once at end of turn
   }
+}
+
+// Clamp every vital into range. Runs ONCE per turn, after BOTH the card's effects
+// and the status drift have been summed onto the raw value. This is what lets a
+// card's gain and the turn's drift net out before the cap/floor bite: a full-purse
+// card can end the turn at 100 (so a force-at-max spend fires next turn) instead of
+// being capped mid-turn and then knocked below 100 by rent; symmetrically, a mortal
+// blow isn't floored to 0 and then quietly undone by positive drift.
+function clampVitals(state: GameState): void {
+  for (const key of VITAL_KEYS) state.vitals[key] = clampVital(state.vitals[key]);
 }
 
 // Per-turn TRAIT increments from active status states (StatusStateDef.tick) AND
@@ -409,6 +423,7 @@ export function chooseDirection(
   state.age += 1;
   applyDrift(state, content);
   applyTick(state, content);
+  clampVitals(state);
   checkGameOver(state, content);
   return { state, result: outcome.result };
 }
@@ -419,6 +434,7 @@ export function quietYear(prev: GameState): { state: GameState; result: string }
   state.age += 1;
   applyDrift(state, CONTENT);
   applyTick(state, CONTENT);
+  clampVitals(state);
   checkGameOver(state, CONTENT);
   return { state, result: "A quiet, uneventful year passes." };
 }

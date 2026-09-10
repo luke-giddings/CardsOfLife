@@ -386,9 +386,10 @@ export class Game {
     // Simulate the choice's effects on a throwaway clone, so the fatal check uses
     // the drift of the status you'd be IN *after* the card — a choice that
     // changes your job/home/lifestyle changes the drains too, and previewing the
-    // CURRENT drains would mislead. `projected.vitals` already holds the card's
-    // vital change (clamped, in engine order: effect then drift), and `drift` is
-    // the post-change per-turn drain.
+    // CURRENT drains would mislead. `projected.vitals` holds the card's RAW vital
+    // change (unclamped — the engine now sums card + drift and clamps once), and
+    // `drift` is the post-change per-turn drain. The lethal test below adds the two
+    // raw and compares to 0, which matches the engine exactly (clamp(x)≤0 ⟺ x≤0).
     const projected = structuredClone(this.state);
     if (outcome.effects) applyEffect(projected, outcome.effects, content);
     // Mirror chooseDirection: a non-filler card is consumed THIS turn, BEFORE the
