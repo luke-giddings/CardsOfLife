@@ -149,6 +149,10 @@ export interface Traits {
   // So the more you profited from crime, the longer the reckoning. Reset on
   // release. Lives loose in the debug panel (not a job-only stat).
   criminality: number;
+  // Total years spent behind bars, across EVERY sentence — ticked by the
+  // housing=prison state, so it counts escape/cellmate years too, not just the
+  // ones the "do your time" card resolved. Read by the end-of-run epilogue.
+  yearsInGaol: number;
   // Standing with your current employer (0 = model worker). Rises when you shirk
   // and each time you grovel to keep your job; a high count means the foreman
   // won't hear your pleading. Resets to 0 on any job change (a fresh reputation
@@ -204,6 +208,7 @@ export const DEFAULT_TRAITS: Traits = {
   jobReachedFactory: false,
   jobRenouncedCrime: false,
   criminality: 0,
+  yearsInGaol: 0,
   jobStrikes: 0,
   flawOwesCharity: false,
   flawSoldUp: false,

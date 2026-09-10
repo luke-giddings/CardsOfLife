@@ -972,6 +972,11 @@ export class Game {
     if (saw("log.workhouse")) colour.push(t("ui.proseWorkhouse"));
     else if (saw("log.streets")) colour.push(t("ui.proseStreets"));
     if (saw("log.crime")) colour.push(t("ui.proseCrime"));
+    // Gaol: the years are ticked by the prison housing state, so this covers
+    // every sentence served (and the years spent escaping or with a cellmate).
+    if (tr.yearsInGaol > 0)
+      colour.push(tf(tr.yearsInGaol === 1 ? "ui.proseGaolOne" : "ui.proseGaol", { n: tr.yearsInGaol }));
+    if (tr.flawWanted) colour.push(t("ui.proseWanted"));
     if (tr.relBrotherActive) {
       // Read both axes: a bitter bond reads estranged; a warm-but-absent one reads
       // "drifted" (you loved him, but let the years pull you apart); otherwise close

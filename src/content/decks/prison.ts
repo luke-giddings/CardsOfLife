@@ -18,8 +18,13 @@ import type { CardOptions, Deck } from "../../engine/types.ts";
 // Every swipe serves the year (criminality -1). On the LAST year (criminality <= 1)
 // each instead releases you to the streets with the counter cleared; the labour
 // swipe still pays out then, so you don't walk free penniless for having worked it.
+// The release turn counts as a year inside too: applyEffect moves you out BEFORE
+// applyTick runs, so the prison state's `tick` misses the very year you walk free
+// in. Without this a 1-year sentence would record 0 years served and the epilogue
+// would never mention gaol at all.
 const RELEASE = {
   setTraits: { criminality: 0 },
+  incTraits: { yearsInGaol: 1 },
   setStatus: { housing: "homeless", job: "unemployed" },
   remember: "log.released",
 } as const;
@@ -77,7 +82,7 @@ export const prisonDecks = [
         kind: "one_time",
         prompt: "prison_escape.prompt",
         options: {
-          left: { label: "prison_escape.left", outcomes: [{ result: "prison_escape.left.r0", effects: { setFlaws: { flawWanted: true }, setTraits: { criminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, vitals: { spirit: "+", health: "-" }, remember: "log.escaped" } }] },
+          left: { label: "prison_escape.left", outcomes: [{ result: "prison_escape.left.r0", effects: { setFlaws: { flawWanted: true }, setTraits: { criminality: 0 }, incTraits: { yearsInGaol: 1 }, setStatus: { housing: "homeless", job: "unemployed" }, vitals: { spirit: "+", health: "-" }, remember: "log.escaped" } }] },
           right: { label: "prison_escape.right", outcomes: [{ result: "prison_escape.right.r0" }] },
         },
       },

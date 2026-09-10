@@ -704,9 +704,15 @@ one-shot **break-out** (frees you but latches `flawWanted`); and a one-shot **me
 your cellmate**. The `criminality`-as-sentence loop means a prolific career ends in
 a long stretch, while a small-timer serves a year or two.
 
-Backlog on the prison system: **`flawWanted`** is set by the break-out but not yet
-*used* — it should make honest work harder to land, carry a re-arrest risk, and
-colour the epitaph. And **"meet your cellmate"** should open a dedicated **cellmate
+Total time inside is tallied in **`yearsInGaol`** — ticked by the prison housing
+state (so it counts cellmate/escape years, not just the ones "do your time"
+resolved) plus one for the exit turn, since `applyEffect` moves you out before
+`applyTick` runs and would otherwise miss the very year you walk free in. It
+accumulates across every sentence and is read out in the closing epilogue.
+
+Backlog on the prison system: **`flawWanted`** now colours the epilogue, but is
+still not used mechanically — it should make honest work harder to land and carry
+a re-arrest risk. And **"meet your cellmate"** should open a dedicated **cellmate
 relationship deck** (to be designed) rather than the one-off comfort it grants now.
 
 ### Houses — a `---` purchase behind a rising gate, then cheap upkeep
