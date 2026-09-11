@@ -422,6 +422,11 @@ export const EN = {
   "home_family_pet.left.r0": "A new best friend who gets you outdoors — vet bills and all.",
   "home_family_pet.right": "Shoo it off",
   "home_family_pet.right.r0": "You save the hassle and the money, but feel a pang.",
+  "home_family_dog.prompt": "A thin, hopeful dog has taken to waiting by the gate for you each morning.",
+  "home_family_dog.left": "Take it in",
+  "home_family_dog.left.r0": "It sleeps across your feet the first night and never really leaves. Something in you stands a little straighter for having it.",
+  "home_family_dog.right": "Send it on its way",
+  "home_family_dog.right.r0": "You harden your heart and shut the gate. There's more in the pot tonight — and a quiet you don't much care for.",
 
   "home_family_market.prompt": "Mother sends you to market with the week's pennies and a long list.",
   "home_family_market.left": "Haggle for every penny",
@@ -1771,6 +1776,11 @@ export const IT: Record<StringId, string> = {
   "home_family_pet.left.r0": "Un nuovo migliore amico che ti fa uscire all'aria aperta — spese del veterinario comprese.",
   "home_family_pet.right": "Scacciarlo",
   "home_family_pet.right.r0": "Ti risparmi la seccatura e i soldi, ma senti una fitta.",
+  "home_family_dog.prompt": "Un cane magro e pieno di speranza ha preso l'abitudine di aspettarti al cancello ogni mattina.",
+  "home_family_dog.left": "Accoglierlo",
+  "home_family_dog.left.r0": "La prima notte dorme sui tuoi piedi e non se ne va più. Qualcosa in te sta un po' più dritto, ad averlo accanto.",
+  "home_family_dog.right": "Mandarlo via",
+  "home_family_dog.right.r0": "Indurisci il cuore e chiudi il cancello. Stasera c'è più roba nel piatto — e un silenzio che non ti piace granché.",
 
   "home_family_market.prompt": "La mamma ti manda al mercato con gli spiccioli della settimana e una lunga lista.",
   "home_family_market.left": "Contrattare su ogni centesimo",

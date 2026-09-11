@@ -55,6 +55,26 @@ export const homeDecks = [
           },
         },
         {
+          // The stray DOG — the mirror of the stray cat above, and the childhood
+          // route onto the SPIRIT companion (the cat is the happiness one). Same
+          // shape: take it in and it seeds the pet status, or send it on its way.
+          // A found stray bonds a little less than a chosen pet-shop animal, so it
+          // seeds love 2 rather than 3, same as the cat.
+          // Gated pet=none like its twin, so the two strays can never stack: take
+          // either and the other drops out of the pool. Declining one still leaves
+          // the other available — two chances at a childhood animal, never two
+          // animals. Refusing costs the very vital the dog would have given you
+          // (spirit), mirroring the cat's refusal costing happiness.
+          id: "home_family_dog",
+          kind: "one_time",
+          conditions: { ageMax: 17, status: { pet: "none" } },
+          prompt: "home_family_dog.prompt",
+          options: {
+            left: { label: "home_family_dog.left", outcomes: [{ result: "home_family_dog.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { pet: "dog" }, setTraits: { petDogLove: 2, petDogAge: 0 } } }] },
+            right: { label: "home_family_dog.right", outcomes: [{ result: "home_family_dog.right.r0", effects: { vitals: { finances: "+", happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
           id: "home_family_market",
           kind: "one_time",
           conditions: { ageMax: 17 },

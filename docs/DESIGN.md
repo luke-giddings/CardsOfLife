@@ -979,6 +979,14 @@ Roughly in likely order. None of these are started.
   each real work events, promotion moments, and path-appropriate hazards so a
   career actually plays out rather than just ticking experience toward a promotion
   or a sacking. (Supersedes the terminal-tier note in the deck-density item.)
+- **Pets — two childhood strays.** Both routes onto a pet are mirrored: a stray
+  **cat** (happiness companion) and a stray **dog** (spirit companion) can each
+  turn up while you live with family, and the adult/young-adult pet shop offers
+  the same pair plus "walk on". Every acquisition card is gated `pet: none`, so
+  you can never stack two animals — take either stray and the other drops out of
+  the pool; decline one and the other may still come. A found stray seeds love 2
+  against the pet shop's 3 (a chosen animal bonds better). Refusing a stray costs
+  the very vital that animal embodies — happiness for the cat, spirit for the dog.
 - **Homeless deck & exits** — **BUILT** (`home_homeless`, a `priority` deck owned
   by `homeless` housing). Grim daily life (a charity meal to recover; a little
   begged income so even the jobless inch toward a deposit) plus **four gated
