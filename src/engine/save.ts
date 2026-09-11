@@ -1,12 +1,12 @@
 import type { GameState } from "./types.ts";
 
 // Bump this whenever GameState's SHAPE changes, so saves written by an older
-build simply do not load (you get a fresh life) instead of loading silently into
-an inconsistent state. This is deliberately NOT migration — there is no attempt
-to carry an old save forward, which is the point: during development a restart is
-cheap, a half-converted state is confusing. (v1 -> v2: `housingBeforeApprentice`
-became the general `suspendedStatuses`, so a v1 save mid-apprenticeship had no
-stash to restore and left you housed "With Master" forever.)
+// build simply do not load (you get a fresh life) instead of loading silently
+// into an inconsistent state. This is deliberately NOT migration — there is no
+// attempt to carry an old save forward, which is the point: during development a
+// restart is cheap, a half-converted state is confusing. (v1 -> v2:
+// `housingBeforeApprentice` became the general `suspendedStatuses`, so a v1 save
+// mid-apprenticeship had no stash to restore and left you housed "With Master".)
 const KEY = "cardsoflife.save.v2";
 
 export function saveGame(state: GameState): void {
