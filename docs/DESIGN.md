@@ -724,11 +724,16 @@ one-shot **break-out** (frees you but latches `flawWanted`); and a one-shot **me
 your cellmate**. The `jobCriminality`-as-sentence loop means a prolific career ends in
 a long stretch, while a small-timer serves a year or two.
 
-Total time inside is tallied in **`flawYearsInGaol`** — ticked by the prison housing
-state (so it counts cellmate/escape years, not just the ones "do your time"
-resolved) plus one for the exit turn, since `applyEffect` moves you out before
-`applyTick` runs and would otherwise miss the very year you walk free in. It
-accumulates across every sentence and is read out in the closing epilogue.
+Total time inside is tallied in **`flawYearsInGaol`**, ticked by the prison housing
+state and by nothing else. The bookkeeping is self-balancing: the turn you are
+ARRESTED ticks (`applyEffect` gaols you before `applyTick` runs) and the turn you
+are RELEASED does not (it moves you out first), so the ticks total exactly the
+years between. Serve an uninterrupted sentence and the tally equals the term the
+judge named; lose a year to something else — the cellmate one-shot, a declined
+break-out, an age milestone firing through — and it counts that too, which is the
+point: it reports time SERVED, not the sentence. It accumulates across every
+stretch and is read out in the closing epilogue. (Do not add an explicit +1 on the
+release: that double-counts the arrest year and reported a 4-year stretch as 5.)
 
 Backlog on the prison system: **`flawWanted`** now colours the epilogue, but is
 still not used mechanically — it should make honest work harder to land and carry
