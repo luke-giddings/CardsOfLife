@@ -421,6 +421,14 @@ export interface Content {
   decks: Deck[];
   statuses: Record<StatusKind, StatusDef>;
   start: StartConfig;
+  // Content CONSTANTS, substituted into any player-facing card string that uses
+  // {braces} — the siblings' names live here rather than being written into every
+  // card, so renaming one is a single edit. Constant for the whole run (never
+  // per-save), so they are NOT traits; content, not engine, so they are NOT
+  // hardcoded in the UI. Deliberately content-level rather than per-deck: the
+  // end-of-run epilogue names the siblings too (ui.proseBrother*) and belongs to
+  // no deck, so deck-scoping would leave those unresolvable.
+  vars?: Record<string, string>;
 }
 
 // --- Runtime game state (this is what gets saved) ----------------------------

@@ -395,9 +395,23 @@ export class Game {
   // the heat you carried in. Deliberately a tiny, explicit set: `tf` leaves any
   // placeholder it does not recognise alone, so a typo renders literally rather
   // than throwing, and every string without braces is untouched.
+  // Variables available to EVERY player-facing card string (prompt, option label,
+  // result) — see Content.vars, where the cast's names are declared. `tf` leaves
+  // unknown or absent placeholders alone, so strings without braces are untouched.
+  private textVars(): Record<string, string | number> {
+    return { ...(content.vars ?? {}) };
+  }
+
+  // Render a card string with those variables. Use in place of bare `t()` for
+  // anything the player reads off a card.
+  private txt(id: StringId): string {
+    return tf(id, this.textVars());
+  }
+
   private resultVars(): Record<string, string | number> {
     const years = this.state.traits.jobCriminality;
     return {
+      ...this.textVars(),
       // Pre-formatted so each language handles its own plural (and the arrest
       // cards can read naturally: "hands you down a single year" / "7 years").
       sentence: years === 1 ? t("ui.termYear") : tf("ui.termYears", { n: years }),
@@ -675,9 +689,9 @@ export class Game {
             <span class="dbg-cond">${cond}</span> → ${fmtEffect(o.effects)}
             <span class="dbg-res">“${tf(o.result, this.resultVars())}”</span></div>`;
         }
-        opts += `<div class="dbg-choice ${opt.if && !shown ? "opt-hidden" : ""}"><b>${dir} · ${t(opt.label)}</b> ${vis}${outs}</div>`;
+        opts += `<div class="dbg-choice ${opt.if && !shown ? "opt-hidden" : ""}"><b>${dir} · ${this.txt(opt.label)}</b> ${vis}${outs}</div>`;
       }
-      detail = `<div class="dbg-prompt">${t(sel.prompt).replace(/\n+/g, " ")}</div>${opts}`;
+      detail = `<div class="dbg-prompt">${this.txt(sel.prompt).replace(/\n+/g, " ")}</div>${opts}`;
     }
 
     // History: each played card + the choice taken, newest first. Tap a row to
@@ -810,11 +824,11 @@ export class Game {
       !this.hard ? `<span class="edge-vitals">${this.vitalChips(opt)}</span>` : "";
     const edge = (dir: Direction, cls: string): string => {
       const opt = this.availOpt(card, dir);
-      return opt ? `<div class="edge ${cls}">${t(opt.label)}${ev(opt)}</div>` : "";
+      return opt ? `<div class="edge ${cls}">${this.txt(opt.label)}${ev(opt)}</div>` : "";
     };
     front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
-      <p class="prompt">${t(card.prompt)}</p>
+      <p class="prompt">${this.txt(card.prompt)}</p>
       ${edge("left", "edge-left")}
       ${edge("right", "edge-right")}
       ${edge("up", "edge-up")}
@@ -892,7 +906,7 @@ export class Game {
     this.history.push({
       age: this.state.age,
       cardId: this.card.id,
-      choice: t(opt.label),
+      choice: this.txt(opt.label),
       before: structuredClone(this.state),
     });
 

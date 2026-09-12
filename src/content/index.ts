@@ -48,6 +48,10 @@ import {
 // ---------------------------------------------------------------------------
 
 export const content = {
+  // The cast's names. Any player-facing string may write {brother} / {sister};
+  // renaming a sibling is this one line rather than ~60 string edits.
+  vars: { brother: "Tom", sister: "Sarah" },
+
   start: {
     // Start low and even — babyhood is where the meters get built up (unevenly,
     // by your choices), ready for the child deck to start spending them.
