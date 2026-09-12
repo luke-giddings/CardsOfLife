@@ -900,6 +900,13 @@ Roughly in likely order. None of these are started.
   designed; **deliberately deferred** so childhood content is written and
   balanced first. Starts with the **age-18 leaver branch** (choose first job /
   apprenticeship / further study).
+- **Balance numbers tuned in old age are provisional.** The old-age draw pool is
+  currently ~6 cards against adulthood's ~14 (late-life content is thin — see the
+  deck-density item). Anything measured there is flattered by the sparse pool: a
+  weighted card looks far likelier to land than it will once the stage is filled
+  out. `rel_bro_fate`'s `weight: 25` is deliberately sized against the pool old
+  age *will* have, not today's. Re-check any late-life weight, `chance` or gate
+  when that content lands.
 - **`Deck.tickWhile`** — a deck's `tick` can be gated on a condition, suspending it
   while the condition fails (the deck stays active). Added because the sibling
   deck's `relBrotherDistance` ticked up every year forever: once Tom's arc had
@@ -907,10 +914,10 @@ Roughly in likely order. None of these are started.
   from him however devoted you had been. A player always choosing the kindest
   option read CLOSE 98% of the time if they died before 40 and **0%** if they
   reached 75. With `tickWhile: { traits: { relBrotherStoryDone: false } }` the
-  counter freezes when the story ends. `rel_bro_fate` also became a **milestone**
-  (like the crossroads and the estrangement) so the finale actually lands — as a
-  plain one_time it was missed in most lives that reached it, leaving the arc open
-  and the counter running. Distance now measures PRESENCE, not lifespan: break-even
+  counter freezes when the story ends. `rel_bro_fate` is also heavily **weighted**
+  (25) so the finale actually lands — unweighted it was missed in most lives that
+  reached it, leaving the arc open and the counter running. Weight rather than a
+  milestone, so it stays near-certain to happen without fixing exactly when. Distance now measures PRESENCE, not lifespan: break-even
   is catching ~5 of his ~10 beats (4 beats reads close 7% of the time, 5 reads 91%).
 - **Two-choice vs three-choice sweep** — the game is currently **178 two-swipe
   cards to 18 three-swipe** ones, and the third swipe has been added ad hoc where a

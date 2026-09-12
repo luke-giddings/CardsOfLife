@@ -265,15 +265,27 @@ export const siblingDecks = [
         //     dutiful (r2); a bitter bond is cold even now (r3). Terminal: sets
         //     relBrotherStoryDone (the deck goes dormant).
         {
-          // A MILESTONE, like the crossroads and the estrangement — the other two
-          // arc-defining beats. As a plain one_time it competed in a ~15-card pool
-          // and was simply missed in most lives that reached it (only 23% of players
-          // dying at 60-74 had concluded the arc), which left the story open and the
-          // distance counter running. Priority below the estrangement, so a brother
-          // you drove away does not also get a deathbed reconciliation.
+          // HEAVILY WEIGHTED rather than a milestone. Unweighted it competed in the
+          // ordinary pool and was simply missed in most lives that reached it (only
+          // 23% of players dying at 60-74 concluded the arc), leaving the story open
+          // and the distance counter running. Making it a milestone fixed that but
+          // fired it the instant Tom turned 59, so every long life hit the same beat
+          // at the same moment. A big weight keeps WHEN it lands in the draw's hands
+          // while making it near-certain to land at all. No upper age bound either, so
+          // it stays available for the rest of the run — the only lives that miss it
+          // are those ending within a year or two of Tom turning 59, a fair way to
+          // lose a finale.
+          //
+          // CALIBRATION CAVEAT: this card is gated on Tom being 59+, so it is drawn
+          // almost entirely in OLD AGE, where the pool is currently only ~6 cards
+          // against adulthood's ~14 (late-life content is thin — see the backlog).
+          // 25 is sized against the pool old age will have once that is filled in
+          // (~25/(25+13) = 66% a year), not the thin one it competes in today (~83%).
+          // RE-CHECK this number when late-life content lands: measuring it against
+          // today's sparse pool flatters any weight.
           id: "rel_bro_fate",
-          kind: "milestone",
-          priority: 50,
+          kind: "one_time",
+          weight: 25,
           conditions: { traits: { relBrotherStoryDone: false, relBrotherAge: { min: 59 } } },
           prompt: "rel_bro_fate.prompt",
           options: {
