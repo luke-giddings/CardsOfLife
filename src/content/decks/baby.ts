@@ -103,8 +103,8 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_sister.prompt",
           options: {
-            left: { label: "baby_sister.left", outcomes: [{ result: "baby_sister.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: 30 }, addDecks: ["sibling"] } }] },
-            right: { label: "baby_sister.right", outcomes: [{ result: "baby_sister.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: -15 }, addDecks: ["sibling"] } }] },
+            left: { label: "baby_sister.left", outcomes: [{ result: "baby_sister.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: 30 }, addDecks: ["rel_sis"] } }] },
+            right: { label: "baby_sister.right", outcomes: [{ result: "baby_sister.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: -15 }, addDecks: ["rel_sis"] } }] },
           },
         },
 

@@ -77,6 +77,7 @@ const TRAIT_STEP: Record<string, number> = {
   relSisterLove: 10,
   relBrotherGrit: 5,
   relBrotherDistance: 5,
+  relSisterDistance: 5,
 };
 
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point
@@ -622,7 +623,7 @@ export class Game {
       : id.startsWith("edu_") ? "edu"
       : id.startsWith("job_") ? "job"
       : id.startsWith("home_") || id === "prison" ? "home"
-      : id.startsWith("rel_") || id === "sibling" ? "rel"
+      : id.startsWith("rel_") ? "rel"
       : id.startsWith("pet_") ? "pet"
       : "misc";
     // How many cards in a deck could still be drawn (not exhausted) — regardless of
@@ -1000,22 +1001,22 @@ export class Game {
     const skipTrade = new Set(["infant", "pauper", "unemployed", "studying", "grammar_school", "university", "pickpocket", "burglar", "fence"]);
 
     const life: string[] = [`${t(tr.gender === "girl" ? "ui.bornGirl" : "ui.bornBoy")}.`];
-    if (st.education === "university") life.push(t("ui.proseUni"));
-    else if (st.education === "grammar") life.push(t("ui.proseGrammar"));
-    if (!skipTrade.has(st.job)) life.push(tf("ui.proseTrade", { job: lower(t(`status.job.${st.job}` as StringId)) }));
-    life.push(t(`ui.proseHome.${st.housing}` as StringId));
-    if (tr.flawSoldUp && owned) life.push(t("ui.proseRoseAgain"));
-    else if (tr.flawSoldUp) life.push(t("ui.proseSoldUp"));
+    if (st.education === "university") life.push(this.txt("ui.proseUni"));
+    else if (st.education === "grammar") life.push(this.txt("ui.proseGrammar"));
+    if (!skipTrade.has(st.job)) life.push(tf("ui.proseTrade", { ...this.textVars(), job: lower(t(`status.job.${st.job}` as StringId)) }));
+    life.push(this.txt(`ui.proseHome.${st.housing}` as StringId));
+    if (tr.flawSoldUp && owned) life.push(this.txt("ui.proseRoseAgain"));
+    else if (tr.flawSoldUp) life.push(this.txt("ui.proseSoldUp"));
 
     const colour: string[] = [];
-    if (saw("log.workhouse")) colour.push(t("ui.proseWorkhouse"));
-    else if (saw("log.streets")) colour.push(t("ui.proseStreets"));
-    if (saw("log.crime")) colour.push(t("ui.proseCrime"));
+    if (saw("log.workhouse")) colour.push(this.txt("ui.proseWorkhouse"));
+    else if (saw("log.streets")) colour.push(this.txt("ui.proseStreets"));
+    if (saw("log.crime")) colour.push(this.txt("ui.proseCrime"));
     // Gaol: the years are ticked by the prison housing state, so this covers
     // every sentence served (and the years spent escaping or with a cellmate).
     if (tr.flawYearsInGaol > 0)
-      colour.push(tf(tr.flawYearsInGaol === 1 ? "ui.proseGaolOne" : "ui.proseGaol", { n: tr.flawYearsInGaol }));
-    if (tr.flawWanted) colour.push(t("ui.proseWanted"));
+      colour.push(tf(tr.flawYearsInGaol === 1 ? "ui.proseGaolOne" : "ui.proseGaol", { ...this.textVars(), n: tr.flawYearsInGaol }));
+    if (tr.flawWanted) colour.push(this.txt("ui.proseWanted"));
     if (tr.relBrotherActive) {
       // Read both axes: a bitter bond reads estranged; a warm-but-absent one reads
       // "drifted" (you loved him, but let the years pull you apart); otherwise close
@@ -1024,14 +1025,24 @@ export class Game {
         : tr.relBrotherLove >= 30 && tr.relBrotherDistance < 25 ? "ui.proseBrotherClose"
         : tr.relBrotherLove >= 15 && tr.relBrotherDistance >= 25 ? "ui.proseBrotherDrifted"
         : "ui.proseBrotherPeace";
-      colour.push(t(bro));
+      colour.push(this.txt(bro));
     }
-    if (tr.relSisterActive)
-      colour.push(t(tr.relSisterLove >= 30 ? "ui.proseSisterClose" : tr.relSisterLove >= 0 ? "ui.proseSisterPeace" : "ui.proseSisterEstranged"));
-    if (st.pet === "cat") colour.push(t("ui.proseCat"));
-    else if (st.pet === "dog") colour.push(t("ui.proseDog"));
-    if (tr.skillMartialArts) colour.push(t("ui.proseMartial"));
-    if (tr.flawOwesCharity) colour.push(t("ui.proseOwedCharity"));
+    if (tr.relSisterActive) {
+      // Same two-axis read as the brother: a bitter bond is estranged, a warm but
+      // absent one drifted, otherwise close or a quiet peace.
+      const sis = tr.relSisterLove < 0 ? "ui.proseSisterEstranged"
+        : tr.relSisterLove >= 30 && tr.relSisterDistance < 25 ? "ui.proseSisterClose"
+        : tr.relSisterLove >= 15 && tr.relSisterDistance >= 25 ? "ui.proseSisterDrifted"
+        : "ui.proseSisterPeace";
+      colour.push(this.txt(sis));
+      // ...and what her life came to, if it was ever settled.
+      if (tr.relSisterCalling !== "none")
+        colour.push(this.txt(`ui.proseSisterCalling.${tr.relSisterCalling}` as StringId));
+    }
+    if (st.pet === "cat") colour.push(this.txt("ui.proseCat"));
+    else if (st.pet === "dog") colour.push(this.txt("ui.proseDog"));
+    if (tr.skillMartialArts) colour.push(this.txt("ui.proseMartial"));
+    if (tr.flawOwesCharity) colour.push(this.txt("ui.proseOwedCharity"));
 
     const paras = [life, colour]
       .filter((p) => p.length)

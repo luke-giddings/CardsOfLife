@@ -900,6 +900,36 @@ Roughly in likely order. None of these are started.
   designed; **deliberately deferred** so childhood content is written and
   balanced first. Starts with the **age-18 leaver branch** (choose first job /
   apprenticeship / further study).
+- **Sarah — the sister arc (`rel_sis`)** — mirrors Tom's SHAPE (love + distance,
+  beats in windows of her own life, a crossroads milestone, a weighted finale, an
+  estrangement) but inverts his mechanics and temperament. Tom's second axis is
+  `relBrotherGrit`, his backbone, which grows when you make him **stand alone**;
+  hers is `relSisterPromise`, how far her gift has been nurtured, which only grows
+  when you **step in and spend** — lessons, ribbon slippers, a day's lost pay to sit
+  in the front row. He hardens by your absence, she rises by your presence.
+  She WANTS the schoolroom, so her crossroads is deliberately not the even trade
+  his is: the needle pays you a wage and costs you her (love −12). From there:
+  **school** → lessons → recital → the audition, which reads `promise` (≥9) and
+  decides between the stage (**ballerina**) and the back row (**chorus**); **work**
+  → the sweatshop → the dressmaker, landing her a **seamstress**, skilled and
+  steady with the dream folded away. Her outcome is recorded in `relSisterCalling`
+  and named in the epilogue. The recital card is the one place the two axes are
+  split by hand: paying for her costume but missing the night gives `promise`
+  without pulling `distance` down.
+- **Both-siblings cards** — four cards that exist only when you have Tom AND Sarah,
+  two per deck, in two flavours. **Scarcity**: one purse, two children
+  (`rel_sis_purse` at her age 10, `rel_bro_purse` at his 18 — deliberately at
+  different moments so they do not read as one card twice); backing one moves the
+  OTHER sibling's traits down, so the arcs genuinely interfere, and splitting it
+  helps neither enough. **Loyalty**: they quarrel and whoever reaches you first
+  gets a hearing (`rel_sis_quarrel`, `rel_bro_quarrel`); refusing to judge costs a
+  little of both.
+- **`Content.vars`** — the cast's names live in content as substitutable constants
+  (`{brother}` / `{sister}`), not written into ~60 card strings. Every player-facing
+  string — prompt, option label, result, and the epilogue prose — is rendered
+  through `tf` so renaming a sibling is one line. Not a trait (constant for the
+  run) and not engine (content); content-level rather than per-deck because the
+  epilogue names them and belongs to no deck.
 - **Balance numbers tuned in old age are provisional.** The old-age draw pool is
   currently ~6 cards against adulthood's ~14 (late-life content is thin — see the
   deck-density item). Anything measured there is flattered by the sparse pool: a

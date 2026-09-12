@@ -119,8 +119,25 @@ export interface Traits {
   relBrotherSchooled: boolean;  // his crossroads branch: true = you sent him to school, false = to work
   relBrotherReckoned: boolean;  // the adult "reckoning" beat has happened (its two housing variants can't both fire)
   relBrotherStoryDone: boolean; // his arc has concluded (finale or estrangement) — the deck goes dormant
+  // Sarah's arc (rel_sis deck) mirrors Tom's SHAPE — love + distance, beats in
+  // windows of her own life, a crossroads, a weighted finale, an estrangement —
+  // but inverts his second axis. Tom's `grit` is his backbone, and it grows when
+  // you make him STAND ALONE; her `promise` is how far her gift has been
+  // nurtured, and it only grows when you STEP IN and spend on her. He hardens by
+  // your absence; she rises by your presence.
   relSisterActive: boolean;
-  relSisterLove: number;
+  relSisterLove: number;     // bond quality: warm (+) ↔ bitter (−)
+  relSisterAge: number;      // her age, ticked each year by the rel_sis deck
+  relSisterDistance: number; // how PRESENT you've been (climbs alone, falls when you show up)
+  // Her gift, and how far it has been paid for: dancing lessons, ribbon slippers,
+  // a front-row seat at the recital. Never rises on its own — the audition reads
+  // it, and it decides whether she rises to the stage or settles for the chorus.
+  relSisterPromise: number;
+  relSisterSchooled: boolean;   // her crossroads branch: true = school, false = the needle
+  relSisterStoryDone: boolean;  // arc concluded (finale or estrangement) — freezes the tick
+  // Where her life landed. Read by the epilogue; set by the audition (school road)
+  // or the dressmaker (work road).
+  relSisterCalling: "none" | "ballerina" | "chorus" | "seamstress";
   // Work life. All `job*` so the debug panel groups them under a Jobs category.
   // Times you've switched jobs over the run (an epitaph/flavour counter).
   jobTimesChanged: number;
@@ -202,6 +219,12 @@ export const DEFAULT_TRAITS: Traits = {
   relBrotherStoryDone: false,
   relSisterActive: false,
   relSisterLove: 0,
+  relSisterAge: 0,
+  relSisterDistance: 0,
+  relSisterPromise: 0,
+  relSisterSchooled: false,
+  relSisterStoryDone: false,
+  relSisterCalling: "none",
   jobTimesChanged: 0,
   jobExperience: 0,
   jobSkill: 0,

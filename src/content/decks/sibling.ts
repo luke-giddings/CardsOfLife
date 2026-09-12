@@ -11,8 +11,6 @@
 //   Later beats read love AND distance, so "you drifted apart" is a distinct outcome
 //   from "you fell out". relBrotherStoryDone ends the arc (finale, or estrangement if
 //   love curdles); relBrotherReckoned de-dupes the adult reckoning's two housing forms.
-// sibling — SISTER placeholder (activated by baby_sister): the old shared fillers,
-//   now sister-only. To be rebuilt as her own `rel_sis` story arc later.
 import type { Deck } from "../../engine/types.ts";
 
 export const siblingDecks = [
@@ -265,6 +263,33 @@ export const siblingDecks = [
         //     dutiful (r2); a bitter bond is cold even now (r3). Terminal: sets
         //     relBrotherStoryDone (the deck goes dormant).
         {
+          // SCARCITY, from HIS side — the mirror of rel_sis_purse, and deliberately
+          // at a different moment in life so the two do not read as one card twice:
+          // hers is a child's lessons, his is a grown man's start. Only exists when
+          // you have both children.
+          id: "rel_bro_purse",
+          kind: "one_time",
+          conditions: { traits: { relBrotherStoryDone: false, relBrotherActive: true, relSisterActive: true, relBrotherAge: { min: 18 } } },
+          prompt: "rel_bro_purse.prompt",
+          options: {
+            left: { label: "rel_bro_purse.left", outcomes: [{ result: "rel_bro_purse.left.r0", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -6, relSisterLove: -8, relSisterPromise: -3 } } }] },
+            right: { label: "rel_bro_purse.right", outcomes: [{ result: "rel_bro_purse.right.r0", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: -8, relSisterLove: 10, relSisterPromise: 4, relSisterDistance: -6 } } }] },
+            down: { label: "rel_bro_purse.down", outcomes: [{ result: "rel_bro_purse.down.r0", effects: { vitals: { finances: "--" }, incTraits: { relBrotherLove: 2, relSisterLove: 2, relSisterPromise: 1, relBrotherDistance: -6, relSisterDistance: -6 } } }] },
+          },
+        },
+        {
+          // LOYALTY, from his side: he reaches you first this time.
+          id: "rel_bro_quarrel",
+          kind: "one_time",
+          conditions: { traits: { relBrotherStoryDone: false, relBrotherActive: true, relSisterActive: true, relBrotherAge: { min: 14 } } },
+          prompt: "rel_bro_quarrel.prompt",
+          options: {
+            left: { label: "rel_bro_quarrel.left", outcomes: [{ result: "rel_bro_quarrel.left.r0", effects: { incTraits: { relBrotherLove: 12, relBrotherDistance: -6, relSisterLove: -10 } } }] },
+            right: { label: "rel_bro_quarrel.right", outcomes: [{ result: "rel_bro_quarrel.right.r0", effects: { incTraits: { relBrotherLove: -10, relSisterLove: 12, relSisterDistance: -6 } } }] },
+            down: { label: "rel_bro_quarrel.down", outcomes: [{ result: "rel_bro_quarrel.down.r0", effects: { vitals: { spirit: "-" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
+          },
+        },
+        {
           // HEAVILY WEIGHTED rather than a milestone. Unweighted it competed in the
           // ordinary pool and was simply missed in most lives that reached it (only
           // 23% of players dying at 60-74 concluded the arc), leaving the story open
@@ -348,42 +373,4 @@ export const siblingDecks = [
       ],
     },
 
-    // === SISTER — placeholder (to become rel_sis with her own story) =========
-    // The old shared sibling fillers, now SISTER-ONLY: the brother has his own
-    // rel_bro deck, so these only ever run for a sister (baby_sister adds this
-    // deck). Kept as light filler until her story arc is built.
-    {
-      id: "sibling",
-      title: "deck.sibling.title",
-      unlock: "deck.sibling.blurb",
-      cards: [
-        {
-          id: "sibling_play",
-          kind: "one_time",
-          prompt: "sibling_play.prompt",
-          options: {
-            left: { label: "sibling_play.left", outcomes: [{ result: "sibling_play.left.r1", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 8 } } }] },
-            right: { label: "sibling_play.right", outcomes: [{ result: "sibling_play.right.r1", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: -8 } } }] },
-          },
-        },
-        {
-          id: "sibling_blame",
-          kind: "one_time",
-          prompt: "sibling_blame.prompt",
-          options: {
-            left: { label: "sibling_blame.left", outcomes: [{ result: "sibling_blame.left.r1", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: 8 } } }] },
-            right: { label: "sibling_blame.right", outcomes: [{ result: "sibling_blame.right.r1", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: -8 } } }] },
-          },
-        },
-        {
-          id: "sibling_treat",
-          kind: "one_time",
-          prompt: "sibling_treat.prompt",
-          options: {
-            left: { label: "sibling_treat.left", outcomes: [{ result: "sibling_treat.left.r1", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: 8 } } }] },
-            right: { label: "sibling_treat.right", outcomes: [{ result: "sibling_treat.right.r1", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: -8 } } }] },
-          },
-        },
-      ],
-    },
 ] satisfies Deck[];

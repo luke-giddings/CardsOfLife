@@ -7,6 +7,7 @@ import {
   educationDecks,
   jobDecks,
   siblingDecks,
+  sisterDecks,
   petDecks,
   prisonDecks,
 } from "./decks/index.ts";
@@ -298,6 +299,7 @@ export const content = {
     ...educationDecks,
     ...jobDecks,
     ...siblingDecks,
+    ...sisterDecks,
     ...petDecks,
     ...prisonDecks,
   ],
