@@ -406,7 +406,13 @@ export class Game {
   // Render a card string with those variables. Use in place of bare `t()` for
   // anything the player reads off a card.
   private txt(id: StringId): string {
-    return tf(id, this.textVars());
+    const out = tf(id, this.textVars());
+    // A surviving {placeholder} means a render site was missed, or a string uses a
+    // variable that textVars() does not supply. Silent literals like "{sister}" have
+    // shipped twice now (the epilogue prose, then the new-chapter card), so make it
+    // loud in debug rather than waiting for a screenshot.
+    if (this.debug && /\{[a-z]+\}/i.test(out)) console.warn(`[cardsoflife] unresolved placeholder in "${id}": ${out}`);
+    return out;
   }
 
   private resultVars(): Record<string, string | number> {
@@ -1055,8 +1061,8 @@ export class Game {
       ? ""
       : `<p class="end-line">${tf("ui.reachedYears", { n: this.state.age })}</p>`;
     wrap.innerHTML = `
-      <div class="end-title">${t(ending.title)}</div>
-      <p class="end-blurb">${t(ending.blurb)}</p>
+      <div class="end-title">${this.txt(ending.title)}</div>
+      <p class="end-blurb">${this.txt(ending.blurb)}</p>
       ${ageLine}
       <div class="end-sec">${t("ui.recapHeader")}</div>
       ${paras}`;
@@ -1117,8 +1123,8 @@ export class Game {
     const card = el("div", "unlock-card");
     card.innerHTML = `
       <div class="unlock-eyebrow">${t("ui.newChapter")}</div>
-      <div class="unlock-title">${t(u.title)}</div>
-      <p class="unlock-blurb">${t(u.blurb)}</p>
+      <div class="unlock-title">${this.txt(u.title)}</div>
+      <p class="unlock-blurb">${this.txt(u.blurb)}</p>
       <div class="tap-cue">${t("ui.tapBegin")}</div>`;
     holder.append(card);
     this.scene.append(holder);
