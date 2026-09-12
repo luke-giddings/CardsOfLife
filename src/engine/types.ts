@@ -343,6 +343,13 @@ export interface Deck {
   // year Tom is born (the deck is added then and never removed) so his beats can
   // fire at his age. Runs every turn the deck is active, babyhood grace included.
   tick?: Partial<Record<NumericTraitKey, number>>;
+  // Gate on `tick`: while this condition FAILS the deck's tick is suspended (the
+  // deck itself stays active). For a counter that only means something while a
+  // story is live — the sibling deck's `relBrotherDistance` measures how present
+  // you have been, so it must stop climbing once his arc has concluded and there
+  // is nothing left to show up for, or a long life drifts away from him no matter
+  // how devoted you were.
+  tickWhile?: Condition;
   // An "urgent" deck: while it is active, its eligible cards OWN the draw pool —
   // incidental flavour from other active decks is suppressed so you can escape
   // the state (unemployment, the workhouse) instead of drifting in it for years.

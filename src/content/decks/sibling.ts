@@ -26,6 +26,13 @@ export const siblingDecks = [
       // baby_brother and never removed), and DRIFTS a year at a time too: distance
       // climbs unless you show up. Every card below pulls distance back down.
       tick: { relBrotherAge: 1, relBrotherDistance: 1 },
+      // ...but only while his story is still running. Distance measures how
+      // PRESENT you have been, and once the arc has concluded there is nothing
+      // left to be present FOR — so letting it climb on just punished you for
+      // outliving him. It used to: a player who always chose the kindest option
+      // read CLOSE 98% of the time if they died before 40, and 0% of the time if
+      // they reached 75, purely because the counter never stopped.
+      tickWhile: { traits: { relBrotherStoryDone: false } },
       cards: [
         // --- STAGE 0: little Tom. Warm childhood fillers while he's small (under 5,
         //     before his own school-or-work crossroads). Each shapes his Love (your
@@ -258,8 +265,15 @@ export const siblingDecks = [
         //     dutiful (r2); a bitter bond is cold even now (r3). Terminal: sets
         //     relBrotherStoryDone (the deck goes dormant).
         {
+          // A MILESTONE, like the crossroads and the estrangement — the other two
+          // arc-defining beats. As a plain one_time it competed in a ~15-card pool
+          // and was simply missed in most lives that reached it (only 23% of players
+          // dying at 60-74 had concluded the arc), which left the story open and the
+          // distance counter running. Priority below the estrangement, so a brother
+          // you drove away does not also get a deathbed reconciliation.
           id: "rel_bro_fate",
-          kind: "one_time",
+          kind: "milestone",
+          priority: 50,
           conditions: { traits: { relBrotherStoryDone: false, relBrotherAge: { min: 59 } } },
           prompt: "rel_bro_fate.prompt",
           options: {

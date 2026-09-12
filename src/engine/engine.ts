@@ -366,7 +366,11 @@ function applyTick(state: GameState, content: Content): void {
     if (st?.tick) add(st.tick);
   }
   for (const deck of content.decks) {
-    if (deck.tick && state.activeDecks.includes(deck.id)) add(deck.tick);
+    if (!deck.tick || !state.activeDecks.includes(deck.id)) continue;
+    // A deck may suspend its own tick once its story no longer needs it — see
+    // Deck.tickWhile. Content names the condition; the engine just honours it.
+    if (!meets(deck.tickWhile, state, content)) continue;
+    add(deck.tick);
   }
 }
 
