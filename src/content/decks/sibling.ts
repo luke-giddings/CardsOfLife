@@ -50,7 +50,12 @@ export const siblingDecks = [
             // deliberately shutting Tom out had no way to express it and the
             // estrangement ending was unreachable. Note distance is NOT pulled down
             // here: you did not show up at all, you avoided him.
-            up: { label: "rel_bro_play.up", outcomes: [{ result: "rel_bro_play.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10 } } }] },
+            //   It BUYS the most grit of the three (see the bully card for the same
+            // ladder): being sent off to make your own way is deliberate toughening,
+            // but being dodged teaches it harder and colder. Without that it was
+            // strictly worse than `right` on every axis — same spirit, less love, no
+            // grit — so a punishment button rather than a choice.
+            up: { label: "rel_bro_play.up", outcomes: [{ result: "rel_bro_play.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10, relBrotherGrit: 10 } } }] },
           },
         },
         {
@@ -69,11 +74,16 @@ export const siblingDecks = [
                 { result: "rel_bro_bully.left.r1", effects: { vitals: { health: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4, relBrotherDistance: -6 } } },
               ],
             },
-            right: { label: "rel_bro_bully.right", outcomes: [{ result: "rel_bro_bully.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 10, relBrotherLove: 2, relBrotherDistance: -6 } } }] },
-            // Cold: you were THERE and did nothing. The deepest cut of the three, and
-            // the only gain is the beating you did not take. Grit still rises — he
-            // learns nobody is coming — but bitterly.
-            up: { label: "rel_bro_bully.up", outcomes: [{ result: "rel_bro_bully.up.r0", effects: { vitals: { happiness: "-" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
+            right: { label: "rel_bro_bully.right", outcomes: [{ result: "rel_bro_bully.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 8, relBrotherLove: 2, relBrotherDistance: -6 } } }] },
+            // Cold: you were THERE and did nothing. The deepest cut of the three —
+            // and the GRIT LADDER of this card is the reason to take it: wading in
+            // teaches him nothing (−4), teaching him to swing teaches him a lot (+8),
+            // and learning that nobody is coming teaches him most of all (+14), at a
+            // price in love no other swipe comes close to. Until that ladder existed
+            // this option was strictly worse than `right` on every axis — less grit,
+            // far less love, and a happiness cost on top — so there was never a
+            // reason to pick it.
+            up: { label: "rel_bro_bully.up", outcomes: [{ result: "rel_bro_bully.up.r0", effects: { vitals: { happiness: "-" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 14, relBrotherDistance: -6 } } }] },
           },
         },
         {

@@ -103,12 +103,12 @@ export const content = {
         university: { label: "status.job.university", drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
-        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], keepExperience: true },
+        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], keepExperience: true, grim: true },
         // A workhouse inmate — the institution IS your occupation now, so entering
         // the workhouse cancels any schooling/job (child_hunger sets this). No
         // drift and NO deck of its own: the home_workhouse housing deck already
         // owns workhouse life and its exits. You climb back out via that deck.
-        pauper: { label: "status.job.pauper" },
+        pauper: { label: "status.job.pauper", grim: true },
 
         // === FOUR CAREER PATHS ==========================================
         // Progression is by an `experience` counter (ticked by work cards); a
@@ -166,7 +166,7 @@ export const content = {
         // Behind bars — "job" while serving a sentence. No wage, no deck of its own
         // (the prison DECK hangs off the housing=prison state); the grim drift lives
         // on that housing state. Set alongside housing=prison by the arrest cards.
-        convict: { label: "status.job.convict" },
+        convict: { label: "status.job.convict", grim: true },
       },
     },
     housing: {
@@ -179,7 +179,7 @@ export const content = {
         family: { label: "status.housing.family", drift: { finances: -5 }, driftShown: { finances: "-" }, addDecks: ["home_family"] },
         // The workhouse: a grinding health/happiness drain, and its own deck of
         // bleak daily-life events (including three ways out).
-        workhouse: { label: "status.housing.workhouse", drift: { health: -5, happiness: -5 }, driftShown: { health: "-", happiness: "-" }, addDecks: ["home_workhouse"] },
+        workhouse: { label: "status.housing.workhouse", drift: { health: -5, happiness: -5 }, driftShown: { health: "-", happiness: "-" }, addDecks: ["home_workhouse"], grim: true },
         // A place of your own (from the workhouse buyout, or moving out of the
         // family home): rent to pay every year, but your own space and better
         // conditions restore some health — the childhood preview of the adult
@@ -204,7 +204,7 @@ export const content = {
         // — ran away / turned out onto the streets: free, but the hardest grind
         //   of all. Owns the home_homeless deck (grim daily life + four gated
         //   exits: rent a room, back to school, the workhouse, or crawl home).
-        homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 }, driftShown: { health: "-", happiness: "-" }, addDecks: ["home_homeless"] },
+        homeless: { label: "status.housing.homeless", drift: { health: -5, happiness: -5 }, driftShown: { health: "-", happiness: "-" }, addDecks: ["home_homeless"], grim: true },
         // — gaoled. A grim happiness/health drain and its own `priority` prison
         //   deck (do your time, break out, or meet a cellmate). Entered from the
         //   arrest cards (which also set job=convict and strip any pet); left when
@@ -214,7 +214,7 @@ export const content = {
         //   in) — but the prison deck's "do your time" card offers prison labour
         //   once you're skint, which out-earns this drain, so the drain is a slow
         //   squeeze rather than a death sentence for a long stretch.
-        prison: { label: "status.housing.prison", drift: { happiness: -4, health: -3, finances: -5 }, driftShown: { happiness: "-", health: "-", finances: "-" }, tick: { flawYearsInGaol: 1 }, suspends: { lifestyle: "default" }, addDecks: ["prison"] },
+        prison: { label: "status.housing.prison", drift: { happiness: -4, health: -3, finances: -5 }, driftShown: { happiness: "-", health: "-", finances: "-" }, tick: { flawYearsInGaol: 1 }, suspends: { lifestyle: "default" }, addDecks: ["prison"], grim: true },
         // — taken on by a master tradesman (housed and fed; see job=apprentice).
         apprentice: { label: "status.housing.apprentice" },
       },

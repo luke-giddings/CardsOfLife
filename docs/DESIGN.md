@@ -379,17 +379,28 @@ fire given the current state. Two extra markers:
   identical, but flagged bad): `setFlaws` never earns the star, **and suppresses
   it** even when the same outcome also changes status (so selling up → renting, or
   the charity-hospital debt, don't star). Incremental ticks (experience, +1
-  sporty) don't qualify either, keeping the star rare. *(Known remaining case: a
-  plain demotion like being sacked → unemployed still stars — it's a bare
-  `setStatus` with no flaw, and telling a downgrade from an upgrade needs status
-  rankings; parked.)*
-- A red **⚠** is its opposite: the same outcome carries a **lasting burden**
-  (`setFlaws` — the charity-hospital ledger, the sold-up disgrace, a warrant, a
-  sweet tooth). Suppressing the star was not enough on its own: a burden then
+  sporty) don't qualify either, keeping the star rare.
+- A red **⚠** is its opposite, and fires on either of two things: a **lasting
+  burden** (`setFlaws` — the charity-hospital ledger, the sold-up disgrace, a
+  warrant, a sweet tooth), or a **fall into a setback status**
+  (`StatusStateDef.grim` — unemployed, pauper, convict, the workhouse, the
+  street, gaol). Suppressing the star was not enough on its own: a burden then
   showed *nothing*, so the charity hospital's "health ++, spirit +" read as a
   clean gift when it was also writing your name in a ledger that falls due in
-  young adulthood. The two marks are mutually exclusive and the burden wins,
-  because the mark is the part you would otherwise miss.
+  young adulthood — and a sacking, being a bare `setStatus` like any promotion,
+  wore the reward star. The two marks are mutually exclusive and the burden
+  wins, because the mark is the part you would otherwise miss.
+  - `grim` is **declared by content, not ranked by the UI**: only the content
+    knows that `unemployed` is a fall and `apprentice` is a start. The engine
+    never reads it — it is purely a display fact.
+  - It marks a **fall**, not any move between bad places: a grim target only
+    counts when the status you are LEAVING wasn't itself grim. So being sacked,
+    evicted or gaoled warns, while being released from gaol onto the street,
+    running from the workhouse, or taking the workhouse over the street does
+    not — you were already there, and the warning would be telling you
+    something you cannot act on. *(This replaces the parked "telling a
+    downgrade from an upgrade needs status rankings" item: one boolean per
+    state turned out to be all the UI needed.)*
 
 **Status reveal timing:** when a choice both changes a status and unlocks a new
 titled deck (a "new chapter"), the visible **status-chip** change is **held until

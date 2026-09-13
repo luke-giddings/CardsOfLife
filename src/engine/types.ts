@@ -424,6 +424,14 @@ export interface StatusStateDef {
   // counter and the job it was earned in, so a sacking→re-hire into the SAME job
   // doesn't wipe your progress. See changeStatus.
   keepExperience?: boolean;
+  // A SETBACK: landing here is something that happens TO you, not a road you'd
+  // take for its own sake — sacked, on the street, in the workhouse, in gaol.
+  // Purely a display fact, and the engine never reads it: the card preview shows
+  // an option that puts you here with the burden ⚠ instead of the reward ★, so a
+  // bare `setStatus` demotion stops advertising itself as a promotion. Content
+  // declares which states are grim rather than the UI ranking them, since only
+  // the content knows that unemployed is a fall and apprentice is a start.
+  grim?: boolean;
 }
 
 export interface StatusDef {

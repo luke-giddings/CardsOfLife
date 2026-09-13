@@ -500,15 +500,28 @@ export class Game {
     //     trait (setTraits), or a life-stage deck swap — so a rewarding choice
     //     (seize the apprenticeship, buy the house, get vaccinated) doesn't look
     //     weaker than a plain sibling that only moves a stat.
-    //   ⚠ a BURDEN (setFlaws — the charity-hospital debt, the sold-up shame mark,
-    //     a warrant, a sweet tooth). It used to show NOTHING, which read as a
-    //     clean choice: the hospital's "health ++, spirit +" looked like a pure
-    //     gift when it also put your name in a ledger that falls due in young
-    //     adulthood. A burden ousts the star even when the outcome also changes
-    //     status (selling up → renting), because the mark is the part you'd miss.
+    //   ⚠ a BURDEN: either a lasting mark (setFlaws — the charity-hospital debt,
+    //     the sold-up shame, a warrant, a sweet tooth) or a move into a SETBACK
+    //     status (StatusStateDef.grim — sacked, on the street, the workhouse,
+    //     gaol). It used to show NOTHING, which read as a clean choice: the
+    //     hospital's "health ++, spirit +" looked like a pure gift when it also
+    //     put your name in a ledger that falls due in young adulthood, and being
+    //     sacked wore the REWARD star, since it is a bare `setStatus` like any
+    //     promotion. A burden ousts the star even when the same outcome also
+    //     changes status (selling up → renting), because the mark is the part
+    //     you'd otherwise miss.
     // Incremental ticks (experience, +1 sporty) count as neither.
     const e = outcome.effects;
-    const burden = !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
+    // A FALL into a setback, not merely a move between them: released from gaol
+    // onto the street, or running from the workhouse, lands you somewhere grim
+    // but is not the thing the mark is warning about — you were already there.
+    // So a grim target only counts when the status you are leaving wasn't grim.
+    const grim = (kind: StatusKind, value: string): boolean =>
+      !!content.statuses[kind]?.states[value]?.grim;
+    const intoGrimStatus = Object.entries(e?.setStatus ?? {}).some(
+      ([kind, value]) => grim(kind as StatusKind, value) && !grim(kind as StatusKind, this.state.statuses[kind as StatusKind]),
+    );
+    const burden = intoGrimStatus || !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
     const special = !burden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
     if (special) chips += `<span class="ep-v ep-special" title="This choice changes your path — a job, home, schooling, or a lasting boon">★</span>`;
     if (burden) chips += `<span class="ep-v ep-burden" title="This choice leaves a lasting mark — a debt, a disgrace, a warrant, a weakness">⚠</span>`;
