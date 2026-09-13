@@ -145,7 +145,7 @@ export const childhoodDecks = [
           options: {
             left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setFlaws: { flawOwesCharity: true } } }] },
             right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "++", happiness: "+" }, setFlaws: { flawOwesCharity: true } } }] },
-            down: { label: "child_charity_hospital.down", outcomes: [{ result: "child_charity_hospital.down.r0", effects: { vitals: { health: "++", finances: "+" }, setFlaws: { flawOwesCharity: true } } }] },
+            up: { label: "child_charity_hospital.up", outcomes: [{ result: "child_charity_hospital.up.r0", effects: { vitals: { health: "++", finances: "+" }, setFlaws: { flawOwesCharity: true } } }] },
           },
         },
 

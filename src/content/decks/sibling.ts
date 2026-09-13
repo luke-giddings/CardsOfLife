@@ -50,7 +50,7 @@ export const siblingDecks = [
             // deliberately shutting Tom out had no way to express it and the
             // estrangement ending was unreachable. Note distance is NOT pulled down
             // here: you did not show up at all, you avoided him.
-            down: { label: "rel_bro_play.down", outcomes: [{ result: "rel_bro_play.down.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10 } } }] },
+            up: { label: "rel_bro_play.up", outcomes: [{ result: "rel_bro_play.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10 } } }] },
           },
         },
         {
@@ -73,7 +73,7 @@ export const siblingDecks = [
             // Cold: you were THERE and did nothing. The deepest cut of the three, and
             // the only gain is the beating you did not take. Grit still rises — he
             // learns nobody is coming — but bitterly.
-            down: { label: "rel_bro_bully.down", outcomes: [{ result: "rel_bro_bully.down.r0", effects: { vitals: { happiness: "-" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
+            up: { label: "rel_bro_bully.up", outcomes: [{ result: "rel_bro_bully.up.r0", effects: { vitals: { happiness: "-" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
           },
         },
         {
@@ -87,7 +87,7 @@ export const siblingDecks = [
             // Cold, and genuinely tempting: unlike the other two this one PAYS you —
             // a fed, warm night — so it is a real trade of the bond for your own skin
             // rather than a pure cruelty button.
-            down: { label: "rel_bro_share.down", outcomes: [{ result: "rel_bro_share.down.r0", effects: { vitals: { health: "+" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
+            up: { label: "rel_bro_share.up", outcomes: [{ result: "rel_bro_share.up.r0", effects: { vitals: { health: "+" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
           },
         },
 
@@ -274,7 +274,7 @@ export const siblingDecks = [
           options: {
             left: { label: "rel_bro_purse.left", outcomes: [{ result: "rel_bro_purse.left.r0", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -6, relSisterLove: -8, relSisterPromise: -3 } } }] },
             right: { label: "rel_bro_purse.right", outcomes: [{ result: "rel_bro_purse.right.r0", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: -8, relSisterLove: 10, relSisterPromise: 4, relSisterDistance: -6 } } }] },
-            down: { label: "rel_bro_purse.down", outcomes: [{ result: "rel_bro_purse.down.r0", effects: { vitals: { finances: "--" }, incTraits: { relBrotherLove: 2, relSisterLove: 2, relSisterPromise: 1, relBrotherDistance: -6, relSisterDistance: -6 } } }] },
+            up: { label: "rel_bro_purse.up", outcomes: [{ result: "rel_bro_purse.up.r0", effects: { vitals: { finances: "--" }, incTraits: { relBrotherLove: 2, relSisterLove: 2, relSisterPromise: 1, relBrotherDistance: -6, relSisterDistance: -6 } } }] },
           },
         },
         {
@@ -286,7 +286,7 @@ export const siblingDecks = [
           options: {
             left: { label: "rel_bro_quarrel.left", outcomes: [{ result: "rel_bro_quarrel.left.r0", effects: { incTraits: { relBrotherLove: 12, relBrotherDistance: -6, relSisterLove: -10 } } }] },
             right: { label: "rel_bro_quarrel.right", outcomes: [{ result: "rel_bro_quarrel.right.r0", effects: { incTraits: { relBrotherLove: -10, relSisterLove: 12, relSisterDistance: -6 } } }] },
-            down: { label: "rel_bro_quarrel.down", outcomes: [{ result: "rel_bro_quarrel.down.r0", effects: { vitals: { spirit: "-" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
+            up: { label: "rel_bro_quarrel.up", outcomes: [{ result: "rel_bro_quarrel.up.r0", effects: { vitals: { spirit: "-" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
           },
         },
         {

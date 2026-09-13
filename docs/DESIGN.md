@@ -167,7 +167,10 @@ keeps you alive through childhood hazards.
 
 - **Front:** a prompt + 2–4 options mapped to swipe directions (left/right
   always; up/down optional). The player sees **only the labels** — never the
-  numbers.
+  numbers. By convention the **third option is always `up`**: a bottom label is
+  easy to miss on a phone, where the thumb and the browser chrome sit over it, so
+  every third choice in the game is authored as `up`. `down` remains supported
+  (the UI renders all four) but no card uses it.
 - **Back:** the **result** — outcome text + effects. An option carries an
   ordered list of **outcomes**; the engine picks the **first whose conditions
   match** (author the last one unconditional as the fallback). So the same swipe
@@ -231,7 +234,7 @@ floored to 0 and then quietly undone by positive drift.
 ## 10. Decks & progression
 
 - **baby** (ages 0–5): tutorial + build-up. **Impossible to lose** (positive
-  effects only). Teaches swipe/up/down, the vitals, and seeds Traits. Ends at
+  effects only). Teaches the swipe directions, the vitals, and seeds Traits. Ends at
   the **school-or-work** milestone.
 - **childhood** (shared, ages 5–17): events any child has regardless of status —
   the boxing coach, the bully, street football, the **hazards**, and turning 18.
@@ -642,7 +645,7 @@ How the gates realise this:
   while a former factory hand who was sacked can pick their career back up without
   re-grinding. For the green worker the option is **hidden entirely** (per-option
   `if` — see below), not a dead/duplicate choice. Green illiterate at the offer
-  therefore chooses child-labour (`left`) or hold out (`down`); the factory
+  therefore chooses child-labour (`left`) or hold out (`up`); the factory
   (`right`) only appears once earned.
 
 > **Built.** The four paths are implemented and gated by the `education`
@@ -953,7 +956,7 @@ Roughly in likely order. None of these are started.
   cards to 18 three-swipe** ones, and the third swipe has been added ad hoc where a
   card needed it (the criminal "give up the life", the apprentice "beg for more
   time", prison labour, Tom's cold childhood options). Worth a deliberate pass
-  asking which cards *want* a third option and which are honest binaries — a down
+  asking which cards *want* a third option and which are honest binaries — the up
   swipe is the natural home for the costly escape hatch, the cowardly way out, or
   the choice that trades a relationship for a vital. Note the distribution is very
   uneven by deck: `adult`, `education` and `pet` have **none** at all, while `jobs`
@@ -995,7 +998,7 @@ Roughly in likely order. None of these are started.
 - **"Keep your job" / `jobStrikes` mechanic** — *prototyped on the labour deck.* A
   per-job `jobStrikes` counter (resets on any job change) rises when you shirk
   (`job_labour_machine`/`errand` "refuse/dawdle" options) and each time you grovel;
-  the sacking card's `down` = "beg to keep your place" (conditional option, shown
+  the sacking card's `up` = "beg to keep your place" (conditional option, shown
   only while `jobStrikes ≤ 1`) lets a worker in good standing save the job at a
   pride cost, and the option vanishes once you've pushed your luck. Softens how
   often a sacking actually lands. **To do:** replicate to the other job decks'
@@ -1036,7 +1039,9 @@ Roughly in likely order. None of these are started.
 - **Pets — two childhood strays.** Both routes onto a pet are mirrored: a stray
   **cat** (happiness companion) and a stray **dog** (spirit companion) can each
   turn up while you live with family, and the adult/young-adult pet shop offers
-  the same pair plus "walk on". Every acquisition card is gated `pet: none`, so
+  the same pair plus "keep your shillings" — which pays back the animal's price
+  (finances `+` against the pets' `-`), since a pet is otherwise a pure gain and
+  declining had nothing to offer. Every acquisition card is gated `pet: none`, so
   you can never stack two animals — take either stray and the other drops out of
   the pool; decline one and the other may still come. A found stray seeds love 2
   against the pet shop's 3 (a chosen animal bonds better). Refusing a stray costs

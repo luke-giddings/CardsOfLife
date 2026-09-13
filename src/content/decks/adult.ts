@@ -9,10 +9,14 @@ import type { CardOptions, Deck } from "../../engine/types.ts";
 // lockstep. Each card is one_time and gated pet=none (one pet at a time); the two
 // pets seed love 3 (a chosen, well-bonded animal) and reset their age clock.
 // Card definitions are never mutated, so sharing the object by reference is safe.
+// Walking away pays back the price of the animal (finances "+" against the pets'
+// "-"): a pet is a slow, certain gain in happiness/spirit for a slow, certain
+// drain on money, so the only thing declining can offer is the money itself —
+// which is exactly what makes it tempting when you are poor.
 const petshopOptions: CardOptions = {
   left: { label: "petshop.cat", outcomes: [{ result: "petshop.cat.r0", effects: { vitals: { finances: "-", happiness: "+" }, setStatus: { pet: "cat" }, setTraits: { petCatLove: 3, petCatAge: 0 } } }] },
   right: { label: "petshop.dog", outcomes: [{ result: "petshop.dog.r0", effects: { vitals: { finances: "-", spirit: "+" }, setStatus: { pet: "dog" }, setTraits: { petDogLove: 3, petDogAge: 0 } } }] },
-  down: { label: "petshop.none", outcomes: [{ result: "petshop.none.r0" }] },
+  up: { label: "petshop.none", outcomes: [{ result: "petshop.none.r0", effects: { vitals: { finances: "+" } } }] },
 };
 
 export const adultDecks = [

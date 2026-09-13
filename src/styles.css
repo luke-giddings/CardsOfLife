@@ -152,10 +152,12 @@ body {
   align-items: center;
   gap: 6px;
   left: 50%;
-  /* keep the label on one line, centred, and never wide enough to run into the
-     corners where the vertical side-labels sit */
-  white-space: nowrap;
+  /* Centred, and never wide enough to run into the corners where the vertical
+     side-labels sit. These wrap (unlike the side labels): the longest option
+     labels are far wider than the card, so holding them on one line would spill
+     them off both edges. Two lines fit the top gutter the prompt reserves. */
   max-width: calc(100% - 108px);
+  line-height: 1.25;
   text-align: center;
 }
 .edge-up { flex-direction: column; }
@@ -505,8 +507,9 @@ body {
   margin: 0;
   /* Reserve gutters for the edge labels so the prompt can never overlap them:
      top/bottom clear the up/down labels (and their easy-mode vital previews),
-     left/right clear the vertical side labels (up to two wrapped columns). */
-  padding: 40px 22px;
+     left/right clear the vertical side labels (up to two wrapped columns). The
+     top gutter is the deeper one: the up label hangs below the age line. */
+  padding: 84px 22px 40px;
   text-wrap: balance;
   white-space: pre-line;
   flex: 1 1 auto;
@@ -554,7 +557,7 @@ body {
 }
 .edge-left { left: 10px; transform: translateY(-50%) rotate(180deg); }
 .edge-right { right: 10px; transform: translateY(-50%); }
-.edge-up { top: 14px; left: 50%; transform: translateX(-50%); }
+.edge-up { top: 52px; left: 50%; transform: translateX(-50%); }
 .edge-down { bottom: 14px; left: 50%; transform: translateX(-50%); }
 
 .flip.lean-left .edge-left,

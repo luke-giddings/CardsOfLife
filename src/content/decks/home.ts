@@ -484,7 +484,7 @@ export const homeDecks = [
             // The SAME back-to-school escape as the apprentice card (same gate), on
             // this card too — the runaway has no upper age gate, so it widens the
             // window to ~7–13 without adding a new card to the deck.
-            down: { label: "home_workhouse_runaway.down", if: { ageMax: 13, vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } } }, outcomes: [{ result: "home_workhouse_runaway.down.r0", effects: { vitals: { happiness: "+" }, setStatus: { housing: "family", job: "studying" } } }] },
+            up: { label: "home_workhouse_runaway.up", if: { ageMax: 13, vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } } }, outcomes: [{ result: "home_workhouse_runaway.up.r0", effects: { vitals: { happiness: "+" }, setStatus: { housing: "family", job: "studying" } } }] },
             right: { label: "home_workhouse_runaway.right", outcomes: [{ result: "home_workhouse_runaway.right.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
@@ -501,7 +501,7 @@ export const homeDecks = [
             // 14) AND recovered enough not to relapse straight into ruin: you need
             // a school fund (finances >= 40, the child_hunger net is spent) and
             // your vitals off the floor, so the studying/keep drains don't kill you.
-            down: { label: "home_workhouse_apprentice.down", if: { ageMax: 13, vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } } }, outcomes: [{ result: "home_workhouse_apprentice.down.r0", effects: { vitals: { happiness: "+" }, setStatus: { housing: "family", job: "studying" } } }] },
+            up: { label: "home_workhouse_apprentice.up", if: { ageMax: 13, vitals: { finances: { min: 40 }, health: { min: 35 }, happiness: { min: 35 }, spirit: { min: 35 } } }, outcomes: [{ result: "home_workhouse_apprentice.up.r0", effects: { vitals: { happiness: "+" }, setStatus: { housing: "family", job: "studying" } } }] },
             right: { label: "home_workhouse_apprentice.right", outcomes: [{ result: "home_workhouse_apprentice.right.r0", effects: { vitals: { happiness: "-" } } }] },
           },
         },

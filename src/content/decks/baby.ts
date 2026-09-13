@@ -22,7 +22,7 @@ export const babyDecks = [
           },
         },
         {
-          // Teaches that choices move the bars, and teaches the down-swipe.
+          // Teaches that choices move the bars, and teaches the up-swipe.
           id: "baby_firststeps",
           kind: "milestone",
           priority: 90,
@@ -31,7 +31,7 @@ export const babyDecks = [
           options: {
             left: { label: "baby_firststeps.left", outcomes: [{ result: "baby_firststeps.left.r0", effects: { vitals: { happiness: "++" } } }] },
             right: { label: "baby_firststeps.right", outcomes: [{ result: "baby_firststeps.right.r0", effects: { vitals: { spirit: "++" } } }] },
-            down: { label: "baby_firststeps.down", outcomes: [{ result: "baby_firststeps.down.r0", effects: { vitals: { health: "++" } } }] },
+            up: { label: "baby_firststeps.up", outcomes: [{ result: "baby_firststeps.up.r0", effects: { vitals: { health: "++" } } }] },
           },
         },
 
@@ -43,7 +43,7 @@ export const babyDecks = [
           options: {
             left: { label: "baby_uncle.left", outcomes: [{ result: "baby_uncle.left.r0", effects: { vitals: { happiness: "++" } } }] },
             right: { label: "baby_uncle.right", outcomes: [{ result: "baby_uncle.right.r0", effects: { setTraits: { eduUniFund: true } } }] },
-            down: { label: "baby_uncle.down", outcomes: [{ result: "baby_uncle.down.r0", effects: { vitals: { health: "++" } } }] },
+            up: { label: "baby_uncle.up", outcomes: [{ result: "baby_uncle.up.r0", effects: { vitals: { health: "++" } } }] },
           },
         },
         {
@@ -58,7 +58,7 @@ export const babyDecks = [
           options: {
             left: { label: "baby_disposition.left", outcomes: [{ result: "baby_disposition.left.r0", effects: { vitals: { health: "+" }, setTraits: { persSporty: 3 } } }] },
             right: { label: "baby_disposition.right", outcomes: [{ result: "baby_disposition.right.r0", effects: { vitals: { spirit: "+" }, setTraits: { persBookish: 3 } } }] },
-            down: { label: "baby_disposition.down", outcomes: [{ result: "baby_disposition.down.r0", effects: { vitals: { health: "++", happiness: "++", spirit: "+" } } }] },
+            up: { label: "baby_disposition.up", outcomes: [{ result: "baby_disposition.up.r0", effects: { vitals: { health: "++", happiness: "++", spirit: "+" } } }] },
           },
         },
         {
@@ -68,7 +68,7 @@ export const babyDecks = [
           options: {
             left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { persSweetTooth: true } } }] },
             right: { label: "baby_grandma.right", outcomes: [{ result: "baby_grandma.right.r0", effects: { vitals: { health: "+" } } }] },
-            down: { label: "baby_grandma.down", outcomes: [{ result: "baby_grandma.down.r0", effects: { vitals: { finances: "++" } } }] },
+            up: { label: "baby_grandma.up", outcomes: [{ result: "baby_grandma.up.r0", effects: { vitals: { finances: "++" } } }] },
           },
         },
         {

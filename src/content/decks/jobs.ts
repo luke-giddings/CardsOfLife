@@ -48,7 +48,7 @@ export const jobDecks = [
             // career back up without re-grinding. Hidden entirely otherwise (no
             // dead/duplicate option), via per-option `if`.
             right: { label: "job_unemployed_offer.right", if: { traits: { jobReachedFactory: true } }, outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
-            down: { label: "job_unemployed_offer.down", outcomes: [{ result: "job_unemployed_offer.down.r0", effects: { vitals: { spirit: "-" } } }] },
+            up: { label: "job_unemployed_offer.up", outcomes: [{ result: "job_unemployed_offer.up.r0", effects: { vitals: { spirit: "-" } } }] },
           },
         },
         {
@@ -244,7 +244,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_labour_sacked.left", outcomes: [{ result: "job_labour_sacked.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "unemployed" } } }] },
             right: { label: "job_labour_sacked.right", outcomes: [{ result: "job_labour_sacked.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
-            down: { label: "job_labour_sacked.down", if: { traits: { jobStrikes: { max: 1 } } }, outcomes: [{ result: "job_labour_sacked.down.r0", effects: { vitals: { spirit: "-", happiness: "-" }, incTraits: { jobStrikes: 1 } } }] },
+            up: { label: "job_labour_sacked.up", if: { traits: { jobStrikes: { max: 1 } } }, outcomes: [{ result: "job_labour_sacked.up.r0", effects: { vitals: { spirit: "-", happiness: "-" }, incTraits: { jobStrikes: 1 } } }] },
           },
         },
       ],
@@ -405,7 +405,7 @@ export const jobDecks = [
           //   left  Sit the trial → PASS (skill >= 3) → journeyman job +
           //         `journeyman` credential; else FAIL → unemployed, no credential.
           //   right Give up the trade → unemployed, milder than a botched trial.
-          //   down  Beg for more time → shown only while bench cards remain
+          //   up    Beg for more time → shown only while bench cards remain
           //         (experience < 5) AND you're not yet up to standard (skill <= 2).
           //         A no-op decline: you stay an apprentice and the trial simply
           //         comes round again another year, once you've done more work.
@@ -429,7 +429,7 @@ export const jobDecks = [
               ],
             },
             right: { label: "job_apprentice_qualify.right", outcomes: [{ result: "job_apprentice_qualify.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "unemployed" } } }] },
-            down: { label: "job_apprentice_qualify.down", if: { traits: { jobExperience: { max: 4 }, jobSkill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.down.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
+            up: { label: "job_apprentice_qualify.up", if: { traits: { jobExperience: { max: 4 }, jobSkill: { max: 2 } } }, outcomes: [{ result: "job_apprentice_qualify.up.r0", effects: { vitals: { spirit: "-", happiness: "-" } } }] },
           },
         },
         {
@@ -444,7 +444,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_apprentice_end.left", outcomes: [{ result: "job_apprentice_end.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "unemployed" } } }] },
             right: { label: "job_apprentice_end.right", outcomes: [{ result: "job_apprentice_end.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, setStatus: { job: "unemployed" } } }] },
-            down: { label: "job_apprentice_end.down", outcomes: [{ result: "job_apprentice_end.down.r0", effects: { vitals: { finances: "-", happiness: "-" } } }] },
+            up: { label: "job_apprentice_end.up", outcomes: [{ result: "job_apprentice_end.up.r0", effects: { vitals: { finances: "-", happiness: "-" } } }] },
           },
           prompt: "job_apprentice_end.prompt",
         },
@@ -476,7 +476,7 @@ export const jobDecks = [
             // but it latches jobRenouncedCrime so the underworld never reopens (the
             // fagin offer is gated on it). Shared label/result across the criminal
             // score cards. The ★ comes from the job change.
-            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
+            up: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {
@@ -489,7 +489,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_criminal_score.left", outcomes: [{ result: "job_criminal_score.left.r0", effects: { vitals: { finances: "+++", spirit: "--" }, incTraits: { jobExperience: 1, jobCriminality: 1 } } }] },
             right: { label: "job_criminal_score.right", outcomes: [{ result: "job_criminal_score.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
-            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
+            up: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {
@@ -839,7 +839,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_burglar_job.left", outcomes: [{ result: "job_burglar_job.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, jobCriminality: 2 } } }] },
             right: { label: "job_burglar_job.right", outcomes: [{ result: "job_burglar_job.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
-            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
+            up: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {
@@ -885,7 +885,7 @@ export const jobDecks = [
           options: {
             left: { label: "job_fence_deal.left", outcomes: [{ result: "job_fence_deal.left.r0", effects: { vitals: { finances: "+++", spirit: "-" }, incTraits: { jobExperience: 1, jobCriminality: 3 } } }] },
             right: { label: "job_fence_deal.right", outcomes: [{ result: "job_fence_deal.right.r0", effects: { vitals: { spirit: "+" } } }] },
-            down: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
+            up: { label: "crime_giveup.opt", outcomes: [{ result: "crime_giveup.r0", effects: { vitals: { spirit: "+++" }, setStatus: { job: "unemployed" }, setTraits: { jobRenouncedCrime: true } } }] },
           },
         },
         {

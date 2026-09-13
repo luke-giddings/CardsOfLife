@@ -10,7 +10,7 @@ import type { CardOptions, Deck } from "../../engine/types.ts";
 // The three swipes of a year served, shared by BOTH copies of the card below.
 //   left  endure quietly — costs spirit
 //   right throw yourself into the work — happiness up, health down
-//   down  prison labour, only when skint (finances <= 20): pays "+" (+10) against
+//   up    prison labour, only when skint (finances <= 20): pays "+" (+10) against
 //         gaol's -5 finances drift. Netting +5 lifts you back over the gate, which
 //         hides the option again — a soft FLOOR, not an income, so inside (where
 //         you can't earn any other way) money oscillates in a low, non-lethal band
@@ -44,12 +44,12 @@ const doTimeOptions: CardOptions = {
       { result: "prison_time.right.r0", effects: { incTraits: { jobCriminality: -1 }, vitals: { happiness: "+", health: "-" } } },
     ],
   },
-  down: {
-    label: "prison_time.down",
+  up: {
+    label: "prison_time.up",
     if: { vitals: { finances: { max: 20 } } },
     outcomes: [
       { if: { traits: { jobCriminality: { max: 1 } } }, result: "prison_time.release", effects: { ...RELEASE, vitals: { finances: "+" } } },
-      { result: "prison_time.down.r0", effects: { incTraits: { jobCriminality: -1 }, vitals: { finances: "+" } } },
+      { result: "prison_time.up.r0", effects: { incTraits: { jobCriminality: -1 }, vitals: { finances: "+" } } },
     ],
   },
 };
