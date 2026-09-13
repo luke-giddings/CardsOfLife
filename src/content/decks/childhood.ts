@@ -137,6 +137,13 @@ export const childhoodDecks = [
           // what small extra you take from the stay (spirit / happiness / a few
           // coins). Gated to age <= 13 (findRescue honours conditions), so from
           // 14 on you face ill-health mortality without the net.
+          //   A rescue fires on ONE vital hitting 0, from any cause, at any level
+          // of the others — so its prompt may assert neither. This one used to
+          // open "the fever has you, and there's no money for a doctor", which
+          // read as nonsense to a rich child worn down by the loom's slow drain:
+          // wrong cause, wrong premise. It now names no cause and no purse. The
+          // four finances rescues can be blunt ("the last coin is spent") because
+          // there an empty purse IS the trigger.
           id: "child_charity_hospital",
           kind: "one_time",
           rescue: "health",

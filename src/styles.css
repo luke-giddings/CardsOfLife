@@ -507,9 +507,8 @@ body {
   margin: 0;
   /* Reserve gutters for the edge labels so the prompt can never overlap them:
      top/bottom clear the up/down labels (and their easy-mode vital previews),
-     left/right clear the vertical side labels (up to two wrapped columns). The
-     top gutter is the deeper one: the up label hangs below the age line. */
-  padding: 84px 22px 40px;
+     left/right clear the vertical side labels (up to two wrapped columns). */
+  padding: 40px 22px;
   text-wrap: balance;
   white-space: pre-line;
   flex: 1 1 auto;
@@ -558,6 +557,9 @@ body {
 .edge-left { left: 10px; transform: translateY(-50%) rotate(180deg); }
 .edge-right { right: 10px; transform: translateY(-50%); }
 .edge-up { top: 52px; left: 50%; transform: translateX(-50%); }
+/* A card with a top option needs a deeper top gutter than this, since the up
+   label hangs below the age line and wraps — but only as deep as that card's own
+   label, so showFront measures it and sets padding-top per card. */
 .edge-down { bottom: 14px; left: 50%; transform: translateX(-50%); }
 
 .flip.lean-left .edge-left,

@@ -84,6 +84,12 @@ const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + c
 const MAX_TILT = 70; // the tilt asymptotes toward this as you drag to the edge; release flips the rest
 const TILT_EASE = 55; // drag distance (px) at which tilt reaches half of MAX_TILT — higher = gentler
 const TAP_SLOP = 12; // movement (px) under which a pointer-up counts as a tap, not a swipe
+// breathing room the prompt keeps from the card edges, and from the top option's
+// label when there is one (see fitPromptToUpLabel). Mirrors .prompt's CSS padding.
+const PROMPT_GUTTER = 40;
+// separation the prompt keeps below the top option's label — breathing room, not
+// a full edge gutter, so a three-option card spends as little height as it can.
+const UP_LABEL_GAP = 16;
 const FLIP_MS = 620; // must match the .flip CSS transition
 const SLIDE_MS = 320;
 
@@ -852,6 +858,7 @@ export class Game {
     this.holder = holder;
     this.flip = flip;
     this.phase = "front";
+    this.fitPromptToUpLabel(front);
 
     this.attachDrag(flip, card);
     this.renderDebug();
@@ -865,6 +872,20 @@ export class Game {
         holder.style.opacity = "";
       });
     }
+  }
+
+  // The top option's label hangs below the age line and wraps to as many lines as
+  // it needs (the longest are far wider than a phone card). The prompt has to
+  // clear it, but reserving the worst case on EVERY card just wastes height —
+  // most cards have no top option, and a fixed deep gutter pushed the longest
+  // prompts off the bottom of a short screen. So measure what this card's label
+  // actually takes and reserve exactly that, never less than the design gutter.
+  private fitPromptToUpLabel(front: HTMLElement): void {
+    const up = front.querySelector<HTMLElement>(".edge-up");
+    const prompt = front.querySelector<HTMLElement>(".prompt");
+    if (!up || !prompt) return;
+    const need = up.getBoundingClientRect().bottom - prompt.getBoundingClientRect().top + UP_LABEL_GAP;
+    prompt.style.paddingTop = `${Math.max(PROMPT_GUTTER, Math.ceil(need))}px`;
   }
 
   // Debug: re-render the current front card in place (no entrance animation) so
