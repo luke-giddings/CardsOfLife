@@ -97,7 +97,6 @@ export interface Traits {
   // sources so youth can actually reach 3, and more results that branch on level.)
   persBookish: number;
   persSporty: number;
-  persSweetTooth: boolean;
   persSociable: boolean;
   // Sibling relationships (hidden; can go negative = rivalry). All `rel<Sibling>*`
   // so the debug panel groups them by sibling under a Relationships category.
@@ -186,6 +185,13 @@ export interface Traits {
   // the prison escape card. BACKLOG: use in other checks (harder to land honest
   // work, a chance of re-arrest, a grimmer epitaph). Unused for now beyond being set.
   flawWanted: boolean;
+  // A lifelong weakness for sugar, latched in babyhood by grandma's second
+  // helpings. It doesn't drain anything by itself — it AMPLIFIES the cards where
+  // sugar is on offer, in both directions: indulging is sweeter and dearer (in
+  // money and teeth), and going without costs more happiness while hardening you.
+  // Read by home_family_sweets, _market, _fair, ya_thrift and old_grandchildren,
+  // so it bites from childhood to the last chapter.
+  flawSweetTooth: boolean;
   // Pets. `pet*` so the debug panel groups them under a Pets category. There are
   // two pets (one at a time): a cat (a HAPPINESS companion) and a dog (a SPIRIT
   // companion), each with its own age/love pair. `pet<X>Age` ticks up each year
@@ -207,7 +213,6 @@ export const DEFAULT_TRAITS: Traits = {
   eduWasUndergraduate: false,
   persBookish: 0,
   persSporty: 0,
-  persSweetTooth: false,
   persSociable: false,
   relBrotherActive: false,
   relBrotherLove: 0,
@@ -236,6 +241,7 @@ export const DEFAULT_TRAITS: Traits = {
   flawOwesCharity: false,
   flawSoldUp: false,
   flawWanted: false,
+  flawSweetTooth: false,
   petCatAge: 0,
   petCatLove: 0,
   petDogAge: 0,

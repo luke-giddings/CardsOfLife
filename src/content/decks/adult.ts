@@ -49,12 +49,26 @@ export const adultDecks = [
           },
         },
         {
+          // The sweet tooth's young-adult beat: with money of your own for the
+          // first time, indulging it is dearer and starts to tell on your health.
           id: "ya_thrift",
           kind: "one_time",
           prompt: "ya_thrift.prompt",
           options: {
-            left: { label: "ya_thrift.left", outcomes: [{ result: "ya_thrift.left.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
-            right: { label: "ya_thrift.right", outcomes: [{ result: "ya_thrift.right.r0", effects: { vitals: { happiness: "+", finances: "-" } } }] },
+            left: {
+              label: "ya_thrift.left",
+              outcomes: [
+                { if: { traits: { flawSweetTooth: true } }, result: "ya_thrift.left.r0", effects: { vitals: { finances: "+", happiness: "--", spirit: "+" } } },
+                { result: "ya_thrift.left.r1", effects: { vitals: { finances: "+", happiness: "-" } } },
+              ],
+            },
+            right: {
+              label: "ya_thrift.right",
+              outcomes: [
+                { if: { traits: { flawSweetTooth: true } }, result: "ya_thrift.right.r0", effects: { vitals: { happiness: "++", finances: "--", health: "-" } } },
+                { result: "ya_thrift.right.r1", effects: { vitals: { happiness: "+", finances: "-" } } },
+              ],
+            },
           },
         },
         {
@@ -297,11 +311,20 @@ export const adultDecks = [
           },
         },
         {
+          // The sweet tooth comes full circle: grandma's second helpings made you,
+          // and now you are the one with the tin. Only the spoiling option reads
+          // the trait — sending them home to rest has nothing to do with sugar.
           id: "old_grandchildren",
           kind: "one_time",
           prompt: "old_grandchildren.prompt",
           options: {
-            left: { label: "old_grandchildren.left", outcomes: [{ result: "old_grandchildren.left.r0", effects: { vitals: { happiness: "++", health: "-" } } }] },
+            left: {
+              label: "old_grandchildren.left",
+              outcomes: [
+                { if: { traits: { flawSweetTooth: true } }, result: "old_grandchildren.left.r0", effects: { vitals: { happiness: "+++", health: "--" } } },
+                { result: "old_grandchildren.left.r1", effects: { vitals: { happiness: "++", health: "-" } } },
+              ],
+            },
             right: { label: "old_grandchildren.right", outcomes: [{ result: "old_grandchildren.right.r0", effects: { vitals: { health: "+", happiness: "-" } } }] },
           },
         },

@@ -28,14 +28,14 @@ export const homeDecks = [
             left: {
               label: "home_family_sweets.left",
               outcomes: [
-                { if: { traits: { persSweetTooth: true } }, result: "home_family_sweets.left.r0", effects: { vitals: { happiness: "++", health: "--", finances: "-" } } },
+                { if: { traits: { flawSweetTooth: true } }, result: "home_family_sweets.left.r0", effects: { vitals: { happiness: "++", health: "--", finances: "-" } } },
                 { result: "home_family_sweets.left.r1", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } },
               ],
             },
             right: {
               label: "home_family_sweets.right",
               outcomes: [
-                { if: { traits: { persSweetTooth: true } }, result: "home_family_sweets.right.r0", effects: { vitals: { spirit: "++", happiness: "--", finances: "+" } } },
+                { if: { traits: { flawSweetTooth: true } }, result: "home_family_sweets.right.r0", effects: { vitals: { spirit: "++", happiness: "--", finances: "+" } } },
                 { result: "home_family_sweets.right.r1", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
               ],
             },
@@ -75,23 +75,55 @@ export const homeDecks = [
           },
         },
         {
+          // One of five cards that read flawSweetTooth. The sweet-toothed branch
+          // comes FIRST in each option (first match wins), and pushes BOTH ways:
+          // the treat is a twist of sweets rather than a hot pie — sweeter, and
+          // it costs teeth instead of feeding you — while walking the stalls
+          // without spending is harder, and hardens you for it.
           id: "home_family_market",
           kind: "one_time",
           conditions: { ageMax: 17 },
           prompt: "home_family_market.prompt",
           options: {
-            left: { label: "home_family_market.left", outcomes: [{ result: "home_family_market.left.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
-            right: { label: "home_family_market.right", outcomes: [{ result: "home_family_market.right.r0", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } }] },
+            left: {
+              label: "home_family_market.left",
+              outcomes: [
+                { if: { traits: { flawSweetTooth: true } }, result: "home_family_market.left.r0", effects: { vitals: { finances: "+", spirit: "++", happiness: "--" } } },
+                { result: "home_family_market.left.r1", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
+              ],
+            },
+            right: {
+              label: "home_family_market.right",
+              outcomes: [
+                { if: { traits: { flawSweetTooth: true } }, result: "home_family_market.right.r0", effects: { vitals: { happiness: "++", health: "-", finances: "-" } } },
+                { result: "home_family_market.right.r1", effects: { vitals: { happiness: "+", health: "+", finances: "-" } } },
+              ],
+            },
           },
         },
         {
+          // The toffee-apple stall. Same amplifier: a sweet tooth turns a good day
+          // out into a reckless one, and turns watching from the fence into a
+          // genuine act of will.
           id: "home_family_fair",
           kind: "one_time",
           conditions: { ageMax: 17 },
           prompt: "home_family_fair.prompt",
           options: {
-            left: { label: "home_family_fair.left", outcomes: [{ result: "home_family_fair.left.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },
-            right: { label: "home_family_fair.right", outcomes: [{ result: "home_family_fair.right.r0", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } }] },
+            left: {
+              label: "home_family_fair.left",
+              outcomes: [
+                { if: { traits: { flawSweetTooth: true } }, result: "home_family_fair.left.r0", effects: { vitals: { happiness: "+++", finances: "--", health: "--" } } },
+                { result: "home_family_fair.left.r1", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } },
+              ],
+            },
+            right: {
+              label: "home_family_fair.right",
+              outcomes: [
+                { if: { traits: { flawSweetTooth: true } }, result: "home_family_fair.right.r0", effects: { vitals: { finances: "+", spirit: "++", happiness: "--" } } },
+                { result: "home_family_fair.right.r1", effects: { vitals: { finances: "+", spirit: "+", happiness: "-" } } },
+              ],
+            },
           },
         },
         {

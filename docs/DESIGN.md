@@ -383,6 +383,13 @@ fire given the current state. Two extra markers:
   plain demotion like being sacked → unemployed still stars — it's a bare
   `setStatus` with no flaw, and telling a downgrade from an upgrade needs status
   rankings; parked.)*
+- A red **⚠** is its opposite: the same outcome carries a **lasting burden**
+  (`setFlaws` — the charity-hospital ledger, the sold-up disgrace, a warrant, a
+  sweet tooth). Suppressing the star was not enough on its own: a burden then
+  showed *nothing*, so the charity hospital's "health ++, spirit +" read as a
+  clean gift when it was also writing your name in a ledger that falls due in
+  young adulthood. The two marks are mutually exclusive and the burden wins,
+  because the mark is the part you would otherwise miss.
 
 **Status reveal timing:** when a choice both changes a status and unlocks a new
 titled deck (a "new chapter"), the visible **status-chip** change is **held until
@@ -1097,6 +1104,17 @@ Roughly in likely order. None of these are started.
   **housing- and station-aware variety** (events that read differently for a
   labourer vs a merchant, a renter vs an estate-owner) so the middle years feel
   shaped by your station, not generic.
+- **Sweet tooth — now a flaw that actually bites.** `flawSweetTooth` (latched in
+  babyhood by grandma's second helpings) was read by exactly ONE card, and was
+  set via `setTraits`, so the option that inflicted it wore the reward ★. It is
+  now a `setFlaws` burden (⚠ on the card face) and is read by **five** cards
+  spanning the whole life: `home_family_sweets`, `_market` and `_fair` in
+  childhood, `ya_thrift` in the green years, and `old_grandchildren` at the end,
+  where grandma's habit comes full circle and you are the one with the tin. It
+  drains nothing by itself — it **amplifies both ways**: indulging is sweeter and
+  dearer (in money and teeth), going without costs more happiness and hardens you
+  for it. That is the shape to copy for any future disposition trait: a trait
+  that only gates one card is indistinguishable from no trait at all.
 - **Adult-at-home vs childhood family life** — **BUILT (first pass).** The
   childhood `home_family` cards (sweets, pet, fair, scrump, chores, market) are
   gated `ageMax 17`; a grown-adult-under-the-parental-roof set (`home_family_keep`,

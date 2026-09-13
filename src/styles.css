@@ -181,6 +181,10 @@ body {
 /* "This choice changes your path" — a job/home/trait payload beyond the vital
    numbers, so a rewarding choice doesn't look weaker than its plain sibling. */
 .ep-special { color: var(--gold); font-weight: 700; }
+/* Its opposite: a lasting BURDEN (a debt, a disgrace, a warrant, a weakness).
+   Deliberately not the gold star — a burden wearing the reward mark made the
+   choice that inflicted it read as the generous one. */
+.ep-burden { color: var(--bad); font-weight: 700; font-size: 1.1em; line-height: 1; }
 
 /* debug panel under the card */
 .debug-panel { display: none; }

@@ -66,7 +66,9 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_grandma.prompt",
           options: {
-            left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { persSweetTooth: true } } }] },
+            // setFlaws, not setTraits: a sweet tooth is a lifelong liability, not a
+            // boon, so the card shows the burden mark rather than the reward star.
+            left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setFlaws: { flawSweetTooth: true } } }] },
             right: { label: "baby_grandma.right", outcomes: [{ result: "baby_grandma.right.r0", effects: { vitals: { health: "+" } } }] },
             up: { label: "baby_grandma.up", outcomes: [{ result: "baby_grandma.up.r0", effects: { vitals: { finances: "++" } } }] },
           },

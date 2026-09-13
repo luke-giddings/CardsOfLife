@@ -494,18 +494,24 @@ export class Game {
         : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${sym}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
-    // A BENEFICIAL path change beyond the vital numbers gets a "special" star —
-    // so a rewarding choice (seize the apprenticeship, buy the house, get
-    // vaccinated) doesn't look weaker than a plain sibling that only moves a stat.
-    // It fires on a new job/home/education (setStatus), a BOON trait (setTraits),
-    // or a life-stage deck swap. It is suppressed when the outcome inflicts a
-    // BURDEN (setFlaws — the charity-hospital debt, the sold-up shame mark), even
-    // if that outcome also changes status (e.g. selling up → renting), since the
-    // star reads as "good". Incremental ticks (experience, +1 sporty) don't count.
+    // A lasting consequence beyond the vital numbers gets its own mark, so a
+    // choice isn't judged on its stat bars alone. Two marks, never both:
+    //   ★ a BENEFICIAL path change — a new job/home/schooling (setStatus), a boon
+    //     trait (setTraits), or a life-stage deck swap — so a rewarding choice
+    //     (seize the apprenticeship, buy the house, get vaccinated) doesn't look
+    //     weaker than a plain sibling that only moves a stat.
+    //   ⚠ a BURDEN (setFlaws — the charity-hospital debt, the sold-up shame mark,
+    //     a warrant, a sweet tooth). It used to show NOTHING, which read as a
+    //     clean choice: the hospital's "health ++, spirit +" looked like a pure
+    //     gift when it also put your name in a ledger that falls due in young
+    //     adulthood. A burden ousts the star even when the outcome also changes
+    //     status (selling up → renting), because the mark is the part you'd miss.
+    // Incremental ticks (experience, +1 sporty) count as neither.
     const e = outcome.effects;
-    const hasFlaw = !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
-    const special = !hasFlaw && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
+    const burden = !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
+    const special = !burden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
     if (special) chips += `<span class="ep-v ep-special" title="This choice changes your path — a job, home, schooling, or a lasting boon">★</span>`;
+    if (burden) chips += `<span class="ep-v ep-burden" title="This choice leaves a lasting mark — a debt, a disgrace, a warrant, a weakness">⚠</span>`;
     // No vital changes → show nothing (rather than a bare "—").
     return chips;
   }
