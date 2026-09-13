@@ -12,7 +12,8 @@ import {
   totalDrift,
 } from "../engine/engine.ts";
 import { meets } from "../engine/conditions.ts";
-import { clearSave, loadGame, saveGame } from "../engine/save.ts";
+import { clearSave, loadGame, loadHistory, saveGame, saveHistory } from "../engine/save.ts";
+import type { HistoryEntry } from "../engine/save.ts";
 import {
   ENDINGS,
   STATUS_KINDS,
@@ -148,7 +149,7 @@ export class Game {
   private debugOpen = new Set<string>(["pool", "detail"]); // which debug sections are expanded
   // Debug history: the pre-choice snapshot at each played card, so we can list
   // what was drawn/chosen and rewind to try a different choice.
-  private history: { age: number; cardId: string; choice: string; before: GameState }[] = [];
+  private history: HistoryEntry[] = [];
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -156,7 +157,17 @@ export class Game {
     this.debug = loadDebug();
     this.hard = loadHard();
     this.buildShell();
-    this.state = loadGame() ?? initGame(content);
+    // Resume the run AND its rewind list together. A history only means anything
+    // beside the save it was written with, so a fresh life takes an empty one and
+    // drops whatever was stored (clearSave removes both keys).
+    const saved = loadGame();
+    if (saved) {
+      this.state = saved;
+      this.history = loadHistory() ?? [];
+    } else {
+      this.state = initGame(content);
+      clearSave();
+    }
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
     this.captureDisplay();
@@ -759,7 +770,7 @@ export class Game {
     if (setAge && min != null && this.state.age < min) {
       this.state.age = min;
       this.prevVitals = { ...this.state.vitals };
-      saveGame(this.state);
+      this.persist();
       this.syncTop();
     }
     this.card = card;
@@ -770,14 +781,14 @@ export class Game {
   // --- debug state edits -----------------------------------------------------
   private adjustVital(key: VitalKey, delta: number): void {
     this.state.vitals[key] = Math.max(0, Math.min(100, this.state.vitals[key] + delta));
-    saveGame(this.state);
+    this.persist();
     this.syncTop();
     this.renderDebug();
     this.refreshFront(); // vitals affect preview symbols / which outcome resolves
   }
   private adjustAge(delta: number): void {
     this.state.age = Math.max(0, this.state.age + delta);
-    saveGame(this.state);
+    this.persist();
     this.syncTop();
     this.renderDebug();
     this.refreshFront();
@@ -788,7 +799,7 @@ export class Game {
     if (i >= 0) decks.splice(i, 1);
     else decks.push(id);
     this.seenDecks.add(id);
-    saveGame(this.state);
+    this.persist();
     this.captureDisplay(); // debug edit lands immediately (no chapter card to wait for)
     this.syncTop();
     this.renderDebug();
@@ -800,7 +811,7 @@ export class Game {
     if (typeof v === "number") t[key] = v + (delta ?? 10);
     else if (typeof v === "boolean") t[key] = !v;
     else if (key === "gender") t[key] = v === "boy" ? "girl" : "boy";
-    saveGame(this.state);
+    this.persist();
     this.renderDebug();
     this.refreshFront(); // traits gate which outcome resolves
   }
@@ -813,7 +824,7 @@ export class Game {
     if (!draw.card) {
       const q = quietYear(this.state);
       this.state = q.state;
-      saveGame(this.state);
+      this.persist();
       this.syncTop();
       if (this.state.over) this.showEnd();
       else this.beginTurn();
@@ -888,6 +899,14 @@ export class Game {
     prompt.style.paddingTop = `${Math.max(PROMPT_GUTTER, Math.ceil(need))}px`;
   }
 
+  // Write the run and its rewind list as one step, so a refresh can never resume
+  // a save whose history belongs to a different turn. Always paired — the history
+  // is only read back when the save beside it loads.
+  private persist(): void {
+    saveGame(this.state);
+    saveHistory(this.history);
+  }
+
   // Debug: re-render the current front card in place (no entrance animation) so
   // its preview symbols / resolved outcomes reflect edited vitals, age, etc.
   private refreshFront(): void {
@@ -908,7 +927,7 @@ export class Game {
     if (!entry) return;
     this.history = this.history.slice(0, index);
     this.state = structuredClone(entry.before);
-    saveGame(this.state);
+    this.persist();
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
     this.captureDisplay();
@@ -940,7 +959,7 @@ export class Game {
 
     const res = chooseDirection(this.state, this.card, dir);
     this.state = res.state;
-    saveGame(this.state);
+    this.persist();
     this.detectUnlocks();
     // Hold the visible status/chip change until the "A new chapter" card when one
     // is pending; otherwise let it land now (there's no chapter to sync it to).
