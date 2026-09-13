@@ -286,7 +286,7 @@ export const siblingDecks = [
           options: {
             left: { label: "rel_bro_quarrel.left", outcomes: [{ result: "rel_bro_quarrel.left.r0", effects: { incTraits: { relBrotherLove: 12, relBrotherDistance: -6, relSisterLove: -10 } } }] },
             right: { label: "rel_bro_quarrel.right", outcomes: [{ result: "rel_bro_quarrel.right.r0", effects: { incTraits: { relBrotherLove: -10, relSisterLove: 12, relSisterDistance: -6 } } }] },
-            up: { label: "rel_bro_quarrel.up", outcomes: [{ result: "rel_bro_quarrel.up.r0", effects: { vitals: { spirit: "-" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
+            up: { label: "rel_bro_quarrel.up", outcomes: [{ result: "rel_bro_quarrel.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
           },
         },
         {

@@ -927,6 +927,19 @@ Roughly in likely order. None of these are started.
   helps neither enough. **Loyalty**: they quarrel and whoever reaches you first
   gets a hearing (`rel_sis_quarrel`, `rel_bro_quarrel`); refusing to judge costs a
   little of both.
+- **Balance rule for the relationship decks — the cold swipe pays best.** A
+  third option that only *costs* you something is not a choice, it is a
+  punishment button; nobody picks it twice. In Sarah's deck the cruel swipe is
+  the one with the best immediate return (money, and the hours her dancing was
+  eating), bought with the currency the deck scores you on — her love, and the
+  `promise` that decides the audition. That makes estrangement a *strategy* you
+  can be tempted into rather than a self-harm button, which is what it was
+  meant to be. Two options in Tom's deck (`rel_bro_play` "give him the slip",
+  `rel_bro_bully` "pretend you didn't see") are still strictly dominated by the
+  swipe beside them, as is `prison_cellmate`'s "keep to yourself" — left alone
+  pending the cellmate relationship deck. A strict-dominance check (an option
+  that is no better than a sibling option on *every* vital and every comparable
+  trait) is the cheap way to find these.
 - **`Content.vars`** — the cast's names live in content as substitutable constants
   (`{brother}` / `{sister}`), not written into ~60 card strings. Every player-facing
   string — prompt, option label, result, and the epilogue prose — is rendered

@@ -23,6 +23,14 @@
 // Two cards only exist when you have BOTH siblings (see rel_sis_purse and
 // rel_sis_quarrel, and their mirrors in the brother deck): one divides a purse
 // that cannot stretch to both children, one makes you take a side.
+//
+// BALANCE RULE for this deck: THE COLD SWIPE PAYS BEST. Her arc is about what
+// you can afford, so the cruel option is the one with the best immediate return
+// (money, and the hours her dancing was eating), bought with the currency the
+// deck actually scores you on — her love, and the `promise` that decides the
+// audition. A cold swipe that merely costs you something is not a choice, it is
+// a punishment button: the three childhood beats each had one, and they were
+// strictly dominated by the swipe beside them until this was applied.
 import type { Deck } from "../../engine/types.ts";
 
 export const sisterDecks = [
@@ -49,7 +57,7 @@ export const sisterDecks = [
           right: { label: "rel_sis_dance.right", outcomes: [{ result: "rel_sis_dance.right.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: 4, relSisterDistance: -6 } } }] },
           // Cold: not neglect but scorn — the cheapest way to teach a child that
           // her one talent is an embarrassment.
-          up: { label: "rel_sis_dance.up", outcomes: [{ result: "rel_sis_dance.up.r0", effects: { vitals: { spirit: "-" }, incTraits: { relSisterLove: -12, relSisterPromise: -2, relSisterDistance: -6 } } }] },
+          up: { label: "rel_sis_dance.up", outcomes: [{ result: "rel_sis_dance.up.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { relSisterLove: -12, relSisterPromise: -2, relSisterDistance: -6 } } }] },
         },
       },
       {
@@ -62,7 +70,7 @@ export const sisterDecks = [
         options: {
           left: { label: "rel_sis_mend.left", outcomes: [{ result: "rel_sis_mend.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterDistance: -6 } } }] },
           right: { label: "rel_sis_mend.right", outcomes: [{ result: "rel_sis_mend.right.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: 4, relSisterDistance: -6 } } }] },
-          up: { label: "rel_sis_mend.up", outcomes: [{ result: "rel_sis_mend.up.r0", effects: { vitals: { spirit: "-" }, incTraits: { relSisterLove: -12, relSisterDistance: -6 } } }] },
+          up: { label: "rel_sis_mend.up", outcomes: [{ result: "rel_sis_mend.up.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { relSisterLove: -12, relSisterDistance: -6 } } }] },
         },
       },
       {
@@ -107,8 +115,8 @@ export const sisterDecks = [
         prompt: "rel_sis_lessons.prompt",
         options: {
           left: { label: "rel_sis_lessons.left", outcomes: [{ result: "rel_sis_lessons.left.r0", effects: { vitals: { finances: "--" }, incTraits: { relSisterLove: 8, relSisterPromise: 4, relSisterDistance: -6 } } }] },
-          right: { label: "rel_sis_lessons.right", outcomes: [{ result: "rel_sis_lessons.right.r0", effects: { incTraits: { relSisterLove: 2, relSisterPromise: 1, relSisterDistance: -6 } } }] },
-          up: { label: "rel_sis_lessons.up", outcomes: [{ result: "rel_sis_lessons.up.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: -12, relSisterPromise: -2, relSisterDistance: -6 } } }] },
+          right: { label: "rel_sis_lessons.right", outcomes: [{ result: "rel_sis_lessons.right.r0", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 2, relSisterPromise: 1, relSisterDistance: -6 } } }] },
+          up: { label: "rel_sis_lessons.up", outcomes: [{ result: "rel_sis_lessons.up.r0", effects: { vitals: { finances: "++" }, incTraits: { relSisterLove: -12, relSisterPromise: -2, relSisterDistance: -6 } } }] },
         },
       },
       {
@@ -120,7 +128,7 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterSchooled: true, relSisterAge: { min: 12 } } },
         prompt: "rel_sis_recital.prompt",
         options: {
-          left: { label: "rel_sis_recital.left", outcomes: [{ result: "rel_sis_recital.left.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { relSisterLove: 12, relSisterPromise: 3, relSisterDistance: -10 } } }] },
+          left: { label: "rel_sis_recital.left", outcomes: [{ result: "rel_sis_recital.left.r0", effects: { vitals: { happiness: "+", finances: "--" }, incTraits: { relSisterLove: 12, relSisterPromise: 3, relSisterDistance: -10 } } }] },
           right: { label: "rel_sis_recital.right", outcomes: [{ result: "rel_sis_recital.right.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: -6 } } }] },
           up: { label: "rel_sis_recital.up", outcomes: [{ result: "rel_sis_recital.up.r0", effects: { vitals: { finances: "-" }, incTraits: { relSisterLove: 2, relSisterPromise: 2 } } }] },
         },
@@ -201,7 +209,7 @@ export const sisterDecks = [
         options: {
           left: { label: "rel_sis_quarrel.left", outcomes: [{ result: "rel_sis_quarrel.left.r0", effects: { incTraits: { relSisterLove: 12, relSisterDistance: -6, relBrotherLove: -10 } } }] },
           right: { label: "rel_sis_quarrel.right", outcomes: [{ result: "rel_sis_quarrel.right.r0", effects: { incTraits: { relSisterLove: -10, relBrotherLove: 12, relBrotherDistance: -6 } } }] },
-          up: { label: "rel_sis_quarrel.up", outcomes: [{ result: "rel_sis_quarrel.up.r0", effects: { vitals: { spirit: "-" }, incTraits: { relSisterLove: -4, relBrotherLove: -4 } } }] },
+          up: { label: "rel_sis_quarrel.up", outcomes: [{ result: "rel_sis_quarrel.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: -4, relBrotherLove: -4 } } }] },
         },
       },
 
