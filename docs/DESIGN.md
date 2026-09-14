@@ -402,6 +402,51 @@ fire given the current state. Two extra markers:
     downgrade from an upgrade needs status rankings" item: one boolean per
     state turned out to be all the UI needed.)*
 
+## Opening flow (`src/ui/intro.ts`)
+
+The cards you see **before a life starts**. They look like game cards — same
+face, same swipe, same flip — but the engine never sees them: they draw from no
+deck, cost no year and move no vital. That is why they live in `src/ui` and not
+`src/content`; a deck of them would have to be excluded from every draw pool,
+every milestone check and every stat script, and would buy nothing for it.
+
+What opens, in order of precedence:
+
+1. **First run** (`cardsoflife.intro` unset) — three cards, once ever. What the
+   game is; a card you *practise the swipe on* (all three directions work, each
+   naming back what you did, and the third is on `up` because that is where every
+   third option in the game sits and it is the one players miss); then the
+   easy/hard fork, which sets the same flag the HARD button does.
+2. **A life in progress** — one card: carry on with it, or begin a new one
+   (which clears the save and its rewind history, exactly as RESET does).
+3. **Neither** — no card at all; a new life just begins.
+
+A **finished** life still goes straight to its end screen, as before — the
+resume card is for a life you can actually return to.
+
+Mechanics worth knowing:
+
+- The first-run flag is latched when the flow **finishes**, not when it starts,
+  so closing the tab half-way through shows it again next time. It is not part
+  of the save: wiping a life must not re-run the tutorial.
+- An option with no `result` acts at once with no flip, which is what a menu
+  wants; the tutorial card keeps its results precisely *because* the flip is one
+  of the things it is teaching.
+- The first-run flow hides the age and status chips (`.intro-on`) — they
+  describe a life that hasn't started. The **vital bars stay**, since the
+  tutorial points at them. The resume card keeps the full chrome on purpose: the
+  age and bars of the life you left are exactly what you need to decide.
+- Intro prompts carry far more text than any game prompt (the longest of those is
+  ~160 characters), so they get their own smaller type scale. Checked for
+  overflow in both languages: they fit from 360×780 up. 360×640 still clips, as
+  it already did for six game cards — that screen is shorter than the card
+  design assumes.
+- `attachDrag` takes `(has, pick)` callbacks rather than a `Card`, which is what
+  lets the flow reuse the real swipe, tilt, tap-region and flip behaviour instead
+  of a second copy of it.
+- **Debug: the INTRO button** (top-left, visible only with the debug panel on)
+  forgets the flag and replays the flow immediately.
+
 **Status reveal timing:** when a choice both changes a status and unlocks a new
 titled deck (a "new chapter"), the visible **status-chip** change is **held until
 the chapter card appears**, so the two land together instead of the chips moving a

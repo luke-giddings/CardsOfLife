@@ -108,6 +108,7 @@ body {
 }
 .reset,
 .dbg,
+.intro-btn,
 .lang,
 .hard {
   font-size: 0.68rem;
@@ -122,12 +123,25 @@ body {
 }
 .reset:hover,
 .dbg:hover,
+.intro-btn:hover,
 .lang:hover,
 .hard:hover { color: var(--ink); background: var(--surface); }
 .reset:active,
 .dbg:active,
+.intro-btn:active,
 .lang:active,
 .hard:active { transform: translateY(1px); }
+/* Replaying the opening flow is a testing tool, so it only exists while the
+   debug panel is on — a player must never be able to re-trigger the tutorial. */
+.intro-btn { display: none; }
+.debug-on .intro-btn { display: inline-block; }
+
+/* The FIRST-TIME opening flow pares the chrome back to a title screen: an age
+   and a row of status chips describe a life that has not started yet. The vital
+   bars stay — the tutorial card points at them. (The resume card is NOT in this
+   mode: there, the age and bars of the life you left are the whole point.) */
+.intro-on .age,
+.intro-on .statuses { display: none; }
 .dbg.on,
 .hard.on {
   color: var(--baize);
@@ -503,6 +517,15 @@ body {
   text-transform: uppercase;
   color: var(--faint);
   margin-bottom: 16px;
+}
+/* Opening-flow cards carry explanation, not a dramatic beat, and far more of it
+   than any game prompt (the longest of those is ~160 characters; the tutorial is
+   half as long again). A smaller, tighter face fits it without a scrollbar and
+   reads as instruction rather than story. */
+.front.intro .prompt {
+  font-size: 1.02rem;
+  line-height: 1.5;
+  font-weight: 500;
 }
 .prompt {
   font-size: 1.2rem;

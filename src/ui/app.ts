@@ -14,6 +14,7 @@ import {
 import { meets } from "../engine/conditions.ts";
 import { clearSave, loadGame, loadHistory, saveGame, saveHistory } from "../engine/save.ts";
 import type { HistoryEntry } from "../engine/save.ts";
+import { FIRST_RUN, PLAY, RESUME, type IntroCard, type IntroOption } from "./intro.ts";
 import {
   ENDINGS,
   STATUS_KINDS,
@@ -34,6 +35,9 @@ import { t, tf, getLocale, setLocale, LOCALES, type StringId } from "../i18n/ind
 import { APP_VERSION, BUILD_DESC } from "../version.ts";
 
 const DEBUG_KEY = "cardsoflife.debug";
+// Latched the first time anyone finishes the opening flow, so it is shown once
+// ever. Not part of the save: wiping a life must not re-run the tutorial.
+const INTRO_KEY = "cardsoflife.intro";
 const HARD_KEY = "cardsoflife.hard";
 const DECK_BY_ID = new Map(content.decks.map((d) => [d.id, d]));
 const ALL_CARDS: Card[] = content.decks.flatMap((d) =>
@@ -151,6 +155,15 @@ export class Game {
   // what was drawn/chosen and rewind to try a different choice.
   private history: HistoryEntry[] = [];
 
+  // The opening flow (ui/intro.ts). While `introCard` is set the scene is showing
+  // a shell card, not a game card: no year passes and `this.card` stays null.
+  private introFlow: IntroCard[] = [];
+  private introCard: IntroCard | null = null;
+  // The swipe just taken, held until the card finishes leaving — so the flow
+  // advances on the same beat a game card would, rather than mid-animation.
+  private introPending: IntroOption | null = null;
+  private firstRun = false;
+
   constructor(root: HTMLElement) {
     this.root = root;
     setContent(content);
@@ -172,7 +185,11 @@ export class Game {
     this.seenDecks = new Set(this.state.activeDecks);
     this.captureDisplay();
     this.syncTop();
-    if (this.state.over) this.showEnd();
+    // What you see on opening: the first-time flow (once ever), else a choice
+    // about the life you left in progress, else straight into a new one.
+    if (!loadIntroSeen()) this.startIntro(FIRST_RUN, true);
+    else if (this.state.over) this.showEnd();
+    else if (saved) this.startIntro(RESUME, false);
     else this.beginTurn();
     window.addEventListener("keydown", this.onKey);
   }
@@ -213,11 +230,18 @@ export class Game {
     reset.addEventListener("click", () => {
       if (!this.busy) this.restart();
     });
+    // Replays the once-ever opening flow. Debug-only (hidden by CSS unless the
+    // panel is on) and it sits beside DEBUG on the left, with the other controls
+    // that are not for players.
+    const intro = el("button", "intro-btn") as HTMLButtonElement;
+    intro.textContent = t("ui.intro");
+    intro.title = t("ui.introTip");
+    intro.addEventListener("click", () => this.replayIntro());
     // Debug lives on the far left (with the age) so it's clearly separate from
     // the three player-facing controls (Language / Hard / Reset) on the right.
     controls.append(lang, this.hardBtn, reset);
     const headLeft = el("div", "head-left");
-    headLeft.append(age, this.dbgBtn);
+    headLeft.append(age, this.dbgBtn, intro);
     headRow.append(headLeft, controls);
 
     const vitals = el("div", "vitals");
@@ -890,7 +914,7 @@ export class Game {
     this.phase = "front";
     this.fitPromptToUpLabel(front);
 
-    this.attachDrag(flip, card);
+    this.attachDrag(flip, (d) => !!this.availOpt(card, d), (d) => this.choose(d));
     this.renderDebug();
 
     // slide in from below (skipped on a debug re-render so it doesn't replay)
@@ -924,6 +948,129 @@ export class Game {
   private persist(): void {
     saveGame(this.state);
     saveHistory(this.history);
+  }
+
+  // --- the opening flow (ui/intro.ts) ----------------------------------------
+
+  // Enter a shell flow. `firstRun` pares the chrome back to a title screen: the
+  // age and the status chips mean nothing before a life starts, though the vital
+  // bars stay, since the tutorial card points at them. The RESUME card keeps the
+  // full chrome on purpose — the age and bars of the life you left are exactly
+  // what you need to decide whether to carry it on.
+  private startIntro(flow: IntroCard[], firstRun: boolean): void {
+    this.introFlow = flow;
+    this.firstRun = firstRun;
+    this.root.classList.toggle("intro-on", firstRun);
+    this.card = null;
+    this.showIntroCard(flow[0]);
+  }
+
+  private showIntroCard(card: IntroCard): void {
+    this.introCard = card;
+    if (this.holder) this.holder.remove();
+
+    const holder = el("div", "holder");
+    const flip = el("div", "flip");
+    const front = el("div", "face front intro");
+    // No age line and no vital previews: a shell card costs no year and moves no
+    // bar, so both would be lying about what the swipe does.
+    const edge = (dir: Direction, cls: string): string => {
+      const opt = card.options[dir];
+      return opt ? `<div class="edge ${cls}">${this.txt(opt.label)}</div>` : "";
+    };
+    front.innerHTML = `
+      <p class="prompt">${tf(card.prompt, { ...this.textVars(), n: this.state.age })}</p>
+      ${edge("left", "edge-left")}
+      ${edge("right", "edge-right")}
+      ${edge("up", "edge-up")}
+      ${edge("down", "edge-down")}`;
+
+    const back = el("div", "face back");
+    back.innerHTML = `<p class="result"></p><div class="tap-cue">${t("ui.tapContinue")}</div>`;
+
+    flip.append(front, back);
+    holder.appendChild(flip);
+    this.scene.appendChild(holder);
+    this.holder = holder;
+    this.flip = flip;
+    this.phase = "front";
+    this.busy = false;
+    this.fitPromptToUpLabel(front);
+    this.attachDrag(flip, (d) => !!card.options[d], (d) => this.chooseIntro(d));
+
+    if (!reduceMotion) {
+      holder.style.transform = "translateY(28px)";
+      holder.style.opacity = "0";
+      requestAnimationFrame(() => {
+        holder.style.transform = "";
+        holder.style.opacity = "";
+      });
+    }
+  }
+
+  private chooseIntro(dir: Direction): void {
+    const card = this.introCard;
+    const opt = card?.options[dir];
+    if (this.busy || !opt) return;
+    this.busy = true;
+    this.lastDir = dir;
+    this.introPending = opt;
+    // With a result line the card turns over first, as a game card does; without
+    // one it simply leaves, so a menu does not cost a second tap.
+    if (opt.result) {
+      this.revealBack(dir, this.txt(opt.result));
+    } else {
+      this.busy = false;
+      this.advance();
+    }
+  }
+
+  // The swiped card has left: apply what the swipe chose, then show the next
+  // shell card or start playing.
+  private resolveIntro(): void {
+    const opt = this.introPending;
+    this.introPending = null;
+    if (!opt) return;
+
+    if (opt.setHard !== undefined && opt.setHard !== this.hard) {
+      this.hard = opt.setHard;
+      saveHard(this.hard);
+      this.hardBtn.classList.toggle("on", this.hard);
+    }
+
+    if (opt.goto !== PLAY) {
+      const here = this.introFlow.findIndex((c) => c.id === this.introCard?.id);
+      const next = opt.goto
+        ? this.introFlow.find((c) => c.id === opt.goto)
+        : this.introFlow[here + 1];
+      if (next) return this.showIntroCard(next);
+    }
+
+    // Leaving the flow. The first run is latched HERE rather than on entry, so
+    // closing the tab half-way through still shows it again next time.
+    if (this.firstRun) {
+      saveIntroSeen();
+      this.firstRun = false;
+      this.root.classList.remove("intro-on");
+    }
+    this.introFlow = [];
+    this.introCard = null;
+    if (opt.fresh) return this.restart();
+    this.syncTop();
+    if (this.state.over) this.showEnd();
+    else this.beginTurn();
+  }
+
+  // Debug: forget that the opening flow was ever seen and play it again now.
+  private replayIntro(): void {
+    if (this.busy) return;
+    clearIntroSeen();
+    this.scene.innerHTML = "";
+    this.holder = null;
+    this.flip = null;
+    this.introPending = null;
+    this.pendingUnlock = null;
+    this.startIntro(FIRST_RUN, true);
   }
 
   // Debug: re-render the current front card in place (no entrance animation) so
@@ -984,11 +1131,18 @@ export class Game {
     // is pending; otherwise let it land now (there's no chapter to sync it to).
     if (!this.pendingUnlock) this.captureDisplay();
 
+    this.revealBack(dir, tf(res.result as StringId, this.resultVars()));
+  }
+
+  // Turn the card the last 90° to show `text` on its back, then arm the tap that
+  // moves on. Shared by a game choice and by an opening-flow swipe that has a
+  // result line (ui/intro.ts) — the flip is one of the things the tutorial card
+  // is there to teach, so it uses exactly the same motion.
+  private revealBack(dir: Direction, text: string): void {
     const flip = this.flip;
-    const back = flip.querySelector<HTMLElement>(".back .result")!;
-    const backFace = flip.querySelector<HTMLElement>(".back")!;
-    back.textContent = tf(res.result as StringId, this.resultVars());
-    backFace.style.transform =
+    if (!flip) return;
+    flip.querySelector<HTMLElement>(".back .result")!.textContent = text;
+    flip.querySelector<HTMLElement>(".back")!.style.transform =
       dir === "up" || dir === "down" ? "rotateX(180deg)" : "rotateY(180deg)";
 
     flip.classList.remove("dragging", ...LEAN_CLASSES);
@@ -1030,6 +1184,9 @@ export class Game {
       this.holder = null;
       this.flip = null;
       this.busy = false;
+      // A shell card is leaving: the flow decides what comes next, and no turn
+      // is taken. Checked first — during the flow there is no game in play yet.
+      if (this.introPending) return this.resolveIntro();
       if (this.state.over) this.showEnd();
       else if (this.pendingUnlock) this.showUnlock();
       else this.beginTurn();
@@ -1224,7 +1381,13 @@ export class Game {
       ArrowUp: "up",
       ArrowDown: "down",
     };
-    if (this.phase === "front" && this.card) {
+    if (this.phase === "front" && this.introCard) {
+      const dir = map[e.key];
+      if (dir && this.introCard.options[dir]) {
+        e.preventDefault();
+        this.chooseIntro(dir);
+      }
+    } else if (this.phase === "front" && this.card) {
       const dir = map[e.key];
       if (dir && this.availOpt(this.card, dir)) {
         e.preventDefault();
@@ -1237,7 +1400,10 @@ export class Game {
 
   // --- swipe (3D rotate to 90°, then flip the rest to the back) --------------
 
-  private attachDrag(flip: HTMLElement, card: Card): void {
+  // Swipe/tap handling for ANY card face — a game card or one of the opening
+  // flow's (see ui/intro.ts). It knows nothing about either: `has` says whether a
+  // direction is offered, `pick` takes it.
+  private attachDrag(flip: HTMLElement, has: (d: Direction) => boolean, pick: (d: Direction) => void): void {
     let startX = 0;
     let startY = 0;
     let dragging = false;
@@ -1246,7 +1412,7 @@ export class Game {
       const horiz = Math.abs(dx) >= Math.abs(dy);
       const dir: Direction = horiz ? (dx < 0 ? "left" : "right") : (dy < 0 ? "up" : "down");
       // Don't rotate toward a direction that has no choice (absent or hidden).
-      if (!this.availOpt(card, dir)) {
+      if (!has(dir)) {
         flip.style.transform = "";
         flip.classList.remove(...LEAN_CLASSES);
         return;
@@ -1277,17 +1443,17 @@ export class Game {
       // A tap (barely moved) selects the option in whichever region you tapped.
       if (Math.hypot(dx, dy) < TAP_SLOP) {
         const dir = regionDir(flip, x, y);
-        if (dir && this.availOpt(card, dir)) return this.choose(dir);
+        if (dir && has(dir)) return pick(dir);
         settle();
         return;
       }
       const horiz = Math.abs(dx) >= Math.abs(dy);
       if (horiz && Math.abs(dx) > SWIPE_THRESHOLD) {
         const dir: Direction = dx < 0 ? "left" : "right";
-        if (this.availOpt(card, dir)) return this.choose(dir);
+        if (has(dir)) return pick(dir);
       } else if (!horiz && Math.abs(dy) > SWIPE_THRESHOLD) {
         const dir: Direction = dy < 0 ? "up" : "down";
-        if (this.availOpt(card, dir)) return this.choose(dir);
+        if (has(dir)) return pick(dir);
       }
       settle();
     };
@@ -1407,6 +1573,31 @@ function loadHard(): boolean {
 function saveHard(on: boolean): void {
   try {
     localStorage.setItem(HARD_KEY, on ? "1" : "0");
+  } catch {
+    // ignore
+  }
+}
+
+// Has anyone ever finished the opening flow on this device? Storage being
+// unavailable reads as "yes": better to skip a tutorial than to trap someone in
+// one that can never record itself as done.
+function loadIntroSeen(): boolean {
+  try {
+    return localStorage.getItem(INTRO_KEY) === "1";
+  } catch {
+    return true;
+  }
+}
+function saveIntroSeen(): void {
+  try {
+    localStorage.setItem(INTRO_KEY, "1");
+  } catch {
+    // ignore
+  }
+}
+function clearIntroSeen(): void {
+  try {
+    localStorage.removeItem(INTRO_KEY);
   } catch {
     // ignore
   }
