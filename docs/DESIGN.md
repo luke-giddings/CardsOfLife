@@ -432,15 +432,22 @@ Mechanics worth knowing:
 - An option with no `result` acts at once with no flip, which is what a menu
   wants; the tutorial card keeps its results precisely *because* the flip is one
   of the things it is teaching.
-- The first-run flow hides the age and status chips (`.intro-on`) — they
-  describe a life that hasn't started. The **vital bars stay**, since the
-  tutorial points at them. The resume card keeps the full chrome on purpose: the
-  age and bars of the life you left are exactly what you need to decide.
+- **Chrome is per card** (`IntroCard.chrome`), not per flow. `"none"` is a bare
+  title screen — no age, no status chips, no vital bars; `"bars"` brings the
+  four bars in, and their ARRIVAL is the point, since it happens on the very
+  card that explains what they are; `"full"` is everything, which the resume
+  card wants, because the age and bars of the life you left are exactly what
+  you need in order to decide. The age and chips stay hidden throughout the
+  first run: they describe a life that hasn't started.
 - Intro prompts carry far more text than any game prompt (the longest of those is
-  ~160 characters), so they get their own smaller type scale. Checked for
-  overflow in both languages: they fit from 360×780 up. 360×640 still clips, as
-  it already did for six game cards — that screen is shorter than the card
-  design assumes.
+  ~160 characters), so they get their own smaller type scale, and a shell card
+  with no `down` option reclaims the gutter that would clear one — worth about a
+  line, which is the difference between the tutorial fitting a small phone in
+  Italian and not. Checked for overflow in both languages: they fit from 360×780
+  up. 360×640 still clips, as it already did for six game cards — that screen is
+  shorter than the card design assumes.
+- The birth card no longer says "swipe to choose": the tutorial has just taught
+  that, and a player who skipped it said they already knew.
 - `attachDrag` takes `(has, pick)` callbacks rather than a `Card`, which is what
   lets the flow reuse the real swipe, tilt, tap-region and flip behaviour instead
   of a second copy of it.

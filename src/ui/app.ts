@@ -952,15 +952,11 @@ export class Game {
 
   // --- the opening flow (ui/intro.ts) ----------------------------------------
 
-  // Enter a shell flow. `firstRun` pares the chrome back to a title screen: the
-  // age and the status chips mean nothing before a life starts, though the vital
-  // bars stay, since the tutorial card points at them. The RESUME card keeps the
-  // full chrome on purpose — the age and bars of the life you left are exactly
-  // what you need to decide whether to carry it on.
+  // Enter a shell flow. `firstRun` only says whether finishing it should latch
+  // the once-ever flag; how much chrome shows is each CARD's own business.
   private startIntro(flow: IntroCard[], firstRun: boolean): void {
     this.introFlow = flow;
     this.firstRun = firstRun;
-    this.root.classList.toggle("intro-on", firstRun);
     this.card = null;
     this.showIntroCard(flow[0]);
   }
@@ -968,10 +964,17 @@ export class Game {
   private showIntroCard(card: IntroCard): void {
     this.introCard = card;
     if (this.holder) this.holder.remove();
+    // The title card is bare and the next card brings the bars in with it, so
+    // this changes BETWEEN cards, not just on entering the flow.
+    this.root.classList.toggle("intro-on", card.chrome !== "full");
+    this.root.classList.toggle("intro-bare", card.chrome === "none");
 
     const holder = el("div", "holder");
     const flip = el("div", "flip");
-    const front = el("div", "face front intro");
+    // `no-down` reclaims the bottom gutter, which exists to clear a down label.
+    // Set from the card's own options rather than assumed, so adding a down
+    // option to a shell card later cannot silently collide with the prompt.
+    const front = el("div", `face front intro${card.options.down ? "" : " no-down"}`);
     // No age line and no vital previews: a shell card costs no year and moves no
     // bar, so both would be lying about what the swipe does.
     const edge = (dir: Direction, cls: string): string => {
@@ -1051,8 +1054,8 @@ export class Game {
     if (this.firstRun) {
       saveIntroSeen();
       this.firstRun = false;
-      this.root.classList.remove("intro-on");
     }
+    this.root.classList.remove("intro-on", "intro-bare");
     this.introFlow = [];
     this.introCard = null;
     if (opt.fresh) return this.restart();

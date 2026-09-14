@@ -6,6 +6,10 @@
 // in src/content: a deck of these would have to be excluded from every draw pool,
 // every milestone check and every stat script, to buy nothing.
 //
+// Each card says how much chrome shows behind it (see IntroChrome), so the
+// title card can be a bare title screen and the next card can BRING the vital
+// bars in as it explains them.
+//
 // Two flows:
 //   FIRST_RUN  — shown ONCE ever (gated on the `cardsoflife.intro` flag): what
 //                the game is, a card you practise the swipe on, and the choice
@@ -32,9 +36,19 @@ export interface IntroOption {
   fresh?: boolean;    // start a NEW life rather than resuming the saved one
 }
 
+// How much of the game's chrome shows behind a shell card.
+//   "none" — a title screen: no age, no status chips, and no vital bars either.
+//   "bars" — the four vital bars appear, but still no age or chips. The tutorial
+//            card uses this, and their ARRIVAL is the point: they show up on the
+//            same card that explains what they are.
+//   "full" — everything, as in play. The resume card wants this: the age and
+//            bars of the life you left are exactly what you need to decide.
+export type IntroChrome = "none" | "bars" | "full";
+
 export interface IntroCard {
   id: string;
   prompt: StringId;
+  chrome: IntroChrome;
   // Same shape as a game card's, minus everything the engine would read.
   options: Partial<Record<Direction, IntroOption>>;
 }
@@ -46,6 +60,7 @@ export const FIRST_RUN: IntroCard[] = [
     // No `result` on either swipe: the first card should get out of the way.
     id: "intro_welcome",
     prompt: "intro_welcome.prompt",
+    chrome: "none",
     options: {
       left: { label: "intro_welcome.left" },
       right: { label: "intro_welcome.right", goto: "intro_mode" },
@@ -58,6 +73,7 @@ export const FIRST_RUN: IntroCard[] = [
     // option in the game sits, and it is the one players miss.
     id: "intro_swipe",
     prompt: "intro_swipe.prompt",
+    chrome: "bars",
     options: {
       left: { label: "intro_swipe.left", result: "intro_swipe.left.r0" },
       right: { label: "intro_swipe.right", result: "intro_swipe.right.r0" },
@@ -67,6 +83,7 @@ export const FIRST_RUN: IntroCard[] = [
   {
     id: "intro_mode",
     prompt: "intro_mode.prompt",
+    chrome: "bars",
     options: {
       left: { label: "intro_mode.left", result: "intro_mode.left.r0", setHard: false, goto: PLAY },
       right: { label: "intro_mode.right", result: "intro_mode.right.r0", setHard: true, goto: PLAY },
@@ -78,6 +95,7 @@ export const RESUME: IntroCard[] = [
   {
     id: "intro_resume",
     prompt: "intro_resume.prompt",
+    chrome: "full",
     options: {
       left: { label: "intro_resume.left", goto: PLAY },
       right: { label: "intro_resume.right", goto: PLAY, fresh: true },

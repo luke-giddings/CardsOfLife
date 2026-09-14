@@ -136,12 +136,15 @@ body {
 .intro-btn { display: none; }
 .debug-on .intro-btn { display: inline-block; }
 
-/* The FIRST-TIME opening flow pares the chrome back to a title screen: an age
-   and a row of status chips describe a life that has not started yet. The vital
-   bars stay — the tutorial card points at them. (The resume card is NOT in this
-   mode: there, the age and bars of the life you left are the whole point.) */
+/* Opening-flow chrome, per card (see IntroChrome in ui/intro.ts). An age and a
+   row of status chips describe a life that has not started yet, so the whole
+   first-run flow hides them; the title card hides the vital bars as well, which
+   makes their arrival on the NEXT card — the one that explains what they are —
+   the thing you notice. The resume card sets neither class: there, the age and
+   bars of the life you left are the whole point. */
 .intro-on .age,
 .intro-on .statuses { display: none; }
+.intro-bare .vitals { display: none; }
 .dbg.on,
 .hard.on {
   color: var(--baize);
@@ -527,6 +530,10 @@ body {
   line-height: 1.5;
   font-weight: 500;
 }
+/* No down label to clear, so the gutter reserved for one is free real estate —
+   worth ~a line of text, which is the difference between the tutorial card
+   fitting a small phone in every language and not. */
+.front.intro.no-down .prompt { padding-bottom: 14px; }
 .prompt {
   font-size: 1.2rem;
   line-height: 1.42;
