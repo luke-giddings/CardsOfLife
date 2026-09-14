@@ -1306,9 +1306,8 @@ export const EN = {
   "ending.grown_up.blurb": "Half your street didn't see eighteen — but you did. The rest of your story is still to be written…",
 
   // ---- Opening flow (src/ui/intro.ts) -----------------------------------
-  "intro_welcome.prompt": "CARDS OF LIFE\n\nOne life in Victorian England, dealt a year at a time.\n\nThere is no winning. Only how you lived, and how long.",
-  "intro_welcome.left": "Show me how",
-  "intro_welcome.right": "I know the drill",
+  "intro_welcome.title": "Cards of Life",
+  "intro_welcome.prompt": "Can you make a good life in the hard years of Victorian England?",
   "intro_swipe.prompt": "Every card is a choice. Swipe toward the answer you want, or tap its edge.\n\nThose four bars are your life. Empty any one of them and the life ends.\n\nGo on — any direction.",
   "intro_swipe.left": "Swipe left",
   "intro_swipe.left.r0": "Left it is.\n\nThe card turns over to show you what your answer came to. Every one of them will.",
@@ -2780,9 +2779,8 @@ export const IT: Record<StringId, string> = {
   "ending.grown_up.blurb": "Metà della tua strada non ha visto i diciott'anni — ma tu sì. Il resto della tua storia è ancora da scrivere…",
 
   // ---- Opening flow (src/ui/intro.ts) -----------------------------------
-  "intro_welcome.prompt": "CARDS OF LIFE\n\nUna vita nell'Inghilterra vittoriana, distribuita un anno alla volta.\n\nQui non si vince. Conta come hai vissuto, e per quanto.",
-  "intro_welcome.left": "Mostrami come",
-  "intro_welcome.right": "So già come funziona",
+  "intro_welcome.title": "Cards of Life",
+  "intro_welcome.prompt": "Riuscirai a farti una buona vita negli anni duri dell'Inghilterra vittoriana?",
   "intro_swipe.prompt": "Ogni carta è una scelta. Scorri verso la risposta che vuoi, o tocca il suo bordo.\n\nQuelle quattro barre sono la tua vita. Svuotane una sola e la vita finisce.\n\nAvanti — in qualsiasi direzione.",
   "intro_swipe.left": "Scorri a sinistra",
   "intro_swipe.left.r0": "A sinistra, dunque.\n\nLa carta si gira per mostrarti a quanto è ammontata la risposta. Lo faranno tutte.",

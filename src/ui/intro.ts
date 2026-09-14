@@ -11,8 +11,8 @@
 // bars in as it explains them.
 //
 // Two flows:
-//   FIRST_RUN  — shown ONCE ever (gated on the `cardsoflife.intro` flag): what
-//                the game is, a card you practise the swipe on, and the choice
+//   FIRST_RUN  — shown ONCE ever (gated on the `cardsoflife.intro` flag): a
+//                title screen, a card you practise the swipe on, and the choice
 //                between seeing the odds and not.
 //   RESUME     — shown on every later opening WITH a life in progress: continue
 //                it, or start again.
@@ -47,24 +47,30 @@ export type IntroChrome = "none" | "bars" | "full";
 
 export interface IntroCard {
   id: string;
+  // Set only on the title card, and rendered large: it is the game's name, not
+  // a line of its prose.
+  title?: StringId;
   prompt: StringId;
   chrome: IntroChrome;
   // Same shape as a game card's, minus everything the engine would read.
-  options: Partial<Record<Direction, IntroOption>>;
+  // A card has EITHER swipe options or a single button, never both.
+  options?: Partial<Record<Direction, IntroOption>>;
+  // One centred button instead of swipe choices. The title card uses this: the
+  // swipe has not been taught yet, so asking for one on the very first card
+  // would want a gesture nobody has been shown.
+  button?: IntroOption;
 }
 
 export const PLAY = "play";
 
 export const FIRST_RUN: IntroCard[] = [
   {
-    // No `result` on either swipe: the first card should get out of the way.
+    // The title screen. One button, no result: it should get out of the way.
     id: "intro_welcome",
+    title: "intro_welcome.title",
     prompt: "intro_welcome.prompt",
     chrome: "none",
-    options: {
-      left: { label: "intro_welcome.left" },
-      right: { label: "intro_welcome.right", goto: "intro_mode" },
-    },
+    button: { label: "ui.newLife" },
   },
   {
     // The tutorial. All three swipes do the same thing — advance — so there is

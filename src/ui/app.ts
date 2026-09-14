@@ -974,19 +974,28 @@ export class Game {
     // `no-down` reclaims the bottom gutter, which exists to clear a down label.
     // Set from the card's own options rather than assumed, so adding a down
     // option to a shell card later cannot silently collide with the prompt.
-    const front = el("div", `face front intro${card.options.down ? "" : " no-down"}`);
+    const front = el("div", `face front intro${card.options?.down ? "" : " no-down"}`);
     // No age line and no vital previews: a shell card costs no year and moves no
     // bar, so both would be lying about what the swipe does.
     const edge = (dir: Direction, cls: string): string => {
-      const opt = card.options[dir];
+      const opt = card.options?.[dir];
       return opt ? `<div class="edge ${cls}">${this.txt(opt.label)}</div>` : "";
     };
     front.innerHTML = `
+      ${card.title ? `<h1 class="intro-title">${this.txt(card.title)}</h1>` : ""}
       <p class="prompt">${tf(card.prompt, { ...this.textVars(), n: this.state.age })}</p>
       ${edge("left", "edge-left")}
       ${edge("right", "edge-right")}
       ${edge("up", "edge-up")}
       ${edge("down", "edge-down")}`;
+
+    // A button card takes no swipe at all — see IntroCard.button.
+    if (card.button) {
+      const go = el("button", "intro-go") as HTMLButtonElement;
+      go.textContent = this.txt(card.button.label);
+      go.addEventListener("click", () => this.takeIntro(card.button!, "up"));
+      front.appendChild(go);
+    }
 
     const back = el("div", "face back");
     back.innerHTML = `<p class="result"></p><div class="tap-cue">${t("ui.tapContinue")}</div>`;
@@ -999,7 +1008,11 @@ export class Game {
     this.phase = "front";
     this.busy = false;
     this.fitPromptToUpLabel(front);
-    this.attachDrag(flip, (d) => !!card.options[d], (d) => this.chooseIntro(d));
+    // No drag on a button card: tilting and flipping a card that offers no swipe
+    // would promise a gesture that does nothing.
+    if (!card.button) {
+      this.attachDrag(flip, (d) => !!card.options?.[d], (d) => this.chooseIntro(d));
+    }
 
     if (!reduceMotion) {
       holder.style.transform = "translateY(28px)";
@@ -1012,9 +1025,15 @@ export class Game {
   }
 
   private chooseIntro(dir: Direction): void {
-    const card = this.introCard;
-    const opt = card?.options[dir];
+    const opt = this.introCard?.options?.[dir];
     if (this.busy || !opt) return;
+    this.takeIntro(opt, dir);
+  }
+
+  // `dir` is the direction the card leaves in; for a button card there is no
+  // swipe, so it lifts away upward.
+  private takeIntro(opt: IntroOption, dir: Direction): void {
+    if (this.busy) return;
     this.busy = true;
     this.lastDir = dir;
     this.introPending = opt;
@@ -1385,8 +1404,12 @@ export class Game {
       ArrowDown: "down",
     };
     if (this.phase === "front" && this.introCard) {
+      const card = this.introCard;
       const dir = map[e.key];
-      if (dir && this.introCard.options[dir]) {
+      if (card.button && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        this.takeIntro(card.button, "up");
+      } else if (dir && card.options?.[dir]) {
         e.preventDefault();
         this.chooseIntro(dir);
       }

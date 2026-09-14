@@ -412,8 +412,8 @@ every milestone check and every stat script, and would buy nothing for it.
 
 What opens, in order of precedence:
 
-1. **First run** (`cardsoflife.intro` unset) — three cards, once ever. What the
-   game is; a card you *practise the swipe on* (all three directions work, each
+1. **First run** (`cardsoflife.intro` unset) — three cards, once ever. A **title
+   screen**; a card you *practise the swipe on* (all three directions work, each
    naming back what you did, and the third is on `up` because that is where every
    third option in the game sits and it is the one players miss); then the
    easy/hard fork, which sets the same flag the HARD button does.
@@ -432,6 +432,13 @@ Mechanics worth knowing:
 - An option with no `result` acts at once with no flip, which is what a menu
   wants; the tutorial card keeps its results precisely *because* the flip is one
   of the things it is teaching.
+- The title card has **no swipe choices at all** — a `button` instead of
+  `options`, and no drag attached. The swipe has not been taught yet at that
+  point, so offering swipe choices there would want a gesture nobody has been
+  shown; and a card that tilts toward an answer it will not take is a promise
+  broken on the very first screen. Its `title` is rendered as a real heading
+  rather than as the first line of the prompt, so the game's name can be the
+  biggest thing on the screen, with the prompt beneath it as a one-line hook.
 - **Chrome is per card** (`IntroCard.chrome`), not per flow. `"none"` is a bare
   title screen — no age, no status chips, no vital bars; `"bars"` brings the
   four bars in, and their ARRIVAL is the point, since it happens on the very

@@ -534,6 +534,44 @@ body {
    worth ~a line of text, which is the difference between the tutorial card
    fitting a small phone in every language and not. */
 .front.intro.no-down .prompt { padding-bottom: 14px; }
+
+/* --- the title card ------------------------------------------------------- */
+/* The game's NAME, so it is set as a title rather than as a line of the prose
+   it used to be buried in. Scales with the card so it stays the biggest thing
+   on a small screen without wrapping awkwardly on a large one. */
+.intro-title {
+  margin: 0;
+  padding: 8px 4px 0;
+  font-size: clamp(1.9rem, 9vw, 2.6rem);
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--ink);
+}
+/* The tagline under it is a hook, not body copy: lighter and quieter than the
+   instructional prompts on the cards that follow. */
+.front.intro .intro-title + .prompt {
+  font-size: 1.12rem;
+  font-weight: 500;
+  color: var(--muted);
+  padding-top: 18px;
+}
+/* The only control on the title card — the swipe has not been taught yet. */
+.intro-go {
+  margin: 0 4px 4px;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  background: var(--baize);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+.intro-go:active { transform: translateY(1px); }
 .prompt {
   font-size: 1.2rem;
   line-height: 1.42;
