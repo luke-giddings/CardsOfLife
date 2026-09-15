@@ -126,9 +126,13 @@ export const FIRST_RUN: IntroCard[] = [
     prompt: "intro_mode.prompt",
     chrome: "bars",
     highlight: "hard",
+    // Both answers start a FRESH life. The first-time flow has just explained
+    // being born, so it has to end at the birth card — resuming whatever was
+    // saved would drop a first-time player into the middle of someone else's
+    // life, and drops the debug replay somewhere that is not what it is for.
     options: {
-      left: { label: "intro_mode.left", result: "intro_mode.left.r0", setHard: false, goto: PLAY, sample: true },
-      right: { label: "intro_mode.right", result: "intro_mode.right.r0", setHard: true, goto: PLAY },
+      left: { label: "intro_mode.left", result: "intro_mode.left.r0", setHard: false, goto: PLAY, fresh: true, sample: true },
+      right: { label: "intro_mode.right", result: "intro_mode.right.r0", setHard: true, goto: PLAY, fresh: true },
     },
   },
 ];
