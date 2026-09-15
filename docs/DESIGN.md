@@ -864,7 +864,15 @@ in and out — sentence served or break-out — behaves identically. **`suspends
 general primitive, declared in content**: a state lists which other status KINDS
 it overrides and what they collapse to (gaol: `suspends: { lifestyle: "default" }`).
 The engine stashes what you had and hands it back on leaving, so it never has to
-know a status VALUE — that keeps content rules out of `changeStatus`. Prison is a `priority` deck of three cards: **"do
+know a status VALUE — that keeps content rules out of `changeStatus`.
+**A card must never set a status that the same effect's other status suspends.**
+The stash is taken when the suspension fires, so an explicit set landing first
+stashes the value the suspension was about to force, and leaving restores you
+*into* the suspended state — permanently. `home_workhouse_apprentice` set
+`housing: "apprentice"` beside `job: "apprentice"`, so taking the indenture out
+of the workhouse left you living with your old master for the rest of your life,
+journeyman or not. The fix is always to drop the explicit set and let `suspends`
+do the work. `scripts/suspends-check.ts` finds any recurrence. Prison is a `priority` deck of three cards: **"do
 your time"** (weight ×5) counts `jobCriminality` down a year at a time and, on the
 last year, **releases you onto the streets** (homeless + unemployed, counter
 cleared). Gaol also bleeds money slowly (−5: fines, nothing coming in), so "do your

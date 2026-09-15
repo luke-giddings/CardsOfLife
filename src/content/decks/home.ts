@@ -526,7 +526,11 @@ export const homeDecks = [
           conditions: { ageMin: 10 },
           prompt: "home_workhouse_apprentice.prompt",
           options: {
-            left: { label: "home_workhouse_apprentice.left", outcomes: [{ result: "home_workhouse_apprentice.left.r0", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { housing: "apprentice", job: "apprentice" } } }] },
+            // Sets the JOB only. job=apprentice `suspends` housing — it stashes
+            // whatever roof you had and moves you under the master's — so setting
+            // housing here as well stashed "apprentice" itself, and qualifying
+            // then "restored" you to the master's house for the rest of your life.
+            left: { label: "home_workhouse_apprentice.left", outcomes: [{ result: "home_workhouse_apprentice.left.r0", effects: { vitals: { spirit: "++", finances: "+", happiness: "+" }, setStatus: { job: "apprentice" } } }] },
             // A way back to SCHOOL — leave the workhouse for the family home and
             // resume your letters (job → studying, its edu deck; housing → family).
             // Shown only while you're still school-age (<= 13, before the leaver at
