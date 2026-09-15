@@ -17,6 +17,9 @@
 
   --good: #2f9e5e;
   --bad: #cf4a3f;
+  /* The safety net's shield (see RESCUE_ICON): steel, so the red skull inside it
+     reads as the danger and the shield as the thing standing in front of it. */
+  --steel: #7c8794;
 
   /* Flash highlights — a brighter tint of each bar's OWN colour, so a change on
      the health bar flashes bright red (not green) etc. Direction (gain/loss) is
@@ -47,6 +50,7 @@
     --v-spirit: #8892d8;
     --good: #46b279;
     --bad: #e0685d;
+    --steel: #aab4bf;
     --vf-finances: #7fe6b0;
     --vf-happiness: #f5cf6a;
     --vf-health: #f79b8f;
@@ -201,6 +205,12 @@ body {
   height: 1.25em;
   vertical-align: -0.28em;
 }
+/* Two colours, not one: an all-red mark read as a single blob of alarm, where
+   the point is that something is standing between you and the skull. The eye
+   sockets stay HOLES (fill-rule evenodd on the skull path) so the card shows
+   through them in either theme. */
+.rescue-shield { fill: none; stroke: var(--steel); }
+.rescue-skull { fill: var(--bad); stroke: none; }
 /* "This choice changes your path" — a job/home/trait payload beyond the vital
    numbers, so a rewarding choice doesn't look weaker than its plain sibling. */
 .ep-special { color: var(--gold); font-weight: 700; }

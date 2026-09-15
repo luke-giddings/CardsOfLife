@@ -369,8 +369,13 @@ fire given the current state. Two extra markers:
   safety net would catch that 0** — the projection runs `findRescue` on the
   post-choice state (advanced one turn, so age-gated nets like the charity
   hospital's `ageMax` resolve correctly), so you can tell "real death" from
-  "you'd be floored but survive, this once". That mark is **drawn** (an inline
-  SVG, `RESCUE_ICON`) rather than set as an emoji: 🛡 and ☠ render differently on
+  "you'd be floored but survive, this once". The shield is **steel** (`--steel`)
+  and the skull inside it **red** — all one colour it read as a single blob of
+  alarm, where the whole point is that something is standing between you and the
+  skull. Both parts are coloured from the stylesheet rather than by SVG
+  attributes, since a presentation attribute cannot hold a `var()` and both must
+  follow the theme. That mark is **drawn** (an inline SVG, `RESCUE_ICON`) rather
+  than set as an emoji: 🛡 and ☠ render differently on
   every platform and cannot be composed — stacked, two emoji clash in colour and
   weight — and the eye sockets must be *holes*, punched with `fill-rule="evenodd"`
   so the card shows through, or they are wrong in one of the two themes.

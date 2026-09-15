@@ -110,10 +110,13 @@ const LEAN_CLASSES = ["lean-left", "lean-right", "lean-up", "lean-down"];
 // so the card shows through — or they are wrong in one of the two themes.
 // Crossbones were drawn and dropped: below ~20px they merge into the skull into a
 // blob, and this mark is drawn at 13.
+// The two parts are coloured from the stylesheet (.rescue-shield steel,
+// .rescue-skull red) rather than by attributes here: a presentation attribute
+// cannot hold a var(), and both need to follow the theme.
 const RESCUE_ICON =
-  `<svg class="ep-rescue" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">` +
-  `<path d="M10 1.2 18 4v7.2c0 4.8-3.6 8.2-8 9.6-4.4-1.4-8-4.8-8-9.6V4z"/>` +
-  `<path fill="currentColor" stroke="none" fill-rule="evenodd" d="M10 6.2c-2.4 0-4 1.7-4 3.9 0 1.3.6 2.2 1.3 2.8v1.4h5.4v-1.4c.7-.6 1.3-1.5 1.3-2.8 0-2.2-1.6-3.9-4-3.9zM8.4 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1zM11.6 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1z"/>` +
+  `<svg class="ep-rescue" viewBox="0 0 20 22" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">` +
+  `<path class="rescue-shield" d="M10 1.2 18 4v7.2c0 4.8-3.6 8.2-8 9.6-4.4-1.4-8-4.8-8-9.6V4z"/>` +
+  `<path class="rescue-skull" fill-rule="evenodd" d="M10 6.2c-2.4 0-4 1.7-4 3.9 0 1.3.6 2.2 1.3 2.8v1.4h5.4v-1.4c.7-.6 1.3-1.5 1.3-2.8 0-2.2-1.6-3.9-4-3.9zM8.4 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1zM11.6 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1z"/>` +
   `</svg>`;
 
 const FULL_FLIP: Record<Direction, string> = {
@@ -529,7 +532,7 @@ export class Game {
       const sym = !mag ? "" : mag === "//" ? "−−−" : mag === "/" ? "−−" : mag.split("-").join("−");
       const body = lethal
         ? rescued
-          ? `<span class="dbad" title="You'd hit 0 — but a safety net would catch you (once)">${RESCUE_ICON}</span>`
+          ? `<span title="You'd hit 0 — but a safety net would catch you (once)">${RESCUE_ICON}</span>`
           : `<span class="dbad ep-end" title="This would be fatal">☠</span>`
         : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${sym}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
