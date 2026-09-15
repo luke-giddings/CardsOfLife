@@ -136,6 +136,7 @@ export class Game {
   private flashes!: Record<VitalKey, HTMLElement>;
   private drains!: Record<VitalKey, HTMLElement>;
   private statusesEl!: HTMLElement;
+  private vitalsEl!: HTMLElement;
   private dbgBtn!: HTMLButtonElement;
   private debugPanel!: HTMLElement;
 
@@ -245,6 +246,7 @@ export class Game {
     headRow.append(headLeft, controls);
 
     const vitals = el("div", "vitals");
+    this.vitalsEl = vitals;
     this.fills = {} as Record<VitalKey, HTMLElement>;
     this.flashes = {} as Record<VitalKey, HTMLElement>;
     this.drains = {} as Record<VitalKey, HTMLElement>;
@@ -962,12 +964,22 @@ export class Game {
   }
 
   private showIntroCard(card: IntroCard): void {
+    const hadBars = this.introCard ? this.introCard.chrome !== "none" : false;
     this.introCard = card;
     if (this.holder) this.holder.remove();
-    // The title card is bare and the next card brings the bars in with it, so
-    // this changes BETWEEN cards, not just on entering the flow.
+    // The title and gesture cards are bare and the vitals card brings the bars in
+    // with it, so this changes BETWEEN cards, not just on entering the flow.
     this.root.classList.toggle("intro-on", card.chrome !== "full");
     this.root.classList.toggle("intro-bare", card.chrome === "none");
+    // The bars arrive on the card that explains them, so make the arrival itself
+    // the thing you notice: they fade in one after another and each pulses once.
+    // Restarted by hand (remove, reflow, re-add) because the same element is
+    // reused, and a class that is already present replays no animation.
+    if (!hadBars && card.chrome !== "none" && !reduceMotion) {
+      this.vitalsEl.classList.remove("vitals-reveal");
+      void this.vitalsEl.offsetWidth;
+      this.vitalsEl.classList.add("vitals-reveal");
+    }
 
     const holder = el("div", "holder");
     const flip = el("div", "flip");
@@ -1075,6 +1087,7 @@ export class Game {
       this.firstRun = false;
     }
     this.root.classList.remove("intro-on", "intro-bare");
+    this.vitalsEl.classList.remove("vitals-reveal");
     this.introFlow = [];
     this.introCard = null;
     if (opt.fresh) return this.restart();

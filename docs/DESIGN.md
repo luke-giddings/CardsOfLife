@@ -412,11 +412,12 @@ every milestone check and every stat script, and would buy nothing for it.
 
 What opens, in order of precedence:
 
-1. **First run** (`cardsoflife.intro` unset) — three cards, once ever. A **title
-   screen**; a card you *practise the swipe on* (all three directions work, each
-   naming back what you did, and the third is on `up` because that is where every
-   third option in the game sits and it is the one players miss); then the
-   easy/hard fork, which sets the same flag the HARD button does.
+1. **First run** (`cardsoflife.intro` unset) — four cards, once ever, each with
+   one job. A **title screen**; a card you *practise the swipe on* (all three
+   directions work, each naming back what you did, and the third is on `up`
+   because that is where every third option in the game sits and it is the one
+   players miss); a card that **introduces the vital bars**, which arrive with
+   it; then the easy/hard fork, which sets the same flag the HARD button does.
 2. **A life in progress** — one card: carry on with it, or begin a new one
    (which clears the save and its rewind history, exactly as RESET does).
 3. **Neither** — no card at all; a new life just begins.
@@ -439,20 +440,25 @@ Mechanics worth knowing:
   broken on the very first screen. Its `title` is rendered as a real heading
   rather than as the first line of the prompt, so the game's name can be the
   biggest thing on the screen, with the prompt beneath it as a one-line hook.
-- **Chrome is per card** (`IntroCard.chrome`), not per flow. `"none"` is a bare
-  title screen — no age, no status chips, no vital bars; `"bars"` brings the
-  four bars in, and their ARRIVAL is the point, since it happens on the very
-  card that explains what they are; `"full"` is everything, which the resume
-  card wants, because the age and bars of the life you left are exactly what
-  you need in order to decide. The age and chips stay hidden throughout the
-  first run: they describe a life that hasn't started.
+- **Chrome is per card** (`IntroCard.chrome`), not per flow. `"none"` is bare —
+  no age, no status chips, no vital bars — and covers both the title card and
+  the gesture card; `"bars"` brings the four bars in on the card that explains
+  them; `"full"` is everything, which the resume card wants, because the age and
+  bars of the life you left are exactly what you need in order to decide. The
+  age and chips stay hidden throughout the first run: they describe a life that
+  hasn't started.
+- The bars' **arrival is animated** rather than cut in: they drop in one after
+  another and each fill pulses once just after it lands (`.vitals-reveal`),
+  so the eye is on them exactly as the card names them. It is restarted by hand
+  (remove class, force reflow, re-add) because the same element is reused and an
+  already-present class replays nothing, and it is skipped under
+  `prefers-reduced-motion`.
 - Intro prompts carry far more text than any game prompt (the longest of those is
   ~160 characters), so they get their own smaller type scale, and a shell card
-  with no `down` option reclaims the gutter that would clear one — worth about a
-  line, which is the difference between the tutorial fitting a small phone in
-  Italian and not. Checked for overflow in both languages: they fit from 360×780
-  up. 360×640 still clips, as it already did for six game cards — that screen is
-  shorter than the card design assumes.
+  with no `down` option reclaims the gutter that would clear one. Giving the
+  gesture and the vitals a card each, rather than one card explaining both, also
+  halved the longest of them: **every** shell card now fits in both languages at
+  every size tested, 360×640 included — which no earlier draft managed.
 - The birth card no longer says "swipe to choose": the tutorial has just taught
   that, and a player who skipped it said they already knew.
 - `attachDrag` takes `(has, pick)` callbacks rather than a `Card`, which is what

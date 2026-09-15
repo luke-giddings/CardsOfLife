@@ -73,18 +73,29 @@ export const FIRST_RUN: IntroCard[] = [
     button: { label: "ui.newLife" },
   },
   {
-    // The tutorial. All three swipes do the same thing — advance — so there is
-    // no wrong move; what differs is the result line, which names the direction
-    // back to you. The third option is on `up` because that is where every third
-    // option in the game sits, and it is the one players miss.
+    // THE GESTURE. All three swipes do the same thing — advance — so there is no
+    // wrong move; what differs is the result line, which names the direction back
+    // to you. The third option is on `up` because that is where every third option
+    // in the game sits, and it is the one players miss. Still no bars: this card
+    // is about the gesture alone, and they arrive on the next one.
     id: "intro_swipe",
     prompt: "intro_swipe.prompt",
-    chrome: "bars",
+    chrome: "none",
     options: {
       left: { label: "intro_swipe.left", result: "intro_swipe.left.r0" },
       right: { label: "intro_swipe.right", result: "intro_swipe.right.r0" },
       up: { label: "intro_swipe.up", result: "intro_swipe.up.r0" },
     },
+  },
+  {
+    // THE VITALS. The bars fade in and flash as this card arrives (see
+    // showIntroCard), so what the words point at is the thing that just moved.
+    // One button rather than a swipe: the card asks you to read something, not
+    // to choose, and a pair of labels that both mean "yes, fine" is not a choice.
+    id: "intro_vitals",
+    prompt: "intro_vitals.prompt",
+    chrome: "bars",
+    button: { label: "intro_vitals.go" },
   },
   {
     id: "intro_mode",
