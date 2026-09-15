@@ -718,10 +718,10 @@ body {
 /* A word of explanation riding on a real game card — see showFront's coachStatus.
    Deliberately not prompt-sized: it is an aside about the furniture, not part of
    the year you are being asked about. */
-.front.coached .prompt { padding-bottom: 10px; }
+.front.coached .prompt { padding-bottom: 8px; }
 .coach {
   margin: 0;
-  padding: 0 22px 14px;
+  padding: 0 20px 10px;
   font-size: 0.88rem;
   line-height: 1.45;
   font-weight: 500;
