@@ -120,6 +120,15 @@ export const content = {
         // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
         // crosses you onto the skilled ladder.
         child_labourer: { label: "status.job.child_labourer", drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"] },
+        // The GROWN-UP form of the same rung: casual day labour. Identical in every
+        // mechanical respect — same wage, same toll, same deck, same routes out
+        // (the factory step, the apprentice's lucky break) — and it exists purely
+        // so that an unlettered adult taking whatever work he can find is not
+        // labelled a child labourer. Coming of age promotes a CHILD labourer
+        // straight to the factory (see child_adult), so nobody is ever a child
+        // labourer past 18; this is what the unemployment deck hands a grown man
+        // who never reached the mill.
+        labourer: { label: "status.job.labourer", drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"] },
         factory: { label: "status.job.factory", drift: { finances: 13, health: -5 }, driftShown: { finances: "++", health: "-" }, addDecks: ["job_factory"] },
         gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, driftShown: { finances: "+++", health: "-" }, addDecks: ["job_gangmaster"] },
 

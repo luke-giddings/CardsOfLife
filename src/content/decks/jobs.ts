@@ -28,17 +28,23 @@ export const jobDecks = [
               // Resume the career your CREDENTIAL fits — each education level
               // re-enters its own ladder at the bottom rung: university → junior
               // physician (medicine), grammar → clerk (clerkly/law), basic → shop
-              // assistant (commerce). Unlettered → no wasted swipe: back to casual
-              // child-labour (the loom-deck floor, which keeps the lucky-break
-              // apprenticeship in reach). Outcomes resolve top-to-bottom, so the
-              // highest credential wins. Contrast the right option (the steadier
+              // assistant (commerce). Unlettered → no wasted swipe: back to
+              // casual labour (the loom-deck floor, which keeps the lucky-break
+              // apprenticeship in reach) — as a CHILD labourer while you are still
+              // a child, and as a grown labourer once you are not. Without that
+              // split an unlettered man of 26 was handed the childhood rung and
+              // wore "Child labourer" for the rest of his working life. The result
+              // text always described casual graft, never a child's shift, so both
+              // outcomes share it. Outcomes resolve top-to-bottom, so the highest
+              // credential wins. Contrast the right option (the steadier
               // factory), so the illiterate still get a real choice.
               label: "job_unemployed_offer.left",
               outcomes: [
                 { if: { status: { education: { atLeast: "university" } } }, result: "job_unemployed_offer.left.r2", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician_junior" } } },
                 { if: { status: { education: { atLeast: "grammar" } } }, result: "job_unemployed_offer.left.r3", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" } } },
                 { if: { status: { education: { atLeast: "basic" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
-                { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
+                { if: { ageMax: 17 }, result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
+                { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "labourer" } } },
               ],
             },
             // Return to the factory — but only if you've *been* there (the
