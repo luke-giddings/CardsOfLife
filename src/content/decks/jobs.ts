@@ -124,11 +124,23 @@ export const jobDecks = [
 
     // --- Child at work: hazards and events only for the labouring path. ------
     {
+      // Every card here carries `weight: 2`. A labourer spends ~11 years on this
+      // rung and the deck is only five cards against a pool of sixteen or more
+      // (home, childhood, the siblings), so at even weight it was drawn 2.7 times
+      // in the whole of a working life — a quarter of the years he was actually
+      // at work. Everything that MOVES the unskilled path is in here: every one
+      // of these cards ticks `jobExperience`, and the step up to the factory is
+      // gated on it, so the deck's share of the draw IS the ladder's climb rate.
+      // At even weight 72% of labourers peaked at one or two experience, 1.7%
+      // ever reached the gate, and the factory card surfaced in 0.4% of lives:
+      // the second rung was dead content, and every factory hand in the game was
+      // really made by a coming-of-age promotion that has since been removed.
       id: "job_labour",
       cards: [
         {
           id: "job_labour_machine",
           kind: "one_time",
+          weight: 2,
           prompt: "job_labour_machine.prompt",
           options: {
             left: {
@@ -150,6 +162,7 @@ export const jobDecks = [
           // Payday. Ticks experience toward the step up to a proper factory job.
           id: "job_labour_wages",
           kind: "filler",
+          weight: 2,
           prompt: "job_labour_wages.prompt",
           options: {
             left: { label: "job_labour_wages.left", outcomes: [{ result: "job_labour_wages.left.r0", effects: { vitals: { finances: "++", spirit: "+", happiness: "-" }, incTraits: { jobExperience: 1 } } }] },
@@ -162,6 +175,7 @@ export const jobDecks = [
           // then bows out once played — wages remains the recurring earner.
           id: "job_labour_toil",
           kind: "one_time",
+          weight: 2,
           prompt: "job_labour_toil.prompt",
           options: {
             left: { label: "job_labour_toil.left", outcomes: [{ result: "job_labour_toil.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { jobExperience: 1 } } }] },
@@ -171,6 +185,7 @@ export const jobDecks = [
         {
           id: "job_labour_errand",
           kind: "one_time",
+          weight: 2,
           prompt: "job_labour_errand.prompt",
           options: {
             left: { label: "job_labour_errand.left", outcomes: [{ result: "job_labour_errand.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { jobExperience: 1 } } }] },
@@ -179,30 +194,13 @@ export const jobDecks = [
         },
         {
           // The ordinary escape up the UNSKILLED ladder: a steady factory job,
-          // EARNED and then guaranteed — a MILESTONE, at the lowest priority in
-          // the game so it never jumps ahead of a life-stage one.
+          // experience-gated — you work your way onto the floor.
           //
-          // It was a filler gated at experience >= 4, and in that shape it was
-          // dead content: measured over 4,000 greedy lives, a labourer spends
-          // 11.4 years on the rung but draws only 2.7 cards from this deck (the
-          // rest of the pool — home, childhood, the siblings — crowds it out), so
-          // 72% of them peak at ONE or TWO experience and just 1.7% ever reached
-          // the gate. The card came up in 0.4% of lives. Every factory hand in the
-          // game was actually made by the old birthday promotion at the coming-of-
-          // age milestone, which handed out the job for surviving to eighteen.
-          // That promotion is gone (it made a birthday worth more than a grown
-          // man's work), so this has to be a real route or the unskilled ladder
-          // has no rungs above its first.
-          //
-          // Hence: a milestone, so a few years' graft is enough however the draw
-          // falls, and the gate down to 3 — which lands ~11% of labour lives at
-          // the mill, against the 9.4% the birthday promotion used to deliver.
-          // The same work, the same destination, at an age you earned rather than
-          // one you merely reached. One copy: "you keep to your patch" is a
-          // decision, not a deferral.
+          // The gate is reachable now because the DECK is weighted (see below),
+          // not because this card jumps the queue: it stays an ordinary draw.
           id: "job_labour_factory",
-          kind: "milestone",
-          priority: 20,
+          kind: "filler",
+          weight: 2,
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_labour_factory.prompt",
           options: {

@@ -796,20 +796,39 @@ flavour by path): floor 0 · tier 1 ≈ −5 · tier 2 ≈ −10 · tier 3 ≈ �
   worth a better job than a grown man's work gets him from the unemployment deck,
   and let the factory's own earn-gate be skipped by simply living.
   Removing it exposed that the earn-gate had never worked. `job_labour_factory`
-  was a `filler` at experience ≥ 4, and measured over 4,000 greedy lives a
-  labourer spends **11.4 years** on the rung while drawing only **2.7** cards from
-  its deck (home, childhood and the siblings crowd the pool), so 72% peak at one
-  or two experience and **1.7%** ever reached the gate — the card surfaced in
-  **0.4%** of lives. *Every* factory hand in the game was made by the birthday.
-  It is now a **milestone at experience ≥ 3**, the lowest priority in the game so
-  it never outranks a life-stage one: a few years' graft is enough however the
-  draw falls. That lands **7.2%** of labour lives at the mill against the **9.4%**
-  the birthday delivered — the same destination for the same work, at an age
-  earned rather than reached — and leaves overall lifespan unmoved (33.3 → 33.0).
-  One copy: "you keep to your patch" is a decision, not a deferral.
+  is a `filler` at an experience gate, and measured over 4,000 greedy lives a
+  labourer spends **11.3 years** on the rung while drawing only **2.8** cards from
+  its deck (home, childhood and the siblings crowd the pool), so 72% peaked at one
+  or two experience and **1.7%** ever reached the old gate of 4 — the card
+  surfaced in **0.4%** of lives. *Every* factory hand in the game was made by the
+  birthday. The whole deck now carries **`weight: 2`** and the gate is **3**.
+- **What weighting a deck actually buys, and what it does not.** Doubling every
+  card in `job_labour` moves its share of a labourer's draws from **25% to 30%**,
+  not the 48% the arithmetic suggests (5 of 21 weighted cards → 10 of 26): three
+  of its five cards are `one_time` and are consumed in the first few years, so for
+  most of the rung the deck is really **two** cards and extra weight mostly buys
+  repeats of the same payday. The sibling beats barely move (1.1 → 1.0 per life),
+  so the crowding cost is small — but so is the gain. Reaching the mill: **9.4%**
+  of labour lives under the old birthday promotion, **0.5%** with it gone and
+  nothing else changed, **4.3%** at weight ×2 and gate 3. The two dials, measured
+  over 2,500 lives each: ×2/gate 2 → 14.1%, ×3/gate 3 → 7.7%, ×4/gate 3 → 10.9%,
+  ×2/gate 4 → 0.7%. **The real fix is more cards**: an eleven-year stretch of life
+  served by five cards, three of them one-shots, cannot pace a counter at all.
   **The general lesson:** a card gated behind a counter that only its own deck
-  ticks is only as reachable as that deck's share of the draw. Check a new gate
-  against the deck's real draw rate, not against how many ticks it "should" take.
+  ticks is only as reachable as that deck's share of the draw — and a deck that
+  runs dry cannot be weighted back into relevance. Check a new gate against the
+  deck's real draw rate, not against how many ticks it "should" take.
+- **A declined filler does not really come back.** Turning the mill down is
+  supposed to be reversible — it is a `filler`, so it returns to the pool — but
+  measured over 3,000 lives it was offered a second time in **0 of the 182** lives
+  that saw it at all. The filler discard pile is why: a played filler stays out
+  while any *unplayed* filler remains in the pool, and the pool is drawn from the
+  whole of a life, so a labour card that goes into the pile in childhood is still
+  waiting there when the life ends. The rule is doing exactly what it was built
+  for (no filler repeats while anything fresh is left) and the cost is invisible
+  until you look: for a career card, filler and one-shot are the same thing in
+  practice. Anything that must be *re-offerable* needs either its own escape from
+  the pile or a second card id.
 - **Criminal** risk is **arrest → prison** (see below).
 - **Educated** tiers gate on the new higher education levels (grammar, university).
 
