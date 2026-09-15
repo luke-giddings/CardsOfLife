@@ -194,7 +194,13 @@ body {
    skull struck through reads as "death averted". */
 /* A rescued death: you'd hit 0 but a one-shot safety net catches you. A shield
    (rather than a struck-through skull, which read poorly) says "protected". */
-.ep-rescue { font-size: 0.9em; line-height: 1; }
+/* Sized in em so it tracks the chip text it sits beside, and nudged down to sit
+   on the same optical line as the +/− symbols. */
+.ep-rescue {
+  width: 1.25em;
+  height: 1.25em;
+  vertical-align: -0.28em;
+}
 /* "This choice changes your path" — a job/home/trait payload beyond the vital
    numbers, so a rewarding choice doesn't look weaker than its plain sibling. */
 .ep-special { color: var(--gold); font-weight: 700; }
@@ -566,6 +572,26 @@ body {
 .vitals-reveal .vital:nth-child(3) .fill { animation-delay: 1060ms; }
 .vitals-reveal .vital:nth-child(4) .fill { animation-delay: 1240ms; }
 
+/* The worked example of the preview chips on the easy-mode result: two mock
+   choices, side by side, so the row reads as "a card's two answers". */
+.ep-sample {
+  flex-basis: 100%;   /* claim a row of its own inside the wrapping .result */
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+  margin-top: 22px;
+}
+.ep-sample .edge-vitals { flex-direction: column; gap: 4px; }
+
+/* A top-bar control the card is currently talking about. Pulses rather than
+   just sitting lit, because the point is to catch the eye of someone reading
+   the card, not to look like a toggle that is already on. */
+@keyframes pointed-at {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; border-color: var(--line); color: var(--faint); }
+  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--baize) 28%, transparent); border-color: var(--baize); color: var(--baize); }
+}
+.hard.pointed-at { animation: pointed-at 1500ms ease-in-out infinite; }
+
 /* --- the title card ------------------------------------------------------- */
 /* The game's NAME, so it is set as a title rather than as a line of the prose
    it used to be buried in. Scales with the card so it stays the biggest thing
@@ -628,6 +654,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* so an appended sample (see .ep-sample) can take a row under the text rather
+     than sitting beside it. align-content keeps the two rows together in the
+     middle — without it they wrap to opposite ends of the card. */
+  flex-wrap: wrap;
+  align-content: center;
   text-align: center;
 }
 .tap-cue {

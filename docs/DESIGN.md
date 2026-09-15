@@ -365,11 +365,17 @@ fire given the current state. Two extra markers:
   is the drift of the status you'd be **in after the choice**: a card that moves
   you to a harsher status (homeless, workhouse, a pricier lifestyle) previews
   *that* status's drains, not your current ones. It shows on whichever vital
-  would hit 0. A **shield** (🛡) is shown instead when a **one-shot
+  would hit 0. A **skull inside a shield** is shown instead when a **one-shot
   safety net would catch that 0** — the projection runs `findRescue` on the
   post-choice state (advanced one turn, so age-gated nets like the charity
   hospital's `ageMax` resolve correctly), so you can tell "real death" from
-  "you'd be floored but survive, this once".
+  "you'd be floored but survive, this once". That mark is **drawn** (an inline
+  SVG, `RESCUE_ICON`) rather than set as an emoji: 🛡 and ☠ render differently on
+  every platform and cannot be composed — stacked, two emoji clash in colour and
+  weight — and the eye sockets must be *holes*, punched with `fill-rule="evenodd"`
+  so the card shows through, or they are wrong in one of the two themes.
+  Crossbones were drawn and dropped: below ~20px they merge into the skull, and
+  this mark is drawn at 13.
 - A gold **★** marks a **beneficial path change beyond the numbers** — a new
   job/home/education (`setStatus`), a **boon trait** (`setTraits` — skillVaccinated,
   sporty, a uni fund…), or a life-stage deck swap — so a rewarding option (seize
@@ -433,6 +439,17 @@ Mechanics worth knowing:
 - An option with no `result` acts at once with no flip, which is what a menu
   wants; the tutorial card keeps its results precisely *because* the flip is one
   of the things it is teaching.
+- The easy/hard card's "you can change this later" note is on the **prompt**,
+  not the results: it is true of either answer, and it is worth knowing *before*
+  you choose rather than after. While that card is up, the HARD button pulses
+  (`IntroCard.highlight`), so the control the prompt names is one you can see.
+- Choosing to see the costs shows a **worked example** of the preview on the
+  result — two mock choices' worth of chips, built by running invented options
+  through `vitalChips`, the very code the card faces use, so "this is what you
+  will see" cannot drift from what you will actually see. It is rendered against
+  a *comfortable* fabricated state: against the real starting vitals a sample
+  "health −−" is fatal and the preview — rightly — draws a death's head on it,
+  which is true of the live state but wrong as an example.
 - The title card has **no swipe choices at all** — a `button` instead of
   `options`, and no drag attached. The swipe has not been taught yet at that
   point, so offering swipe choices there would want a gesture nobody has been

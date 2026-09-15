@@ -102,6 +102,20 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 
 const LEAN_CLASSES = ["lean-left", "lean-right", "lean-up", "lean-down"];
 
+// "You'd hit 0 here — but a safety net catches you, this once." A skull inside a
+// shield: the death you'd have had, and the thing standing between you and it.
+// DRAWN rather than set as an emoji, for two reasons. 🛡 and ☠ render differently
+// on every platform and cannot be composed (two emoji stacked clash in colour and
+// weight), and the eye sockets have to be HOLES — punched with fill-rule evenodd
+// so the card shows through — or they are wrong in one of the two themes.
+// Crossbones were drawn and dropped: below ~20px they merge into the skull into a
+// blob, and this mark is drawn at 13.
+const RESCUE_ICON =
+  `<svg class="ep-rescue" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">` +
+  `<path d="M10 1.2 18 4v7.2c0 4.8-3.6 8.2-8 9.6-4.4-1.4-8-4.8-8-9.6V4z"/>` +
+  `<path fill="currentColor" stroke="none" fill-rule="evenodd" d="M10 6.2c-2.4 0-4 1.7-4 3.9 0 1.3.6 2.2 1.3 2.8v1.4h5.4v-1.4c.7-.6 1.3-1.5 1.3-2.8 0-2.2-1.6-3.9-4-3.9zM8.4 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1zM11.6 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1z"/>` +
+  `</svg>`;
+
 const FULL_FLIP: Record<Direction, string> = {
   left: "rotateY(-180deg)",
   right: "rotateY(180deg)",
@@ -505,7 +519,7 @@ export class Game {
       if (!mag && !lethal) continue;
       // A vital hitting 0 is only really death if no safety net catches it. If a
       // one-shot rescue would fire (charity hospital, sell-up, eviction…), show a
-      // STRUCK-THROUGH skull — you'd be floored but survive (this once).
+      // skull-in-a-shield (RESCUE_ICON) — you'd be floored but survive, this once.
       const rescued = lethal && !!findRescue(projected, content, key);
       // The player only ever sees +/− bars. Flat tokens map their dashes to −; the
       // proportional slash tokens (a scaling spend) render as minus bars by severity
@@ -515,7 +529,7 @@ export class Game {
       const sym = !mag ? "" : mag === "//" ? "−−−" : mag === "/" ? "−−" : mag.split("-").join("−");
       const body = lethal
         ? rescued
-          ? `<span class="ep-rescue" title="You'd hit 0 — but a safety net would catch you (once)">🛡</span>`
+          ? `<span class="dbad" title="You'd hit 0 — but a safety net would catch you (once)">${RESCUE_ICON}</span>`
           : `<span class="dbad ep-end" title="This would be fatal">☠</span>`
         : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${sym}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
@@ -971,6 +985,7 @@ export class Game {
     // with it, so this changes BETWEEN cards, not just on entering the flow.
     this.root.classList.toggle("intro-on", card.chrome !== "full");
     this.root.classList.toggle("intro-bare", card.chrome === "none");
+    this.hardBtn.classList.toggle("pointed-at", card.highlight === "hard");
     // The bars arrive on the card that explains them, so make the arrival itself
     // the thing you notice: they fade in one after another and each pulses once.
     // Restarted by hand (remove, reflow, re-add) because the same element is
@@ -1052,7 +1067,7 @@ export class Game {
     // With a result line the card turns over first, as a game card does; without
     // one it simply leaves, so a menu does not cost a second tap.
     if (opt.result) {
-      this.revealBack(dir, this.txt(opt.result));
+      this.revealBack(dir, this.txt(opt.result), opt.sample ? this.previewSample() : "");
     } else {
       this.busy = false;
       this.advance();
@@ -1088,12 +1103,39 @@ export class Game {
     }
     this.root.classList.remove("intro-on", "intro-bare");
     this.vitalsEl.classList.remove("vitals-reveal");
+    this.hardBtn.classList.remove("pointed-at");
     this.introFlow = [];
     this.introCard = null;
     if (opt.fresh) return this.restart();
     this.syncTop();
     if (this.state.over) this.showEnd();
     else this.beginTurn();
+  }
+
+  // A worked example of the easy-mode preview, for the card that offers it.
+  // Built by running two invented options through `vitalChips` — the very code
+  // the card faces use — so the sample cannot drift from the real thing: if the
+  // chips are restyled or a symbol changes, this changes with them.
+  private previewSample(): string {
+    // Against the REAL starting vitals a sample "health −−" is fatal, and
+    // vitalChips — rightly — draws a skull for it. True of the live state, wrong
+    // as a worked example: it teaches the death warning on a choice nobody is
+    // making. So the sample is rendered against a comfortable state and the real
+    // one is put straight back.
+    const real = this.state;
+    this.state = { ...structuredClone(real), vitals: { finances: 60, happiness: 60, health: 60, spirit: 60 } };
+    try {
+      const chips = (vitals: Effect["vitals"]): string =>
+        this.vitalChips({ label: "ui.newLife", outcomes: [{ result: "ui.newLife", effects: { vitals } }] });
+      return (
+        `<span class="ep-sample">` +
+        `<span class="edge-vitals">${chips({ happiness: "++", finances: "-" })}</span>` +
+        `<span class="edge-vitals">${chips({ health: "--", spirit: "+" })}</span>` +
+        `</span>`
+      );
+    } finally {
+      this.state = real;
+    }
   }
 
   // Debug: forget that the opening flow was ever seen and play it again now.
@@ -1173,10 +1215,17 @@ export class Game {
   // moves on. Shared by a game choice and by an opening-flow swipe that has a
   // result line (ui/intro.ts) — the flip is one of the things the tutorial card
   // is there to teach, so it uses exactly the same motion.
-  private revealBack(dir: Direction, text: string): void {
+  private revealBack(dir: Direction, text: string, extraHtml = ""): void {
     const flip = this.flip;
     if (!flip) return;
-    flip.querySelector<HTMLElement>(".back .result")!.textContent = text;
+    const result = flip.querySelector<HTMLElement>(".back .result")!;
+    // textContent for the prose (it is author text and stays escaped); anything
+    // extra is our own markup, appended inside the paragraph. `.result` is a
+    // centred flex row that wraps, and the sample claims a full row of its own,
+    // so it lands under the text while the pair still centre together and the
+    // tap-cue stays pinned at the foot of the card.
+    result.textContent = text;
+    if (extraHtml) result.insertAdjacentHTML("beforeend", extraHtml);
     flip.querySelector<HTMLElement>(".back")!.style.transform =
       dir === "up" || dir === "down" ? "rotateX(180deg)" : "rotateY(180deg)";
 

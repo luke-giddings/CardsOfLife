@@ -34,6 +34,10 @@ export interface IntroOption {
   // Applied as the swipe is taken.
   setHard?: boolean;  // the easy/hard fork
   fresh?: boolean;    // start a NEW life rather than resuming the saved one
+  // Append a live sample of the easy-mode preview to the result, rendered by the
+  // SAME code the card faces use — so "this is what you will see" is literally
+  // what you will see, and cannot drift from it.
+  sample?: boolean;
 }
 
 // How much of the game's chrome shows behind a shell card.
@@ -47,6 +51,10 @@ export type IntroChrome = "none" | "bars" | "full";
 
 export interface IntroCard {
   id: string;
+  // Draw the eye to one of the top-bar controls while this card is up. The
+  // easy/hard card names the HARD button, and a named button you cannot find is
+  // no better than one that was never mentioned.
+  highlight?: "hard";
   // Set only on the title card, and rendered large: it is the game's name, not
   // a line of its prose.
   title?: StringId;
@@ -98,11 +106,16 @@ export const FIRST_RUN: IntroCard[] = [
     button: { label: "intro_vitals.go" },
   },
   {
+    // The easy/hard fork. The "you can change this later" note lives on the
+    // PROMPT, not the results: it is true of both answers, and it is worth
+    // knowing before you choose rather than after. The HARD button pulses while
+    // this card is up, so the thing the prompt names is the thing you can see.
     id: "intro_mode",
     prompt: "intro_mode.prompt",
     chrome: "bars",
+    highlight: "hard",
     options: {
-      left: { label: "intro_mode.left", result: "intro_mode.left.r0", setHard: false, goto: PLAY },
+      left: { label: "intro_mode.left", result: "intro_mode.left.r0", setHard: false, goto: PLAY, sample: true },
       right: { label: "intro_mode.right", result: "intro_mode.right.r0", setHard: true, goto: PLAY },
     },
   },
