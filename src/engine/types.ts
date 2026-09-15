@@ -489,6 +489,12 @@ export interface GameState {
   traits: Traits;
   activeDecks: string[];
   usedCards: Record<string, number>; // card id -> times played
+  // The filler discard pile: fillers already dealt, kept out of the draw until
+  // the eligible ones are all in here and it shuffles back (see drawCard).
+  // Fillers are exempt from `usedCards` — they never run out — so they need
+  // their own list, and it is a list rather than a count because nothing here
+  // cares HOW often one played, only whether it has.
+  playedFillers: string[];
   lastCardId?: string;                // to avoid drawing the same card twice in a row
   experienceJob?: string;             // the job the current `jobExperience` was earned in (see changeStatus)
   // Status values stashed by a state that `suspends` them, handed back on leaving.

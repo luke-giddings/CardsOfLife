@@ -270,6 +270,9 @@ body {
    truncated by it; indented to line up past the mark column. */
 .dbg-row .dbg-note { color: var(--gold); font-size: 0.64rem; margin-left: calc(1ch + 7px); }
 .dbg-row.gated { color: var(--faint); opacity: 0.7; }
+/* In the pool, but held out of the draw by the filler discard pile — dimmed like
+   a gated card, since it is just as undrawable this turn. */
+.dbg-row.waiting { color: var(--faint); opacity: 0.7; }
 .dbg-row.due .dbg-id { color: var(--baize); }
 
 .dbg-hist {

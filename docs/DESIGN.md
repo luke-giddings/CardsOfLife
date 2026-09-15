@@ -221,6 +221,29 @@ adding/removing decks and gating are trivial filters.
   repeatable's share against the one-offs.
 - **Draw-and-discard:** a played card is consumed, unless it's **filler**
   (returns to the pool). `one_time` cards carry `copies` = max occurrences.
+- **Fillers queue (`GameState.playedFillers`).** Returning to the pool is not the
+  same as returning to the front of it. A played filler goes to a **discard pile**
+  and stays out of the draw while any *unplayed* filler is still in the pool; only
+  when the pile is all that is left does it shuffle back in — minus the filler
+  dealt most recently, which would otherwise be free to come straight round again.
+  A filler is recorded when it is **played**, beside `usedCards`, so a filler
+  *forced* by a capped vital counts as played exactly like one dealt from the pool.
+  The pile is scoped to the fillers *currently in* the pool, both for the "all
+  seen" test and for the reshuffle: the childhood decks running dry must not also
+  forget the working-life fillers you have not reached yet.
+  **Why:** "no repeats twice in a row" only moved the repeat one card along, so a
+  filler routinely came back with a single card between it and itself — the game
+  reading as though it had run out of things to say. Measured over 4,000 greedy
+  lives (`scripts/filler-repeats.ts`): a filler repeating within two turns fell
+  **11.3% → 6.0%** of filler draws, and the mean gap between repeats went 8.0 →
+  10.3 turns. The cost — the worry that so few fillers would make the reshuffle
+  routine — did not materialise: it fires on **2.7% of draws, ~1 per life**, and
+  **69% of lives never reach one**; the first averages age 37, i.e. late, when the
+  decks genuinely have thinned. The repeats that remain cluster in the small
+  `priority` pools (unemployed, homeless) where there is nothing else to draw, and
+  on `home_family_moveout`, which is a `force` card and *meant* to be insistent.
+  A filler high on that script's "still repeating soonest" list is a place to
+  **write another filler**, not a bug in the rule.
 
 Per-turn order: pick card → resolve outcome → apply effects (raw) → age +1 →
 apply Status **drift** (raw) → **clamp all vitals once** → check game-over.
@@ -670,7 +693,8 @@ playable on a phone.
 - Victorian setting; childhood mortality, earned by preparation (~70% careful).
 - Magnitude steps (`+`/`++`) with a single tunable point table.
 - Engine/content split; typed content; TypeScript + Vite on GitHub Pages.
-- Virtual-pool draw; milestone priority; filler; no immediate repeats.
+- Virtual-pool draw; milestone priority; filler; no immediate repeats, and no
+  filler repeat at all while an unplayed one is left.
 - Cards have a front (choice, numbers hidden) and a back (result), outcomes
   chosen by condition.
 - Traits drive conditions and results; relationships are Traits.

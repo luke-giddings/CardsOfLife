@@ -626,7 +626,10 @@ export class Game {
       this.debugPanel.innerHTML = "";
       return;
     }
-    const { milestone, pool, gated } = eligibleDraw(this.state);
+    const { milestone, pool, gated, held } = eligibleDraw(this.state);
+    // Fillers waiting their turn are still in the pool but cannot be drawn, so
+    // they are marked rather than listed as if they were live.
+    const waiting = new Set(held.map((c) => c.id));
     const row = (c: Card, mark: string, cls: string, note = ""): string =>
       `<div class="dbg-row ${cls}" data-card="${c.id}">
         <div class="dbg-line">
@@ -635,12 +638,16 @@ export class Game {
           <span class="dbg-kind">${c.kind}${c.weight && c.weight !== 1 ? ` ×${c.weight}` : ""}</span>
           <button class="dbg-draw" data-card="${c.id}" data-action="force" title="Force this card next">draw ▶</button>
         </div>
-        ${note ? `<div class="dbg-note">needs ${note}</div>` : ""}
+        ${note ? `<div class="dbg-note">${note}</div>` : ""}
       </div>`;
     const rows = [
       ...(milestone ? [row(milestone, "★", "due")] : []),
-      ...pool.map((c) => row(c, c.id === this.card?.id ? "→" : "·", "pool")),
-      ...gated.map((c) => row(c, "·", "gated", fmtCond(c.conditions))),
+      ...pool.map((c) =>
+        waiting.has(c.id)
+          ? row(c, "↩", "pool waiting", "already played — waiting for the other fillers")
+          : row(c, c.id === this.card?.id ? "→" : "·", "pool"),
+      ),
+      ...gated.map((c) => row(c, "·", "gated", `needs ${fmtCond(c.conditions)}`)),
     ];
 
     // Current traits, grouped into collapsible sub-sections so the (growing)

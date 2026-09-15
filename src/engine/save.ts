@@ -6,8 +6,9 @@ import type { GameState } from "./types.ts";
 // attempt to carry an old save forward, which is the point: during development a
 // restart is cheap, a half-converted state is confusing. (v1 -> v2:
 // `housingBeforeApprentice` became the general `suspendedStatuses`, so a v1 save
-// mid-apprenticeship had no stash to restore and left you housed "With Master".)
-const KEY = "cardsoflife.save.v2";
+// mid-apprenticeship had no stash to restore and left you housed "With Master".
+// v2 -> v3: `playedFillers` arrived, and a save without it crashes the draw.)
+const KEY = "cardsoflife.save.v3";
 
 // The debug rewind list: the pre-choice snapshot at each card played, so the
 // debug panel can list what was drawn and chosen, and jump back to retry one.
@@ -23,7 +24,7 @@ export interface HistoryEntry {
 // (a long life is ~100 of them); separating them means a quota failure or a
 // corrupt history costs you the rewind list and never the run itself. Versioned
 // with the save, since the snapshots inside it ARE GameStates.
-const HISTORY_KEY = "cardsoflife.history.v2";
+const HISTORY_KEY = "cardsoflife.history.v3";
 
 export function saveGame(state: GameState): void {
   try {
