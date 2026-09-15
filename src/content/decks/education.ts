@@ -151,11 +151,20 @@ export const educationDecks = [
         },
         {
           // End of grammar school (age >= 17): earns the `grammar` credential.
-          // Then UP to university — the family fund OR your own savings pay the
-          // way (eduUniFund OR finances >= 50, so the option hides if you can't
-          // afford it) — or leave for work. The way is actually PAID for now: the
-          // family fund covers it and is spent (eduUniFund -> false); otherwise your
-          // own savings foot a heavy tuition bill (finances --).
+          // Then UP to university, or leave for work.
+          //
+          // The university option used to HIDE when you could not afford the fees,
+          // which left the card a single swipe under a prompt that talks about the
+          // university beckoning — an announcement rather than a choice, and a
+          // taunt for the poor scholar it hit most often (grammar school is free to
+          // enter and bleeds -5/yr, so arriving here skint is the common case).
+          // So the means are now money OR your own back, in three outcomes: the
+          // family fund pays and is spent; your own savings pay a heavy bill; or
+          // you go up as a SERVITOR, waiting at the tables of richer men for your
+          // fees (Oxford's servitors, Cambridge's sizars — the real Victorian road
+          // up for a clever poor boy). That last is not charity: it costs happiness
+          // dearly and health besides, on top of the university's own drift, and it
+          // is still the way onto the highest-paying ladder in the game.
           id: "edu_grammar_leaver",
           kind: "milestone",
           priority: 60,
@@ -164,10 +173,10 @@ export const educationDecks = [
           options: {
             left: {
               label: "edu_grammar_leaver.left",
-              if: { any: [{ traits: { eduUniFund: true } }, { vitals: { finances: { min: 50 } } }] },
               outcomes: [
                 { if: { traits: { eduUniFund: true } }, result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduUniFund: false, eduWasUndergraduate: true } } },
-                { result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
+                { if: { vitals: { finances: { min: 50 } } }, result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
+                { result: "edu_grammar_leaver.left.r2", effects: { vitals: { spirit: "+", happiness: "--", health: "-" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
               ],
             },
             right: { label: "edu_grammar_leaver.right", outcomes: [{ result: "edu_grammar_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "clerk" } } }] },

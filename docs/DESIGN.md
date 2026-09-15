@@ -677,10 +677,16 @@ factory step within unskilled; criminal entry. Housing ladder (family → move-o
 housing. Sibling relationship deck. Choice previews (death-from-drift ☠, path
 ★). **Academic ladder now built**: free basic school → fee-paying **grammar
 school** (job=grammar_school, tuition −5) → **university** (job=university,
-tuition −5, entry gated on `eduUniFund` OR savings ≥ 50 via the new `any`
-OR-condition — and the way is *paid*: the family fund covers it and is spent
-(`eduUniFund` → false), otherwise your own savings foot a heavy tuition bill
-(finances −−)), earning the `basic`/`grammar`/`university` credentials — each of
+tuition −5, and the way is always *paid* for, in one of three ways: the family
+fund covers it and is spent (`eduUniFund` → false), your own savings foot a heavy
+tuition bill (finances −−), or — with neither — you go up as a **servitor**,
+waiting at the wealthy men's tables for your fees (happiness −−, health −). That
+last road exists because the option used to *hide* when you could not afford it,
+which left the leaver card a single swipe under a prompt about the university
+beckoning: an announcement, not a choice, and a taunt for the poor scholar it hit
+most often, since grammar school is free to enter and bleeds −5/yr. It is not
+charity — the price is paid up front and the university's own drift follows),
+earning the `basic`/`grammar`/`university` credentials — each of
 which opens its **own distinct career ladder** (Commerce / Clerkly-Law / Medicine
 — see §6), so the level of schooling changes *which* profession you enter, not
 just how high you can climb. (Balance: reaching university is currently very rare

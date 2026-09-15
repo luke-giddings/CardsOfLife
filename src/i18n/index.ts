@@ -718,6 +718,7 @@ export const EN = {
   "edu_grammar_leaver.left": "Up to university",
   "edu_grammar_leaver.left.r0": "The family fund, laid by all these years, sees you matriculated — and is spent doing it. Few climb this high.",
   "edu_grammar_leaver.left.r1": "You empty your own hard-won savings to pay the fees. A heavy price, but the university gates open to you.",
+  "edu_grammar_leaver.left.r2": "No fund, no savings — so you go up as a servitor, waiting at the tables of richer men in return for your fees. The gates open to you, and you come in by the back door.",
   "edu_grammar_leaver.right": "Take a position",
   "edu_grammar_leaver.right.r0": "You set your grammar-school learning to work and step straight onto a clerk's stool at a respectable firm.",
 
@@ -2203,6 +2204,7 @@ export const IT: Record<StringId, string> = {
   "edu_grammar_leaver.left": "Su all'università",
   "edu_grammar_leaver.left.r0": "Il fondo di famiglia, messo da parte in tutti questi anni, ti fa immatricolare — e nel farlo si esaurisce. In pochi salgono così in alto.",
   "edu_grammar_leaver.left.r1": "Svuoti i tuoi sudati risparmi per pagare le tasse. Un prezzo salato, ma le porte dell'università ti si aprono.",
+  "edu_grammar_leaver.left.r2": "Niente fondo, niente risparmi — così sali come servitore, a servire ai tavoli di uomini più ricchi in cambio delle tasse. Le porte ti si aprono, e tu entri da quella di servizio.",
   "edu_grammar_leaver.right": "Prendere un posto",
   "edu_grammar_leaver.right.r0": "Metti a frutto la tua istruzione superiore ed entri dritto su uno sgabello da impiegato in uno studio rispettabile.",
 
