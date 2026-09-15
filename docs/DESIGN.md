@@ -451,7 +451,14 @@ Mechanics worth knowing:
 - Choosing to see the costs shows a **worked example** of the preview on the
   result — two mock choices' worth of chips, built by running invented options
   through `vitalChips`, the very code the card faces use, so "this is what you
-  will see" cannot drift from what you will actually see. It is rendered against
+  will see" cannot drift from what you will actually see — followed by a
+  **legend for the four marks that are not a plus or a minus** (★ ⚠ ☠ and the
+  shield), each with a line saying what it means. Those are the ones that need
+  saying: nothing about a ★ tells you what it is the first time you meet one.
+  All four are defined once as `MARK_*` constants shared by `vitalChips` and the
+  legend, for the same reason the chips are generated rather than mocked up. The
+  legend is only ever shown on the easy answer, because hard mode draws no chips
+  at all and a legend for symbols you will never see is worse than none. It is rendered against
   a *comfortable* fabricated state: against the real starting vitals a sample
   "health −−" is fatal and the preview — rightly — draws a death's head on it,
   which is true of the live state but wrong as an example.

@@ -605,6 +605,31 @@ body {
 }
 .ep-sample .edge-vitals { flex-direction: column; gap: 4px; }
 
+/* The marks that are not a plus or a minus, each with what it means. A grid so
+   the glosses line up under one another; left-aligned inside a centred block,
+   because a ragged centred list of four is harder to read than a tidy column. */
+.ep-legend {
+  flex-basis: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  gap: 7px 12px;
+  margin-top: 20px;
+  font-size: 0.86rem;
+  line-height: 1.25;
+  text-align: left;
+}
+/* Standing alone in a column, the four marks need to read at the same optical
+   weight; on a card face they borrow size from the chip beside them. */
+.ep-mark {
+  justify-self: center;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.ep-gloss { color: var(--muted); }
+
 /* A top-bar control the card is currently talking about. Pulses rather than
    just sitting lit, because the point is to catch the eye of someone reading
    the card, not to look like a toggle that is already on. */

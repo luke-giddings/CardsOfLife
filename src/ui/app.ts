@@ -110,6 +110,16 @@ const LEAN_CLASSES = ["lean-left", "lean-right", "lean-up", "lean-down"];
 // so the card shows through — or they are wrong in one of the two themes.
 // Crossbones were drawn and dropped: below ~20px they merge into the skull into a
 // blob, and this mark is drawn at 13.
+// The four marks that are NOT a plus or a minus, defined once here and used both
+// by the card faces (vitalChips) and by the legend the easy-mode card shows. Two
+// copies of this markup would drift the moment either changed, and the legend's
+// whole job is to be the same thing you will see in play.
+const MARK_SPECIAL =
+  `<span class="ep-v ep-special" title="This choice changes your path — a job, home, schooling, or a lasting boon">★</span>`;
+const MARK_BURDEN =
+  `<span class="ep-v ep-burden" title="This choice leaves a lasting mark — a debt, a disgrace, a warrant, a weakness">⚠</span>`;
+const MARK_FATAL = `<span class="dbad ep-end" title="This would be fatal">☠</span>`;
+
 // The two parts are coloured from the stylesheet (.rescue-shield steel,
 // .rescue-skull red) rather than by attributes here: a presentation attribute
 // cannot hold a var(), and both need to follow the theme.
@@ -118,6 +128,8 @@ const RESCUE_ICON =
   `<path class="rescue-shield" d="M10 1.2 18 4v7.2c0 4.8-3.6 8.2-8 9.6-4.4-1.4-8-4.8-8-9.6V4z"/>` +
   `<path class="rescue-skull" fill-rule="evenodd" d="M10 6.2c-2.4 0-4 1.7-4 3.9 0 1.3.6 2.2 1.3 2.8v1.4h5.4v-1.4c.7-.6 1.3-1.5 1.3-2.8 0-2.2-1.6-3.9-4-3.9zM8.4 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1zM11.6 8.95a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 1 0 0-2.1z"/>` +
   `</svg>`;
+const MARK_RESCUED =
+  `<span title="You'd hit 0 — but a safety net would catch you (once)">${RESCUE_ICON}</span>`;
 
 const FULL_FLIP: Record<Direction, string> = {
   left: "rotateY(-180deg)",
@@ -532,8 +544,8 @@ export class Game {
       const sym = !mag ? "" : mag === "//" ? "−−−" : mag === "/" ? "−−" : mag.split("-").join("−");
       const body = lethal
         ? rescued
-          ? `<span title="You'd hit 0 — but a safety net would catch you (once)">${RESCUE_ICON}</span>`
-          : `<span class="dbad ep-end" title="This would be fatal">☠</span>`
+          ? MARK_RESCUED
+          : MARK_FATAL
         : `<span class="${mag!.startsWith("+") ? "dgood" : "dbad"}">${sym}</span>`;
       chips += `<span class="ep-v"><span class="vicon" style="color:var(--v-${key})">${VITAL_ICON[key]}</span>${body}</span>`;
     }
@@ -566,8 +578,8 @@ export class Game {
     );
     const burden = intoGrimStatus || !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
     const special = !burden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
-    if (special) chips += `<span class="ep-v ep-special" title="This choice changes your path — a job, home, schooling, or a lasting boon">★</span>`;
-    if (burden) chips += `<span class="ep-v ep-burden" title="This choice leaves a lasting mark — a debt, a disgrace, a warrant, a weakness">⚠</span>`;
+    if (special) chips += MARK_SPECIAL;
+    if (burden) chips += MARK_BURDEN;
     // No vital changes → show nothing (rather than a bare "—").
     return chips;
   }
@@ -1130,10 +1142,21 @@ export class Game {
     try {
       const chips = (vitals: Effect["vitals"]): string =>
         this.vitalChips({ label: "ui.newLife", outcomes: [{ result: "ui.newLife", effects: { vitals } }] });
+      // Two mock choices' worth of chips, then the four marks that are NOT a
+      // plus or a minus — those need saying, since nothing about ★ or ⚠ tells
+      // you what it means the first time you meet one on a real card.
+      const row = (mark: string, gloss: StringId): string =>
+        `<span class="ep-mark">${mark}</span><span class="ep-gloss">${t(gloss)}</span>`;
       return (
         `<span class="ep-sample">` +
         `<span class="edge-vitals">${chips({ happiness: "++", finances: "-" })}</span>` +
         `<span class="edge-vitals">${chips({ health: "--", spirit: "+" })}</span>` +
+        `</span>` +
+        `<span class="ep-legend">` +
+        row(MARK_SPECIAL, "intro_mode.legendStar") +
+        row(MARK_BURDEN, "intro_mode.legendBurden") +
+        row(`<span class="ep-v">${MARK_FATAL}</span>`, "intro_mode.legendDeath") +
+        row(`<span class="ep-v">${MARK_RESCUED}</span>`, "intro_mode.legendSaved") +
         `</span>`
       );
     } finally {
