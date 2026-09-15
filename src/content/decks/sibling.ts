@@ -11,6 +11,18 @@
 //   Later beats read love AND distance, so "you drifted apart" is a distinct outcome
 //   from "you fell out". relBrotherStoryDone ends the arc (finale, or estrangement if
 //   love curdles); relBrotherReckoned de-dupes the adult reckoning's two housing forms.
+//
+// THE VISIBLE TRADE. Love, grit and distance are `incTraits`, and incTraits draws
+// NOTHING on the card face — no chip, not even the star. So on a relationship card
+// the entire real payload is invisible, and whatever vitals the option happens to
+// carry are the only thing the player has to go on. That made these cards read as
+// one free option and one or two pure punishments: on the bully card you could gain
+// spirit for teaching him, or lose health for defending him, or lose happiness for
+// walking away, and nothing on the card hinted that those were the same size of
+// decision. So every option here shows a GAIN AND A COST, and two options are never
+// given the same shape unless they are genuinely the same trade (the two sides of a
+// quarrel, say). The hidden axes then decide the STORY; the visible vitals must not
+// decide the choice on their own.
 import type { Deck } from "../../engine/types.ts";
 
 export const siblingDecks = [
@@ -45,7 +57,7 @@ export const siblingDecks = [
           conditions: { traits: { relBrotherStoryDone: false, relBrotherAge: { max: 4 } } },
           prompt: "rel_bro_play.prompt",
           options: {
-            left: { label: "rel_bro_play.left", outcomes: [{ result: "rel_bro_play.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherDistance: -6 } } }] },
+            left: { label: "rel_bro_play.left", outcomes: [{ result: "rel_bro_play.left.r0", effects: { vitals: { happiness: "++", health: "-" }, incTraits: { relBrotherLove: 10, relBrotherDistance: -6 } } }] },
             right: { label: "rel_bro_play.right", outcomes: [{ result: "rel_bro_play.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 4, relBrotherGrit: 6, relBrotherDistance: -6 } } }] },
             // The COLD third option. The two above are both kinds of caring (take him
             // along, or make him stand on his own feet); without a genuinely unkind
@@ -58,7 +70,7 @@ export const siblingDecks = [
             // but being dodged teaches it harder and colder. Without that it was
             // strictly worse than `right` on every axis — same spirit, less love, no
             // grit — so a punishment button rather than a choice.
-            up: { label: "rel_bro_play.up", outcomes: [{ result: "rel_bro_play.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10, relBrotherGrit: 10 } } }] },
+            up: { label: "rel_bro_play.up", outcomes: [{ result: "rel_bro_play.up.r0", effects: { vitals: { happiness: "+", spirit: "-" }, incTraits: { relBrotherLove: -10, relBrotherGrit: 10 } } }] },
           },
         },
         {
@@ -73,11 +85,23 @@ export const siblingDecks = [
               // — he's safe, but learns you'll always come running (grit down).
               label: "rel_bro_bully.left",
               outcomes: [
-                { if: { traits: { skillMartialArts: true } }, result: "rel_bro_bully.left.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 8, relBrotherGrit: 6, relBrotherDistance: -6 } } },
-                { result: "rel_bro_bully.left.r1", effects: { vitals: { health: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4, relBrotherDistance: -6 } } },
+                { if: { traits: { skillMartialArts: true } }, result: "rel_bro_bully.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, incTraits: { relBrotherLove: 8, relBrotherGrit: 6, relBrotherDistance: -6 } } },
+                { result: "rel_bro_bully.left.r1", effects: { vitals: { health: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4, relBrotherDistance: -6 } } },
               ],
             },
-            right: { label: "rel_bro_bully.right", outcomes: [{ result: "rel_bro_bully.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 8, relBrotherLove: 2, relBrotherDistance: -6 } } }] },
+            right: {
+              // Teach him to swing instead of swinging for him. If you can fight
+              // yourself, you teach him PROPERLY — guard, footwork, weight — and it
+              // lands: nearly twice the grit, and he admires you for the skill
+              // rather than resenting the lesson. The same check that makes wading
+              // in a clean rescue, paying off on the other swipe too, so a martial
+              // artist is not simply told to go and hit someone.
+              label: "rel_bro_bully.right",
+              outcomes: [
+                { if: { traits: { skillMartialArts: true } }, result: "rel_bro_bully.right.r0", effects: { vitals: { spirit: "++" }, incTraits: { relBrotherGrit: 14, relBrotherLove: 6, relBrotherDistance: -6 } } },
+                { result: "rel_bro_bully.right.r1", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 8, relBrotherLove: 2, relBrotherDistance: -6 } } },
+              ],
+            },
             // Cold: you were THERE and did nothing. The deepest cut of the three —
             // and the GRIT LADDER of this card is the reason to take it: wading in
             // teaches him nothing (−4), teaching him to swing teaches him a lot (+8),
@@ -86,7 +110,7 @@ export const siblingDecks = [
             // this option was strictly worse than `right` on every axis — less grit,
             // far less love, and a happiness cost on top — so there was never a
             // reason to pick it.
-            up: { label: "rel_bro_bully.up", outcomes: [{ result: "rel_bro_bully.up.r0", effects: { vitals: { happiness: "-" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 14, relBrotherDistance: -6 } } }] },
+            up: { label: "rel_bro_bully.up", outcomes: [{ result: "rel_bro_bully.up.r0", effects: { vitals: { health: "+", happiness: "-" }, incTraits: { relBrotherLove: -12, relBrotherGrit: 14, relBrotherDistance: -6 } } }] },
           },
         },
         {
@@ -95,7 +119,7 @@ export const siblingDecks = [
           conditions: { traits: { relBrotherStoryDone: false, relBrotherAge: { max: 4 } } },
           prompt: "rel_bro_share.prompt",
           options: {
-            left: { label: "rel_bro_share.left", outcomes: [{ result: "rel_bro_share.left.r0", effects: { vitals: { health: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -3, relBrotherDistance: -6 } } }] },
+            left: { label: "rel_bro_share.left", outcomes: [{ result: "rel_bro_share.left.r0", effects: { vitals: { health: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -3, relBrotherDistance: -6 } } }] },
             right: { label: "rel_bro_share.right", outcomes: [{ result: "rel_bro_share.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 4, relBrotherGrit: 6, relBrotherDistance: -6 } } }] },
             // Cold, and genuinely tempting: unlike the other two this one PAYS you —
             // a fed, warm night — so it is a real trade of the bond for your own skin
@@ -153,8 +177,8 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_rift.left",
               outcomes: [
-                { if: { traits: { relBrotherDistance: { min: 2 } } }, result: "rel_bro_rift.left.r1", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: 6, relBrotherGrit: -2, relBrotherDistance: -10 } } },
-                { result: "rel_bro_rift.left.r0", effects: { vitals: { happiness: "-" }, incTraits: { relBrotherLove: 12, relBrotherGrit: -4, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherDistance: { min: 2 } } }, result: "rel_bro_rift.left.r1", effects: { vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 6, relBrotherGrit: -2, relBrotherDistance: -10 } } },
+                { result: "rel_bro_rift.left.r0", effects: { vitals: { health: "-", happiness: "+" }, incTraits: { relBrotherLove: 12, relBrotherGrit: -4, relBrotherDistance: -10 } } },
               ],
             },
             right: {
@@ -179,8 +203,8 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_way.left",
               outcomes: [
-                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_way.left.r0", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -10 } } },
-                { result: "rel_bro_way.left.r1", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_way.left.r0", effects: { vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -10 } } },
+                { result: "rel_bro_way.left.r1", effects: { vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4, relBrotherDistance: -10 } } },
               ],
             },
             right: {
@@ -206,8 +230,8 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_crisis.left",
               outcomes: [
-                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_crisis.left.r0", effects: { vitals: { finances: "--", happiness: "-" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 15, relBrotherGrit: 4, relBrotherDistance: -10 } } },
-                { result: "rel_bro_crisis.left.r1", effects: { vitals: { finances: "--", happiness: "-" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 12, relBrotherGrit: -6, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_crisis.left.r0", effects: { vitals: { finances: "--", happiness: "-", spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 15, relBrotherGrit: 4, relBrotherDistance: -10 } } },
+                { result: "rel_bro_crisis.left.r1", effects: { vitals: { finances: "--", happiness: "-", spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 12, relBrotherGrit: -6, relBrotherDistance: -10 } } },
               ],
             },
             right: {
@@ -285,9 +309,13 @@ export const siblingDecks = [
           conditions: { traits: { relBrotherStoryDone: false, relBrotherActive: true, relSisterActive: true, relBrotherAge: { min: 18 } } },
           prompt: "rel_bro_purse.prompt",
           options: {
-            left: { label: "rel_bro_purse.left", outcomes: [{ result: "rel_bro_purse.left.r0", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -6, relSisterLove: -8, relSisterPromise: -3 } } }] },
-            right: { label: "rel_bro_purse.right", outcomes: [{ result: "rel_bro_purse.right.r0", effects: { vitals: { finances: "-" }, incTraits: { relBrotherLove: -8, relSisterLove: 10, relSisterPromise: 4, relSisterDistance: -6 } } }] },
-            up: { label: "rel_bro_purse.up", outcomes: [{ result: "rel_bro_purse.up.r0", effects: { vitals: { finances: "--" }, incTraits: { relBrotherLove: 2, relSisterLove: 2, relSisterPromise: 1, relBrotherDistance: -6, relSisterDistance: -6 } } }] },
+            left: { label: "rel_bro_purse.left", outcomes: [{ result: "rel_bro_purse.left.r0", effects: { vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -6, relSisterLove: -8, relSisterPromise: -3 } } }] },
+            right: { label: "rel_bro_purse.right", outcomes: [{ result: "rel_bro_purse.right.r0", effects: { vitals: { finances: "-", spirit: "+" }, incTraits: { relBrotherLove: -8, relSisterLove: 10, relSisterPromise: 4, relSisterDistance: -6 } } }] },
+            // Splitting it costs DOUBLE and buys a little of both — which is what
+            // the result says happened. Without the happiness it was simply the
+            // same spirit as keeping the money back, for twice the money: fair on
+            // the page, strictly worse on the card face.
+            up: { label: "rel_bro_purse.up", outcomes: [{ result: "rel_bro_purse.up.r0", effects: { vitals: { finances: "--", happiness: "+", spirit: "+" }, incTraits: { relBrotherLove: 2, relSisterLove: 2, relSisterPromise: 1, relBrotherDistance: -6, relSisterDistance: -6 } } }] },
           },
         },
         {
@@ -297,9 +325,9 @@ export const siblingDecks = [
           conditions: { traits: { relBrotherStoryDone: false, relBrotherActive: true, relSisterActive: true, relBrotherAge: { min: 14 } } },
           prompt: "rel_bro_quarrel.prompt",
           options: {
-            left: { label: "rel_bro_quarrel.left", outcomes: [{ result: "rel_bro_quarrel.left.r0", effects: { incTraits: { relBrotherLove: 12, relBrotherDistance: -6, relSisterLove: -10 } } }] },
-            right: { label: "rel_bro_quarrel.right", outcomes: [{ result: "rel_bro_quarrel.right.r0", effects: { incTraits: { relBrotherLove: -10, relSisterLove: 12, relSisterDistance: -6 } } }] },
-            up: { label: "rel_bro_quarrel.up", outcomes: [{ result: "rel_bro_quarrel.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
+            left: { label: "rel_bro_quarrel.left", outcomes: [{ result: "rel_bro_quarrel.left.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: 12, relBrotherDistance: -6, relSisterLove: -10 } } }] },
+            right: { label: "rel_bro_quarrel.right", outcomes: [{ result: "rel_bro_quarrel.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10, relSisterLove: 12, relSisterDistance: -6 } } }] },
+            up: { label: "rel_bro_quarrel.up", outcomes: [{ result: "rel_bro_quarrel.up.r0", effects: { vitals: { happiness: "+" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
           },
         },
         {

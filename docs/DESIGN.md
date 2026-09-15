@@ -1148,12 +1148,35 @@ Roughly in likely order. None of these are started.
   eating), bought with the currency the deck scores you on — her love, and the
   `promise` that decides the audition. That makes estrangement a *strategy* you
   can be tempted into rather than a self-harm button, which is what it was
-  meant to be. Two options in Tom's deck (`rel_bro_play` "give him the slip",
-  `rel_bro_bully` "pretend you didn't see") are still strictly dominated by the
-  swipe beside them, as is `prison_cellmate`'s "keep to yourself" — left alone
-  pending the cellmate relationship deck. A strict-dominance check (an option
-  that is no better than a sibling option on *every* vital and every comparable
-  trait) is the cheap way to find these.
+  meant to be. `prison_cellmate`'s "keep to yourself" is still dominated — left
+  alone pending the cellmate relationship deck. A strict-dominance check (an
+  option that is no better than a sibling option on *every* vital and every
+  comparable trait) is the cheap way to find these: `scripts/dominated.ts`.
+- **…and the trade has to be VISIBLE.** Love, grit and distance are `incTraits`,
+  and `incTraits` draws nothing on the card face — no chip, and not even the
+  star (which fires on `setStatus`/`setTraits`/`addDecks`, see `vitalChips`). So
+  on a relationship card the entire real payload is invisible, and whatever
+  vitals the option happens to carry are all the player has to go on. Tom's deck
+  failed that badly: on the bully card you could *gain* spirit for teaching him
+  to fight, or *lose* health for defending him, or *lose* happiness for walking
+  away, and nothing on the card hinted those were the same size of decision —
+  one free option and two punishments. Every option in `rel_bro` now shows a
+  gain **and** a cost, and two options never share a shape unless they are
+  genuinely the same trade (the two sides of a quarrel). **`scripts/invisible.ts`**
+  is the check: it compares options on the vitals alone and exempts anything
+  showing a marker, so it finds exactly the options that are dominated *on the
+  card face*. Still flagged, and not yet passed: nine options across `rel_sis`,
+  three in `job_apprentice` (where "graft at it" costs health and spirit and
+  buys only the invisible `jobSkill` that decides whether you qualify — the
+  nastiest of them), and `prison_cellmate`.
+- **Value is not the same as a trade.** The first version of that pass gave
+  *every* option a cost, including the ones that already had a gain, and the
+  deck stopped paying: mean life fell from 38.7 to 33.1 over 1,500 greedy lives
+  because ~10 cards a life each lost 10 points. The rule is only that no option
+  may be a pure cost or a lookalike — so a cost is added where an option had no
+  visible gain, and an option that already read as a fair trade is left alone.
+  The corrected pass is value-neutral (38.7 → 38.7); check it after any balance
+  edit, because a per-card change of one magnitude step is worth years of life.
 - **`Content.vars`** — the cast's names live in content as substitutable constants
   (`{brother}` / `{sister}`), not written into ~60 card strings. Every player-facing
   string — prompt, option label, result, and the epilogue prose — is rendered
