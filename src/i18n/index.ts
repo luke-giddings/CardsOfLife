@@ -1321,7 +1321,7 @@ export const EN = {
   "intro_mode.left.r0": "Every answer will show its price, like this:",
   "intro_mode.right": "Let me find out",
   "intro_mode.right.r0": "Nothing is shown. You will find out the way everyone did — afterwards.",
-  "intro_mode.legendStar": "leaves something lasting in your favour",
+  "intro_mode.legendStar": "leaves a lasting gain",
   "intro_mode.legendBurden": "leaves a lasting mark",
   "intro_mode.legendDeath": "would end the life here",
   "intro_mode.legendSaved": "you would survive it, once",
