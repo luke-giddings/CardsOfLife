@@ -1027,10 +1027,12 @@ export class Game {
 
     const holder = el("div", "holder");
     const flip = el("div", "flip");
-    // `no-down` reclaims the bottom gutter, which exists to clear a down label.
-    // Set from the card's own options rather than assumed, so adding a down
-    // option to a shell card later cannot silently collide with the prompt.
-    const front = el("div", `face front intro${card.options?.down ? "" : " no-down"}`);
+    // `no-up`/`no-down` reclaim the gutters, which exist to clear the edge labels
+    // — on a button or tap card there are none, and that is ~40px of nothing at
+    // the top of the longest card in the flow. Set from the card's own options
+    // rather than assumed, so adding an option to a shell card later cannot
+    // silently collide with the prompt.
+    const front = el("div", `face front intro${card.options?.up ? "" : " no-up"}${card.options?.down ? "" : " no-down"}`);
     // No age line and no vital previews: a shell card costs no year and moves no
     // bar, so both would be lying about what the swipe does.
     const edge = (dir: Direction, cls: string): string => {

@@ -550,6 +550,9 @@ body {
    worth ~a line of text, which is the difference between the tutorial card
    fitting a small phone in every language and not. */
 .front.intro.no-down .prompt { padding-bottom: 14px; }
+/* The same at the top. The title card overrides this below, where its spacing is
+   measured against the title rather than against an absent label. */
+.front.intro.no-up .prompt { padding-top: 14px; }
 
 /* The bars' entrance, played once when the opening flow reaches the card that
    explains them (see showIntroCard). They drop in one after another, and each
@@ -657,9 +660,12 @@ body {
   text-wrap: balance;
   color: var(--ink);
 }
+/* The credits bring their own line breaks, and `balance` re-wraps lines that
+   already fit to even them up — it split "Codeveloped by Luke & Claude" after
+   "by". Where the text says where its lines go, let it say so. */
+.front.intro:has(.intro-list) .prompt { padding-bottom: 14px; text-wrap: pretty; }
 /* The tagline under it is a hook, not body copy: lighter and quieter than the
    instructional prompts on the cards that follow. */
-.front.intro:has(.intro-list) .prompt { padding-bottom: 14px; }
 .front.intro .intro-title + .prompt {
   font-size: 1.12rem;
   font-weight: 500;
