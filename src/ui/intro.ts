@@ -14,10 +14,9 @@
 //   FIRST_RUN  — shown ONCE ever (gated on the `cardsoflife.intro` flag): a
 //                title screen, a card you practise the swipe on, and the choice
 //                between seeing the odds and not.
-//   RESUME     — shown on every later opening WITH a life in progress: continue
-//                it, or start again.
-// With the intro seen and no life saved, there is no card at all — a new life
-// just begins.
+//   RETURNING  — shown on every later opening: the same title card, carrying a
+//                menu. Continue (only with a life saved) or a new life; either
+//                goes straight to play.
 import type { Direction } from "../engine/types.ts";
 import type { StringId } from "../i18n/index.ts";
 
@@ -39,6 +38,9 @@ export interface IntroOption {
   // SAME code the card faces use — so "this is what you will see" is literally
   // what you will see, and cannot drift from it.
   sample?: boolean;
+  // Drop this button entirely when there is no life saved. "Continue" on the
+  // returning title card: there is nothing to continue to.
+  needsSave?: boolean;
 }
 
 // How much of the game's chrome shows behind a shell card.
@@ -64,14 +66,17 @@ export interface IntroCard {
   // Same shape as a game card's, minus everything the engine would read.
   // A card has EITHER swipe options or a single button, never both.
   options?: Partial<Record<Direction, IntroOption>>;
-  // One centred button instead of swipe choices. The title card uses this: the
-  // swipe has not been taught yet, so asking for one on the very first card
-  // would want a gesture nobody has been shown.
-  button?: IntroOption;
+  // Centred buttons instead of swipe choices — the first is the primary one. The
+  // title cards use these: the swipe has not been taught yet on the first run,
+  // and on a return a menu is a menu.
+  buttons?: IntroOption[];
   // No choice at all — a tap anywhere on the card moves on. For a card that asks
   // you to LOOK at something rather than answer anything, and that comes before
   // the swipe has been taught.
   tap?: IntroOption;
+  // A headed list under the prompt — the about card's "coming soon".
+  listHeading?: StringId;
+  list?: StringId[];
 }
 
 export const PLAY = "play";
@@ -83,7 +88,7 @@ export const FIRST_RUN: IntroCard[] = [
     title: "intro_welcome.title",
     prompt: "intro_welcome.prompt",
     chrome: "none",
-    button: { label: "ui.newLife" },
+    buttons: [{ label: "ui.newLife" }],
   },
   {
     // THE VITALS, first: what the bars are, before what to do about them. They
@@ -128,14 +133,35 @@ export const FIRST_RUN: IntroCard[] = [
   },
 ];
 
-export const RESUME: IntroCard[] = [
+// Every opening after the first: the SAME title card, carrying a menu. Continue
+// is dropped when there is no life saved, which leaves one button and the card
+// the first run opened on — so the game always opens on its own title, and what
+// differs is only what you can do from there. Either button goes straight to
+// play: the first-time flow is shown once ever, never again.
+export const RETURNING: IntroCard[] = [
   {
-    id: "intro_resume",
-    prompt: "intro_resume.prompt",
-    chrome: "full",
-    options: {
-      left: { label: "intro_resume.left", goto: PLAY },
-      right: { label: "intro_resume.right", goto: PLAY, fresh: true },
-    },
+    id: "intro_welcome",
+    title: "intro_welcome.title",
+    prompt: "intro_welcome.prompt",
+    chrome: "none",
+    buttons: [
+      { label: "intro_resume.left", goto: PLAY, needsSave: true },
+      { label: "ui.newLife", goto: PLAY, fresh: true },
+      { label: "intro_about.go", goto: "intro_about" },
+    ],
+  },
+  {
+    // Credits, and what is still to come. Reached from the title card and
+    // returning to it — the only card in either flow that goes BACKWARDS, which
+    // `goto` handles without knowing it is going back.
+    // No title on this one: it is reached FROM the title card, so repeating the
+    // name in full is both redundant and — with a list under it — more than the
+    // card can hold.
+    id: "intro_about",
+    prompt: "intro_about.prompt",
+    chrome: "none",
+    listHeading: "intro_about.soon",
+    list: ["intro_about.soon1", "intro_about.soon2", "intro_about.soon3", "intro_about.soon4"],
+    buttons: [{ label: "intro_about.back", goto: "intro_welcome" }],
   },
 ];

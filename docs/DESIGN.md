@@ -431,12 +431,18 @@ What opens, in order of precedence:
    easy/hard fork, which sets the same flag the HARD button does. What the bars
    ARE comes before what to do about them, so the gesture card is the last thing
    before play and the lesson nearest the first real choice.
-2. **A life in progress** — one card: carry on with it, or begin a new one
-   (which clears the save and its rewind history, exactly as RESET does).
-3. **Neither** — no card at all; a new life just begins.
+2. **Every later opening** — the SAME title card, carrying a menu: **Continue**
+   (dropped when there is no life saved), **New life** (which clears the save and
+   its rewind history, exactly as RESET does), and **About**. Either of the first
+   two goes straight to play; the first-time flow is shown once ever and never
+   again. So the game always opens on its own title, and what differs between a
+   first run and a thousandth is only what you can do from there.
+3. **About** — credits, the version, and a short "still to come" list drawn from
+   the top of this backlog. Reached from the title card and returning to it, via
+   the same `goto` that moves the flow forwards.
 
-A **finished** life still goes straight to its end screen, as before — the
-resume card is for a life you can actually return to.
+A **finished** life still goes straight to its end screen — there is nothing to
+continue, and the epilogue is worth more than a menu.
 
 Mechanics worth knowing:
 
@@ -464,6 +470,15 @@ Mechanics worth knowing:
   a *comfortable* fabricated state: against the real starting vitals a sample
   "health −−" is fatal and the preview — rightly — draws a death's head on it,
   which is true of the live state but wrong as an example.
+- **The status coach.** The status chips first appear on the first GAME card of
+  a first run — they are hidden through the whole opening flow — so that card
+  carries one extra line saying what they are, and the chips pulse while it is
+  up. It rides on the birth card rather than taking a shell card of its own,
+  because the chips are only there to be pointed at once play has started. Set
+  as the first-run flow latches, spent the moment that card is answered: once in
+  a life, never on a later run. The card gives up its bottom gutter while the
+  coach is on it (`.front.coached`), which is what keeps the pair on a short
+  phone.
 - The vitals card carries **no choice at all**: a tap anywhere moves on. That is
   precisely what a **result face** already is — something to look at, dismissed
   by tapping — so it reuses that state rather than growing a second one that

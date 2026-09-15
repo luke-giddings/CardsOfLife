@@ -14,7 +14,7 @@ import {
 import { meets } from "../engine/conditions.ts";
 import { clearSave, loadGame, loadHistory, saveGame, saveHistory } from "../engine/save.ts";
 import type { HistoryEntry } from "../engine/save.ts";
-import { FIRST_RUN, PLAY, RESUME, type IntroCard, type IntroOption } from "./intro.ts";
+import { FIRST_RUN, PLAY, RETURNING, type IntroCard, type IntroOption } from "./intro.ts";
 import {
   ENDINGS,
   STATUS_KINDS,
@@ -193,6 +193,10 @@ export class Game {
   // advances on the same beat a game card would, rather than mid-animation.
   private introPending: IntroOption | null = null;
   private firstRun = false;
+  private hasSave = false;
+  // Set as the first-time flow finishes, spent on the first GAME card: the status
+  // chips appear on it, so that is where they get explained. See showFront.
+  private coachStatus = false;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -204,6 +208,7 @@ export class Game {
     // beside the save it was written with, so a fresh life takes an empty one and
     // drops whatever was stored (clearSave removes both keys).
     const saved = loadGame();
+    this.hasSave = !!saved && !saved.over;
     if (saved) {
       this.state = saved;
       this.history = loadHistory() ?? [];
@@ -219,8 +224,7 @@ export class Game {
     // about the life you left in progress, else straight into a new one.
     if (!loadIntroSeen()) this.startIntro(FIRST_RUN, true);
     else if (this.state.over) this.showEnd();
-    else if (saved) this.startIntro(RESUME, false);
-    else this.beginTurn();
+    else this.startIntro(RETURNING, false);
     window.addEventListener("keydown", this.onKey);
   }
 
@@ -915,7 +919,10 @@ export class Game {
     flip.className = "flip";
 
     const front = document.createElement("div");
-    front.className = "face front";
+    // `coached` lets the prompt give up the bottom gutter it reserves for a down
+    // label — the coach line below provides the separation, and on a short phone
+    // the two together would otherwise run off the card.
+    front.className = this.coachStatus ? "face front coached" : "face front";
     const ageLabel = this.state.age === 0 ? t("ui.newborn") : tf("ui.age", { n: this.state.age });
     // Easy mode: attach each option's vital preview right under its edge label.
     const ev = (opt: CardOption): string =>
@@ -924,9 +931,15 @@ export class Game {
       const opt = this.availOpt(card, dir);
       return opt ? `<div class="edge ${cls}">${this.txt(opt.label)}${ev(opt)}</div>` : "";
     };
+    // Only ever on the FIRST card of a first run: the status chips have just
+    // appeared above, and nothing else in the game says what they are. It rides
+    // on this card rather than taking one of its own because the chips are only
+    // there to be pointed at once play has started.
+    const coach = this.coachStatus ? `<p class="coach">${this.txt("intro_status.coach")}</p>` : "";
     front.innerHTML = `
       <div class="card-age">${ageLabel}</div>
       <p class="prompt">${this.txt(card.prompt)}</p>
+      ${coach}
       ${edge("left", "edge-left")}
       ${edge("right", "edge-right")}
       ${edge("up", "edge-up")}
@@ -944,6 +957,7 @@ export class Game {
     this.flip = flip;
     this.phase = "front";
     this.fitPromptToUpLabel(front);
+    this.statusesEl.classList.toggle("pointed-at", this.coachStatus);
 
     this.attachDrag(flip, (d) => !!this.availOpt(card, d), (d) => this.choose(d));
     this.renderDebug();
@@ -1023,19 +1037,26 @@ export class Game {
       const opt = card.options?.[dir];
       return opt?.label ? `<div class="edge ${cls}">${this.txt(opt.label)}</div>` : "";
     };
+    const list = card.list?.length
+      ? `<div class="intro-list">` +
+        (card.listHeading ? `<h2>${this.txt(card.listHeading)}</h2>` : "") +
+        `<ul>${card.list.map((id) => `<li>${this.txt(id)}</li>`).join("")}</ul></div>`
+      : "";
     front.innerHTML = `
       ${card.title ? `<h1 class="intro-title">${this.txt(card.title)}</h1>` : ""}
-      <p class="prompt">${tf(card.prompt, { ...this.textVars(), n: this.state.age })}</p>
+      <p class="prompt">${tf(card.prompt, { ...this.textVars(), n: this.state.age, v: APP_VERSION })}</p>
+      ${list}
       ${edge("left", "edge-left")}
       ${edge("right", "edge-right")}
       ${edge("up", "edge-up")}
       ${edge("down", "edge-down")}`;
 
-    // A button card takes no swipe at all — see IntroCard.button.
-    if (card.button?.label) {
-      const go = el("button", "intro-go") as HTMLButtonElement;
-      go.textContent = this.txt(card.button.label);
-      go.addEventListener("click", () => this.takeIntro(card.button!, "up"));
+    // A button card takes no swipe at all — see IntroCard.buttons. The first is
+    // the primary one; any others are quieter, so a menu has an obvious default.
+    for (const [i, opt] of this.introButtons(card).entries()) {
+      const go = el("button", i === 0 ? "intro-go" : "intro-go second") as HTMLButtonElement;
+      go.textContent = this.txt(opt.label!);
+      go.addEventListener("click", () => this.takeIntro(opt, "up"));
       front.appendChild(go);
     }
     // A tap card has no choice on it at all — and that is precisely a RESULT
@@ -1060,7 +1081,7 @@ export class Game {
     this.fitPromptToUpLabel(front);
     // No drag on a button or tap card: tilting and flipping a card that offers no
     // swipe would promise a gesture that does nothing.
-    if (!card.button && !card.tap) {
+    if (!card.buttons && !card.tap) {
       this.attachDrag(flip, (d) => !!card.options?.[d], (d) => this.chooseIntro(d));
     }
     // A tap card is in the same state a revealed result is in — shown, and
@@ -1084,6 +1105,12 @@ export class Game {
         holder.style.opacity = "";
       });
     }
+  }
+
+  // The buttons this card actually shows: "Continue" is dropped when there is no
+  // life to continue, which is what lets one title card serve both openings.
+  private introButtons(card: IntroCard): IntroOption[] {
+    return (card.buttons ?? []).filter((b) => b.label && (!b.needsSave || this.hasSave));
   }
 
   private chooseIntro(dir: Direction): void {
@@ -1135,6 +1162,9 @@ export class Game {
     if (this.firstRun) {
       saveIntroSeen();
       this.firstRun = false;
+      // The status chips appear with the first game card, so the first game card
+      // is where they get a word of explanation — and a pulse to look at.
+      this.coachStatus = true;
     }
     this.root.classList.remove("intro-on", "intro-bare");
     this.vitalsEl.classList.remove("vitals-reveal");
@@ -1237,6 +1267,10 @@ export class Game {
     if (!opt) return;
     this.busy = true;
     this.lastDir = dir;
+    // The coach line has done its job the moment the card it rode in on is
+    // answered; it is shown once in a life, not once a turn.
+    this.coachStatus = false;
+    this.statusesEl.classList.remove("pointed-at");
 
     // Record a pre-choice snapshot for the debug history / rewind.
     this.history.push({
@@ -1514,9 +1548,10 @@ export class Game {
     if (this.phase === "front" && this.introCard) {
       const card = this.introCard;
       const dir = map[e.key];
-      if (card.button && (e.key === "Enter" || e.key === " ")) {
+      const primary = this.introButtons(card)[0];
+      if (primary && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
-        this.takeIntro(card.button, "up");
+        this.takeIntro(primary, "up");
       } else if (dir && card.options?.[dir]) {
         e.preventDefault();
         this.chooseIntro(dir);

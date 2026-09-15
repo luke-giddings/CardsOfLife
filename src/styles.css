@@ -638,6 +638,9 @@ body {
   50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--baize) 28%, transparent); border-color: var(--baize); color: var(--baize); }
 }
 .hard.pointed-at { animation: pointed-at 1500ms ease-in-out infinite; }
+/* The same attention-getter on the status chips, for the one card that explains
+   them. They have a border already, so the ring reads the same way. */
+.statuses.pointed-at .chip { animation: pointed-at 1500ms ease-in-out infinite; }
 
 /* --- the title card ------------------------------------------------------- */
 /* The game's NAME, so it is set as a title rather than as a line of the prose
@@ -645,8 +648,8 @@ body {
    on a small screen without wrapping awkwardly on a large one. */
 .intro-title {
   margin: 0;
-  padding: 8px 4px 0;
-  font-size: clamp(1.9rem, 9vw, 2.6rem);
+  padding: 4px 4px 0;
+  font-size: clamp(1.7rem, 9vw, 2.6rem);
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: 0.01em;
@@ -656,6 +659,7 @@ body {
 }
 /* The tagline under it is a hook, not body copy: lighter and quieter than the
    instructional prompts on the cards that follow. */
+.front.intro:has(.intro-list) .prompt { padding-bottom: 14px; }
 .front.intro .intro-title + .prompt {
   font-size: 1.12rem;
   font-weight: 500;
@@ -665,7 +669,7 @@ body {
 /* The only control on the title card — the swipe has not been taught yet. */
 .intro-go {
   margin: 0 4px 4px;
-  padding: 15px;
+  padding: 14px;   /* still ~47px tall, comfortably above the touch minimum */
   border-radius: 12px;
   border: none;
   background: var(--baize);
@@ -676,6 +680,55 @@ body {
   cursor: pointer;
 }
 .intro-go:active { transform: translateY(1px); }
+/* Anything after the first button on a menu card: the same shape, quieter, so
+   there is an obvious default without hiding the alternative. */
+.intro-go.second {
+  margin-top: 6px;
+  padding: 11px;   /* quieter and more compact than the primary, and a menu of
+                      three has to fit a short phone */
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+/* The about card's "still to come". A plain list, set quieter than the prompt
+   above it: it is a note about the game rather than part of it. */
+.intro-list {
+  padding: 0 18px 2px;
+  text-align: left;
+}
+.intro-list h2 {
+  margin: 0 0 8px;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--faint);
+  text-align: center;
+}
+.intro-list ul { margin: 0; padding-left: 18px; }
+.intro-list li {
+  margin-bottom: 5px;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.intro-list li::marker { color: var(--faint); }
+
+/* A word of explanation riding on a real game card — see showFront's coachStatus.
+   Deliberately not prompt-sized: it is an aside about the furniture, not part of
+   the year you are being asked about. */
+.front.coached .prompt { padding-bottom: 10px; }
+.coach {
+  margin: 0;
+  padding: 0 22px 14px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  font-weight: 500;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--muted);
+}
 .prompt {
   font-size: 1.2rem;
   line-height: 1.42;
