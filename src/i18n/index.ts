@@ -65,9 +65,9 @@ export const EN = {
   "baby_grandma.left": "Second helpings of pudding!",
   "baby_grandma.left.r0": "A lifelong sweet tooth is born.",
   "baby_grandma.right": "Just a little treat",
-  "baby_grandma.right.r0": "A wholesome bit of everything, in moderation.",
+  "baby_grandma.right.r0": "A wholesome bit of everything, in moderation — and not a spoonful more, however you wheedle.",
   "baby_grandma.up": "Bank it for the future",
-  "baby_grandma.up.r0": "She squirrels the treat money into a savings account for you.",
+  "baby_grandma.up.r0": "She squirrels the treat money into a savings account for you. Not so much as a crumb comes your way.",
 
   "baby_vaccine.prompt": "The vaccinator calls at the door with his lancet — the smallpox jab.",
   "baby_vaccine.left": "Brave the lancet",
@@ -1550,9 +1550,9 @@ export const IT: Record<StringId, string> = {
   "baby_grandma.left": "Bis di budino!",
   "baby_grandma.left.r0": "Nasce una golosità che durerà tutta la vita.",
   "baby_grandma.right": "Solo un dolcetto",
-  "baby_grandma.right.r0": "Un po' di tutto, con sana moderazione.",
+  "baby_grandma.right.r0": "Un po' di tutto, con sana moderazione — e neanche un cucchiaio in più, per quanto insisti.",
   "baby_grandma.up": "Metterlo da parte per il futuro",
-  "baby_grandma.up.r0": "Mette i soldi del dolcetto in un salvadanaio per te.",
+  "baby_grandma.up.r0": "Mette i soldi del dolcetto in un salvadanaio per te. Non ti arriva neanche una briciola.",
 
   "baby_vaccine.prompt": "Il vaccinatore bussa alla porta con la sua lancetta — il vaccino contro il vaiolo.",
   "baby_vaccine.left": "Affrontare la lancetta",

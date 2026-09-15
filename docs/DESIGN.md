@@ -1316,6 +1316,18 @@ Roughly in likely order. None of these are started.
   dearer (in money and teeth), going without costs more happiness and hardens you
   for it. That is the shape to copy for any future disposition trait: a trait
   that only gates one card is indistinguishable from no trait at all.
+- **…and the card that grants it now has to be *bought*.** Grandma's three
+  answers were happiness ++ (with the flaw), health +, and finances ++ — so the
+  big prize was available with no flaw attached, and the flaw was a trap rather
+  than a temptation. The pudding is now the only "++" on the card and the other
+  two each take a happiness dip for forgoing the spoiling. **This is the single
+  most leveraged card measured so far**: it is drawn in nearly every life at
+  about age three, and it was quietly handing out +25 points of vitals at the
+  moment they compound hardest. Removing that costs, over 2,500 greedy lives,
+  **mean life 38.8 → 33.0, deaths under 18 6.8% → 10.7%, and reaching 60
+  10.4% → 2.1%** — which puts the ~59+ sibling finales close to unreachable. The
+  lesson is the measurement, not the card: an early card's magnitude step is
+  worth years, so re-run **`scripts/lifespan.ts`** after any babyhood edit.
 - **Adult-at-home vs childhood family life** — **BUILT (first pass).** The
   childhood `home_family` cards (sweets, pet, fair, scrump, chores, market) are
   gated `ageMax 17`; a grown-adult-under-the-parental-roof set (`home_family_keep`,
