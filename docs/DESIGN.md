@@ -455,6 +455,10 @@ Mechanics worth knowing:
   a *comfortable* fabricated state: against the real starting vitals a sample
   "health −−" is fatal and the preview — rightly — draws a death's head on it,
   which is true of the live state but wrong as an example.
+- The vitals card carries a **single option**, "Continue", on `up`: it asks you
+  to read something rather than to choose, and two labels that both mean "yes,
+  fine" is not a choice. A swipe rather than a button, since the card before it
+  has just taught the gesture and this is the first chance to use it.
 - The title card has **no swipe choices at all** — a `button` instead of
   `options`, and no drag attached. The swipe has not been taught yet at that
   point, so offering swipe choices there would want a gesture nobody has been

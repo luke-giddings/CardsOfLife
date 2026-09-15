@@ -98,12 +98,14 @@ export const FIRST_RUN: IntroCard[] = [
   {
     // THE VITALS. The bars fade in and flash as this card arrives (see
     // showIntroCard), so what the words point at is the thing that just moved.
-    // One button rather than a swipe: the card asks you to read something, not
-    // to choose, and a pair of labels that both mean "yes, fine" is not a choice.
+    // A single option rather than a pair: the card asks you to read something,
+    // not to choose, and two labels that both mean "yes, fine" is not a choice.
+    // It sits on `up` — the swipe was taught on the card before, so this is the
+    // first place to practise it, and the top is where the odd option lives.
     id: "intro_vitals",
     prompt: "intro_vitals.prompt",
     chrome: "bars",
-    button: { label: "intro_vitals.go" },
+    options: { up: { label: "intro_vitals.go" } },
   },
   {
     // The easy/hard fork. The "you can change this later" note lives on the
