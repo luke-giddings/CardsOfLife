@@ -424,11 +424,13 @@ every milestone check and every stat script, and would buy nothing for it.
 What opens, in order of precedence:
 
 1. **First run** (`cardsoflife.intro` unset) — four cards, once ever, each with
-   one job. A **title screen**; a card you *practise the swipe on* (all three
-   directions work, each naming back what you did, and the third is on `up`
-   because that is where every third option in the game sits and it is the one
-   players miss); a card that **introduces the vital bars**, which arrive with
-   it; then the easy/hard fork, which sets the same flag the HARD button does.
+   one job. A **title screen**; a card that **introduces the vital bars**, which
+   arrive with it; a card you *practise the swipe on* (all three directions work,
+   each naming back what you did, and the third is on `up` because that is where
+   every third option in the game sits and it is the one players miss); then the
+   easy/hard fork, which sets the same flag the HARD button does. What the bars
+   ARE comes before what to do about them, so the gesture card is the last thing
+   before play and the lesson nearest the first real choice.
 2. **A life in progress** — one card: carry on with it, or begin a new one
    (which clears the save and its rewind history, exactly as RESET does).
 3. **Neither** — no card at all; a new life just begins.
@@ -462,10 +464,13 @@ Mechanics worth knowing:
   a *comfortable* fabricated state: against the real starting vitals a sample
   "health −−" is fatal and the preview — rightly — draws a death's head on it,
   which is true of the live state but wrong as an example.
-- The vitals card carries a **single option**, "Continue", on `up`: it asks you
-  to read something rather than to choose, and two labels that both mean "yes,
-  fine" is not a choice. A swipe rather than a button, since the card before it
-  has just taught the gesture and this is the first chance to use it.
+- The vitals card carries **no choice at all**: a tap anywhere moves on. That is
+  precisely what a **result face** already is — something to look at, dismissed
+  by tapping — so it reuses that state rather than growing a second one that
+  merely looks the same: `armAdvance` for the tap and the pointer cursor, the
+  `"back"` phase for the keyboard dismiss, the same `.tap-cue`, and `advance`
+  handing back to `resolveIntro` because `introPending` is set. It has to be a
+  tap and not a swipe, since the swipe is taught on the card *after* it.
 - The title card has **no swipe choices at all** — a `button` instead of
   `options`, and no drag attached. The swipe has not been taught yet at that
   point, so offering swipe choices there would want a gesture nobody has been

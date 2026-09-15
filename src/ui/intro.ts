@@ -22,7 +22,8 @@ import type { Direction } from "../engine/types.ts";
 import type { StringId } from "../i18n/index.ts";
 
 export interface IntroOption {
-  label: StringId;
+  // Absent on a `tap` card, which has nothing to label.
+  label?: StringId;
   // Shown on the back of the card, as a game card's result is. OMIT it to make
   // the swipe act at once with no flip — right for a menu ("Continue"), where a
   // line of text and a second tap would only be in the way. The tutorial card
@@ -67,6 +68,10 @@ export interface IntroCard {
   // swipe has not been taught yet, so asking for one on the very first card
   // would want a gesture nobody has been shown.
   button?: IntroOption;
+  // No choice at all — a tap anywhere on the card moves on. For a card that asks
+  // you to LOOK at something rather than answer anything, and that comes before
+  // the swipe has been taught.
+  tap?: IntroOption;
 }
 
 export const PLAY = "play";
@@ -81,31 +86,31 @@ export const FIRST_RUN: IntroCard[] = [
     button: { label: "ui.newLife" },
   },
   {
-    // THE GESTURE. All three swipes do the same thing — advance — so there is no
-    // wrong move; what differs is the result line, which names the direction back
-    // to you. The third option is on `up` because that is where every third option
-    // in the game sits, and it is the one players miss. Still no bars: this card
-    // is about the gesture alone, and they arrive on the next one.
+    // THE VITALS, first: what the bars are, before what to do about them. They
+    // fade in and pulse as this card arrives (see showIntroCard), so the words
+    // point at the thing that just moved. No choice on it at all — a tap
+    // anywhere moves on. It asks you to look, not to answer, and the swipe is
+    // taught on the NEXT card, so a swipe here would want a gesture nobody has
+    // been shown.
+    id: "intro_vitals",
+    prompt: "intro_vitals.prompt",
+    chrome: "bars",
+    tap: {},
+  },
+  {
+    // THE GESTURE, once you know what the bars are. All three swipes do the same
+    // thing — advance — so there is no wrong move; what differs is the result
+    // line, which names the direction back to you. The third option is on `up`
+    // because that is where every third option in the game sits, and it is the
+    // one players miss.
     id: "intro_swipe",
     prompt: "intro_swipe.prompt",
-    chrome: "none",
+    chrome: "bars",
     options: {
       left: { label: "intro_swipe.left", result: "intro_swipe.left.r0" },
       right: { label: "intro_swipe.right", result: "intro_swipe.right.r0" },
       up: { label: "intro_swipe.up", result: "intro_swipe.up.r0" },
     },
-  },
-  {
-    // THE VITALS. The bars fade in and flash as this card arrives (see
-    // showIntroCard), so what the words point at is the thing that just moved.
-    // A single option rather than a pair: the card asks you to read something,
-    // not to choose, and two labels that both mean "yes, fine" is not a choice.
-    // It sits on `up` — the swipe was taught on the card before, so this is the
-    // first place to practise it, and the top is where the odd option lives.
-    id: "intro_vitals",
-    prompt: "intro_vitals.prompt",
-    chrome: "bars",
-    options: { up: { label: "intro_vitals.go" } },
   },
   {
     // The easy/hard fork. The "you can change this later" note lives on the

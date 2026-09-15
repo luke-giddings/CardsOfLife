@@ -1021,7 +1021,7 @@ export class Game {
     // bar, so both would be lying about what the swipe does.
     const edge = (dir: Direction, cls: string): string => {
       const opt = card.options?.[dir];
-      return opt ? `<div class="edge ${cls}">${this.txt(opt.label)}</div>` : "";
+      return opt?.label ? `<div class="edge ${cls}">${this.txt(opt.label)}</div>` : "";
     };
     front.innerHTML = `
       ${card.title ? `<h1 class="intro-title">${this.txt(card.title)}</h1>` : ""}
@@ -1032,11 +1032,19 @@ export class Game {
       ${edge("down", "edge-down")}`;
 
     // A button card takes no swipe at all — see IntroCard.button.
-    if (card.button) {
+    if (card.button?.label) {
       const go = el("button", "intro-go") as HTMLButtonElement;
       go.textContent = this.txt(card.button.label);
       go.addEventListener("click", () => this.takeIntro(card.button!, "up"));
       front.appendChild(go);
+    }
+    // A tap card has no choice on it at all — and that is precisely a RESULT
+    // face: something to look at, dismissed by tapping anywhere. So it says so
+    // with the same cue, and below it is armed the same way.
+    if (card.tap) {
+      const cue = el("div", "tap-cue");
+      cue.textContent = t("ui.tapContinue");
+      front.appendChild(cue);
     }
 
     const back = el("div", "face back");
@@ -1050,10 +1058,22 @@ export class Game {
     this.phase = "front";
     this.busy = false;
     this.fitPromptToUpLabel(front);
-    // No drag on a button card: tilting and flipping a card that offers no swipe
-    // would promise a gesture that does nothing.
-    if (!card.button) {
+    // No drag on a button or tap card: tilting and flipping a card that offers no
+    // swipe would promise a gesture that does nothing.
+    if (!card.button && !card.tap) {
       this.attachDrag(flip, (d) => !!card.options?.[d], (d) => this.chooseIntro(d));
+    }
+    // A tap card is in the same state a revealed result is in — shown, and
+    // waiting to be dismissed — so it uses that state and that handler rather
+    // than a second one that merely looks the same. `armAdvance` gives it the
+    // tap-anywhere click and the pointer cursor; the "back" phase gives it the
+    // keyboard dismiss; and `advance` hands back to resolveIntro because
+    // introPending is set, exactly as it does after a swipe with no result.
+    if (card.tap) {
+      this.introPending = card.tap;
+      this.lastDir = "up";
+      this.phase = "back";
+      this.armAdvance();
     }
 
     if (!reduceMotion) {
