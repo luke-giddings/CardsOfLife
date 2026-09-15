@@ -568,15 +568,15 @@ body {
    since a movement at the top of the screen takes your eye off the words you are
    meant to be reading. Then each bar arrives a STEP after the one before, and its
    fill swells only once it has settled, so the four read one at a time rather
-   than as a single flicker. Measured: ~1s of stillness, all four bars in by
-   ~2.6s, the last pulse done by ~3.9s.
+   than as a single flicker. From the moment it starts: ~0.65s of stillness, all
+   four bars in by ~2.3s, the last pulse done by ~3.2s.
      `backwards` matters here: through the lead the bars hold their opening frame
    (invisible) while still taking up their space, so the card sits where it will
    stay and nothing jumps when they arrive. Tune with the three values below. */
 .vitals-reveal {
-  --reveal-lead: 1100ms;  /* stillness before anything moves */
-  --reveal-in: 720ms;     /* how long one bar takes to arrive */
-  --reveal-step: 220ms;   /* gap between one bar starting and the next */
+  --reveal-lead: 650ms;   /* stillness before anything moves */
+  --reveal-in: 780ms;     /* how long one bar takes to arrive */
+  --reveal-step: 280ms;   /* gap between one bar starting and the next */
 }
 .vitals-reveal .vital {
   animation: vitals-in var(--reveal-in) cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
