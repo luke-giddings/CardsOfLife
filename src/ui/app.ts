@@ -1148,6 +1148,10 @@ export class Game {
       saveHard(this.hard);
       this.hardBtn.classList.toggle("on", this.hard);
     }
+    // A fresh start takes effect HERE, not when the flow ends. Otherwise the
+    // tutorial runs against whatever life was in progress and its vitals card
+    // shows that life's bars — which is what the debug replay did.
+    if (opt.fresh) this.newLife();
 
     if (opt.goto !== PLAY) {
       const here = this.introFlow.findIndex((c) => c.id === this.introCard?.id);
@@ -1171,7 +1175,6 @@ export class Game {
     this.hardBtn.classList.remove("pointed-at");
     this.introFlow = [];
     this.introCard = null;
-    if (opt.fresh) return this.restart();
     this.syncTop();
     if (this.state.over) this.showEnd();
     else this.beginTurn();
@@ -1454,9 +1457,14 @@ export class Game {
     this.scene.appendChild(wrap);
   }
 
-  private restart(): void {
+  // Wipe everything back to a newborn and show it, WITHOUT dealing a card. Split
+  // out of restart so the opening flow can start the life the moment you ask for
+  // one: the cards after the title show the vital bars, and they have to be a new
+  // life's bars, not the leftovers of the life this one replaced.
+  private newLife(): void {
     clearSave();
     this.state = initGame(content);
+    this.hasSave = false;
     this.scene.innerHTML = "";
     this.holder = null;
     this.flip = null;
@@ -1467,6 +1475,10 @@ export class Game {
     this.seenDecks = new Set(this.state.activeDecks);
     this.captureDisplay();
     this.syncTop();
+  }
+
+  private restart(): void {
+    this.newLife();
     this.beginTurn();
   }
 

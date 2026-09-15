@@ -428,11 +428,16 @@ What opens, in order of precedence:
    arrive with it; a card you *practise the swipe on* (all three directions work,
    each naming back what you did, and the third is on `up` because that is where
    every third option in the game sits and it is the one players miss); then the
-   easy/hard fork, which sets the same flag the HARD button does. **Both answers
-   on that last card start a FRESH life**: the flow has just explained being
-   born, so it has to end at the birth card. Resuming a saved life instead —
-   which is what happens without it, and what the debug replay hit — drops a
-   first-time player into the middle of one already under way. What the bars
+   easy/hard fork, which sets the same flag the HARD button does. The flow has
+   just explained being born, so it has to END at the birth card: `fresh` on the
+   title card's button **starts the new life at the moment you ask for one**,
+   not when the flow finishes. Both matter. Without `fresh` at all the flow
+   exits by resuming whatever was saved, dropping a first-time player into a life
+   already under way; with it only at the end, every card in between describes
+   the life being replaced — the vitals card tutors you on a stranger's bars.
+   Neither shows on a true first run, where there is nothing saved to leak; both
+   showed on the debug replay, which is the only place the flow meets a life in
+   progress. What the bars
    ARE comes before what to do about them, so the gesture card is the last thing
    before play and the lesson nearest the first real choice.
 2. **Every later opening** — the SAME title card, carrying a menu: **Continue**

@@ -84,11 +84,15 @@ export const PLAY = "play";
 export const FIRST_RUN: IntroCard[] = [
   {
     // The title screen. One button, no result: it should get out of the way.
+    // `fresh` starts the life NOW rather than when the flow ends, so the cards
+    // that follow describe the life you are about to play — on a true first run
+    // there is nothing to clear, but the debug replay would otherwise tutor you
+    // with the bars of the life it is replacing.
     id: "intro_welcome",
     title: "intro_welcome.title",
     prompt: "intro_welcome.prompt",
     chrome: "none",
-    buttons: [{ label: "ui.newLife" }],
+    buttons: [{ label: "ui.newLife", fresh: true }],
   },
   {
     // THE VITALS, first: what the bars are, before what to do about them. They
