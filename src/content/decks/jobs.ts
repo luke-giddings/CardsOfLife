@@ -196,11 +196,26 @@ export const jobDecks = [
           // The ordinary escape up the UNSKILLED ladder: a steady factory job,
           // experience-gated — you work your way onto the floor.
           //
-          // The gate is reachable now because the DECK is weighted (see below),
-          // not because this card jumps the queue: it stays an ordinary draw.
+          // TWO weights, each fixing a different half of the climb, because the
+          // funnel splits cleanly in two (scripts/climb.ts). The deck's own
+          // `weight: 2` is what gets you to the GATE: at even weight only 10.9%
+          // of labourers ever reached experience 3, and 27.2% do now. This card's
+          // extra weight is what gets the card IN FRONT OF YOU once you have: a
+          // qualified labourer stays on the rung about six more years but draws
+          // his own deck only 1.5 times in them, so at an even share within the
+          // deck he saw this card in 22.9% of those windows and now sees it in
+          // 42.9%. Between them, 8.2% of labour lives reach the mill, against the
+          // 9.4% the old coming-of-age promotion used to hand out.
+          //
+          // Weighting ONE card inside a deck is nearly free, which is why it is
+          // the right lever here: it changes WHICH labour card you draw, not how
+          // often labour beats the siblings. And this one is gated, so it carries
+          // no weight at all until you qualify — measured, the deck's share of the
+          // draw over those six years goes from 24.2% to 28.7%, and the moment the
+          // card is taken the window closes behind it.
           id: "job_labour_factory",
           kind: "filler",
-          weight: 2,
+          weight: 6,
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_labour_factory.prompt",
           options: {

@@ -802,6 +802,27 @@ flavour by path): floor 0 · tier 1 ≈ −5 · tier 2 ≈ −10 · tier 3 ≈ �
   or two experience and **1.7%** ever reached the old gate of 4 — the card
   surfaced in **0.4%** of lives. *Every* factory hand in the game was made by the
   birthday. The whole deck now carries **`weight: 2`** and the gate is **3**.
+- **"The card is too rare" is two different faults, and they take different
+  levers.** Either you never reach the counter that unlocks it, or you reach it
+  and are never dealt it. `scripts/climb.ts` splits them. For the mill it was
+  overwhelmingly the second: **27.2%** of labourers reach experience 3, and of
+  those only **22.9%** were ever offered the card — they stay on the rung about
+  six more years after qualifying but draw their own deck just **1.5 times** in
+  them. (Of the qualifiers who never saw it, half go off to an apprenticeship,
+  which is the better exit anyway.) So the two weights do different jobs: the
+  deck's `weight: 2` is what gets you to the gate (10.9% → 27.2% reach it), and
+  `job_labour_factory`'s own **`weight: 6`** is what puts the card in front of you
+  once you are there (22.9% → 42.9%). Together, **8.2%** of labour lives reach the
+  mill against the **9.4%** the coming-of-age promotion used to hand out.
+- **Weighting one card inside a deck is nearly free; weighting a whole deck is
+  not.** A card's weight decides *which* card of the deck you draw, not how often
+  the deck beats its neighbours — so it buys reachability without starting the
+  arms race where every deck has to be weighted to keep its place. An
+  eligibility-gated card is cheaper still, because it carries no weight at all
+  until it qualifies: over the six years this one is live the labour deck's share
+  of the draw goes from **24.2% to 28.7%**, and the moment the card is taken the
+  window closes behind it. Reach for the card's weight first, and the deck's only
+  when the counter itself is out of reach.
 - **What weighting a deck actually buys, and what it does not.** Doubling every
   card in `job_labour` moves its share of a labourer's draws from **25% to 30%**,
   not the 48% the arithmetic suggests (5 of 21 weighted cards → 10 of 26): three
@@ -812,8 +833,10 @@ flavour by path): floor 0 · tier 1 ≈ −5 · tier 2 ≈ −10 · tier 3 ≈ �
   of labour lives under the old birthday promotion, **0.5%** with it gone and
   nothing else changed, **4.3%** at weight ×2 and gate 3. The two dials, measured
   over 2,500 lives each: ×2/gate 2 → 14.1%, ×3/gate 3 → 7.7%, ×4/gate 3 → 10.9%,
-  ×2/gate 4 → 0.7%. **The real fix is more cards**: an eleven-year stretch of life
-  served by five cards, three of them one-shots, cannot pace a counter at all.
+  ×2/gate 4 → 0.7%. Gate 2 was rejected on flavour rather than on the number: it
+  fires at a median age of **13**, and a promotion to the factory floor should not
+  land on an early teenager. More cards would help the first half of the funnel,
+  but the second half was the real fault — see the two items above.
   **The general lesson:** a card gated behind a counter that only its own deck
   ticks is only as reachable as that deck's share of the draw — and a deck that
   runs dry cannot be weighted back into relevance. Check a new gate against the
