@@ -1204,10 +1204,36 @@ Roughly in likely order. None of these are started.
   genuinely the same trade (the two sides of a quarrel). **`scripts/invisible.ts`**
   is the check: it compares options on the vitals alone and exempts anything
   showing a marker, so it finds exactly the options that are dominated *on the
-  card face*. Still flagged, and not yet passed: nine options across `rel_sis`,
-  three in `job_apprentice` (where "graft at it" costs health and spirit and
-  buys only the invisible `jobSkill` that decides whether you qualify — the
-  nastiest of them), and `prison_cellmate`.
+  card face*. Still flagged, and not yet passed: nine options across `rel_sis`
+  and `prison_cellmate`.
+- **Two kinds of deck, and the check does not apply the same way to both.**
+  It also flags three `job_apprentice` cards, where "graft at it" costs health
+  and spirit and buys only the invisible `jobSkill` that decides whether you
+  qualify. That one is **deliberate and stays**: a CAREER deck is allowed a right
+  answer, and finding it is what makes a second run worth playing. The hidden
+  counter is the lesson, not a bug. A RELATIONSHIP deck is the opposite — Tom and
+  Sarah have stories rather than solutions, and there is no path through them you
+  are supposed to work out — so there the visible trade has to be honest on the
+  first reading, which is what the `rel_bro` pass was for.
+- **But a failure must always say WHY.** A deck may hide the rule; it may never
+  hide the verdict. Sitting the guild trial half-taught used to read "clumsy and
+  half-taught, your piece fails inspection", which names the state and not the
+  cause, and worse, three of the five bench cards told you the easy option taught
+  you something ("still a lesson learned", "you learn a trick or two") when the
+  counter that decides your trade had not moved at all. That is not a lesson a
+  player can learn from, it is a lie they can only be caught by. The bench results
+  now say plainly when your hands learned nothing, the trial names the evenings
+  you rested on both the pass and the fail, and the two `persSporty` checks (the
+  runaway cart, the loom) say "you were never quick on your feet" rather than
+  leaving the wound unexplained.
+- **Do not read a hidden-counter deck off the greedy player.** `scripts/lifespan.ts`
+  and its siblings pick the swipe that leaves the weakest vital highest, which is
+  exactly the player who can never learn a counter it cannot see: it takes "take
+  it steady" every time, so it qualified as a journeyman in **0%** of lives and
+  made the skilled ladder look broken. A player who grafts at the bench reaches
+  `jobSkill` ≥ 3 in **40%** of apprenticeships and qualifies in **17%**. The
+  greedy model measures reachability of things the player can *see*; for anything
+  behind a hidden counter, sim the player who knows the rule as well.
 - **Value is not the same as a trade.** The first version of that pass gave
   *every* option a cost, including the ones that already had a gain, and the
   deck stopped paying: mean life fell from 38.7 to 33.1 over 1,500 greedy lives

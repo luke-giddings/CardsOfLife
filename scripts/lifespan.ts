@@ -6,6 +6,14 @@
 // That is an optimist's ceiling rather than a real player, but it is stable
 // between runs, so the DIFFERENCE between two content versions is the signal.
 //
+// It is also, by construction, a player who can never learn a rule it cannot
+// see: an option that costs vitals now to raise a hidden counter later is one it
+// declines every single time. So this says nothing useful about content gated on
+// such a counter — it scores 0% journeymen where a player who grafts at the
+// bench scores 17% — and a low number there is a fact about THIS player, not
+// about the game. Sim the player who knows the rule before calling that content
+// unreachable.
+//
 // Read "reached 60" as a content-reachability number, not just a difficulty one:
 // the sibling finales are gated on Tom or Sarah turning 59, so a life that ends
 // at 40 never sees the end of the story it has been telling all game.
