@@ -178,13 +178,32 @@ export const jobDecks = [
           },
         },
         {
-          // The ordinary escape up the UNSKILLED ladder: a steady factory job.
-          // Experience-gated (higher than other tier-1 steps because the
-          // unskilled path has fewer rungs, so each is a longer haul — a
-          // reasonable run only just reaches the factory by ~18).
+          // The ordinary escape up the UNSKILLED ladder: a steady factory job,
+          // EARNED and then guaranteed — a MILESTONE, at the lowest priority in
+          // the game so it never jumps ahead of a life-stage one.
+          //
+          // It was a filler gated at experience >= 4, and in that shape it was
+          // dead content: measured over 4,000 greedy lives, a labourer spends
+          // 11.4 years on the rung but draws only 2.7 cards from this deck (the
+          // rest of the pool — home, childhood, the siblings — crowds it out), so
+          // 72% of them peak at ONE or TWO experience and just 1.7% ever reached
+          // the gate. The card came up in 0.4% of lives. Every factory hand in the
+          // game was actually made by the old birthday promotion at the coming-of-
+          // age milestone, which handed out the job for surviving to eighteen.
+          // That promotion is gone (it made a birthday worth more than a grown
+          // man's work), so this has to be a real route or the unskilled ladder
+          // has no rungs above its first.
+          //
+          // Hence: a milestone, so a few years' graft is enough however the draw
+          // falls, and the gate down to 3 — which lands ~11% of labour lives at
+          // the mill, against the 9.4% the birthday promotion used to deliver.
+          // The same work, the same destination, at an age you earned rather than
+          // one you merely reached. One copy: "you keep to your patch" is a
+          // decision, not a deferral.
           id: "job_labour_factory",
-          kind: "filler",
-          conditions: { traits: { jobExperience: { min: 4 } } },
+          kind: "milestone",
+          priority: 20,
+          conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_labour_factory.prompt",
           options: {
             left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" }, setTraits: { jobReachedFactory: true } } }] },

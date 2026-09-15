@@ -167,21 +167,29 @@ export const childhoodDecks = [
           prompt: "child_adult.prompt",
           options: {
             left: { label: "child_adult.left", outcomes: [
-              // A CHILD labourer cannot stay one into adulthood: coming of age puts
-              // you on the grown men's shift (the adult unskilled rung). The
-              // experience-gated job_labour_factory card is the early route there;
-              // turning eighteen is the other. jobReachedFactory is stamped so a
-              // later spell of unemployment can offer the factory back.
-              { if: { status: { job: "child_labourer" } }, result: "child_adult.left.r1", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal", job: "factory" }, setTraits: { jobReachedFactory: true }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
+              // A CHILD labourer cannot stay one into adulthood: coming of age
+              // puts you on the grown men's shift — which is the `labourer`
+              // status, the same rung under an honest name, and NOT a promotion.
+              // It used to hand out `factory` here, so a birthday was worth a
+              // better job than the unemployment deck gives a grown man who takes
+              // whatever work he can find, and the factory's own earn-gate
+              // (job_labour_factory, experience >= 4) could be skipped by simply
+              // living to eighteen. The result line always described the grown
+              // men's shift rather than a proper factory, so it stands unchanged.
+              { if: { status: { job: "child_labourer" } }, result: "child_adult.left.r1", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal", job: "labourer" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
               { result: "child_adult.left.r0", effects: { vitals: { spirit: "+", happiness: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
             ] },
             right: { label: "child_adult.right", outcomes: [
-              // A CHILD labourer cannot stay one into adulthood: coming of age puts
-              // you on the grown men's shift (the adult unskilled rung). The
-              // experience-gated job_labour_factory card is the early route there;
-              // turning eighteen is the other. jobReachedFactory is stamped so a
-              // later spell of unemployment can offer the factory back.
-              { if: { status: { job: "child_labourer" } }, result: "child_adult.right.r1", effects: { vitals: { health: "+", finances: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal", job: "factory" }, setTraits: { jobReachedFactory: true }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
+              // A CHILD labourer cannot stay one into adulthood: coming of age
+              // puts you on the grown men's shift — which is the `labourer`
+              // status, the same rung under an honest name, and NOT a promotion.
+              // It used to hand out `factory` here, so a birthday was worth a
+              // better job than the unemployment deck gives a grown man who takes
+              // whatever work he can find, and the factory's own earn-gate
+              // (job_labour_factory, experience >= 4) could be skipped by simply
+              // living to eighteen. The result line always described the grown
+              // men's shift rather than a proper factory, so it stands unchanged.
+              { if: { status: { job: "child_labourer" } }, result: "child_adult.right.r1", effects: { vitals: { health: "+", finances: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal", job: "labourer" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
               { result: "child_adult.right.r0", effects: { vitals: { health: "+", finances: "+" }, setStatus: { age: "young_adult", lifestyle: "frugal" }, removeDecks: ["age_childhood"], addDecks: ["age_young_adult", "lifestyle"] } },
             ] },
           },
