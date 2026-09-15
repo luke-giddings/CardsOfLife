@@ -1308,7 +1308,7 @@ export const EN = {
   // ---- Opening flow (src/ui/intro.ts) -----------------------------------
   "intro_welcome.title": "Cards of Life",
   "intro_welcome.prompt": "Can you make a good life in the hard years of Victorian England?",
-  "intro_swipe.prompt": "Every card is a choice. Swipe toward the answer you want, or tap its edge.\n\nSelect any direction.",
+  "intro_swipe.prompt": "Every card is a choice. Swipe toward the answer you want, or tap its edge.",
   "intro_swipe.left": "Select left",
   "intro_swipe.left.r0": "Left it is.\n\nThe card turns over to show you what your answer came to. Every one of them will.",
   "intro_swipe.right": "Select right",
@@ -2783,7 +2783,7 @@ export const IT: Record<StringId, string> = {
   // ---- Opening flow (src/ui/intro.ts) -----------------------------------
   "intro_welcome.title": "Cards of Life",
   "intro_welcome.prompt": "Riuscirai a farti una buona vita negli anni duri dell'Inghilterra vittoriana?",
-  "intro_swipe.prompt": "Ogni carta è una scelta. Scorri verso la risposta che vuoi, o tocca il suo bordo.\n\nScegli una direzione qualsiasi.",
+  "intro_swipe.prompt": "Ogni carta è una scelta. Scorri verso la risposta che vuoi, o tocca il suo bordo.",
   "intro_swipe.left": "Scegli sinistra",
   "intro_swipe.left.r0": "A sinistra, dunque.\n\nLa carta si gira per mostrarti a quanto è ammontata la risposta. Lo faranno tutte.",
   "intro_swipe.right": "Scegli destra",
