@@ -1334,7 +1334,7 @@ export const EN = {
   "intro_about.soon3": "More of working life, in trades half-written",
   "intro_about.soon4": "A house and an heir, for the life after this one",
   "intro_resume.left": "Continue",
-  "intro_status.coach": "Just above the card is where your life stands — home, work, and more to come. The marks show what each gives or takes every year.",
+  "intro_status.coach": "Just above the card is where your life stands, and the marks show what it gives or takes every year.",
   "ui.introTip": "Debug: show the first-time opening flow again",
   "ui.intro": "Intro",
   // ---- UI chrome --------------------------------------------------------
@@ -2819,7 +2819,7 @@ export const IT: Record<StringId, string> = {
   "intro_about.soon3": "Altra vita lavorativa, in mestieri a metà",
   "intro_about.soon4": "Una casa e un erede, per la vita dopo questa",
   "intro_resume.left": "Riprendi",
-  "intro_status.coach": "Appena sopra la carta c'è come sta la tua vita — la casa, il lavoro, e altro col tempo. I segni mostrano cosa ti dà o ti toglie ogni anno.",
+  "intro_status.coach": "Appena sopra la carta c'è come sta la tua vita, e i segni mostrano cosa ti dà o ti toglie ogni anno.",
   "ui.introTip": "Debug: rimostra la sequenza di apertura iniziale",
   "ui.intro": "Intro",
   // ---- UI chrome --------------------------------------------------------
