@@ -471,7 +471,12 @@ Mechanics worth knowing:
   hasn't started.
 - The bars' **arrival is animated** rather than cut in: they drop in one after
   another and each fill pulses once just after it lands (`.vitals-reveal`),
-  so the eye is on them exactly as the card names them. It is restarted by hand
+  so the eye is on them exactly as the card names them. It opens with **about a
+  second of stillness** — movement at the top of the screen pulls the eye off
+  the words you are meant to be reading, so the card gets read first and the
+  bars arrive into an audience. The three timings are named custom properties
+  (`--reveal-lead`, `--reveal-in`, `--reveal-step`) rather than a column of
+  magic delays, so the feel can be tuned from one place. It is restarted by hand
   (remove class, force reflow, re-add) because the same element is reused and an
   already-present class replays nothing, and it is skipped under
   `prefers-reduced-motion`.
