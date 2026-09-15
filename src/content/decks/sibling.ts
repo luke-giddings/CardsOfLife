@@ -18,6 +18,9 @@ export const siblingDecks = [
     // === BROTHER — Tom ======================================================
     {
       id: "rel_bro",
+    // His beats are gated on HIS age, not yours: a stretch in gaol or the
+    // workhouse would otherwise shut a window for good rather than delay it.
+    neverSuppressed: true,
       title: "deck.rel_bro.title",
       unlock: "deck.rel_bro.blurb",
       // Tom ages a year at a time from the year he's born (this deck is added by

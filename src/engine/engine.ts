@@ -77,7 +77,12 @@ function focusPool(pool: Card[], content: Content): Card[] {
   const priority = new Set(content.decks.filter((d) => d.priority).map((d) => d.id));
   if (priority.size === 0) return pool;
   const urgent = pool.filter((c) => !!c.deck && priority.has(c.deck));
-  return urgent.length > 0 ? urgent : pool;
+  if (urgent.length === 0) return pool;
+  // `neverSuppressed` decks keep their place beside the urgent ones. A Set, so a
+  // deck that were somehow both does not end up in the pool twice and draw at
+  // double weight.
+  const spared = new Set(content.decks.filter((d) => d.neverSuppressed).map((d) => d.id));
+  return [...new Set([...urgent, ...pool.filter((c) => !!c.deck && spared.has(c.deck))])];
 }
 
 // Draw the next card: a due milestone if there is one, otherwise a random

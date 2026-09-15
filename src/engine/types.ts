@@ -383,6 +383,12 @@ export interface Deck {
   // incidental flavour from other active decks is suppressed so you can escape
   // the state (unemployment, the workhouse) instead of drifting in it for years.
   priority?: boolean;
+  // Exempt from that suppression: this deck's cards stay in the pool even while
+  // an urgent deck owns it. For decks whose cards are gated on someone ELSE'S
+  // age — the sibling arcs — where a few years in gaol or the workhouse can
+  // otherwise close a window that never reopens, and a beat is missed for good
+  // rather than merely delayed.
+  neverSuppressed?: boolean;
 }
 
 // --- Status definitions ------------------------------------------------------

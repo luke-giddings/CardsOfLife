@@ -1077,6 +1077,32 @@ Roughly in likely order. None of these are started.
   helps neither enough. **Loyalty**: they quarrel and whoever reaches you first
   gets a hearing (`rel_sis_quarrel`, `rel_bro_quarrel`); refusing to judge costs a
   little of both.
+- **`Deck.neverSuppressed` — the sibling arcs are exempt from priority
+  suppression.** Their beats are gated on SOMEONE ELSE'S age, so a stretch in
+  gaol, the workhouse or unemployment does not delay a window, it closes one for
+  good. The flag keeps a deck's cards in the pool while an urgent deck owns it.
+  Measured with `scripts/suppression-ab.ts` over 4000 greedy lives, off vs on:
+
+  | | off | on |
+  |---|---|---|
+  | Tom's beats seen per life | 1.00 | **1.42** |
+  | Tom's arc concluded | 5.8% | **8.4%** |
+  | Sarah's beats seen per life | 1.27 | **1.48** |
+  | Sarah's arc concluded | 16.2% | **18.8%** |
+  | draws taken by a sibling card while urgent | 1.0% | **11.3%** |
+  | mean pool size while urgent | 3.6 | 4.3 |
+  | urgent years per life | 8.3 | **9.2** |
+
+  So it works — half again as many of Tom's beats land — and it is **not free**:
+  about one urgent year in nine now goes to a sibling card instead of an escape
+  card, and a life spends ~11% more of itself in urgent states. The dilution is
+  large in proportion because the urgent pool is tiny (3.6 cards), so one extra
+  card is a sixth of it. Levers if that proves too much in play: weight the
+  spared cards down while an urgent deck is up, or spare only cards whose window
+  is actually about to close rather than the whole deck.
+  *(The absolute arc-completion figures are low in both columns because a greedy
+  life ends at ~41 and the finales are gated on the sibling reaching old age —
+  read the beats-per-life row, not the conclusion row, as the signal.)*
 - **Balance rule for the relationship decks — the cold swipe pays best.** A
   third option that only *costs* you something is not a choice, it is a
   punishment button; nobody picks it twice. In Sarah's deck the cruel swipe is

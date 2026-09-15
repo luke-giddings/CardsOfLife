@@ -36,6 +36,9 @@ import type { Deck } from "../../engine/types.ts";
 export const sisterDecks = [
   {
     id: "rel_sis",
+    // As with Tom: her windows are her own age, and a suppressed year is a
+    // beat missed rather than postponed.
+    neverSuppressed: true,
     title: "deck.rel_sis.title",
     unlock: "deck.rel_sis.blurb",
     tick: { relSisterAge: 1, relSisterDistance: 1 },
