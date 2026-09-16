@@ -181,6 +181,7 @@ export class Game {
   private displayDecks: string[] = [];
   private debugSelectedId: string | null = null;
   private debugOpen = new Set<string>(["pool", "detail"]); // which debug sections are expanded
+  private debugPoolOnlyLive = false; // draw pool: hide what cannot be drawn this turn
   // Debug history: the pre-choice snapshot at each played card, so we can list
   // what was drawn/chosen and rewind to try a different choice.
   private history: HistoryEntry[] = [];
@@ -334,6 +335,11 @@ export class Game {
         else this.debugOpen.add(id);
         return; // let <details> toggle natively
       }
+      // Draw pool: show everything, or only what could actually come up now.
+      if (target.closest<HTMLElement>("[data-pool-filter]")) {
+        this.debugPoolOnlyLive = !this.debugPoolOnlyLive;
+        return this.renderDebug();
+      }
       const hit = target.closest<HTMLElement>(
         "[data-card],[data-vital],[data-age],[data-deck],[data-trait],[data-hist]",
       );
@@ -346,7 +352,6 @@ export class Game {
       if (d.trait) return this.toggleTrait(d.trait, d.tdelta ? Number(d.tdelta) : undefined);
       const id = d.card!;
       if (d.action === "force") this.forceCard(id); // pool draw ▶ — no age change
-      else if (d.action === "skip") this.forceCard(id, true); // skip to milestone — jump age
       else {
         this.debugSelectedId = id;
         this.renderDebug();
@@ -630,7 +635,15 @@ export class Game {
     // Fillers waiting their turn are still in the pool but cannot be drawn, so
     // they are marked rather than listed as if they were live.
     const waiting = new Set(held.map((c) => c.id));
-    const row = (c: Card, mark: string, cls: string, note = ""): string =>
+    // Three states, and the panel counts all three: LIVE (could come up on this
+    // turn's draw), WAITING (in the pool but held back by the filler discard
+    // pile) and GATED (in an active deck, conditions not met yet). Waiting and
+    // gated are both "unavailable" — the thing you want to be able to hide when
+    // you are only interested in what the next draw can actually produce.
+    const live = pool.filter((c) => !waiting.has(c.id));
+    const unavailable = waiting.size + gated.length;
+    const total = (milestone ? 1 : 0) + pool.length + gated.length;
+    const row = (c: Card, mark: string, cls: string, note = "", noteCls = ""): string =>
       `<div class="dbg-row ${cls}" data-card="${c.id}">
         <div class="dbg-line">
           <span class="dbg-mark">${mark}</span>
@@ -638,17 +651,27 @@ export class Game {
           <span class="dbg-kind">${c.kind}${c.weight && c.weight !== 1 ? ` ×${c.weight}` : ""}</span>
           <button class="dbg-draw" data-card="${c.id}" data-action="force" title="Force this card next">draw ▶</button>
         </div>
-        ${note ? `<div class="dbg-note">${note}</div>` : ""}
+        ${note ? `<div class="dbg-note ${noteCls}">${note}</div>` : ""}
       </div>`;
+    // A live card says which gate it got through, not just that it is here: the
+    // same line a gated card shows as "needs", shown as met. Unconditional cards
+    // say nothing, so the list only grows where there is something to read.
+    const met = (c: Card): string => (c.conditions ? `met ${fmtCond(c.conditions)}` : "");
     const rows = [
-      ...(milestone ? [row(milestone, "★", "due")] : []),
-      ...pool.map((c) =>
-        waiting.has(c.id)
-          ? row(c, "↩", "pool waiting", "already played — waiting for the other fillers")
-          : row(c, c.id === this.card?.id ? "→" : "·", "pool"),
-      ),
-      ...gated.map((c) => row(c, "·", "gated", `needs ${fmtCond(c.conditions)}`)),
+      ...(milestone ? [row(milestone, "★", "due", met(milestone), "met")] : []),
+      ...live.map((c) => row(c, c.id === this.card?.id ? "→" : "·", "pool", met(c), "met")),
+      ...(this.debugPoolOnlyLive
+        ? []
+        : [
+            ...pool.filter((c) => waiting.has(c.id)).map((c) =>
+              row(c, "↩", "pool waiting", "already played — waiting for the other fillers"),
+            ),
+            ...gated.map((c) => row(c, "·", "gated", `needs ${fmtCond(c.conditions)}`)),
+          ]),
     ];
+    const poolFilter =
+      `<button class="dbg-filter ${this.debugPoolOnlyLive ? "on" : ""}" data-pool-filter
+        title="Hide cards that cannot be drawn this turn">hide unavailable</button>`;
 
     // Current traits, grouped into collapsible sub-sections so the (growing)
     // list stays scannable. One chip each: numbers get −/+ buttons; the rest tap
@@ -769,10 +792,6 @@ export class Game {
         </details>`;
       })
       .join("");
-    const milestoneCtl = ALL_CARDS.filter((c) => c.kind === "milestone")
-      .map((c) => `<button data-card="${c.id}" data-action="skip">${c.id}</button>`)
-      .join("");
-
     // Card detail: the selected card (default = the current card), showing
     // EVERY option's EVERY outcome — including ones gated by conditions.
     const sel = (this.debugSelectedId && CARD_BY_ID.get(this.debugSelectedId)) || this.card;
@@ -830,19 +849,22 @@ export class Game {
       sec("age", "Age", `<div class="dbg-ctl">${ageCtl}</div>`) +
       sec("traits", "Traits — tap to toggle", traitHtml) +
       sec("decks", "Decks — tap to add / remove", deckCtl) +
-      sec("milestones", "Skip to milestone", `<div class="dbg-decks">${milestoneCtl}</div>`) +
-      sec("pool", `Draw pool — ${pool.length} card${pool.length === 1 ? "" : "s"} · tap a card to inspect`, `<div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`) +
+      sec(
+        "pool",
+        `Draw pool — ${live.length} live · ${unavailable} unavailable · ${total} total`,
+        `<div class="dbg-poolbar">${poolFilter}<span class="dbg-hint">tap a card to inspect</span></div>
+         <div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`,
+      ) +
       sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail) +
       sec("history", `History — tap to rewind (${this.history.length})`, `<div class="dbg-list">${histRows || "<div>(nothing played yet)</div>"}</div>`);
   }
 
-  // Debug: drop the current card and show a specific one next (ignores
-  // eligibility). Choosing it then applies its effects normally.
-  // Show a specific card next (ignoring eligibility). setAge is only true for
-  // "skip to milestone" — a plain force-draw never changes your age (dropping it
-  // would gate out other cards and make them look consumed). Even skip only
-  // raises the age up to the milestone's minimum, never lowers it.
-  private forceCard(id: string, setAge = false): void {
+  // Debug: drop the current card and show a specific one next, ignoring
+  // eligibility. Choosing it then applies its effects normally. It never touches
+  // your age — the age-raising variant existed only for the "skip to milestone"
+  // list, which is gone; forcing a card is for seeing it, and moving the age to
+  // suit would gate out other cards and make them look consumed.
+  private forceCard(id: string): void {
     if (this.busy) return;
     const card = CARD_BY_ID.get(id);
     if (!card) return;
@@ -850,13 +872,6 @@ export class Game {
       this.holder.remove();
       this.holder = null;
       this.flip = null;
-    }
-    const min = card.conditions?.ageMin;
-    if (setAge && min != null && this.state.age < min) {
-      this.state.age = min;
-      this.prevVitals = { ...this.state.vitals };
-      this.persist();
-      this.syncTop();
     }
     this.card = card;
     this.debugSelectedId = null;
