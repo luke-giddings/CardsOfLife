@@ -213,8 +213,7 @@ export const homeDecks = [
           // answers "I have money and nowhere to put it" sat out three years in
           // four of exactly that state. Below the bar it is still an ordinary pool
           // card from finances >= 50.
-          force: "finances",
-          forceAt: 90,
+          force: { vital: "finances", at: 90 },
           conditions: { ageMin: 14, vitals: { finances: { min: 50 } } },
           prompt: "home_family_moveout.prompt",
           options: {
@@ -290,7 +289,7 @@ export const homeDecks = [
           // the offer is guaranteed to surface rather than hiding in the random
           // pool — you still CHOOSE whether to buy (right = decline). Also offered
           // from finances >= 75 in the normal pool.
-          force: "finances",
+          force: { vital: "finances" },
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_small.prompt",
           options: {
@@ -351,7 +350,7 @@ export const homeDecks = [
         {
           id: "home_buy_large",
           kind: "filler",
-          force: "finances", // force-drawn at 100, still a choice (see home_buy_small)
+          force: { vital: "finances" }, // force-drawn at 100, still a choice (see home_buy_small)
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_large.prompt",
           options: {
@@ -384,7 +383,7 @@ export const homeDecks = [
         {
           id: "home_buy_estate",
           kind: "filler",
-          force: "finances", // force-drawn at 100, still a choice (see home_buy_small)
+          force: { vital: "finances" }, // force-drawn at 100, still a choice (see home_buy_small)
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_estate.prompt",
           options: {

@@ -86,6 +86,51 @@ function focusPool(pool: Card[], content: Content): Card[] {
   return [...new Set([...urgent, ...pool.filter((c) => !!c.deck && spared.has(c.deck))])];
 }
 
+// THE FILLER DISCARD PILE, for one pool. Fillers are inexhaustible (see
+// `exhausted`), which left the weighted pick free to deal the same errand twice
+// in three years — often with one real card sandwiched between two copies of it,
+// which reads as the game having run out of things to say. So a filler that has
+// played is held aside and stays out of the draw while ANY unplayed filler is
+// still in the pool; when the pile is all that is left it shuffles back in.
+//
+// Scoped to the fillers currently IN the pool, for both the "all seen" test and
+// the reshuffle: a childhood deck running dry must not also forget the
+// working-life fillers you have not reached yet, nor be kept out of its own
+// reshuffle by them. With no fillers in the pool every step below is a no-op and
+// `choices` comes back as the pool itself.
+//
+// ONE rule with two readers: `drawCard` takes `choices` and the (possibly
+// reshuffled) `played`, and `eligibleDraw` takes `held`, so the debug panel dims
+// exactly the cards the next draw cannot deal. They used to compute this
+// separately and had already drifted: the panel declared nothing held after a
+// reshuffle, while the draw was still holding one card back.
+function fillerPile(
+  pool: Card[],
+  played: string[],
+): { choices: Card[]; held: Card[]; played: string[] } {
+  const here = new Set(pool.filter((c) => c.kind === "filler").map((c) => c.id));
+  // This pool's share of the pile, in play order — the order is the whole reason
+  // `playedFillers` is a list and not a set of ids or a count.
+  const mine = played.filter((id) => here.has(id));
+  let kept = played;
+  if (here.size > 0 && mine.length === here.size) {
+    // All seen, so shuffle them back in — MINUS the one dealt most recently,
+    // which would otherwise be free to come straight back round, the very thing
+    // the pile exists to stop. `lastCardId` below does not cover this: a
+    // milestone or a forced card landing in between would leave the repeat one
+    // card away rather than adjacent, which is the sandwich itself.
+    const last = mine[mine.length - 1];
+    kept = played.filter((id) => !here.has(id) || id === last);
+  }
+  const stale = new Set(kept.filter((id) => here.has(id)));
+  const choices = pool.filter((c) => !stale.has(c.id));
+  // A pool down to its LAST filler has nothing else to offer, so it plays again
+  // and nothing is held.
+  return choices.length > 0
+    ? { choices, held: pool.filter((c) => stale.has(c.id)), played: kept }
+    : { choices: pool, held: [], played: kept };
+}
+
 // Draw the next card: a due milestone if there is one, otherwise a random
 // eligible non-milestone card. Returns null when nothing is eligible (the
 // caller then passes a "quiet year").
@@ -117,7 +162,7 @@ export function drawCard(
     (c) =>
       c.force !== undefined &&
       c.id !== state.lastCardId &&
-      state.vitals[c.force] >= (c.forceAt ?? VITAL_MAX) &&
+      state.vitals[c.force.vital] >= (c.force.at ?? VITAL_MAX) &&
       isEligible(c, state, content),
   );
   if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };
@@ -141,35 +186,9 @@ export function drawCard(
   if (eligible.length === 0) return { card: null, state: { ...state, rng } };
   const pool = focusPool(eligible, content);
 
-  // Fillers are inexhaustible (see `exhausted`), which left the weighted pick
-  // free to deal the same errand twice in three years — often with one real card
-  // sandwiched between two copies of it, which reads as the game having run out
-  // of things to say. So a filler that has played is held aside like a discard
-  // pile and stays out of the draw while ANY unplayed filler is still in the
-  // pool; when the pile is all that's left, it shuffles back in and repeats are
-  // allowed again.
-  //
-  // Scoped to the fillers currently IN the pool, both tests and reshuffle: a
-  // childhood deck running dry must not also forget the working-life fillers you
-  // have not reached yet, nor be kept out of its own reshuffle by them.
-  let played = state.playedFillers;
-  const fillers = pool.filter((c) => c.kind === "filler");
-  let choices = pool;
-  if (fillers.length > 0) {
-    const here = new Set(fillers.map((c) => c.id));
-    if (fillers.every((c) => played.includes(c.id))) {
-      // The pile is all that's left, so shuffle it back in — MINUS the filler
-      // dealt most recently, which would otherwise be free to come straight back
-      // round, the very thing the pile exists to stop. The list is in play order,
-      // so the most recent is the last entry belonging to this pool. Only a pool
-      // down to its LAST filler can still repeat, and then there is no choice.
-      const last = [...played].reverse().find((id) => here.has(id));
-      played = played.filter((id) => !here.has(id) || id === last);
-    }
-    const stale = new Set(played);
-    const fresh = pool.filter((c) => c.kind !== "filler" || !stale.has(c.id));
-    if (fresh.length > 0) choices = fresh;
-  }
+  // Hold back the fillers already dealt (see fillerPile).
+  const pile = fillerPile(pool, state.playedFillers);
+  let choices = pile.choices;
 
   // Avoid repeating the immediately-previous card when there's a choice. Still
   // needed after a reshuffle, which makes the filler you just played fresh again.
@@ -190,7 +209,7 @@ export function drawCard(
     cursor -= c.weight ?? 1;
     if (cursor < 0) { pick = c; break; }
   }
-  return { card: pick, state: { ...state, rng: roll.state, lastCardId: pick.id, playedFillers: played } };
+  return { card: pick, state: { ...state, rng: roll.state, lastCardId: pick.id, playedFillers: pile.played } };
 }
 
 // Debug helper: the milestone that would fire, the random pool, the cards that
@@ -214,12 +233,9 @@ export function eligibleDraw(
   const gated = inDeck.filter(
     (c) => c !== milestone && (!meets(c.conditions, state, content) || !pool.includes(c)),
   );
-  // The pile's draw-time test, read-only: held back only while an unplayed
-  // filler remains, since otherwise the next draw reshuffles and they are all
-  // back in. The reshuffle itself is not simulated — it is a draw-time decision.
-  const fillers = pool.filter((c) => c.kind === "filler");
-  const anyFresh = fillers.some((c) => !state.playedFillers.includes(c.id));
-  const held = anyFresh ? fillers.filter((c) => state.playedFillers.includes(c.id)) : [];
+  // The same rule the draw will apply, reshuffle and all, rather than a second
+  // reading of it.
+  const { held } = fillerPile(pool, state.playedFillers);
   return { milestone, pool, gated, held };
 }
 

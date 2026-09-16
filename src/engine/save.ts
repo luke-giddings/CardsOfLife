@@ -8,7 +8,11 @@ import type { GameState } from "./types.ts";
 // `housingBeforeApprentice` became the general `suspendedStatuses`, so a v1 save
 // mid-apprenticeship had no stash to restore and left you housed "With Master".
 // v2 -> v3: `playedFillers` arrived, and a save without it crashes the draw.)
-const KEY = "cardsoflife.save.v3";
+// One number, two keys: the history holds whole GameStates, so it can never be
+// read against a save of a different shape. Bumping them separately is the one
+// way this scheme breaks, so there is only one place to bump.
+const SAVE_VERSION = 3;
+const KEY = `cardsoflife.save.v${SAVE_VERSION}`;
 
 // The debug rewind list: the pre-choice snapshot at each card played, so the
 // debug panel can list what was drawn and chosen, and jump back to retry one.
@@ -24,7 +28,7 @@ export interface HistoryEntry {
 // (a long life is ~100 of them); separating them means a quota failure or a
 // corrupt history costs you the rewind list and never the run itself. Versioned
 // with the save, since the snapshots inside it ARE GameStates.
-const HISTORY_KEY = "cardsoflife.history.v3";
+const HISTORY_KEY = `cardsoflife.history.v${SAVE_VERSION}`;
 
 export function saveGame(state: GameState): void {
   try {
