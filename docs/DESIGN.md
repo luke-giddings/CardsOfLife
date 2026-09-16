@@ -1223,6 +1223,15 @@ Roughly in likely order. None of these are started.
   of it, not the size of the number at the end — so the number's only job is to
   leave room for one bad day. Check any threshold against what the draw actually
   delivers before trusting it.
+  Her three childhood cards have also been widened from her ages **0–4 to 0–7**:
+  four years inside *your* childhood, where the pool is at its fattest, delivered
+  none of the three to **53.7%** of lives; 0–7 brings that to **39.0%** and the
+  median promise banked by the audition from 6 to 8. That is story coverage, not
+  the balance fix — widening alone moves the ballerina rate only 38.9% → 40.8% at
+  the old gate. **A narrow window inside a crowded stage is barely a window at
+  all.** Tom's three stage-0 beats are gated the same way and are untouched: his
+  arc has no threshold to miss, so a missed beat bends his story rather than
+  costing an ending.
 - **Balance rule for the relationship decks — the cold swipe pays best.** A
   third option that only *costs* you something is not a choice, it is a
   punishment button; nobody picks it twice. In Sarah's deck the cruel swipe is

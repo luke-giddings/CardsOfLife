@@ -46,14 +46,27 @@ export const sisterDecks = [
     // would otherwise drift away from her however devoted you had been).
     tickWhile: { traits: { relSisterStoryDone: false } },
     cards: [
-      // === CHILDHOOD (her ages 0–4) ======================================
+      // === CHILDHOOD (her ages 0–7) ======================================
       // Three one-shots, each with a cold third swipe, so shutting her out is
       // something you can actually choose rather than something the draw does.
+      //
+      // The window was 0–4 and is now 0–7. These three carry a third of the
+      // `promise` in her deck, and four years inside YOUR childhood — where the
+      // pool is at its fattest — delivered almost none of it: 53.7% of lives drew
+      // none of the three at all, measured over 4,000 (scripts/ballerina.ts). At
+      // 0–7 that is 39.0%, and the median promise banked by the audition goes
+      // from 6 to 8. This is STORY COVERAGE rather than a balance fix — widening
+      // it barely moves the ballerina rate (38.9% → 40.8% at the old gate of 9),
+      // which is why the gate came down instead — but a third of her childhood
+      // going unseen in half of all lives is reason enough on its own. Nothing
+      // here reads as a toddler's beat (a girl of seven still spins on the
+      // flagstones and still stops at the shop window), so the extra years cost
+      // the writing nothing, and 7 keeps them clear of the lessons card at 8.
       {
         // Her gift shows early — and all it asks for is an audience.
         id: "rel_sis_dance",
         kind: "one_time",
-        conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 4 } } },
+        conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 7 } } },
         prompt: "rel_sis_dance.prompt",
         options: {
           left: { label: "rel_sis_dance.left", outcomes: [{ result: "rel_sis_dance.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterPromise: 2, relSisterDistance: -6 } } }] },
@@ -68,7 +81,7 @@ export const sisterDecks = [
         // seed of the seamstress she becomes if the schoolroom never happens.
         id: "rel_sis_mend",
         kind: "one_time",
-        conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 4 } } },
+        conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 7 } } },
         prompt: "rel_sis_mend.prompt",
         options: {
           left: { label: "rel_sis_mend.left", outcomes: [{ result: "rel_sis_mend.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterDistance: -6 } } }] },
@@ -80,7 +93,7 @@ export const sisterDecks = [
         // The first time her gift costs money. `promise` is bought, never given.
         id: "rel_sis_slippers",
         kind: "one_time",
-        conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 4 } } },
+        conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 7 } } },
         prompt: "rel_sis_slippers.prompt",
         options: {
           left: { label: "rel_sis_slippers.left", outcomes: [{ result: "rel_sis_slippers.left.r0", effects: { vitals: { finances: "-", happiness: "+" }, incTraits: { relSisterLove: 10, relSisterPromise: 3, relSisterDistance: -6 } } }] },
