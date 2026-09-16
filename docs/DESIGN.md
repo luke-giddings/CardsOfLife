@@ -1203,6 +1203,26 @@ Roughly in likely order. None of these are started.
   *(The absolute arc-completion figures are low in both columns because a greedy
   life ends at ~41 and the finales are gated on the sibling reaching old age —
   read the beats-per-life row, not the conclusion row, as the signal.)*
+- **A gate must not equal the supply that reliably reaches the player.** Sarah's
+  audition read `relSisterPromise` ≥ **9**, and 9 was exactly the sum of the three
+  promise cards a player actually draws: the crossroads (+2, in 100% of lives),
+  the lessons (+4, 76%) and the recital (+3, 68%). So the stage demanded all three
+  *and* a perfect answer on each, with no margin — and everything above that was
+  draw luck, since the three little-girl cards carrying the rest of the promise
+  are `one_time` and gated to her ages 0–4, and **53% of lives never see any of
+  them**. Measured with `scripts/ballerina.ts` over 4,000 lives, a player taking
+  the most-pleasing option on every card of her deck reached the stage **38.4%**
+  of the time; our playtester did exactly that bar one cold swipe at the
+  flagstones card, finished on 8, and lost the ending by a single point.
+  The gate is now **6** — "you put her in the schoolroom and paid for the
+  lessons", the two commitments that actually cost you — which that devoted player
+  clears **70.2%** of the time. **Lowering it gives nothing away**, and that is
+  the part worth remembering: the control run says a self-interested player sees
+  this card in **1.6%** of lives at all, because the crossroads sends her to the
+  needle for a wage. What makes an ending rare is the expensive *choice* upstream
+  of it, not the size of the number at the end — so the number's only job is to
+  leave room for one bad day. Check any threshold against what the draw actually
+  delivers before trusting it.
 - **Balance rule for the relationship decks — the cold swipe pays best.** A
   third option that only *costs* you something is not a choice, it is a
   punishment button; nobody picks it twice. In Sarah's deck the cruel swipe is

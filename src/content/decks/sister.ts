@@ -138,8 +138,28 @@ export const sisterDecks = [
       },
       {
         // THE TEST. Reads `promise` — everything you did or didn't pay for comes
-        // due here. 9+ is roughly "backed her at most of the moments that cost
-        // something"; below that she dances, but in the back row of a music hall.
+        // due here. 6+ is "you put her in the schoolroom AND paid for the
+        // lessons", the two commitments that actually cost you; below that she
+        // dances, but in the back row of a music hall.
+        //
+        // It was 9, which was exactly the sum of the three promise cards a player
+        // reliably DRAWS — the crossroads (+2, seen in 100% of lives), the lessons
+        // (+4, 76%) and the recital (+3, 68%). So the stage demanded all three,
+        // answered perfectly, with no margin at all, and everything above that was
+        // draw luck: the three little-girl cards that carry the rest of the
+        // promise are one_time and gated to her ages 0-4, and 53% of lives never
+        // see ANY of them. Measured over 4,000 lives, a player taking the option
+        // that pleases her most on every single card of this deck reached the
+        // stage 38.4% of the time. Our playtester, who did exactly that bar one
+        // cold swipe at the flagstones card, finished on 8 and lost the ending by
+        // a single point.
+        //
+        // At 6 that devoted player gets there 70.2% of the time, and the ending is
+        // not thereby given away: a self-interested player almost never sees this
+        // card at all (1.6% of lives), because the crossroads sends her to the
+        // needle for a wage. What makes the ballerina rare is schooling her, not
+        // the size of this number — so the number's job is only to leave room for
+        // one bad day.
         id: "rel_sis_audition",
         kind: "one_time",
         weight: 3,
@@ -149,7 +169,7 @@ export const sisterDecks = [
           left: {
             label: "rel_sis_audition.left",
             outcomes: [
-              { if: { traits: { relSisterPromise: { min: 9 } } }, result: "rel_sis_audition.left.r0", effects: { vitals: { happiness: "++", spirit: "+" }, setTraits: { relSisterCalling: "ballerina" }, incTraits: { relSisterLove: 15, relSisterDistance: -10 }, remember: "log.sisBallerina" } },
+              { if: { traits: { relSisterPromise: { min: 6 } } }, result: "rel_sis_audition.left.r0", effects: { vitals: { happiness: "++", spirit: "+" }, setTraits: { relSisterCalling: "ballerina" }, incTraits: { relSisterLove: 15, relSisterDistance: -10 }, remember: "log.sisBallerina" } },
               { result: "rel_sis_audition.left.r1", effects: { vitals: { happiness: "-" }, setTraits: { relSisterCalling: "chorus" }, incTraits: { relSisterLove: 6, relSisterDistance: -10 } } },
             ],
           },
