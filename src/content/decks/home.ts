@@ -285,11 +285,14 @@ export const homeDecks = [
           // choice — commit the savings, or hold your money and keep renting.
           id: "home_buy_small",
           kind: "filler",
-          // Force-DRAWN at max finances (like the move-out card): capped at 100,
-          // the offer is guaranteed to surface rather than hiding in the random
-          // pool — you still CHOOSE whether to buy (right = decline). Also offered
-          // from finances >= 75 in the normal pool.
-          force: { vital: "finances" },
+          // Force-DRAWN at a full-enough purse (like the move-out card, and at the
+          // same 90): the offer surfaces rather than hiding in the random pool —
+          // you still CHOOSE whether to buy (right = decline). The bar was 100,
+          // and a purse in the nineties is where a saving renter actually SITS,
+          // because the rent line nibbles the top of the bar every year; measured
+          // over 3,000 lives this card spent 737 eligible years above 90 and only
+          // 260 at 100. Also offered from finances >= 75 in the normal pool.
+          force: { vital: "finances", at: 90 },
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_small.prompt",
           options: {
@@ -350,7 +353,7 @@ export const homeDecks = [
         {
           id: "home_buy_large",
           kind: "filler",
-          force: { vital: "finances" }, // force-drawn at 100, still a choice (see home_buy_small)
+          force: { vital: "finances", at: 90 }, // force-drawn at a full-enough purse, still a choice (see home_buy_small)
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_large.prompt",
           options: {
@@ -383,7 +386,7 @@ export const homeDecks = [
         {
           id: "home_buy_estate",
           kind: "filler",
-          force: { vital: "finances" }, // force-drawn at 100, still a choice (see home_buy_small)
+          force: { vital: "finances", at: 90 }, // force-drawn at a full-enough purse, still a choice (see home_buy_small)
           conditions: { vitals: { finances: { min: 75 } } },
           prompt: "home_buy_estate.prompt",
           options: {

@@ -236,13 +236,20 @@ export const jobDecks = [
           // apprenticeship is EARNED with the two stats a labourer can actually
           // build through choices — spirit (grit) or happiness (favour) — via
           // two cards. Each is a `filler` that enters the random pool once its
-          // stat is high (>= 70) and is `force`d when the stat maxes (100), so
-          // it is a growing chance that becomes a certainty, not a blind lucky
-          // draw. Age-gated to 13 (force honours conditions), and consumed on
-          // either choice: accept -> apprentice, or take the coin and stay put.
+          // stat is high (>= 70) and is `force`d at 90, so it is a growing chance
+          // that becomes a certainty, not a blind lucky draw. Age-gated to 13
+          // (force honours conditions), and consumed on either choice: accept ->
+          // apprentice, or take the coin and stay put.
+          //   The force bar was the stat's MAX, which for a five-year window is
+          // close to never: measured over 3,000 lives the grit card spent 3,040
+          // eligible years above spirit 90 and 1,719 at 100, and the favour card
+          // 1,349 above happiness 90 against 569. Lowering both to 90 takes the
+          // share of lives that are ever apprenticed from 59.2% to 66.7% — the
+          // one number in the game this move really shifts, and worth watching
+          // if the trade starts to feel like the default road rather than a break.
           id: "job_labour_apprenticeship_grit",
           kind: "filler",
-          force: { vital: "spirit" },
+          force: { vital: "spirit", at: 90 },
           // Age-capped at 18: apprentices were bound as minors, and the copy
           // ("the luckiest break of your YOUNG life") only rings true for the
           // young. Past coming-of-age the unskilled adult escapes via the
@@ -261,7 +268,7 @@ export const jobDecks = [
           // Same shape on happiness.
           id: "job_labour_apprenticeship_favour",
           kind: "filler",
-          force: { vital: "happiness" },
+          force: { vital: "happiness", at: 90 },
           conditions: { ageMin: 13, ageMax: 18, vitals: { happiness: { min: 70 } } },
           prompt: "job_labour_apprenticeship_favour.prompt",
           options: {

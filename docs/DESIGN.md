@@ -1232,6 +1232,23 @@ Roughly in likely order. None of these are started.
   all.** Tom's three stage-0 beats are gated the same way and are untouched: his
   arc has no threshold to miss, so a missed beat bends his story rather than
   costing an ending.
+- **A `force` bar at the vital's MAX is a bar most lives never touch.** `Card.force`
+  is now `{ vital, at? }`, and all six force cards sit at **90** rather than 100.
+  The top of a bar is not where a life rests: drift nibbles at it every turn, so
+  the state the card exists to answer is "in the nineties", not "capped". Measured
+  over 3,000–4,000 lives: of those still at home past 14, **75.3% reach 90+
+  finances but only 52.3% ever touch 100**, and the move-out card came up in
+  **27%** of the years spent at 90+. The same gap on every other one —
+  `job_labour_apprenticeship_grit` spent 3,040 eligible years above spirit 90 and
+  1,719 at 100, `_favour` 1,349 against 569, `home_buy_small` 737 against 260.
+  At 90 each is drawn in **72–83%** of the years it is at its bar (the exception
+  is `_favour` at 23%, because `cards.find` returns the first match and the grit
+  card is declared first — both lead to the same indenture, so it is an ordering
+  quirk rather than a loss). What it moves: moving out 46.7% → 64.4% of those
+  lives, owning a home 4.2% → 5.9%, and **ever apprenticed 59.2% → 66.7%** — that
+  last is the one number this really shifts, and the one to watch if the trade
+  starts to read as the default road rather than a lucky break. Lifespan is
+  unchanged (33.9 → 34.0).
 - **Balance rule for the relationship decks — the cold swipe pays best.** A
   third option that only *costs* you something is not a choice, it is a
   punishment button; nobody picks it twice. In Sarah's deck the cruel swipe is
