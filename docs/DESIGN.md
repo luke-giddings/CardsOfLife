@@ -1241,14 +1241,20 @@ Roughly in likely order. None of these are started.
   **27%** of the years spent at 90+. The same gap on every other one —
   `job_labour_apprenticeship_grit` spent 3,040 eligible years above spirit 90 and
   1,719 at 100, `_favour` 1,349 against 569, `home_buy_small` 737 against 260.
-  At 90 each is drawn in **72–83%** of the years it is at its bar (the exception
-  is `_favour` at 23%, because `cards.find` returns the first match and the grit
-  card is declared first — both lead to the same indenture, so it is an ordering
-  quirk rather than a loss). What it moves: moving out 46.7% → 64.4% of those
-  lives, owning a home 4.2% → 5.9%, and **ever apprenticed 59.2% → 66.7%** — that
-  last is the one number this really shifts, and the one to watch if the trade
-  starts to read as the default road rather than a lucky break. Lifespan is
+  Each is now drawn in **72–83%** of the years it is at its bar. What it moves:
+  moving out 46.7% → 64.4% of those lives, owning a home 4.2% → 5.9%. Lifespan is
   unchanged (33.9 → 34.0).
+  **The two apprenticeship cards sit at 95, not 90**, because that bar is the one
+  that really moves the shape of a life — it is the crossover from the capped
+  unskilled floor onto the skilled ladder. Share of lives ever apprenticed over
+  10,000 greedy lives: **100 → 59.0%, 95 → 63.6%, 90 → 67.4%.** 95 buys most of
+  the fix while keeping the indenture a break rather than the default road. It
+  also leaves room for the FAVOUR route, which the lower bar crowded out:
+  `cards.find` returns the first match and the grit card is declared first, so a
+  grit card forcing more often simply takes the slot (favour seen 10.0% / 9.8% /
+  7.7% at 100 / 95 / 90). **When two cards answer the same state, lowering one
+  card's bar quietly spends the other's share** — check the sibling, not just the
+  card you changed.
 - **Balance rule for the relationship decks — the cold swipe pays best.** A
   third option that only *costs* you something is not a choice, it is a
   punishment button; nobody picks it twice. In Sarah's deck the cruel swipe is
