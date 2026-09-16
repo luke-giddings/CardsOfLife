@@ -81,18 +81,45 @@ export interface IntroCard {
 
 export const PLAY = "play";
 
+// Credits, and what is still to come. Reached from the title card and returning
+// to it — the only card in either flow that goes BACKWARDS, which `goto` handles
+// without knowing it is going back.
+// No title on this one: it is reached FROM the title card, so repeating the name
+// in full is both redundant and — with a list under it — more than the card can
+// hold.
+// It belongs to BOTH flows. Someone opening the game for the first time may
+// perfectly well want to know whose game it is before they start a life in it,
+// and `goto` only resolves within the flow it is standing in (see resolveIntro),
+// so the card has to appear in each rather than be shared by reference.
+const ABOUT: IntroCard = {
+  id: "intro_about",
+  prompt: "intro_about.prompt",
+  chrome: "none",
+  listHeading: "intro_about.soon",
+  list: ["intro_about.soon1", "intro_about.soon2", "intro_about.soon3", "intro_about.soon4"],
+  buttons: [{ label: "intro_about.back", goto: "intro_welcome" }],
+};
+
 export const FIRST_RUN: IntroCard[] = [
   {
-    // The title screen. One button, no result: it should get out of the way.
-    // `fresh` starts the life NOW rather than when the flow ends, so the cards
-    // that follow describe the life you are about to play — on a true first run
-    // there is nothing to clear, but the debug replay would otherwise tutor you
-    // with the bars of the life it is replacing.
+    // The title screen, with no result on either button: it should get out of
+    // the way. `fresh` starts the life NOW rather than when the flow ends, so
+    // the cards that follow describe the life you are about to play — on a true
+    // first run there is nothing to clear, but the debug replay would otherwise
+    // tutor you with the bars of the life it is replacing.
+    //
+    // The same two buttons as the returning title card, minus Continue: on a
+    // true first run there is nothing to continue to, and on a debug replay
+    // offering it would skip the very flow you pressed the button to see.
+    // About is NOT conditional on anything, here or there.
     id: "intro_welcome",
     title: "intro_welcome.title",
     prompt: "intro_welcome.prompt",
     chrome: "none",
-    buttons: [{ label: "ui.newLife", fresh: true }],
+    buttons: [
+      { label: "ui.newLife", fresh: true },
+      { label: "intro_about.go", goto: "intro_about" },
+    ],
   },
   {
     // THE VITALS, first: what the bars are, before what to do about them. They
@@ -139,6 +166,10 @@ export const FIRST_RUN: IntroCard[] = [
       right: { label: "intro_mode.right", result: "intro_mode.right.r0", setHard: true, goto: PLAY, fresh: true },
     },
   },
+  // Last, so the fall-through order of the tutorial is untouched: nothing runs
+  // off the end of the mode card (both its answers `goto` PLAY), and this is
+  // reachable only by name from the title.
+  ABOUT,
 ];
 
 // Every opening after the first: the SAME title card, carrying a menu. Continue
@@ -158,18 +189,5 @@ export const RETURNING: IntroCard[] = [
       { label: "intro_about.go", goto: "intro_about" },
     ],
   },
-  {
-    // Credits, and what is still to come. Reached from the title card and
-    // returning to it — the only card in either flow that goes BACKWARDS, which
-    // `goto` handles without knowing it is going back.
-    // No title on this one: it is reached FROM the title card, so repeating the
-    // name in full is both redundant and — with a list under it — more than the
-    // card can hold.
-    id: "intro_about",
-    prompt: "intro_about.prompt",
-    chrome: "none",
-    listHeading: "intro_about.soon",
-    list: ["intro_about.soon1", "intro_about.soon2", "intro_about.soon3", "intro_about.soon4"],
-    buttons: [{ label: "intro_about.back", goto: "intro_welcome" }],
-  },
+  ABOUT,
 ];
