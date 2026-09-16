@@ -1248,6 +1248,19 @@ Roughly in likely order. None of these are started.
   affordable only because their beats are gated on the SIBLING's age rather than
   yours; and mean life goes 34.0 → 35.5, because the arrival card is a bare
   happiness/spirit ++ with no cost and now fires half again as often.
+  **The move's real prize was not the window — it was emptying the baby deck.**
+  `age_baby` is ten cards over a five-draw stage, and it holds the cards that set
+  almost every disposition the rest of the life reads: `baby_disposition`
+  (persBookish / persSporty), `baby_vaccine`, `baby_uncle` (the university fund),
+  `baby_nursery` (persSociable). Each was seen in **38%** of lives. Taking two
+  cards out of that deck lifted every one of them to **60%**.
+  And that is why weighting them *where they were* — the obvious cheaper fix, and
+  the one to reach for by reflex — is the wrong answer even though it scores
+  better on the headline: `weight: 3` inside `age_baby` gives 65.2% a brother and
+  35.4% both, but drops those same disposition cards to **26%**. It buys siblings
+  by spending the trait economy. **In a small deck with a short stage, weight is
+  not a free lever — it is a transfer.** Move the card to a bigger pool first,
+  then weight it there.
 - **A `force` bar at the vital's MAX is a bar most lives never touch.** `Card.force`
   is now `{ vital, at? }`, and all six force cards sit at **90** rather than 100.
   The top of a bar is not where a life rests: drift nibbles at it every turn, so
