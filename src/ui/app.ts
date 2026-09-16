@@ -16,6 +16,7 @@ import { clearSave, loadGame, loadHistory, saveGame, saveHistory } from "../engi
 import type { HistoryEntry } from "../engine/save.ts";
 import { FIRST_RUN, PLAY, RETURNING, type IntroCard, type IntroOption } from "./intro.ts";
 import {
+  DEFAULT_TRAITS,
   ENDINGS,
   STATUS_KINDS,
   VITAL_KEYS,
@@ -334,6 +335,13 @@ export class Game {
         if (this.debugOpen.has(id)) this.debugOpen.delete(id);
         else this.debugOpen.add(id);
         return; // let <details> toggle natively
+      }
+      // The run report: to the clipboard to be pasted, or to a file to be sent.
+      const run = target.closest<HTMLElement>("[data-run]");
+      if (run) {
+        if (run.dataset.run === "save") return this.saveRun();
+        void this.copyRun(run);
+        return;
       }
       // Draw pool: show everything, or only what could actually come up now.
       if (target.closest<HTMLElement>("[data-pool-filter]")) {
@@ -856,7 +864,98 @@ export class Game {
          <div class="dbg-list">${rows.join("") || "<div>(empty)</div>"}</div>`,
       ) +
       sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail) +
-      sec("history", `History — tap to rewind (${this.history.length})`, `<div class="dbg-list">${histRows || "<div>(nothing played yet)</div>"}</div>`);
+      sec(
+        "history",
+        `History — tap to rewind (${this.history.length})`,
+        `<div class="dbg-poolbar">
+           <button class="dbg-filter" data-run="copy">copy run</button>
+           <button class="dbg-filter" data-run="save">save .txt</button>
+           <span class="dbg-hint">the whole run, as text</span>
+         </div>
+         <div class="dbg-list">${histRows || "<div>(nothing played yet)</div>"}</div>`,
+      );
+  }
+
+  // Debug: the whole run as plain text, for reading somewhere that is not a
+  // phone screen. One line per card played, carrying the state the player was
+  // LOOKING AT when they chose (history stores the pre-choice snapshot), so the
+  // reader can see what the decision was made on rather than what it led to.
+  // Status and trait changes are printed only where they change, which is what
+  // makes a hundred-line run scannable: the columns are quiet until something
+  // happens.
+  private runReport(): string {
+    const st = (s: GameState): string =>
+      STATUS_KINDS.map((k) => `${k}=${s.statuses[k]}`).join(" ");
+    const traits = (s: GameState): Record<string, unknown> => s.traits as unknown as Record<string, unknown>;
+    const vitals = (s: GameState): string =>
+      VITAL_KEYS.map((k) => `${VITAL_ICON[k]}${String(s.vitals[k]).padStart(3)}`).join(" ");
+    // Traits a deck TICKS every year are clocks, not decisions: printing them on
+    // every line buried the changes worth reading under "relSisterAge=3,
+    // relSisterDistance=3". They are left to the summary at the foot, where the
+    // number is what matters anyway.
+    const clocks = new Set(content.decks.flatMap((d) => Object.keys(d.tick ?? {})));
+    const lines: string[] = [];
+    lines.push(`Cards of Life v${APP_VERSION} · build ${__BUILD__}`);
+    lines.push(`${this.hard ? "HARD" : "easy"} · ${getLocale()} · ${this.history.length} cards played`);
+
+    let prev: GameState | null = null;
+    for (const h of this.history) {
+      const b = h.before;
+      const marks: string[] = [];
+      if (prev) {
+        for (const k of STATUS_KINDS) {
+          if (prev.statuses[k] !== b.statuses[k]) marks.push(`${k}→${b.statuses[k]}`);
+        }
+        for (const [k, v] of Object.entries(traits(b))) {
+          if (clocks.has(k)) continue;
+          if (traits(prev)[k] !== v) marks.push(`${k}=${v}`);
+        }
+        for (const d of b.activeDecks) if (!prev.activeDecks.includes(d)) marks.push(`+${d}`);
+        for (const d of prev.activeDecks) if (!b.activeDecks.includes(d)) marks.push(`-${d}`);
+      }
+      lines.push(
+        `${String(b.age).padStart(3)}  ${h.cardId.padEnd(30)} ${vitals(b)}  ${h.choice}` +
+          (marks.length ? `\n         ${marks.join(", ")}` : ""),
+      );
+      prev = b;
+    }
+
+    // The state AFTER the last card, which no history row carries.
+    const now = this.state;
+    lines.push("");
+    lines.push(`NOW  age ${now.age}  ${vitals(now)}`);
+    lines.push(`     ${st(now)}`);
+    if (now.over) lines.push(`     ENDED: ${now.endReason ?? "?"}`);
+    const defaults = DEFAULT_TRAITS as unknown as Record<string, unknown>;
+    const set = Object.entries(traits(now)).filter(([k, v]) => v !== defaults[k]);
+    lines.push(`     traits: ${set.map(([k, v]) => `${k}=${v}`).join(", ") || "(all default)"}`);
+    lines.push(`     decks: ${now.activeDecks.join(" ")}`);
+    if (now.log.length) lines.push(`     log: ${now.log.map((e) => `${e.age} ${e.id}`).join(" · ")}`);
+    return lines.join("\n");
+  }
+
+  // Hand the report to the person: the clipboard if the browser allows it (the
+  // point is to paste it into a conversation), a downloaded file if it does not.
+  // Both are offered rather than one guessed at, because which works depends on
+  // the phone, and a silent failure here wastes a whole playtest.
+  private async copyRun(btn: HTMLElement): Promise<void> {
+    const text = this.runReport();
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = `copied ${text.length} chars`;
+    } catch {
+      btn.textContent = "copy blocked — use save";
+    }
+    window.setTimeout(() => { btn.textContent = "copy run"; }, 2500);
+  }
+
+  private saveRun(): void {
+    const blob = new Blob([this.runReport()], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `cardsoflife-age${this.state.age}.txt`;
+    a.click();
+    window.setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   }
 
   // Debug: drop the current card and show a specific one next, ignoring
