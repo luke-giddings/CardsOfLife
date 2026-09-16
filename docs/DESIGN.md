@@ -1129,6 +1129,36 @@ estate, having lived comfortably, aged 71."* No arithmetic.
 
 Roughly in likely order. None of these are started.
 
+- **LET A LIFE RUN PAST THIRTY. This is the blocking item for most of the
+  written content.** A greedy life ends at ~35 and **2.3% reach 60**, and the
+  decks are written for a whole life, so the back half of several of them is
+  never read. Measured over 8,000 lives, of the lives that HAVE that sibling:
+
+  | | brother | sister |
+  |---|---|---|
+  | cards in the deck | 13 | 14 |
+  | **cards seen per life** | **2.94** | **3.61** |
+  | the crossroads (a milestone) | 96.9% | 96.2% |
+  | the mid-life reckoning | 14.7% | — |
+  | the settled years | 2.8% | 4.1% |
+  | **the finale** | **0.1%** | **0.3%** |
+
+  The sibling's clock stops at 25 (median), 37 at p90, because you die at 35.
+  Every window above their 26 is content written for a part of life the game
+  does not deliver — four of thirteen cards in Tom's deck, including the finale
+  that the whole love × distance mechanic exists to pay off.
+  **The fix is lifespan, not the windows.** Compressing the arcs into the life we
+  currently give would fit the story to the bug: the arcs are the right shape for
+  a life, and it is the life that is too short. Treat this as the prerequisite for
+  the late-life decks, the love-interest arc's married years, and the epilogue's
+  richer endings — all of them will hit the same wall.
+  *(Two smaller findings from the same run, for whoever picks this up: the
+  sibling stage-0 beats are seen only ~17–25% each, because they compete in the
+  fattest part of the childhood pool; and the sister's whole school road —
+  lessons, recital, audition — is reached by ~6% of sister-lives under
+  self-interested play, since the crossroads is deliberately the expensive
+  choice. Neither is a lifespan problem.)*
+
 > **Current focus — finish the WORK-side content** (before more education work).
 > Of the four big pieces: **house decks/purchase/owned statuses ✅ BUILT** and
 > **lifestyle ✅ BUILT** (both actively being balanced). Remaining: **(1)** homeless
