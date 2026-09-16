@@ -338,11 +338,17 @@ export interface Card {
   // would hit 0 — the engine floors the vital and forces this card next (a
   // one-shot rescue; once played it's used up, so a second collapse is fatal).
   rescue?: VitalKey;
-  // The opposite of rescue: when this vital is at its MAX and the card is
-  // otherwise eligible, force it to jump the queue — so a capped resource (e.g.
-  // full money with nowhere to go) always surfaces the chance to spend it. The
-  // card still appears normally in the pool below the cap.
+  // The opposite of rescue: when this vital is HIGH ENOUGH and the card is
+  // otherwise eligible, force it to jump the queue — so a piled-up resource (e.g.
+  // money with nowhere to go) always surfaces the chance to spend it. The card
+  // still appears normally in the pool below the threshold.
   force?: VitalKey;
+  // How high is high enough, defaulting to the vital's MAX. Worth lowering when
+  // the cap is hard to actually touch: a life can sit in the nineties for years
+  // — drift nibbles at the top of the bar every turn — so a card forced only at
+  // 100 sat out three years in four of the very state it exists to answer.
+  // Ignored unless `force` is set.
+  forceAt?: number;
   // Rarity gate (0..1): even once its `conditions` hold, the card only enters the
   // draw pool on a fresh per-year dice roll (value < chance). Omitted = always in
   // the pool (chance 1). Pair with `one_time` for a rare once-in-a-life surprise

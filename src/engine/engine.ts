@@ -106,17 +106,18 @@ export function drawCard(
   const milestone = dueMilestone(cards, state, content);
   if (milestone) return { card: milestone, state: { ...state, lastCardId: milestone.id } };
 
-  // A "force at max" card jumps the queue when its vital is capped and the card
-  // is otherwise eligible, so a maxed-out resource always surfaces its spend
+  // A "force" card jumps the queue when its vital is high enough and the card is
+  // otherwise eligible, so a piled-up resource always surfaces its spend
   // opportunity (e.g. move out once you're rich) instead of relying on the
-  // random draw. Ranks below milestones, above the random pool. Skipped if it
+  // random draw. The bar is the vital's MAX unless the card names a lower one
+  // (Card.forceAt). Ranks below milestones, above the random pool. Skipped if it
   // was the immediately-previous card, so declining it doesn't lock you into
-  // the same card every year while you stay capped — normal cards interleave.
+  // the same card every year while you stay rich — normal cards interleave.
   const forced = cards.find(
     (c) =>
       c.force !== undefined &&
       c.id !== state.lastCardId &&
-      state.vitals[c.force] >= VITAL_MAX &&
+      state.vitals[c.force] >= (c.forceAt ?? VITAL_MAX) &&
       isEligible(c, state, content),
   );
   if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };

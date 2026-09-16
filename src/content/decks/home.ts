@@ -205,9 +205,16 @@ export const homeDecks = [
           // can afford it.
           id: "home_family_moveout",
           kind: "filler",
-          // Forced when money maxes out (so full coffers always surface the
-          // chance to spend), and available in the pool from finances >= 50.
+          // Forced once the purse is FULL ENOUGH — 90 rather than the default
+          // 100. Measured over 4,000 lives, 75.3% of those still at home past 14
+          // reach 90+ but only 52.3% ever touch 100, because housing drift nibbles
+          // the top of the bar every turn; and of all the years spent at home on
+          // 90+, this card came up in only 27% of them. So the one card that
+          // answers "I have money and nowhere to put it" sat out three years in
+          // four of exactly that state. Below the bar it is still an ordinary pool
+          // card from finances >= 50.
           force: "finances",
+          forceAt: 90,
           conditions: { ageMin: 14, vitals: { finances: { min: 50 } } },
           prompt: "home_family_moveout.prompt",
           options: {
