@@ -1233,21 +1233,20 @@ Roughly in likely order. None of these are started.
   arc has no threshold to miss, so a missed beat bends his story rather than
   costing an ending.
 - **Where a card LIVES decides how often it is seen, and moving it is not always
-  a gain.** The two "a sibling has arrived" cards sat in `age_baby` — ten cards
-  over a five-year stage, so each is seen about half the time — and unlocked the
-  two biggest story decks in the game. Measured over 6,000 lives: 39.7% got a
-  brother, 40.9% a sister, **8.9% both**, 28.3% neither, and the arcs drew 1.26
-  and 1.54 beats a life. Moving them to `home_family` (your ages 5–14) on its own
-  made it **worse**, not better — 26.6% / 25.6% / 5.2% / 53.0% — because the
-  childhood pool they now compete in is twice the size of the baby deck, and the
-  longer window does not make up for it. The move only pays with `weight: 3`
-  alongside it: **53.6% / 54.4% / 26.1% both / 18.0% neither**, and 1.66 / 2.08
-  beats a life. Both siblings at once tripling is the real prize — `rel_bro_purse`
-  and `rel_sis_quarrel` need both, so a quarter of lives can now see them against
-  a twelfth. Costs: the arrival moves from your age 3 to your age 8, which is
-  affordable only because their beats are gated on the SIBLING's age rather than
-  yours; and mean life goes 34.0 → 35.5, because the arrival card is a bare
-  happiness/spirit ++ with no cost and now fires half again as often.
+  a gain — and the headline rate is usually the wrong thing to move it by.** The
+  two "a sibling has arrived" cards sat in `age_baby` and unlock the two biggest
+  story decks in the game. Over 6,000 lives they gave 39.7% a brother, 40.9% a
+  sister, 8.9% both, 28.3% neither. Moving them to `home_family` (your ages 5–14)
+  *lowered* those rates — 26% / 27% / 4.9% / 53% — because the childhood pool
+  they now compete in is twice the size of the baby deck. They are left there
+  unweighted anyway, and the reason is the interesting part:
+  **the arrival rate and the arc's depth are separate dials, and only one of them
+  is about the story.** Weighting them up to 54% / 54% / 26% both changes how
+  many runs have a sibling; it barely touches how developed that sibling's arc
+  is when there is one — **2.86 beats against 3.09**. So the weight buys more
+  runs with a sibling in, not a better sibling story, and a brother is worth more
+  as something a run turns out to have. Before reaching for a card's weight, ask
+  which of those two you actually wanted.
   **The move's real prize was not the window — it was emptying the baby deck.**
   `age_baby` is ten cards over a five-draw stage, and it holds the cards that set
   almost every disposition the rest of the life reads: `baby_disposition`

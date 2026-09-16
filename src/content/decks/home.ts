@@ -9,20 +9,26 @@ export const homeDecks = [
     {
       id: "home_family",
       cards: [
-        // THE SIBLINGS ARRIVE. These lived in `age_baby`, which is a five-year
-        // deck of ten cards, so most lives never drew either: 39.7% got a
-        // brother, 40.9% a sister, 8.9% both and 28.3% neither, and the two
-        // relationship decks they unlock saw 1.26 and 1.54 beats a life between
-        // them. Their arcs are gated on the SIBLING's age rather than yours, so
-        // a later arrival costs less than it used to — which is what makes the
-        // move affordable.
+        // THE SIBLINGS ARRIVE. These lived in `age_baby` — ten cards over a
+        // five-draw stage — and moving them out is the point: it lifted every
+        // remaining baby card (the dispositions, the vaccine, the university
+        // fund, persSociable) from 38% of lives to 60%. Their own arcs are gated
+        // on the SIBLING's age rather than yours, so arriving later costs less
+        // than it would have.
         // Capped at your 14: a new baby in the house is a childhood event, and an
         // arc that starts later than that has no room left to run (the finales
         // want the sibling at 59).
+        //
+        // NO WEIGHT, deliberately. Weighted up they reach 54% of lives each and
+        // 26% both; left plain it is 26% / 27% / 4.9% both — about one run in
+        // four and one in twenty. The number that decides it is how DEVELOPED
+        // the arc is in a life that has one, and that barely moves: 2.86 beats
+        // at weight 1 against 3.09 at weight 3. So the weight only buys more
+        // runs with a sibling in, not a better sibling story, and a brother or
+        // a sister is worth more as something a run turns out to have.
         {
           id: "home_family_brother",
           kind: "one_time",
-          weight: 3,
           conditions: { ageMax: 14 },
           prompt: "home_family_brother.prompt",
           options: {
@@ -33,7 +39,6 @@ export const homeDecks = [
         {
           id: "home_family_sister",
           kind: "one_time",
-          weight: 3,
           conditions: { ageMax: 14 },
           prompt: "home_family_sister.prompt",
           options: {
