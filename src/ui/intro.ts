@@ -81,6 +81,19 @@ export interface IntroCard {
 
 export const PLAY = "play";
 
+// The TITLE CARD, shared by both flows, so the game always opens on its own name
+// and a change to it can only be made in one place. Everything but the BUTTONS
+// is the same, and the buttons are the one thing that legitimately differs: on a
+// first run "New life" falls through to the tutorial behind this card, and on
+// every later opening it goes straight to play. Continue is the only button that
+// can be absent, and only because there is nothing to continue to.
+const WELCOME = {
+  id: "intro_welcome",
+  title: "intro_welcome.title",
+  prompt: "intro_welcome.prompt",
+  chrome: "none",
+} satisfies Omit<IntroCard, "buttons">;
+
 // Credits, and what is still to come. Reached from the title card and returning
 // to it — the only card in either flow that goes BACKWARDS, which `goto` handles
 // without knowing it is going back.
@@ -102,20 +115,17 @@ const ABOUT: IntroCard = {
 
 export const FIRST_RUN: IntroCard[] = [
   {
-    // The title screen, with no result on either button: it should get out of
-    // the way. `fresh` starts the life NOW rather than when the flow ends, so
-    // the cards that follow describe the life you are about to play — on a true
-    // first run there is nothing to clear, but the debug replay would otherwise
-    // tutor you with the bars of the life it is replacing.
+    // No result on either button: the title should get out of the way. `fresh`
+    // starts the life NOW rather than when the flow ends, so the cards that
+    // follow describe the life you are about to play — on a true first run there
+    // is nothing to clear, but the debug replay would otherwise tutor you with
+    // the bars of the life it is replacing. No `goto` on New life either, so it
+    // falls through to the card below and into the tutorial.
     //
-    // The same two buttons as the returning title card, minus Continue: on a
-    // true first run there is nothing to continue to, and on a debug replay
-    // offering it would skip the very flow you pressed the button to see.
-    // About is NOT conditional on anything, here or there.
-    id: "intro_welcome",
-    title: "intro_welcome.title",
-    prompt: "intro_welcome.prompt",
-    chrome: "none",
+    // The returning card's buttons minus Continue: on a true first run there is
+    // nothing to continue to, and on a debug replay offering it would skip the
+    // very flow you pressed the button to see.
+    ...WELCOME,
     buttons: [
       { label: "ui.newLife", fresh: true },
       { label: "intro_about.go", goto: "intro_about" },
@@ -179,10 +189,9 @@ export const FIRST_RUN: IntroCard[] = [
 // play: the first-time flow is shown once ever, never again.
 export const RETURNING: IntroCard[] = [
   {
-    id: "intro_welcome",
-    title: "intro_welcome.title",
-    prompt: "intro_welcome.prompt",
-    chrome: "none",
+    // The same card, with the menu a returning player wants: both roads out of
+    // it go straight to play, because the first-time flow is shown once ever.
+    ...WELCOME,
     buttons: [
       { label: "intro_resume.left", goto: PLAY, needsSave: true },
       { label: "ui.newLife", goto: PLAY, fresh: true },
