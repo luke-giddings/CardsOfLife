@@ -36,7 +36,7 @@ export const siblingDecks = [
       title: "deck.rel_bro.title",
       unlock: "deck.rel_bro.blurb",
       // Tom ages a year at a time from the year he's born (this deck is added by
-      // baby_brother and never removed), and DRIFTS a year at a time too: distance
+      // home_family_brother and never removed), and DRIFTS a year at a time too: distance
       // climbs unless you show up. Every card below pulls distance back down.
       tick: { relBrotherAge: 1, relBrotherDistance: 1 },
       // ...but only while his story is still running. Distance measures how

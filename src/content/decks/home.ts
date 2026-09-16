@@ -9,6 +9,38 @@ export const homeDecks = [
     {
       id: "home_family",
       cards: [
+        // THE SIBLINGS ARRIVE. These lived in `age_baby`, which is a five-year
+        // deck of ten cards, so most lives never drew either: 39.7% got a
+        // brother, 40.9% a sister, 8.9% both and 28.3% neither, and the two
+        // relationship decks they unlock saw 1.26 and 1.54 beats a life between
+        // them. Their arcs are gated on the SIBLING's age rather than yours, so
+        // a later arrival costs less than it used to — which is what makes the
+        // move affordable.
+        // Capped at your 14: a new baby in the house is a childhood event, and an
+        // arc that starts later than that has no room left to run (the finales
+        // want the sibling at 59).
+        {
+          id: "home_family_brother",
+          kind: "one_time",
+          weight: 3,
+          conditions: { ageMax: 14 },
+          prompt: "home_family_brother.prompt",
+          options: {
+            left: { label: "home_family_brother.left", outcomes: [{ result: "home_family_brother.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { relBrotherActive: true }, incTraits: { relBrotherLove: 30 }, addDecks: ["rel_bro"] } }] },
+            right: { label: "home_family_brother.right", outcomes: [{ result: "home_family_brother.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { relBrotherActive: true }, incTraits: { relBrotherLove: -15 }, addDecks: ["rel_bro"] } }] },
+          },
+        },
+        {
+          id: "home_family_sister",
+          kind: "one_time",
+          weight: 3,
+          conditions: { ageMax: 14 },
+          prompt: "home_family_sister.prompt",
+          options: {
+            left: { label: "home_family_sister.left", outcomes: [{ result: "home_family_sister.left.r0", effects: { vitals: { happiness: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: 30 }, addDecks: ["rel_sis"] } }] },
+            right: { label: "home_family_sister.right", outcomes: [{ result: "home_family_sister.right.r0", effects: { vitals: { spirit: "++" }, setTraits: { relSisterActive: true }, incTraits: { relSisterLove: -15 }, addDecks: ["rel_sis"] } }] },
+          },
+        },
         {
           id: "home_family_chores",
           kind: "one_time",

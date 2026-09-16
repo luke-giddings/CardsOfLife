@@ -182,7 +182,10 @@ export class Game {
   private displayDecks: string[] = [];
   private debugSelectedId: string | null = null;
   private debugOpen = new Set<string>(["pool", "detail"]); // which debug sections are expanded
-  private debugPoolOnlyLive = false; // draw pool: hide what cannot be drawn this turn
+  // Draw pool: hide what cannot be drawn this turn. ON by default — the question
+  // the panel is usually open to answer is "what can come up next", and the
+  // gated cards are the long tail of every deck you are standing in.
+  private debugPoolOnlyLive = true;
   // Debug history: the pre-choice snapshot at each played card, so we can list
   // what was drawn/chosen and rewind to try a different choice.
   private history: HistoryEntry[] = [];

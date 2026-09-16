@@ -1232,6 +1232,22 @@ Roughly in likely order. None of these are started.
   all.** Tom's three stage-0 beats are gated the same way and are untouched: his
   arc has no threshold to miss, so a missed beat bends his story rather than
   costing an ending.
+- **Where a card LIVES decides how often it is seen, and moving it is not always
+  a gain.** The two "a sibling has arrived" cards sat in `age_baby` — ten cards
+  over a five-year stage, so each is seen about half the time — and unlocked the
+  two biggest story decks in the game. Measured over 6,000 lives: 39.7% got a
+  brother, 40.9% a sister, **8.9% both**, 28.3% neither, and the arcs drew 1.26
+  and 1.54 beats a life. Moving them to `home_family` (your ages 5–14) on its own
+  made it **worse**, not better — 26.6% / 25.6% / 5.2% / 53.0% — because the
+  childhood pool they now compete in is twice the size of the baby deck, and the
+  longer window does not make up for it. The move only pays with `weight: 3`
+  alongside it: **53.6% / 54.4% / 26.1% both / 18.0% neither**, and 1.66 / 2.08
+  beats a life. Both siblings at once tripling is the real prize — `rel_bro_purse`
+  and `rel_sis_quarrel` need both, so a quarter of lives can now see them against
+  a twelfth. Costs: the arrival moves from your age 3 to your age 8, which is
+  affordable only because their beats are gated on the SIBLING's age rather than
+  yours; and mean life goes 34.0 → 35.5, because the arrival card is a bare
+  happiness/spirit ++ with no cost and now fires half again as often.
 - **A `force` bar at the vital's MAX is a bar most lives never touch.** `Card.force`
   is now `{ vital, at? }`, and all six force cards sit at **90** rather than 100.
   The top of a bar is not where a life rests: drift nibbles at it every turn, so

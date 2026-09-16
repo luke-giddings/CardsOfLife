@@ -1,4 +1,4 @@
-// Deck — SARAH (rel_sis), the sister arc. Activated by baby_sister.
+// Deck — SARAH (rel_sis), the sister arc. Activated by home_family_sister.
 //
 // Mirrors Tom's SHAPE — love + distance, beats gated on windows of her own life,
 // a crossroads milestone, a heavily-weighted finale, an estrangement — but is his
