@@ -406,25 +406,22 @@ export class Game {
     }
     this.prevVitals = { ...s.vitals };
     let chips = "";
-    // The three core life statuses (job, housing, education) show together from
-    // the start of childhood, so the player always sees where they stand — even
-    // when a status is still at its neutral start value. During babyhood they
-    // stay hidden (there's nothing meaningful to show yet). Lifestyle is
-    // reserved, so it only appears once it differs from its default.
+    // Whether a chip shows is the CONTENT's opinion (StatusDef.show), not a chain
+    // of special cases here: see the doc on StatusShow. Babyhood is read off the
+    // baby deck rather than the age, because that is what "before childhood
+    // starts" actually means when a life can be hurried along.
     const inChildhood = !disp.activeDecks.includes("age_baby");
+    const shows = (kind: StatusKind, value: string): boolean => {
+      const rule = content.statuses[kind].show ?? "fromChildhood";
+      if (rule === "always") return true;
+      if (rule === "whenSet") return value !== content.start.statuses[kind];
+      if (rule === "fromChildhood") return inChildhood;
+      return s.age >= rule.ageMin;
+    };
     for (const kind of STATUS_KINDS) {
       const value = disp.statuses[kind];
       if (!value) continue; // defensive: an old save without a newer status kind
-      if (kind === "age") {
-        // The life-stage chip is always shown — from birth onward it's the one
-        // status that means something in babyhood too.
-      } else if (kind === "lifestyle" || kind === "pet") {
-        // Reserved chips: shown only once they leave their neutral start (lifestyle
-        // "default" / pet "none") — i.e. once you actually have a lifestyle or a pet.
-        if (value === content.start.statuses[kind]) continue;
-      } else if (!inChildhood) {
-        continue;
-      }
+      if (!shows(kind, value)) continue;
       const state = content.statuses[kind].states[value];
       const label = state?.label ? t(state.label) : value;
       let drift = "";

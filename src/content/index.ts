@@ -74,6 +74,7 @@ export const content = {
     // can gate on atLeast/atMost by stage. Balance: all values are starter knobs.
     age: {
       id: "age",
+      show: "always", // the one status that means something from birth
       ordered: true,
       ignoreNoDrift: true,
       levels: ["baby", "child", "young_adult", "adult", "old_age"],
@@ -260,6 +261,7 @@ export const content = {
     // — a lavish life genuinely wears you out.
     lifestyle: {
       id: "lifestyle",
+      show: "whenSet", // reserved: nothing to say until you have one
       ordered: true,
       levels: ["frugal", "modest", "comfortable", "lavish"],
       states: {
@@ -280,6 +282,7 @@ export const content = {
     // old age. Hidden chip while "none".
     pet: {
       id: "pet",
+      show: "whenSet", // reserved: nothing to say until you have one
       states: {
         none: {},
         cat: {

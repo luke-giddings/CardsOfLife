@@ -446,8 +446,25 @@ export interface StatusStateDef {
   grim?: boolean;
 }
 
+// When a status kind's chip appears in the top row. The rule used to be a chain
+// of special cases in the UI (age always; lifestyle and pet once they left their
+// neutral start; everything else from the end of babyhood), which meant every new
+// status kind with an opinion about its own visibility added another branch to a
+// function that already had three. It is content's business, so content states it.
+//   "always"        — from birth. The life stage, which means something at once.
+//   "fromChildhood" — hidden while the baby deck is up, shown thereafter. The
+//                     default, and what job / housing / education want.
+//   "whenSet"       — only once the value differs from `content.start.statuses`.
+//                     For the reserved kinds you may never acquire: a lifestyle,
+//                     a pet.
+//   { ageMin }      — from an age. For a status that is live and doing work long
+//                     before it is worth a chip: `family` is single from the
+//                     school/work choice but is nobody's business until 18.
+export type StatusShow = "always" | "fromChildhood" | "whenSet" | { ageMin: number };
+
 export interface StatusDef {
   id: StatusKind;
+  show?: StatusShow;                     // default "fromChildhood"
   ordered?: boolean;
   levels?: string[];                     // ordering for `atLeast`, low → high
   // When true, this kind's drift applies even during a `noDrift` grace period
