@@ -139,7 +139,7 @@ Traits carry **sensible prefixes** so the debug panel can group them:
 (education), `job*` (work life), `flaw*` (burdens, set via `setFlaws`), and
 `rel<Sibling>*` (relationships, nested per sibling — Brother `relBrother*`,
 Sister `relSister*`).
-- **Booleans:** `skillMartialArts`, `skillVaccinated`, `eduUniFund`,
+- **Booleans:** `persSporty`, `persBookish`, `skillMartialArts`, `skillVaccinated`, `eduUniFund`,
   `eduWasUndergraduate` (took up a uni place — lets a dropout return to finish),
   `persSweetTooth`, `persSociable`, `relBrotherActive`, `relSisterActive` (whether
   you have that sibling), `jobReachedFactory`, and the burdens `flawOwesCharity`,
@@ -154,15 +154,50 @@ Sister `relSister*`).
   `jobExperience` (years in the current job), `jobSkill` (apprentice
   craftsmanship), `jobStrikes`, `jobTimesChanged`; `petCatAge`/`petDogAge` (years
   you've kept that pet — tick up via the pet status, drive its old-age passing) and
-  `petCatLove`/`petDogLove` (how well you treat it — neglect sends it running);
-  **`persSporty`/`persBookish`** (0..3 disposition — a baby sets it to the cap,
-  else built +1 at a time in youth; reward cards gate on `{ min: 3 }`, see §18
-  backlog).
+  `petCatLove`/`petDogLove` (how well you treat it — neglect sends it running).
+  (`persSporty`/`persBookish` were counters here and are booleans now — see below.)
 
 **Relationships are just Traits.** Character decks can later branch on
 thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setups"
 (skillVaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
 keeps you alive through childhood hazards.
+
+**A LEVEL NEEDS A LADDER AND A VIEW.** `persSporty` and `persBookish` were 0..3
+with every reader gated at `{ min: 3 }`, on the idea that a baby who leaned in
+started at the cap and everyone else climbed to it. Nothing climbed: `persBookish`
+had one writer that set it straight to 3, and `persSporty` had a second worth +1
+which cannot reach 3 from 0 by any route in the game — over 6,000 lives it ended
+on 0 or 1 and never on 3, and the football card's +1 failed to carry a life across
+the gate **1,399 times out of 1,399**. Before writing a trait as a level, check
+there is a stream of sources to climb it AND some way for the player to see where
+they stand. Otherwise write a boolean: one card makes you it, that card wears a ★,
+and the moment is legible, which is the whole of what a threshold was trying to
+say.
+
+**WHAT A DISPOSITION IS WORTH** (`scripts/disposition.ts`, 8,000 lives per arm,
+greedy play with only the `baby_disposition` swipe forced). The card offers a
+lasting trait plus a small bonus, or no trait and a large one — 10 points of
+visible vitals against 60 — and it is a fair trade, which the card face cannot
+show and the greedy sim cannot see:
+
+| forced swipe | mean age | reached 40 | risky swipe taken | **maimed** |
+|---|---|---|---|---|
+| "Out to play" (sporty) | 34.8 | 27.6% | 5,164 | **0.4%** |
+| "Nose in a book" (bookish) | 32.5 | 21.7% | 3,590 | 0.6% |
+| "A bit of both" | 34.7 | 27.9% | 2,602 | **4.4%** |
+
+`persSporty` is read by `child_accident` and `job_labour_machine`, both of which
+deal `---` (−40 health) and are often fatal on a failed check. Passing turns each
+from a maiming into a gain, so a sporty life takes the risky swipe **twice as
+often** and is maimed **eleven times less**. It buys an option, not just safety.
+
+`persBookish`'s four payoffs — the exam, the prize, the debate, the lecture hall,
+up to 20 points each — all sit behind the schoolroom, and only ~0.8% of greedy
+lives ever sit in one, because the sim takes the child-labourer wage at
+`baby_schooling` every time. So the bookish arm measuring worst is a fact about
+**the sim's career choice**, not about the trait or the card: a player who means
+to go to school collects all of it. Same blindness that scores 0% journeymen where
+a grafting player scores 17%. **Do not "rebalance" this card off these numbers.**
 
 ## 8. Cards: front and back
 
@@ -1371,29 +1406,15 @@ Roughly in likely order. None of these are started.
   is read by the childhood accident and the loom, mean life goes **34.3 → 34.9**
   and reaching 40 **25.5% → 28.7%**. Unblocking dead content, not a balance tweak.
 
-  **Still dead, and it is not the trait's fault:** `persBookish` is false in
-  **100%** of greedy lives, because its only source is `baby_disposition`, whose
-  third option pays about six times what the two defining options pay — see the
-  backlog item below.
+  `persBookish` is still false in ~100% of GREEDY lives, but that is the sim, not
+  the card: its payoffs all sit behind the schoolroom and the sim never enters one.
+  See "what a disposition is worth" in §7.
 
   **What is still thin, and why it is not a content fault.** Courting happens at a
   median age of **35** and marriage lands in 1.4% of devoted lives. The arc is
   four cards deep, the deck is off during priority years, and the life ends at 34.
   This is the live-past-thirty item below wearing a different hat; do not tune it
   out by inflating her weights.
-- **`baby_disposition`'s neutral option pays six times what the other two do.**
-  "Out to play" is health + and makes you sporty; "Nose in a book" is spirit + and
-  makes you bookish; "A bit of both" is health ++ happiness ++ spirit + — sixty
-  points of visible vitals against ten, and it leaves no mark on you at all. The
-  option that decides what sort of person you are should be the one that costs,
-  not the one that pays. Consequence: `persBookish` is false in **100%** of
-  measured lives, which makes four written branches unreachable — the bookish
-  readings of `edu_basicschool_exams`, `edu_basicschool_prize`,
-  `edu_grammar_debate` and `edu_university_lectures`. `scripts/invisible.ts` does
-  not flag it, correctly by its own rules, because the ★ on the two disposition
-  options exempts them. It is an infancy card, and infancy cards compound hard
-  (one magnitude step on grandma's treat moved mean life 38.8 → 33.0), so this
-  wants deciding rather than nudging.
 - **THE DRIFT TABLE, decided in one pass.** Not just the family status (stripped
   to nothing above, deliberately) — the whole table. Drift is what kills you (the
   killing blow in 63.7% of deaths) and it is currently the sum of four
