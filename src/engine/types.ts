@@ -143,6 +143,14 @@ export interface Traits {
   // Years served in the current job. Ticked by each work-event card; a
   // promotion card gates on it and resets it to 0 on the step up.
   jobExperience: number;
+  // Years out of work in the CURRENT stretch of it — ticked by the unemployed
+  // status, as gaol ticks its own years. Cards that care about a long spell of
+  // idleness (rather than about being idle this minute) read this and zero it,
+  // so each stretch is worth one such card. It exists because `job_unemployed`
+  // is a `priority` deck: while you are in that state the draw is focused onto
+  // the escape routes, so a card about being out of work can never be dealt
+  // WHILE you are out of work. It has to be dealt afterwards, about the years.
+  jobYearsIdle: number;
   // Apprenticeship craftsmanship. Unlike `jobExperience` (time served — every
   // apprentice work card ticks it whichever way you choose), `jobSkill` only rises
   // when you APPLY YOURSELF (the "work hard" option). The qualifying trial passes
@@ -252,6 +260,7 @@ export const DEFAULT_TRAITS: Traits = {
   relSisterCalling: "none",
   jobTimesChanged: 0,
   jobExperience: 0,
+  jobYearsIdle: 0,
   jobSkill: 0,
   jobReachedFactory: false,
   jobRenouncedCrime: false,

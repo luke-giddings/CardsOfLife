@@ -2,6 +2,7 @@ import type { Content } from "../engine/types.ts";
 import {
   babyDecks,
   familyDecks,
+  lillyDecks,
   childhoodDecks,
   adultDecks,
   homeDecks,
@@ -52,7 +53,7 @@ import {
 export const content = {
   // The cast's names. Any player-facing string may write {brother} / {sister};
   // renaming a sibling is this one line rather than ~60 string edits.
-  vars: { brother: "Tom", sister: "Sarah" },
+  vars: { brother: "Tom", sister: "Sarah", lilly: "Lilly" },
 
   start: {
     // Start low and even — babyhood is where the meters get built up (unevenly,
@@ -106,7 +107,7 @@ export const content = {
         university: { label: "status.job.university", drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
-        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], keepExperience: true, grim: true },
+        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], tick: { jobYearsIdle: 1 }, keepExperience: true, grim: true },
         // A workhouse inmate — the institution IS your occupation now, so entering
         // the workhouse cancels any schooling/job (child_hunger sets this). No
         // drift and NO deck of its own: the home_workhouse housing deck already
@@ -333,10 +334,16 @@ export const content = {
           drift: { finances: -5, happiness: 5 },
           driftShown: { finances: "-", happiness: "+" },
         },
+        // Marriage has to be worth more than courting or there is no reason on
+        // the board to propose — measured, a devoted player turned the proposal
+        // down two times in three, because it cost a wedding and bought three
+        // points of happiness drift over the courting it replaced. The
+        // difference is HEALTH: somebody to feed you and nurse you, in a game
+        // where health is the scarcer of the two vitals that do the killing.
         married: {
           label: "status.family.married",
-          drift: { finances: -5, happiness: 8 },
-          driftShown: { finances: "-", happiness: "++" },
+          drift: { finances: -5, happiness: 8, health: 3 },
+          driftShown: { finances: "-", happiness: "++", health: "+" },
         },
         // Married with children. NOT REACHED YET — the children cards are the
         // next slice; the state is declared because the shape was agreed and a
@@ -359,6 +366,7 @@ export const content = {
   decks: [
     ...babyDecks,
     ...familyDecks,
+    ...lillyDecks,
     ...childhoodDecks,
     ...adultDecks,
     ...homeDecks,

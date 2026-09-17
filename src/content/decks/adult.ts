@@ -31,15 +31,6 @@ export const adultDecks = [
       unlock: "deck.young_adult.blurb",
       cards: [
         {
-          id: "ya_courting",
-          kind: "one_time",
-          prompt: "ya_courting.prompt",
-          options: {
-            left: { label: "ya_courting.left", outcomes: [{ result: "ya_courting.left.r0", effects: { vitals: { happiness: "++", finances: "-" } } }] },
-            right: { label: "ya_courting.right", outcomes: [{ result: "ya_courting.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
-          },
-        },
-        {
           id: "ya_tavern",
           kind: "one_time",
           prompt: "ya_tavern.prompt",
@@ -185,17 +176,6 @@ export const adultDecks = [
           options: {
             left: { label: "adult_society.left", outcomes: [{ result: "adult_society.left.r0", effects: { vitals: { finances: "-", happiness: "+" } } }] },
             right: { label: "adult_society.right", outcomes: [{ result: "adult_society.right.r0", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
-          },
-        },
-        {
-          // A match is proposed. Marry and set up a household (joy, but a wedding
-          // and a home cost) — or keep your independence and your coin.
-          id: "adult_wed",
-          kind: "one_time",
-          prompt: "adult_wed.prompt",
-          options: {
-            left: { label: "adult_wed.left", outcomes: [{ result: "adult_wed.left.r0", effects: { vitals: { happiness: "++", finances: "-" } } }] },
-            right: { label: "adult_wed.right", outcomes: [{ result: "adult_wed.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
         {

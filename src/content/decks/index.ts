@@ -1,6 +1,7 @@
 // Barrel for the domain-grouped deck files.
 export { babyDecks } from "./baby.ts";
 export { familyDecks } from "./family.ts";
+export { lillyDecks } from "./lilly.ts";
 export { childhoodDecks } from "./childhood.ts";
 export { adultDecks } from "./adult.ts";
 export { homeDecks } from "./home.ts";

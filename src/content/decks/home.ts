@@ -150,8 +150,8 @@ export const homeDecks = [
             left: {
               label: "home_family_fair.left",
               outcomes: [
-                { if: { traits: { flawSweetTooth: true } }, result: "home_family_fair.left.r0", effects: { vitals: { happiness: "+++", finances: "--", health: "--" }, incTraits: { socialWarmth: 2 } } },
-                { result: "home_family_fair.left.r1", effects: { vitals: { happiness: "++", finances: "-", health: "-" }, incTraits: { socialWarmth: 2 } } },
+                { if: { traits: { flawSweetTooth: true } }, result: "home_family_fair.left.r0", effects: { vitals: { happiness: "+++", finances: "--", health: "--" }, incTraits: { socialWarmth: 4 } } },
+                { result: "home_family_fair.left.r1", effects: { vitals: { happiness: "++", finances: "-", health: "-" }, incTraits: { socialWarmth: 4 } } },
               ],
             },
             right: {
@@ -168,7 +168,7 @@ export const homeDecks = [
           kind: "one_time",
           prompt: "home_family_church.prompt",
           options: {
-            left: { label: "home_family_church.left", outcomes: [{ result: "home_family_church.left.r0", effects: { vitals: { spirit: "++", happiness: "-" }, incTraits: { socialWarmth: 2 } } }] },
+            left: { label: "home_family_church.left", outcomes: [{ result: "home_family_church.left.r0", effects: { vitals: { spirit: "++", happiness: "-" }, incTraits: { socialWarmth: 3 } } }] },
             right: { label: "home_family_church.right", outcomes: [{ result: "home_family_church.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
           },
         },

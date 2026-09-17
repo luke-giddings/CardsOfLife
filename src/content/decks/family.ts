@@ -27,11 +27,11 @@ export const familyDecks = [
           // warmth in the game, and the cheapest: it costs you nothing but the
           // afternoon.
           id: "fam_single_yard",
-          kind: "one_time",
+          kind: "filler",
           conditions: { ageMax: 13 },
           prompt: "fam_single_yard.prompt",
           options: {
-            left: { label: "fam_single_yard.left", outcomes: [{ result: "fam_single_yard.left.r0", effects: { vitals: { happiness: "+", health: "-" }, incTraits: { socialWarmth: 2 } } }] },
+            left: { label: "fam_single_yard.left", outcomes: [{ result: "fam_single_yard.left.r0", effects: { vitals: { happiness: "+", health: "-" }, incTraits: { socialWarmth: 3 } } }] },
             right: { label: "fam_single_yard.right", outcomes: [{ result: "fam_single_yard.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
@@ -68,6 +68,41 @@ export const familyDecks = [
               ],
             },
             right: { label: "fam_single_dance.right", outcomes: [{ result: "fam_single_dance.right.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // THE INTRO — the door to Lilly's deck, and the template for the rest.
+          //
+          // It is "you made a friend", NOT "you started courting", so it carries
+          // NO AGE GATE: best friends who become lovers is the arc the ardour axis
+          // exists for, and a gate here would block it. Only the dating cards
+          // inside her own deck are age-gated.
+          //
+          // It SPENDS warmth (5, off a life's measured 2.7 / 6.6 / 7.6 for a cold
+          // / ordinary / sociable player), which is the whole economy: a cold life
+          // never affords anyone, an ordinary one affords a person, a warm one
+          // affords two or three. Nothing counts them.
+          //
+          // Where you met is recorded rather than gated on — `relLillyMet` is read
+          // back by her deck for flavour and by the epilogue. Gating the door on
+          // the schoolroom would have hidden her entirely: only 0.8% of lives ever
+          // sit in one.
+          id: "fam_single_lilly",
+          kind: "one_time",
+          weight: 8,
+          conditions: { traits: { socialWarmth: { min: 5 }, relLillyActive: false } },
+          prompt: "fam_single_lilly.prompt",
+          options: {
+            left: {
+              label: "fam_single_lilly.left",
+              outcomes: [
+                { if: { any: [{ status: { job: "studying" } }, { status: { job: "grammar_school" } }] }, result: "fam_single_lilly.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { socialWarmth: -5, relLillyWarmth: 10 }, setTraits: { relLillyActive: true, relLillyMet: "school" }, addDecks: ["rel_lilly"], remember: "log.lilly" } },
+                { if: { status: { job: "university" } }, result: "fam_single_lilly.left.r1", effects: { vitals: { happiness: "+" }, incTraits: { socialWarmth: -5, relLillyWarmth: 10 }, setTraits: { relLillyActive: true, relLillyMet: "university" }, addDecks: ["rel_lilly"], remember: "log.lilly" } },
+                { if: { any: [{ status: { job: "infant" } }, { status: { job: "unemployed" } }, { status: { job: "pauper" } }] }, result: "fam_single_lilly.left.r2", effects: { vitals: { happiness: "+" }, incTraits: { socialWarmth: -5, relLillyWarmth: 10 }, setTraits: { relLillyActive: true, relLillyMet: "street" }, addDecks: ["rel_lilly"], remember: "log.lilly" } },
+                { result: "fam_single_lilly.left.r3", effects: { vitals: { happiness: "+" }, incTraits: { socialWarmth: -5, relLillyWarmth: 10 }, setTraits: { relLillyActive: true, relLillyMet: "work" }, addDecks: ["rel_lilly"], remember: "log.lilly" } },
+              ],
+            },
+            right: { label: "fam_single_lilly.right", outcomes: [{ result: "fam_single_lilly.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
         {

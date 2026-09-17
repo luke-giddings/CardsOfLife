@@ -91,7 +91,7 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_nursery.prompt",
           options: {
-            left: { label: "baby_nursery.left", outcomes: [{ result: "baby_nursery.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { persSociable: true }, incTraits: { socialWarmth: 2 } } }] },
+            left: { label: "baby_nursery.left", outcomes: [{ result: "baby_nursery.left.r0", effects: { vitals: { spirit: "+" }, setTraits: { persSociable: true }, incTraits: { socialWarmth: 4 } } }] },
             right: { label: "baby_nursery.right", outcomes: [{ result: "baby_nursery.right.r0", effects: { vitals: { health: "+" } } }] },
           },
         },

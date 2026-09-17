@@ -1143,10 +1143,12 @@ Roughly in likely order. None of these are started.
   owns the rest of your life. Agreed in full; recorded here so it survives.
 
   **Built so far:** the `show` rule that lets a status hide until 18; the `family`
-  status with all six states; `fam_single` with four warmth-earning cards; the
-  warmth feeds on the common decks. **Still to do,** in order: the first
-  person-deck (Lilly) and her intro; measurement; then delete `ya_courting` and
-  `adult_wed`.
+  status with all six states; `fam_single` with four warmth-earning cards and
+  Lilly's intro; the warmth feeds on the common decks; **`rel_lilly`, the first
+  person-deck**; `ya_courting` and `adult_wed` deleted. **Still to do:** the other
+  person-decks, `fam_attached` and the affair intros, the cross-person deck, the
+  `scandal` counter, and `family: "parent"` (nothing sets it — `adult_children`
+  is still the old stub).
 
   **Why the feeds had to come first** (`scripts/social.ts`, 2,000 lives). With
   `fam_single` as its only source a life banked a **mean 2.2** warmth — and a
@@ -1248,6 +1250,61 @@ Roughly in likely order. None of these are started.
   `ya_courting` and `adult_wed` are deleted rather than absorbed, and an
   unsociable life dies alone; marriage does **not** close the other person-decks,
   which is what makes the ardour axis and the scandal counter matter.
+- **RELATIONSHIPS, part two: what the first person-deck measured.** `rel_lilly` is
+  built and is the template. Three players (`scripts/lilly.ts`, 3,000 lives each):
+
+  | | met her | her warmth (median / p90) | said it | ended courting | married | lost her |
+  |---|---|---|---|---|---|---|
+  | **cold** | 8.3% | 10 / 20 | 0.4% | 0.0% | 0.0% | 0.6% |
+  | **greedy** (indifferent) | 62.8% | 10 / 26 | 2.4% | 1.5% | 0.3% | 6.9% |
+  | **devoted** | 68.1% | 16 / 40 | 6.2% | 4.0% | 1.4% | 4.2% |
+
+  Her deck is 4.0–4.7% of a life's draws. Lifespan is unmoved (34.3). Reach looks
+  high only because she is the **only** thing there is to spend warmth on; with
+  five decks priced at 5 each, an ordinary life buys two of the five and each
+  deck's own reach falls to roughly this number divided among them.
+
+  Four things this cost, all of them general:
+
+  **1. `focusPool` is the biggest single fact about any non-priority deck.** While
+  a `priority` deck (unemployment, workhouse, gaol) has an eligible card, the pool
+  is restricted to it, and a life spends a great many years there. Sparing
+  `fam_single` and `rel_lilly` (as the sibling decks are spared) moved the intro
+  from a median age of 23 to 16 and reach from 47% to 83% — and cost the escape
+  routes their focus: reaching 60 fell 1.5% → 0.9%. **The call was that the
+  suppression is correct** — a state you should be escaping owns the draw — so
+  neither deck is spared, and the reach was bought back with `weight` instead.
+  This is also why the sibling decks' late beats are so rarely read.
+
+  **2. A card about a `priority` state can never be dealt during it.** The first
+  version of Lilly's disappointment card was gated on `job: "unemployed"` — and so
+  was unreachable by construction, because being out of work is exactly when her
+  deck is switched off. The fix is a COUNTER the status ticks (`jobYearsIdle`,
+  as gaol ticks `flawYearsInGaol`) and a card that reads it afterwards. **Any
+  card that wants to judge a bad spell has to be dealt after it.**
+
+  **3. Author a relationship clock with `incTraits`, never `setTraits`.** The
+  card-face ★ fires on any `setTraits`/`addDecks`/`removeDecks`, so resetting a
+  presence clock with `setTraits: { …Distance: 0 }` put a reward star on every
+  swipe in the deck — including "tell her to mind her own business". The sibling
+  decks' `incTraits: { …Distance: -6 }` earns no mark and reads better anyway: a
+  visit buys you six years, it does not stop time. Likewise an outcome that ENDS
+  a relationship latches its flags in `setFlaws`, not `setTraits`, so it wears ⚠
+  rather than ★.
+
+  **4. There has to be a reason to propose.** A devoted player turned the
+  proposal down two times in three: marriage cost a wedding and bought three
+  points of happiness drift over the courting it replaced. Married drift now
+  carries **health +3** — somebody to feed you and nurse you — which is the
+  scarcer of the two vitals that do the killing. (The sim still declines it often;
+  that is its documented blindness to anything paid for now and collected later,
+  the same reason it scores 0% journeymen.)
+
+  **What is still thin, and why it is not a content fault.** Courting happens at a
+  median age of **35** and marriage lands in 1.4% of devoted lives. The arc is
+  four cards deep, the deck is off during priority years, and the life ends at 34.
+  This is the live-past-thirty item below wearing a different hat; do not tune it
+  out by inflating her weights.
 - **LET A LIFE RUN PAST THIRTY. This is the blocking item for most of the
   written content.** A greedy life ends at ~35 and **2.3% reach 60**, and the
   decks are written for a whole life, so the back half of several of them is
