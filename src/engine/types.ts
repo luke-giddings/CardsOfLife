@@ -91,12 +91,23 @@ export interface Traits {
   // e.g. off the streets — from a fresh grammar-leaver who never went.
   eduWasUndergraduate: boolean;
   // Personality / disposition. `pers*` so the debug panel groups them under a
-  // Personality category. The counters (0..3): a baby who leans into it starts
-  // at the cap (3, = "fully" the trait); otherwise you build it up +1 at a time
-  // in youth. Cards that reward the trait gate on `{ min: 3 }`. (Backlog: more +1
-  // sources so youth can actually reach 3, and more results that branch on level.)
-  persBookish: number;
-  persSporty: number;
+  // Personality category. PLAIN BOOLEANS: you are the sort of person who does
+  // this, or you are not.
+  //
+  // Two of them were 0..3 counters, capped and gated at `{ min: 3 }`, on the idea
+  // that a baby who leaned into it started at the cap and everyone else built up
+  // to it. Nothing ever built up to it. `persBookish` had ONE writer, which set it
+  // straight to 3, so the threshold was decoration on a boolean. `persSporty` had
+  // a second writer worth +1, which could not reach 3 from 0 however it fell:
+  // measured over 6,000 lives it ended on 0 or 1 and never on 3, and the football
+  // card's +1 failed to carry anyone across the gate 1,399 times out of 1,399.
+  //
+  // A level would need a stream of sources to climb and a way for the player to
+  // see where they stood on it, and there is neither. A boolean has one card that
+  // makes you it, and that card wears a ★, which is the whole of what a threshold
+  // crossing was trying to say.
+  persBookish: boolean;
+  persSporty: boolean;
   persSociable: boolean;
   // Sibling relationships (hidden; can go negative = rivalry). All `rel<Sibling>*`
   // so the debug panel groups them by sibling under a Relationships category.
@@ -239,8 +250,8 @@ export const DEFAULT_TRAITS: Traits = {
   skillVaccinated: false,
   eduUniFund: false,
   eduWasUndergraduate: false,
-  persBookish: 0,
-  persSporty: 0,
+  persBookish: false,
+  persSporty: false,
   persSociable: false,
   relBrotherActive: false,
   relBrotherLove: 0,

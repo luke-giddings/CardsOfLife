@@ -41,10 +41,13 @@ export const childhoodDecks = [
           kind: "one_time",
           prompt: "child_sports.prompt",
           options: {
-            // Going all-out also builds the sporty counter (+1) -- the first
-            // youth source toward re-earning what a sporty baby got for free.
-            // (Backlog: more +1 sources so youth can actually reach the cap.)
-            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" }, incTraits: { persSporty: 1, socialWarmth: 2 } } }] },
+            // The SECOND way to become a sporty sort, and the only one open after
+            // infancy — throwing yourself at the game until that is what you are.
+            // It used to add +1 to a counter gated at 3, which it could not reach
+            // from 0 by any route, so the payload was dead: measured, it failed to
+            // carry a life across that gate 1,399 times out of 1,399. As a boolean
+            // it does what it always said it did, and earns its ★ for doing it.
+            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" }, setTraits: { persSporty: true }, incTraits: { socialWarmth: 2 } } }] },
             right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", spirit: "+", health: "-" }, incTraits: { socialWarmth: 4 } } }] },
           },
         },
@@ -91,7 +94,7 @@ export const childhoodDecks = [
               // risk/reward: brilliant if sporty, deadly if not.
               label: "child_accident.left",
               outcomes: [
-                { if: { traits: { persSporty: { min: 3 } } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
+                { if: { traits: { persSporty: true } }, result: "child_accident.left.r0", effects: { vitals: { spirit: "+" } } },
                 { result: "child_accident.left.r1", effects: { vitals: { health: "---" } } },
               ],
             },

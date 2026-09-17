@@ -56,8 +56,8 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_disposition.prompt",
           options: {
-            left: { label: "baby_disposition.left", outcomes: [{ result: "baby_disposition.left.r0", effects: { vitals: { health: "+" }, setTraits: { persSporty: 3 } } }] },
-            right: { label: "baby_disposition.right", outcomes: [{ result: "baby_disposition.right.r0", effects: { vitals: { spirit: "+" }, setTraits: { persBookish: 3 } } }] },
+            left: { label: "baby_disposition.left", outcomes: [{ result: "baby_disposition.left.r0", effects: { vitals: { health: "+" }, setTraits: { persSporty: true } } }] },
+            right: { label: "baby_disposition.right", outcomes: [{ result: "baby_disposition.right.r0", effects: { vitals: { spirit: "+" }, setTraits: { persBookish: true } } }] },
             up: { label: "baby_disposition.up", outcomes: [{ result: "baby_disposition.up.r0", effects: { vitals: { health: "++", happiness: "++", spirit: "+" } } }] },
           },
         },

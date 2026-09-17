@@ -151,7 +151,7 @@ export const jobDecks = [
               // still a child, fatal once you're grown and past it).
               label: "job_labour_machine.left",
               outcomes: [
-                { if: { traits: { persSporty: { min: 3 } } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { jobExperience: 1 } } },
+                { if: { traits: { persSporty: true } }, result: "job_labour_machine.left.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { jobExperience: 1 } } },
                 { result: "job_labour_machine.left.r1", effects: { vitals: { finances: "+", health: "---" }, incTraits: { jobExperience: 1 } } },
               ],
             },

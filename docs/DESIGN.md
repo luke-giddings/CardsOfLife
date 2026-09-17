@@ -1345,16 +1345,48 @@ Roughly in likely order. None of these are started.
   is neither (no mark — the chip still says Cat, and the star was firing on the
   age going back to zero).
 
-  One counter keeps its star deliberately: `baby_disposition` writes
-  `setTraits: { persSporty: 3 }`, a disposition rather than a tally, and its third
-  option ("a bit of both") has the best raw vitals and no lasting trait — the star
-  is the only thing telling you the other two leave a mark on you.
+  The one counter that kept its star under protest — `baby_disposition` writing
+  `setTraits: { persSporty: 3 }`, a disposition rather than a tally — stopped being
+  an exception when **the disposition counters became plain booleans**. They had
+  been 0..3 with every reader gated at `{ min: 3 }`, on the idea that a baby who
+  leaned in started at the cap and everyone else climbed to it. Nothing climbed.
+  `persBookish` had one writer, which set it straight to 3. `persSporty` had a
+  second worth +1, which cannot reach 3 from 0 by any route — measured over 6,000
+  lives it ended on 0 or 1 and **never** on 3, and the football card's +1 failed to
+  carry a life across the gate **1,399 times out of 1,399**.
+
+  A level needs a stream of sources to climb and some way for the player to see
+  where they stand on it, and there was neither. A boolean has one card that makes
+  you it, and that card wears a ★ — which is the whole of what a threshold
+  crossing was trying to say, said legibly. As booleans the football card is a real
+  second route to being sporty rather than dead weight: `persSporty` goes from
+  reaching its gate in **0%** of lives to being true in **24.4%**, and because it
+  is read by the childhood accident and the loom, mean life goes **34.3 → 34.9**
+  and reaching 40 **25.5% → 28.7%**. Unblocking dead content, not a balance tweak.
+
+  **Still dead, and it is not the trait's fault:** `persBookish` is false in
+  **100%** of greedy lives, because its only source is `baby_disposition`, whose
+  third option pays about six times what the two defining options pay — see the
+  backlog item below.
 
   **What is still thin, and why it is not a content fault.** Courting happens at a
   median age of **35** and marriage lands in 1.4% of devoted lives. The arc is
   four cards deep, the deck is off during priority years, and the life ends at 34.
   This is the live-past-thirty item below wearing a different hat; do not tune it
   out by inflating her weights.
+- **`baby_disposition`'s neutral option pays six times what the other two do.**
+  "Out to play" is health + and makes you sporty; "Nose in a book" is spirit + and
+  makes you bookish; "A bit of both" is health ++ happiness ++ spirit + — sixty
+  points of visible vitals against ten, and it leaves no mark on you at all. The
+  option that decides what sort of person you are should be the one that costs,
+  not the one that pays. Consequence: `persBookish` is false in **100%** of
+  measured lives, which makes four written branches unreachable — the bookish
+  readings of `edu_basicschool_exams`, `edu_basicschool_prize`,
+  `edu_grammar_debate` and `edu_university_lectures`. `scripts/invisible.ts` does
+  not flag it, correctly by its own rules, because the ★ on the two disposition
+  options exempts them. It is an infancy card, and infancy cards compound hard
+  (one magnitude step on grandma's treat moved mean life 38.8 → 33.0), so this
+  wants deciding rather than nudging.
 - **THE DRIFT TABLE, decided in one pass.** Not just the family status (stripped
   to nothing above, deliberately) — the whole table. Drift is what kills you (the
   killing blow in 63.7% of deaths) and it is currently the sum of four
