@@ -1221,6 +1221,30 @@ export const EN = {
 
 
 
+  // ---- FAMILY: UNATTACHED (fam_single) ----------------------------------
+  "fam_single_yard.prompt": "There's a knot of children in the yard, thick as thieves over some game with its own unwritten rules. One of them looks over at you.",
+  "fam_single_yard.left": "Join in",
+  "fam_single_yard.left.r0": "You never do learn the rules, but you learn the names, and by dusk you're one of them — grazed, filthy and grinning.",
+  "fam_single_yard.right": "Keep to yourself",
+  "fam_single_yard.right.r0": "You watch from the step and keep your own counsel. It's quieter there, and lonelier, and you get rather good at it.",
+  "fam_single_favour.prompt": "Someone you half know asks a favour — an afternoon of your time, with nothing in it for you but the asking.",
+  "fam_single_favour.left": "Give the afternoon",
+  "fam_single_favour.left.r0": "You fall into it the way you fall into everything, and come away with the afternoon gone and a friend gained.",
+  "fam_single_favour.left.r1": "It's an awkward few hours and you'd rather have been anywhere else — but they remember that you came.",
+  "fam_single_favour.right": "Beg off",
+  "fam_single_favour.right.r0": "You make your excuses. The time is yours again and you spend it on yourself; nobody asks twice.",
+  "fam_single_dance.prompt": "A penny hop in the hall at the end of the street — a fiddle, a bare floor and half the parish crowding in.",
+  "fam_single_dance.left": "Pay your penny",
+  "fam_single_dance.left.r0": "You're in your element before the fiddler has finished tuning, and you shut the place down.",
+  "fam_single_dance.left.r1": "You spend most of it holding up the wall — but you're there, and you're seen, and someone finally drags you onto the boards.",
+  "fam_single_dance.right": "Keep the penny",
+  "fam_single_dance.right.r0": "You catch the fiddle through the wall on your way past, and the penny stays in your pocket where it's safe.",
+  "fam_single_alone.prompt": "Everyone you came up with is spoken for. The rooms are yours, the evenings are yours, and the quiet is getting louder.",
+  "fam_single_alone.left": "Make peace with it",
+  "fam_single_alone.left.r0": "You set your own hours, answer to nobody, and tell yourself it suits you. Most days it does.",
+  "fam_single_alone.right": "Get out among people",
+  "fam_single_alone.right.r0": "You put your coat on and go where the noise is. It costs you a round and an early night, and it's worth both.",
+
   // ---- DECK unlock announcements ---------------------------------------
   "deck.childhood.title": "Childhood",
   "deck.childhood.blurb": "You're a child now — a whole world of scraped knees, best friends and hard knocks awaits.",
@@ -1287,6 +1311,13 @@ export const EN = {
   "statuskind.education": "Education",
   "statuskind.lifestyle": "Life",
   "statuskind.pet": "Pet",
+  "statuskind.family": "Family",
+  "status.family.infant": "A child at home",
+  "status.family.single": "On your own",
+  "status.family.courting": "Courting",
+  "status.family.married": "Married",
+  "status.family.parent": "A family",
+  "status.family.widowed": "Widowed",
   "status.pet.cat": "A cat",
   "status.pet.dog": "A dog",
 
@@ -2709,6 +2740,30 @@ export const IT: Record<StringId, string> = {
 
 
 
+  // ---- FAMILY: UNATTACHED (fam_single) ----------------------------------
+  "fam_single_yard.prompt": "Nel cortile c'\u00e8 un capannello di ragazzini, uniti come ladri attorno a un gioco con regole tutte sue. Uno di loro si volta a guardarti.",
+  "fam_single_yard.left": "Unirti a loro",
+  "fam_single_yard.left.r0": "Le regole non le impari mai, ma impari i nomi, e al tramonto sei uno di loro — sbucciato, lercio e raggiante.",
+  "fam_single_yard.right": "Restare per conto tuo",
+  "fam_single_yard.right.r0": "Guardi dal gradino e tieni per te i tuoi pensieri. \u00c8 pi\u00f9 tranquillo cos\u00ec, e pi\u00f9 solo, e ci diventi piuttosto bravo.",
+  "fam_single_favour.prompt": "Qualcuno che conosci appena ti chiede un favore — un pomeriggio del tuo tempo, senza altra ricompensa che l'averlo chiesto.",
+  "fam_single_favour.left": "Concedere il pomeriggio",
+  "fam_single_favour.left.r0": "Ci finisci dentro come finisci dentro a tutto, e ne esci col pomeriggio andato e un amico in pi\u00f9.",
+  "fam_single_favour.left.r1": "Sono un paio d'ore imbarazzanti e saresti stato ovunque tranne l\u00ec — ma si ricordano che sei venuto.",
+  "fam_single_favour.right": "Tirarti indietro",
+  "fam_single_favour.right.r0": "Trovi una scusa. Il tempo torna tuo e lo spendi per te; nessuno te lo chiede due volte.",
+  "fam_single_dance.prompt": "Un ballo da un penny nella sala in fondo alla strada — un violino, un pavimento spoglio e mezza parrocchia che si accalca.",
+  "fam_single_dance.left": "Pagare il tuo penny",
+  "fam_single_dance.left.r0": "Sei nel tuo elemento prima ancora che il violinista abbia finito di accordare, e chiudi tu la serata.",
+  "fam_single_dance.left.r1": "Passi quasi tutta la sera appoggiato al muro — ma ci sei, e ti vedono, e alla fine qualcuno ti trascina sulle assi.",
+  "fam_single_dance.right": "Tenerti il penny",
+  "fam_single_dance.right.r0": "Passando senti il violino attraverso il muro, e il penny resta in tasca, al sicuro.",
+  "fam_single_alone.prompt": "Tutti quelli cresciuti con te sono sistemati. Le stanze sono tue, le serate sono tue, e il silenzio si fa sempre pi\u00f9 forte.",
+  "fam_single_alone.left": "Fartene una ragione",
+  "fam_single_alone.left.r0": "Ti fai i tuoi orari, non rendi conto a nessuno e ti dici che ti sta bene. Quasi sempre \u00e8 vero.",
+  "fam_single_alone.right": "Uscire tra la gente",
+  "fam_single_alone.right.r0": "Ti metti il cappotto e vai dove c'\u00e8 rumore. Ti costa un giro da bere e una nottata corta, e vale entrambi.",
+
   // ---- DECK unlock announcements ---------------------------------------
   "deck.childhood.title": "L'infanzia",
   "deck.childhood.blurb": "Ora sei un bambino — un mondo intero di ginocchia sbucciate, amici del cuore e brutti colpi ti aspetta.",
@@ -2775,6 +2830,13 @@ export const IT: Record<StringId, string> = {
   "statuskind.education": "Istruzione",
   "statuskind.lifestyle": "Vita",
   "statuskind.pet": "Animale",
+  "statuskind.family": "Famiglia",
+  "status.family.infant": "Un figlio in casa",
+  "status.family.single": "Per conto tuo",
+  "status.family.courting": "Fidanzamento",
+  "status.family.married": "Sposato",
+  "status.family.parent": "Una famiglia",
+  "status.family.widowed": "Vedovo",
   "status.pet.cat": "Un gatto",
   "status.pet.dog": "Un cane",
 

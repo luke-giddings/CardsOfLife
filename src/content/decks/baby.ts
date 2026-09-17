@@ -96,6 +96,10 @@ export const babyDecks = [
           },
         },
         {
+          // Also the moment `family` leaves `infant`: from here you are a person
+          // who could meet someone, which is what puts the fam_single deck in
+          // play. The chip stays hidden until 18 (see the status's `show`) —
+          // the deck is doing its work long before it is worth saying out loud.
           id: "baby_schooling",
           kind: "milestone",
           priority: 20,
@@ -104,11 +108,11 @@ export const babyDecks = [
           options: {
             left: {
               label: "baby_schooling.left",
-              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { age: "child", job: "studying" }, addDecks: ["age_childhood", "home_family"], removeDecks: ["age_baby"] } }],
+              outcomes: [{ result: "baby_schooling.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { age: "child", job: "studying", family: "single" }, addDecks: ["age_childhood", "home_family"], removeDecks: ["age_baby"] } }],
             },
             right: {
               label: "baby_schooling.right",
-              outcomes: [{ result: "baby_schooling.right.r0", effects: { vitals: { finances: "+" }, setStatus: { age: "child", job: "child_labourer" }, addDecks: ["age_childhood", "home_family"], removeDecks: ["age_baby"] } }],
+              outcomes: [{ result: "baby_schooling.right.r0", effects: { vitals: { finances: "+" }, setStatus: { age: "child", job: "child_labourer", family: "single" }, addDecks: ["age_childhood", "home_family"], removeDecks: ["age_baby"] } }],
             },
           },
         },

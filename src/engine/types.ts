@@ -70,8 +70,8 @@ export const ENDINGS: Record<string, Ending> = {
 };
 
 // --- Statuses: persistent side-states that drift Vitals and gate content. ----
-export type StatusKind = "age" | "job" | "housing" | "education" | "lifestyle" | "pet";
-export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education", "lifestyle", "pet"];
+export type StatusKind = "age" | "job" | "housing" | "education" | "lifestyle" | "pet" | "family";
+export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education", "lifestyle", "pet", "family"];
 
 // --- Traits: hidden state. Booleans, enums, counters. ------------------------
 // Add a field here and it is instantly usable (and type-checked) in content.
@@ -195,10 +195,30 @@ export interface Traits {
   // Pets. `pet*` so the debug panel groups them under a Pets category. There are
   // two pets (one at a time): a cat (a HAPPINESS companion) and a dog (a SPIRIT
   // companion), each with its own age/love pair. `pet<X>Age` ticks up each year
-  // you keep that pet (via the pet status state's `tick`); the pet deck's passing
-  // milestone fires when it reaches old age. `pet<X>Love` is how well you treat
-  // it — neglect drives it down until the animal runs off (the runaway milestone,
-  // which removes the pet before old age so a mistreated one never reaches passing).
+  // --- Making people, and what you make of them --------------------------
+  // The social CURRENCY. Earned a couple of points at a time from options on
+  // cards most lives already draw, and SPENT when you take someone up on their
+  // acquaintance (the intro cards in fam_single). Nothing caps how many people
+  // you can have: the cap is how much of this a life can bank, so a warm and
+  // sociable one affords two or three and a cold one affords nobody.
+  socialWarmth: number;
+  // Lilly (rel_lilly). Two axes, and the second is the point. WARMTH is how much
+  // SHE cares for you, built by showing up and by choosing her over something.
+  // ARDOUR is how hard YOU push it past friendship. The pair gives four outcomes
+  // rather than a switch: warm and unpushed is a friend for life, warm and pushed
+  // is the marriage, cold and unpushed is a drift — and cold and PUSHED is the
+  // one worth having, where you reached for more than was there and spoiled what
+  // you had. DISTANCE is the presence clock the sibling decks use: it climbs by
+  // itself and only falls when you turn up.
+  relLillyActive: boolean;
+  relLillyWarmth: number;
+  relLillyArdour: number;
+  relLillyDistance: number;
+  // Where you met her, branched off your status the year the intro fires. Read
+  // by her own cards for flavour and by the epilogue. NOT a door: the intro is
+  // reachable wherever you are, and this only records which wherever it was.
+  relLillyMet: "none" | "school" | "university" | "work" | "street";
+  relLillyStoryDone: boolean;
   petCatAge: number;
   petCatLove: number;
   petDogAge: number;
@@ -242,6 +262,13 @@ export const DEFAULT_TRAITS: Traits = {
   flawSoldUp: false,
   flawWanted: false,
   flawSweetTooth: false,
+  socialWarmth: 0,
+  relLillyActive: false,
+  relLillyWarmth: 0,
+  relLillyArdour: 0,
+  relLillyDistance: 0,
+  relLillyMet: "none",
+  relLillyStoryDone: false,
   petCatAge: 0,
   petCatLove: 0,
   petDogAge: 0,

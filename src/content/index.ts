@@ -1,6 +1,7 @@
 import type { Content } from "../engine/types.ts";
 import {
   babyDecks,
+  familyDecks,
   childhoodDecks,
   adultDecks,
   homeDecks,
@@ -57,7 +58,7 @@ export const content = {
     // Start low and even — babyhood is where the meters get built up (unevenly,
     // by your choices), ready for the child deck to start spending them.
     vitals: { finances: 20, happiness: 20, health: 20, spirit: 20 },
-    statuses: { age: "baby", job: "infant", housing: "family", education: "illiterate", lifestyle: "default", pet: "none" },
+    statuses: { age: "baby", job: "infant", housing: "family", education: "illiterate", lifestyle: "default", pet: "none", family: "infant" },
     decks: ["age_baby"],
     traits: {},
   },
@@ -304,10 +305,60 @@ export const content = {
         },
       },
     },
+
+    // HOME LIFE — who you have, and what that makes of your household. Starts at
+    // `infant` (a child under someone else's roof, no drift, nothing to say) and
+    // moves to `single` at the school/work choice, exactly as `job` leaves its own
+    // `infant`. `single` is doing real work from about five — it owns the deck
+    // where you meet people — but is nobody's business until you are grown, hence
+    // `show: { ageMin: 18 }`.
+    //
+    // Each state owns its deck, so marrying swaps your unattached social life for
+    // your married one with no card having to say so. `fam_attached` is added by
+    // ALL THREE attached states, so an affair is open to the spoken-for whatever
+    // shape their household has taken, and closes if they are single again.
+    //
+    // The drift is the one place this feature pays into the game's biggest
+    // problem: happiness is 49.7% of deaths and has almost no reliable sources
+    // after childhood. Company is one. It is not free — every attached state
+    // costs money, and children cost money and health as well.
+    family: {
+      id: "family",
+      show: { ageMin: 18 },
+      states: {
+        infant: { label: "status.family.infant" },
+        single: { label: "status.family.single", addDecks: ["fam_single"] },
+        courting: {
+          label: "status.family.courting",
+          drift: { finances: -5, happiness: 5 },
+          driftShown: { finances: "-", happiness: "+" },
+        },
+        married: {
+          label: "status.family.married",
+          drift: { finances: -5, happiness: 8 },
+          driftShown: { finances: "-", happiness: "++" },
+        },
+        // Married with children. NOT REACHED YET — the children cards are the
+        // next slice; the state is declared because the shape was agreed and a
+        // half-declared status is worse than an unreached one.
+        parent: {
+          label: "status.family.parent",
+          drift: { finances: -12, happiness: 10, health: -3 },
+          driftShown: { finances: "--", happiness: "++", health: "-" },
+        },
+        // Also not reached yet: nothing kills a spouse.
+        widowed: {
+          label: "status.family.widowed",
+          drift: { happiness: -8 },
+          driftShown: { happiness: "--" },
+        },
+      },
+    },
   },
 
   decks: [
     ...babyDecks,
+    ...familyDecks,
     ...childhoodDecks,
     ...adultDecks,
     ...homeDecks,

@@ -70,6 +70,7 @@ const STATUS_LABEL: Record<StatusKind, StringId> = {
   education: "statuskind.education",
   lifestyle: "statuskind.lifestyle",
   pet: "statuskind.pet",
+  family: "statuskind.family",
 };
 
 // Debug stepper size per numeric trait: how far the −/+ buttons move it. Derived
@@ -84,6 +85,10 @@ const TRAIT_STEP: Record<string, number> = {
   relBrotherGrit: 5,
   relBrotherDistance: 5,
   relSisterDistance: 5,
+  relLillyWarmth: 10,
+  relLillyArdour: 10,
+  relLillyDistance: 5,
+  socialWarmth: 2,
 };
 
 const SWIPE_THRESHOLD = 60; // px of drag before a swipe locks in (highlight + commit) — the DECISION point
@@ -699,11 +704,12 @@ export class Game {
     type TEntry = [string, unknown];
     const isSet = ([, v]: TEntry): boolean =>
       typeof v === "number" ? v !== 0 : typeof v === "boolean" ? v : true;
-    const loose: TEntry[] = [], pers: TEntry[] = [], skill: TEntry[] = [], edu: TEntry[] = [], job: TEntry[] = [], tom: TEntry[] = [], sis: TEntry[] = [], flaw: TEntry[] = [], pet: TEntry[] = [];
+    const loose: TEntry[] = [], pers: TEntry[] = [], skill: TEntry[] = [], edu: TEntry[] = [], job: TEntry[] = [], tom: TEntry[] = [], sis: TEntry[] = [], lilly: TEntry[] = [], flaw: TEntry[] = [], pet: TEntry[] = [];
     for (const e of Object.entries(this.state.traits) as TEntry[]) {
       const k = e[0];
       if (k.startsWith("relBrother")) tom.push(e);
       else if (k.startsWith("relSister")) sis.push(e);
+      else if (k.startsWith("relLilly")) lilly.push(e);
       else if (k.startsWith("pers")) pers.push(e);
       else if (k.startsWith("skill")) skill.push(e);
       else if (k.startsWith("edu")) edu.push(e);
@@ -723,7 +729,10 @@ export class Game {
         ${inner}
       </details>`;
     };
-    const relBody = traitSec("trait:rel:bro", "Brother", tom) + traitSec("trait:rel:sis", "Sister", sis);
+    const relBody =
+      traitSec("trait:rel:bro", "Brother", tom) +
+      traitSec("trait:rel:sis", "Sister", sis) +
+      traitSec("trait:rel:lilly", "Lilly", lilly);
     const traitHtml =
       `<div class="dbg-traits">${loose.map(traitChip).join("")}</div>` +
       traitSec("trait:pers", "Personality", pers) +
@@ -732,7 +741,7 @@ export class Game {
       traitSec("trait:job", "Jobs", job) +
       traitSec("trait:pet", "Pets", pet) +
       traitSec("trait:flaw", "Flaws", flaw) +
-      traitSec("trait:rel", "Relationships", [...tom, ...sis], `<div class="dbg-relgroups">${relBody}</div>`);
+      traitSec("trait:rel", "Relationships", [...tom, ...sis, ...lilly], `<div class="dbg-relgroups">${relBody}</div>`);
 
     // Debug controls: vitals, age, decks, milestone jumps.
     const vitalCtl = VITAL_KEYS.map(
