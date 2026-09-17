@@ -695,6 +695,14 @@ playable on a phone.
 
 ## 17. Settled decisions (quick reference)
 
+- **THE ENGINE IS GAME-AGNOSTIC.** `src/engine` knows about cards, decks, pools,
+  statuses, traits and vitals. It knows nothing about Victorians, childhood,
+  apprenticeships or marriage. If a rule needs the word "childhood" to explain
+  itself, it belongs in `src/content` — as a number the content chooses, not a
+  name the engine understands. (Caught adding a `"fromChildhood"` case to
+  `StatusShow`: the same thing is said by `{ ageMin: 5 }`, and the 5 is content's
+  to know.) This is why `StatusDef.show` is required rather than defaulted — a
+  default would be the engine holding a view about which statuses matter when.
 - Four Vitals; any at 0 = game over; only Health's ending is "death".
 - Victorian setting; childhood mortality, earned by preparation (~70% careful).
 - Magnitude steps (`+`/`++`) with a single tunable point table.

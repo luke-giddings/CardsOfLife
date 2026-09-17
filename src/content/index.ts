@@ -74,7 +74,7 @@ export const content = {
     // can gate on atLeast/atMost by stage. Balance: all values are starter knobs.
     age: {
       id: "age",
-      show: "always", // the one status that means something from birth
+      show: "always", // the life stage means something from the first card
       ordered: true,
       ignoreNoDrift: true,
       levels: ["baby", "child", "young_adult", "adult", "old_age"],
@@ -88,6 +88,7 @@ export const content = {
     },
     job: {
       id: "job",
+      show: { ageMin: 5 }, // babyhood ends at the schooling milestone; nothing to show before it
       states: {
         infant: { label: "status.job.infant" }, // neutral start; no drain, no employment yet
         // While at school your "occupation" is studying: no wages and a grind on
@@ -181,6 +182,7 @@ export const content = {
     },
     housing: {
       id: "housing",
+      show: { ageMin: 5 }, // as job: the three core life statuses appear together
       states: {
         // Home life while living with the family. Costs money — your keep /
         // your share of the household — which the labourer's wage offsets but
@@ -231,6 +233,7 @@ export const content = {
     },
     education: {
       id: "education",
+      show: { ageMin: 5 }, // as job: the three core life statuses appear together
       ordered: true,
       // The credential that separates the four career paths. Only the ACADEMIC
       // ladder is ordered (for `atLeast` gating of the educated path). The TRADE

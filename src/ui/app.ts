@@ -406,16 +406,12 @@ export class Game {
     }
     this.prevVitals = { ...s.vitals };
     let chips = "";
-    // Whether a chip shows is the CONTENT's opinion (StatusDef.show), not a chain
-    // of special cases here: see the doc on StatusShow. Babyhood is read off the
-    // baby deck rather than the age, because that is what "before childhood
-    // starts" actually means when a life can be hurried along.
-    const inChildhood = !disp.activeDecks.includes("age_baby");
+    // Whether a chip shows is the CONTENT's opinion (StatusDef.show), not a rule
+    // written here: see the doc on StatusShow.
     const shows = (kind: StatusKind, value: string): boolean => {
-      const rule = content.statuses[kind].show ?? "fromChildhood";
+      const rule = content.statuses[kind].show;
       if (rule === "always") return true;
       if (rule === "whenSet") return value !== content.start.statuses[kind];
-      if (rule === "fromChildhood") return inChildhood;
       return s.age >= rule.ageMin;
     };
     for (const kind of STATUS_KINDS) {
