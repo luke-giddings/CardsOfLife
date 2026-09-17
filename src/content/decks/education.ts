@@ -10,9 +10,16 @@ export const educationDecks = [
       id: "edu_basicschool",
       cards: [
         {
+          // Examinations, from 9 rather than 11. Nine years of board school were
+          // delivering exactly one study card to most pupils — the prize — so the
+          // study banked at the leaver piled up at 2 and nowhere else, and any bar
+          // above it failed four pupils in five for want of a card to earn it on.
+          // Five years of exams instead of three is the cheapest way to make the
+          // trial a test of effort rather than of the shuffle.
           id: "edu_basicschool_exams",
+          weight: 3,
           kind: "one_time",
-          conditions: { ageMin: 11 },
+          conditions: { ageMin: 9 },
           prompt: "edu_basicschool_exams.prompt",
           options: {
             left: {
@@ -22,8 +29,8 @@ export const educationDecks = [
               // the prize.) A bookish child finds it a pleasure, not a grind.
               label: "edu_basicschool_exams.left",
               outcomes: [
-                { if: { traits: { persBookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
-                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "basic" } } },
+                { if: { traits: { persBookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, incTraits: { eduStudy: 3 }, setStatus: { education: "basic" } } },
+                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, incTraits: { eduStudy: 2 }, setStatus: { education: "basic" } } },
               ],
             },
             right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
@@ -31,6 +38,7 @@ export const educationDecks = [
         },
         {
           id: "edu_basicschool_crush",
+          weight: 3,
           kind: "one_time",
           conditions: { ageMin: 13 },
           prompt: "edu_basicschool_crush.prompt",
@@ -41,6 +49,7 @@ export const educationDecks = [
         },
         {
           id: "edu_basicschool_friend",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_basicschool_friend.prompt",
           options: {
@@ -50,6 +59,7 @@ export const educationDecks = [
         },
         {
           id: "edu_basicschool_prize",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_basicschool_prize.prompt",
           options: {
@@ -58,8 +68,8 @@ export const educationDecks = [
               // already half-read the syllabus for fun — an easy win.
               label: "edu_basicschool_prize.left",
               outcomes: [
-                { if: { traits: { persBookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "basic" } } },
-                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
+                { if: { traits: { persBookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, incTraits: { eduStudy: 3 }, setStatus: { education: "basic" } } },
+                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, incTraits: { eduStudy: 2 }, setStatus: { education: "basic" } } },
               ],
             },
             right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
@@ -69,11 +79,12 @@ export const educationDecks = [
           // A money route for the school path (no wages otherwise), so the
           // family living cost is survivable while studying.
           id: "edu_basicschool_errands",
+          weight: 3,
           kind: "filler",
           prompt: "edu_basicschool_errands.prompt",
           options: {
             left: { label: "edu_basicschool_errands.left", outcomes: [{ result: "edu_basicschool_errands.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
-            right: { label: "edu_basicschool_errands.right", outcomes: [{ result: "edu_basicschool_errands.right.r0", effects: { vitals: { spirit: "+", health: "+", finances: "-" } } }] },
+            right: { label: "edu_basicschool_errands.right", outcomes: [{ result: "edu_basicschool_errands.right.r0", effects: { vitals: { spirit: "+", health: "+", finances: "-" }, incTraits: { eduStudy: 1 } } }] },
           },
         },
         {
@@ -84,13 +95,38 @@ export const educationDecks = [
           // INTO WORK — your letters land you a shop position (shophand, the
           // educated-path entry the `basic` credential unlocks) rather than the
           // punishing scramble through unemployment.
+          //
+          // GOING UP IS NOW A TRIAL, not a choice, and it is the apprenticeship's
+          // trial wearing a gown: `eduStudy >= 3` or you sit the scholarship exam
+          // and fail. Nine years of board school supply it — a determined pupil
+          // banks a median 2 and a bookish one 3, of a possible 4 or more — so the
+          // bar is a real test that a bookish child clears more often, which is
+          // the point of being bookish.
+          //
+          // The option is NOT hidden when you are short. That was tried on the
+          // university leaver and it turned the card into an announcement and a
+          // taunt (see the grammar leaver below); and the failing outcome's chips
+          // are on the card face, so an idle pupil can see the exam is beyond him
+          // and take the shop position with his eyes open. Failing costs more than
+          // never trying, exactly as it does at the bench.
+          //
+          // Only this step is gated. Grammar school lasts three years and delivers
+          // a measured 1.7 draws, and university 1.1: there is no room to bank
+          // anything there, and a bar you cannot reach is not a test. Going up to
+          // university is gated on the MEANS instead, which is its own trial.
           id: "edu_basicschool_leaver",
           kind: "milestone",
           priority: 60,
           conditions: { ageMin: 14 },
           prompt: "edu_basicschool_leaver.prompt",
           options: {
-            left: { label: "edu_basicschool_leaver.left", outcomes: [{ result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "grammar_school" } } }] },
+            left: {
+              label: "edu_basicschool_leaver.left",
+              outcomes: [
+                { if: { traits: { eduStudy: { min: 3 } } }, result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "grammar_school" } } },
+                { result: "edu_basicschool_leaver.left.r1", effects: { vitals: { spirit: "-", happiness: "--" }, setStatus: { education: "basic", job: "shophand" } } },
+              ],
+            },
             right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "shophand" } } }] },
           },
         },
@@ -107,24 +143,27 @@ export const educationDecks = [
       cards: [
         {
           id: "edu_grammar_classics",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_grammar_classics.prompt",
           options: {
-            left: { label: "edu_grammar_classics.left", outcomes: [{ result: "edu_grammar_classics.left.r0", effects: { vitals: { spirit: "++", health: "-" } } }] },
+            left: { label: "edu_grammar_classics.left", outcomes: [{ result: "edu_grammar_classics.left.r0", effects: { vitals: { spirit: "++", health: "-" }, incTraits: { eduStudy: 2 } } }] },
             right: { label: "edu_grammar_classics.right", outcomes: [{ result: "edu_grammar_classics.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
           },
         },
         {
           id: "edu_grammar_master",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_grammar_master.prompt",
           options: {
-            left: { label: "edu_grammar_master.left", outcomes: [{ result: "edu_grammar_master.left.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+            left: { label: "edu_grammar_master.left", outcomes: [{ result: "edu_grammar_master.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { eduStudy: 2 } } }] },
             right: { label: "edu_grammar_master.right", outcomes: [{ result: "edu_grammar_master.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
           },
         },
         {
           id: "edu_grammar_debate",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_grammar_debate.prompt",
           options: {
@@ -132,8 +171,8 @@ export const educationDecks = [
             // no health cost of burning the midnight oil (mirrors how bookish
             // softens the basic-school achievement cards).
             left: { label: "edu_grammar_debate.left", outcomes: [
-              { if: { traits: { persBookish: true } }, result: "edu_grammar_debate.left.r1", effects: { vitals: { spirit: "++", happiness: "+" } } },
-              { result: "edu_grammar_debate.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" } } },
+              { if: { traits: { persBookish: true } }, result: "edu_grammar_debate.left.r1", effects: { vitals: { spirit: "++", happiness: "+" }, incTraits: { eduStudy: 3 } } },
+              { result: "edu_grammar_debate.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, incTraits: { eduStudy: 2 } } },
             ] },
             right: { label: "edu_grammar_debate.right", outcomes: [{ result: "edu_grammar_debate.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
           },
@@ -142,11 +181,12 @@ export const educationDecks = [
           // Tutoring a younger boy for pennies — the income card that offsets the
           // grammar-school fees (filler, so it recurs through the years).
           id: "edu_grammar_tutoring",
+          weight: 3,
           kind: "filler",
           prompt: "edu_grammar_tutoring.prompt",
           options: {
             left: { label: "edu_grammar_tutoring.left", outcomes: [{ result: "edu_grammar_tutoring.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
-            right: { label: "edu_grammar_tutoring.right", outcomes: [{ result: "edu_grammar_tutoring.right.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" } } }] },
+            right: { label: "edu_grammar_tutoring.right", outcomes: [{ result: "edu_grammar_tutoring.right.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" }, incTraits: { eduStudy: 1 } } }] },
           },
         },
         {
@@ -195,45 +235,49 @@ export const educationDecks = [
       cards: [
         {
           id: "edu_university_lectures",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_university_lectures.prompt",
           options: {
             // A bookish scholar (persBookish) finds the lecture hall a delight,
             // not a grind — the punishing study turns into a happiness gain.
             left: { label: "edu_university_lectures.left", outcomes: [
-              { if: { traits: { persBookish: true } }, result: "edu_university_lectures.left.r1", effects: { vitals: { spirit: "++", happiness: "+" } } },
-              { result: "edu_university_lectures.left.r0", effects: { vitals: { spirit: "++", health: "-" } } },
+              { if: { traits: { persBookish: true } }, result: "edu_university_lectures.left.r1", effects: { vitals: { spirit: "++", happiness: "+" }, incTraits: { eduStudy: 3 } } },
+              { result: "edu_university_lectures.left.r0", effects: { vitals: { spirit: "++", health: "-" }, incTraits: { eduStudy: 2 } } },
             ] },
             right: { label: "edu_university_lectures.right", outcomes: [{ result: "edu_university_lectures.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
           },
         },
         {
           id: "edu_university_mentor",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_university_mentor.prompt",
           options: {
-            left: { label: "edu_university_mentor.left", outcomes: [{ result: "edu_university_mentor.left.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+            left: { label: "edu_university_mentor.left", outcomes: [{ result: "edu_university_mentor.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { eduStudy: 2 } } }] },
             right: { label: "edu_university_mentor.right", outcomes: [{ result: "edu_university_mentor.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
           },
         },
         {
           id: "edu_university_life",
+          weight: 3,
           kind: "one_time",
           prompt: "edu_university_life.prompt",
           options: {
             left: { label: "edu_university_life.left", outcomes: [{ result: "edu_university_life.left.r0", effects: { vitals: { happiness: "++", finances: "-", spirit: "-" } } }] },
-            right: { label: "edu_university_life.right", outcomes: [{ result: "edu_university_life.right.r0", effects: { vitals: { spirit: "+", happiness: "-", health: "-" } } }] },
+            right: { label: "edu_university_life.right", outcomes: [{ result: "edu_university_life.right.r0", effects: { vitals: { spirit: "+", happiness: "-", health: "-" }, incTraits: { eduStudy: 2 } } }] },
           },
         },
         {
           // A junior tutoring / clerking post — the income card that offsets the
           // university fees (filler).
           id: "edu_university_stipend",
+          weight: 3,
           kind: "filler",
           prompt: "edu_university_stipend.prompt",
           options: {
             left: { label: "edu_university_stipend.left", outcomes: [{ result: "edu_university_stipend.left.r0", effects: { vitals: { finances: "++", health: "-" } } }] },
-            right: { label: "edu_university_stipend.right", outcomes: [{ result: "edu_university_stipend.right.r0", effects: { vitals: { spirit: "+", finances: "-" } } }] },
+            right: { label: "edu_university_stipend.right", outcomes: [{ result: "edu_university_stipend.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { eduStudy: 1 } } }] },
           },
         },
         {

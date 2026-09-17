@@ -56,18 +56,18 @@ const GOALS: Goal[] = [
     route: [["job", "studying"], ["education", "basic"], ["job", "grammar_school"], ["education", "grammar"],
             ["job", "university"], ["education", "university"], ["job", "physician_junior"],
             ["job", "physician"], ["job", "physician_eminent"]],
-    wants: [["eduUniFund", 25], ["jobExperience", 6], ["persBookish", 8]],
+    wants: [["eduStudy", 10], ["eduUniFund", 25], ["jobExperience", 6], ["persBookish", 8]],
   },
   {
     name: "Solicitor",
     route: [["job", "studying"], ["education", "basic"], ["job", "grammar_school"], ["education", "grammar"],
             ["job", "clerk"], ["job", "chief_clerk"], ["job", "solicitor"]],
-    wants: [["jobExperience", 6], ["persBookish", 8]],
+    wants: [["eduStudy", 10], ["jobExperience", 6], ["persBookish", 8]],
   },
   {
     name: "Merchant",
     route: [["job", "studying"], ["education", "basic"], ["job", "shophand"], ["job", "shopkeeper"], ["job", "merchant"]],
-    wants: [["jobExperience", 6], ["persBookish", 8]],
+    wants: [["eduStudy", 10], ["jobExperience", 6], ["persBookish", 8]],
   },
   {
     name: "Master craftsman",

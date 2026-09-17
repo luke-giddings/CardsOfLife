@@ -678,8 +678,9 @@ export const EN = {
   "edu_basicschool_errands.right.r0": "You keep your evenings for rest and your books — and stay skint.",
 
   "edu_basicschool_leaver.prompt": "You've reached the end of your schooling and earned your certificate. What now?",
-  "edu_basicschool_leaver.left": "Up to grammar school",
+  "edu_basicschool_leaver.left": "Sit for the grammar school",
   "edu_basicschool_leaver.left.r0": "You win a place at the grammar school — Latin, fees, and a future few of your street ever see.",
+  "edu_basicschool_leaver.left.r1": "You sit the scholarship paper and it is plain within the hour that you have not done the work. The master is not unkind about it, which somehow makes it worse. It is the shop counter for you.",
   "edu_basicschool_leaver.right": "Take a position",
   "edu_basicschool_leaver.right.r0": "Books away, cap on. Your letters earn you a place behind a shop counter — a respectable start, and a wage from day one.",
 
@@ -2254,8 +2255,9 @@ export const IT: Record<StringId, string> = {
   "edu_basicschool_errands.right.r0": "Ti tieni le sere per il riposo e i libri — e resti al verde.",
 
   "edu_basicschool_leaver.prompt": "Sei arrivato alla fine della scuola e hai ottenuto il tuo attestato. E adesso?",
-  "edu_basicschool_leaver.left": "Su alla scuola superiore",
+  "edu_basicschool_leaver.left": "Dare l'esame per la superiore",
   "edu_basicschool_leaver.left.r0": "Ottieni un posto alla scuola superiore — latino, rette, e un futuro che pochi della tua via vedono mai.",
+  "edu_basicschool_leaver.left.r1": "Dai la prova per la borsa di studio ed \u00e8 chiaro entro un'ora che non hai fatto il lavoro. Il maestro non \u00e8 scortese al riguardo, il che in qualche modo peggiora le cose. Per te c'\u00e8 il banco del negozio.",
   "edu_basicschool_leaver.right": "Prendere un posto",
   "edu_basicschool_leaver.right.r0": "Via i libri, berretto in testa. Le tue lettere ti valgono un posto dietro il banco di un negozio — un inizio rispettabile, e una paga fin dal primo giorno.",
 

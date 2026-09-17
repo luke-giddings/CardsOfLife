@@ -97,7 +97,7 @@ export const content = {
         // the spirit. (The money side lives on the housing status — living with
         // family costs money; the labourer's wage offsets it, the pupil's
         // doesn't.) Owns the school-events deck; education records the level.
-        studying: { label: "status.job.studying", drift: { spirit: -5 }, driftShown: { spirit: "-" }, addDecks: ["edu_basicschool"] },
+        studying: { label: "status.job.studying", enterTraits: { eduStudy: 0 }, drift: { spirit: -5 }, driftShown: { spirit: "-" }, addDecks: ["edu_basicschool"] },
         // Fee-paying academia above the free board school. Grammar school takes
         // the SAME total toll as before (10 a year) but takes all of it out of
         // the SPIRIT rather than half out of the purse: a hard grind on a boy who
@@ -110,8 +110,8 @@ export const content = {
         // University keeps the tuition: it is the one credential that is supposed
         // to be bought as well as earned, and eduUniFund/savings gate entry to it
         // (see the grammar leaver). Income cards inside both decks offset fees.
-        grammar_school: { label: "status.job.grammar_school", drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
-        university: { label: "status.job.university", drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
+        grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
+        university: { label: "status.job.university", enterTraits: { eduStudy: 0 }, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
         unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], tick: { jobYearsIdle: 1 }, keepExperience: true, grim: true },

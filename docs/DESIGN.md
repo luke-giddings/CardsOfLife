@@ -111,7 +111,7 @@ override falls back to deriving the strength from the magnitude (|v| ≥ 16 → 
 | Status | States (so far) | Notes |
 |---|---|---|
 | **Age / life stage** | baby · child · young_adult · adult · old_age | **Built.** A **visible, passive** status that moves you through the ages — handed over by the same life-stage milestones that swap the life-stage decks (start = baby; `baby_schooling` → child at 5; `child_adult` → young_adult at 18; `ya_adult` → adult at 25; `adult_oldage` → old_age at 50). Its **drift is the passive tax/dividend of your age**: baby a small bonus to **☺ / ♥ / ✦** (not finances) (and flagged `ignoreNoDrift`, so it lands even inside the babyhood grace period — the one status that drifts there), child a touch of ☺, young adult neutral, then a **health decline that starts in adulthood (♥ −3) and steepens in old age (♥ −8)**. Ordered, so cards can gate on `atLeast/atMost` by stage. Always shown (even in babyhood). All values are starter knobs. |
-| **Job / occupation** | infant · child_labourer · labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — with an identical grown-up twin, **labourer** (same wage, same toll, same deck, same ways out), which exists only so an unlettered adult taking whatever work he can find is not labelled a *child* labourer. Coming of age turns a child labourer into a `labourer` (a rename, not a promotion — see §13), so the childhood rung never outlives childhood; the unemployment deck's unlettered fallback used to hand the child rung out at any age, and a man of 26 wore "Child labourer" for the rest of his working life — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. **Grammar school: spirit −10 and nothing else** — the same total toll as the old spirit −5 / tuition −5, taken entirely out of the spirit, because the money side of schooling already lives on the housing status (your keep, which a pupil has no wage to offset) and charging tuition on top taxed the same choice twice. University keeps its tuition: it is the one credential meant to be bought as well as earned. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and the **three educated ladders** pay clearly more, so a promotion is a real raise. The educated paths are now **one distinct ladder per credential** (not a single ladder with a higher cap): **Commerce** (basic) shop assistant +12 → shopkeeper +18 → merchant +28; **Clerkly/Law** (grammar) clerk +16 → chief clerk +22 → solicitor +28; **Medicine** (university) junior physician +14 → physician +30 → **consulting physician +42** (the highest wage in the game — the rare degree's payoff). Your credential sets which ladder you enter (school leaver / graduation / the unemployed job-offer all route by it) and you climb within it by experience. All wages tunable. |
+| **Job / occupation** | infant · child_labourer · labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — with an identical grown-up twin, **labourer** (same wage, same toll, same deck, same ways out), which exists only so an unlettered adult taking whatever work he can find is not labelled a *child* labourer. Coming of age turns a child labourer into a `labourer` (a rename, not a promotion — see §13), so the childhood rung never outlives childhood; the unemployment deck's unlettered fallback used to hand the child rung out at any age, and a man of 26 wore "Child labourer" for the rest of his working life — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Going UP from board school is now a TRIAL, not a choice (`eduStudy ≥ 3` — see §7). **Grammar school: spirit −10 and nothing else** — the same total toll as the old spirit −5 / tuition −5, taken entirely out of the spirit, because the money side of schooling already lives on the housing status (your keep, which a pupil has no wage to offset) and charging tuition on top taxed the same choice twice. University keeps its tuition: it is the one credential meant to be bought as well as earned. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and the **three educated ladders** pay clearly more, so a promotion is a real raise. The educated paths are now **one distinct ladder per credential** (not a single ladder with a higher cap): **Commerce** (basic) shop assistant +12 → shopkeeper +18 → merchant +28; **Clerkly/Law** (grammar) clerk +16 → chief clerk +22 → solicitor +28; **Medicine** (university) junior physician +14 → physician +30 → **consulting physician +42** (the highest wage in the game — the rare degree's payoff). Your credential sets which ladder you enter (school leaver / graduation / the unemployed job-offer all route by it) and you climb within it by experience. All wages tunable. |
 | **Housing** | family · workhouse · renting · owned_small/large/estate · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`; **entering it also sets `job = pauper`** (a no-drift, no-deck occupation) so the institution cancels any schooling or job — the `home_workhouse` deck owns workhouse life and its exits, including a **"back to school"** route (a 3rd option on both the apprentice and runaway exits — so the window is ~7–13, not just 10–13 — shown only while school-age (≤13) and recovered enough — finances ≥ 40 and vitals off the floor — so you don't relapse straight into ruin). **renting** (moved out / bought out): **finances −10** rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). Rent is set to **swallow the base child-labour wage** (+10), so a labourer renting nets ~0 money — you buy health recovery, not continued free savings; getting ahead again needs a better wage or the renting deck's income cards. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | illiterate · basic · grammar · university (+ trade: journeyman/master) | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
 | **Family** | infant · single · courting · married · parent · widowed | **Partly built** — the status and `fam_single` and `rel_lilly` exist; `parent` and `widowed` are declared and unreached. Starts at `infant` exactly as `job` does and is moved to `single` by the school/work choice at ~5, so the unattached deck is live all through childhood — but `show: { ageMin: 18 }`, so the chip stays hidden until the player has any reason to care. **NO DRIFT on any state**, like `education`: a record that owns decks and gates cards without touching the ledger. Each state owns its deck, so marrying swaps your social life for your married life with no bespoke wiring. |
@@ -154,13 +154,54 @@ Sister `relSister*`).
   `jobExperience` (years in the current job), `jobSkill` (apprentice
   craftsmanship), `jobStrikes`, `jobTimesChanged`; `petCatAge`/`petDogAge` (years
   you've kept that pet — tick up via the pet status, drive its old-age passing) and
-  `petCatLove`/`petDogLove` (how well you treat it — neglect sends it running).
+  `petCatLove`/`petDogLove` (how well you treat it — neglect sends it running);
+  **`eduStudy`** (how hard you have applied yourself at the school you are at —
+  the exact twin of `jobSkill` at the bench, stamped back to 0 by each schooling
+  state's `enterTraits`, so every tier is its own test).
   (`persSporty`/`persBookish` were counters here and are booleans now — see below.)
 
 **Relationships are just Traits.** Character decks can later branch on
 thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setups"
 (skillVaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
 keeps you alive through childhood hazards.
+
+**PASSING SCHOOL IS A TRIAL NOW, and it is the apprenticeship's trial in a
+gown.** `eduStudy` rises only when you choose the work over the easier thing, each
+schooling state stamps it back to 0 on entry so every tier is its own test, and
+`edu_basicschool_leaver`'s "sit for the grammar school" reads it: **3 or you fail
+the scholarship paper** and take the shop counter with a spirit and happiness
+blow. `persBookish` earns 3 from the cards it already softened where everyone else
+earns 2 — the bookish child is quicker, not excused — and that is the whole reason
+to be bookish:
+
+| | passes a bar of 2 | **of 3** | of 4 |
+|---|---|---|---|
+| determined plain pupil | 74% | **31%** | 23% |
+| determined bookish pupil | 72% | **56%** | 26% |
+
+Three things had to be true before a bar of 3 was fair, and none of them were:
+
+1. **The school decks were not being dealt.** Measured, a grammar pupil saw any
+   given grammar card in about 10% of lives. Every non-milestone school card is
+   `weight: 3` now, which gives the deck 32% of the draw during board school and
+   42–52% during grammar and university. While you are a pupil, school is your
+   life.
+2. **The exam only ran from 11.** Nine years of board school were delivering one
+   study card to most pupils — the prize — so the study banked at the leaver piled
+   up at exactly 2 and nowhere else (`0:26% 1:5% 2:48% 3:6% 4:13%`), and any bar
+   above it failed four pupils in five for want of a card to earn it on. From 9 it
+   is `0:22% 1:4% 2:43% 3:8% 4:20%`, which a bar of 3 can sit in.
+3. **Only this step can carry a trial.** Grammar school lasts three years and
+   delivers a measured **1.7** draws, university **1.1**. There is no room to bank
+   anything there, and a bar you cannot reach is not a test, so going up to
+   university stays gated on the MEANS — which is its own trial. If the spans are
+   ever lengthened, the second gate becomes possible.
+
+The option is deliberately NOT hidden when you are short, and the failing
+outcome's chips are on the card face, so an idle pupil sees the exam is beyond him
+before he swipes. Hiding it was tried on the university leaver and turned the card
+into an announcement and a taunt. Failing costs more than never trying, exactly as
+it does at the bench.
 
 **WHAT GRAMMAR SCHOOL'S TUITION WAS COSTING** (`scripts/ambition.ts`, 2,500
 lives per goal per setting, before and after moving its drift from spirit −5 /

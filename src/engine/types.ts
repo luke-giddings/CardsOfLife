@@ -90,6 +90,14 @@ export interface Traits {
   // savings). Distinguishes a former undergraduate — who can RETURN to finish,
   // e.g. off the streets — from a fresh grammar-leaver who never went.
   eduWasUndergraduate: boolean;
+  // How hard you have applied yourself at the school you are AT. The exact twin
+  // of `jobSkill` at the bench: it rises only when you choose the work over the
+  // easier thing, the leaver card reads it to decide whether you may go up, and
+  // each schooling state stamps it back to 0 on entry (`enterTraits`), so every
+  // tier is its own test and a hard-won board school does not carry a lazy
+  // grammar school. `persBookish` earns MORE from the same choice rather than
+  // lowering the bar — the bookish child is quicker, not excused.
+  eduStudy: number;
   // Personality / disposition. `pers*` so the debug panel groups them under a
   // Personality category. PLAIN BOOLEANS: you are the sort of person who does
   // this, or you are not.
@@ -250,6 +258,7 @@ export const DEFAULT_TRAITS: Traits = {
   skillVaccinated: false,
   eduUniFund: false,
   eduWasUndergraduate: false,
+  eduStudy: 0,
   persBookish: false,
   persSporty: false,
   persSociable: false,
