@@ -79,19 +79,19 @@ export const lillyDecks = [
       {
         // "Upset with you if you are unemployed for ages" — and ages is the
         // mechanic, not the text. It reads `jobYearsIdle`, the years the
-        // unemployed status has ticked — three years of it, at any point in your
-        // life, and she has something to say. One-shot: the counter only grows,
-        // so a repeating card would scold you every few years for one bad decade
-        // twenty years behind you.
+        // unemployed status has ticked: three of them, and she has something to
+        // say. One-shot, because the counter only ever grows — a repeating card
+        // would scold you every few years for one bad decade twenty years back.
         //
-        // It cannot be gated on the status itself: `job_unemployed` is a
-        // `priority` deck, so while you are out of work the draw is focused onto
-        // the escape routes and her deck is not in the pool at all. The card
-        // that judges a bad spell has to be dealt after it, which is also when
-        // it stings most.
+        // The ONE card in the deck that keeps its place while `job_unemployed`
+        // is focusing the draw. Without that it was unreachable by construction
+        // — a card about being out of work, switched off for exactly as long as
+        // you were out of work — and sparing the whole deck to fix it would have
+        // handed the escape routes' pool to her entire story. This is one slot.
         id: "rel_lilly_idle",
         weight: 3,
         kind: "one_time",
+        neverSuppressed: true,
         conditions: { traits: { relLillyStoryDone: false, jobYearsIdle: { min: 3 } } },
         prompt: "rel_lilly_idle.prompt",
         options: {

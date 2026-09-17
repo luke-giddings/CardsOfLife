@@ -79,11 +79,17 @@ function focusPool(pool: Card[], content: Content): Card[] {
   if (priority.size === 0) return pool;
   const urgent = pool.filter((c) => !!c.deck && priority.has(c.deck));
   if (urgent.length === 0) return pool;
-  // `neverSuppressed` decks keep their place beside the urgent ones. A Set, so a
-  // deck that were somehow both does not end up in the pool twice and draw at
-  // double weight.
+  // `neverSuppressed` keeps a card's place beside the urgent ones, whether it is
+  // the whole deck that says so or the single card. A Set, so anything that is
+  // both urgent and spared does not end up in the pool twice and draw at double
+  // weight.
   const spared = new Set(content.decks.filter((d) => d.neverSuppressed).map((d) => d.id));
-  return [...new Set([...urgent, ...pool.filter((c) => !!c.deck && spared.has(c.deck))])];
+  return [
+    ...new Set([
+      ...urgent,
+      ...pool.filter((c) => c.neverSuppressed || (!!c.deck && spared.has(c.deck))),
+    ]),
+  ];
 }
 
 // THE FILLER DISCARD PILE, for one pool. Fillers are inexhaustible (see

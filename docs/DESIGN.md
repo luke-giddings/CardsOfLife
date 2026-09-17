@@ -1276,12 +1276,25 @@ Roughly in likely order. None of these are started.
   neither deck is spared, and the reach was bought back with `weight` instead.
   This is also why the sibling decks' late beats are so rarely read.
 
-  **2. A card about a `priority` state can never be dealt during it.** The first
-  version of Lilly's disappointment card was gated on `job: "unemployed"` — and so
-  was unreachable by construction, because being out of work is exactly when her
-  deck is switched off. The fix is a COUNTER the status ticks (`jobYearsIdle`,
-  as gaol ticks `flawYearsInGaol`) and a card that reads it afterwards. **Any
-  card that wants to judge a bad spell has to be dealt after it.**
+  **2. A card about a `priority` state is unreachable by construction unless you
+  spare it.** The first version of Lilly's disappointment card was gated on
+  `job: "unemployed"`, and so could never be dealt: being out of work is exactly
+  when her deck is switched off. Two fixes, and it wants both.
+
+  A COUNTER the status ticks (`jobYearsIdle`, as gaol ticks `flawYearsInGaol`),
+  so the card judges a *spell* rather than a moment — which is what "unemployed
+  for ages" meant in the first place, and lets the card land after the spell as
+  well as during it.
+
+  And **`neverSuppressed` on the CARD**, the card-sized version of the deck flag
+  the siblings use. A deck spares all of itself, which is right when every beat
+  is on a clock the draw cannot pause; it is wrong when a deck has one beat about
+  the urgent state and the rest can wait. Measured (4,000 lives), sparing this one
+  card took it from being drawn in 32.1% of lives that met her to **59.1%**, and
+  from **0%** dealt while still out of work to **50%** — landing at a median age of
+  28 rather than 31. At n=16,000 it costs the escape routes nothing measurable
+  (reaching 60 is 1.4% either way), where sparing the two whole decks cost 1.5% →
+  0.9%. **Prefer the card.**
 
   **3. Author a relationship clock with `incTraits`, never `setTraits`.** The
   card-face ★ fires on any `setTraits`/`addDecks`/`removeDecks`, so resetting a
@@ -1422,10 +1435,17 @@ Roughly in likely order. None of these are started.
   helps neither enough. **Loyalty**: they quarrel and whoever reaches you first
   gets a hearing (`rel_sis_quarrel`, `rel_bro_quarrel`); refusing to judge costs a
   little of both.
-- **`Deck.neverSuppressed` — the sibling arcs are exempt from priority
-  suppression.** Their beats are gated on SOMEONE ELSE'S age, so a stretch in
-  gaol, the workhouse or unemployment does not delay a window, it closes one for
-  good. The flag keeps a deck's cards in the pool while an urgent deck owns it.
+- **`neverSuppressed` — exemption from priority suppression, on a DECK or on a
+  single CARD.** `Deck.neverSuppressed` spares all of a deck and is right when
+  every one of its beats is on a clock the draw cannot pause: the sibling arcs are
+  gated on SOMEONE ELSE'S age, so a stretch in gaol, the workhouse or unemployment
+  does not delay a window, it closes one for good. `Card.neverSuppressed` spares
+  one card and is right when a deck has a single beat ABOUT the urgent state and
+  the rest can wait — `rel_lilly_idle`, which is Lilly's opinion of your being out
+  of work and was therefore unreachable while you were out of work. **Reach for
+  the card first**: it costs the escape routes one slot in the pool where the deck
+  costs them the whole deck (measured, n=16,000: the card costs nothing you can
+  see, sparing two decks took reaching 60 from 1.5% to 0.9%).
   Measured with `scripts/suppression-ab.ts` over 4000 greedy lives, off vs on:
 
   | | off | on |

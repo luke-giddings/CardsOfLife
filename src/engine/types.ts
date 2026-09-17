@@ -397,6 +397,19 @@ export interface Card {
   // out three years in four of the very state it exists to answer. One field
   // rather than two, so a threshold with no vital to measure cannot be written.
   force?: { vital: VitalKey; at?: number };
+  // Keep this card in the pool even while a `priority` deck is focusing the draw
+  // — the card-sized version of a deck's `neverSuppressed`.
+  //
+  // A deck spares ALL of itself, which is right when every one of its beats is on
+  // a clock the draw cannot pause (the siblings' windows are their siblings'
+  // ages). It is wrong when a deck has one beat that is ABOUT the urgent state
+  // and the rest can wait: gating a card on a priority state and leaving it
+  // suppressed makes it unreachable by construction, because that state is
+  // exactly when its deck is switched off.
+  //
+  // Sparing one card costs the escape routes a single slot in the pool; sparing
+  // its deck costs them the whole deck. Prefer this.
+  neverSuppressed?: boolean;
   // Rarity gate (0..1): even once its `conditions` hold, the card only enters the
   // draw pool on a fresh per-year dice roll (value < chance). Omitted = always in
   // the pool (chance 1). Pair with `one_time` for a rare once-in-a-life surprise
