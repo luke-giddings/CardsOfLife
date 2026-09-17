@@ -1143,20 +1143,40 @@ Roughly in likely order. None of these are started.
   owns the rest of your life. Agreed in full; recorded here so it survives.
 
   **Built so far:** the `show` rule that lets a status hide until 18; the `family`
-  status with all six states; `fam_single` with four warmth-earning cards. **Still
-  to do,** in order: warmth feeds on the cards most lives already draw; the first
+  status with all six states; `fam_single` with four warmth-earning cards; the
+  warmth feeds on the common decks. **Still to do,** in order: the first
   person-deck (Lilly) and her intro; measurement; then delete `ya_courting` and
   `adult_wed`.
 
-  **Measured, and the reason the feeds come next** (`scripts/social.ts`, 2,000
-  lives): with `fam_single` as its only source a life banks a **mean 2.2 warmth**
-  (median 2, p90 5) — and a player who actively pays vitals for warmth banks
-  **2.3**, which is the whole finding. The supply is not limited by what the
-  player is willing to spend but by **how rarely the cards are offered**:
-  `fam_single` is 1.4 draws of a life's ~35, and its earliest card is seen in 22.8%
-  of lives. This is the sibling lesson again — a currency fed by one deck is only
-  as reachable as that deck — so an intro priced at anything above about 2 is
-  unreachable until the common decks pay into it.
+  **Why the feeds had to come first** (`scripts/social.ts`, 2,000 lives). With
+  `fam_single` as its only source a life banked a **mean 2.2** warmth — and a
+  player actively paying vitals for warmth banked **2.3**, which was the whole
+  finding. The supply was limited not by what the player would spend but by **how
+  rarely the cards were offered**: `fam_single` is 1.4 draws of a life's ~35. The
+  sibling lesson again — a currency fed by one deck is only as reachable as that
+  deck.
+
+  **The feeds, and the rule they follow.** `incTraits` draws *nothing* on the card
+  face, so warmth may never be the only reason to take a swipe: it rides an option
+  that already reads as the open-handed one. The nursery (`persSociable`'s own
+  card), the street football, the pew, the fair, the schoolroom desk, "pay fair and
+  be liked" at the market, Fagin's gang, the public house, the friend at the door,
+  the cellmate. Chosen off `scripts/drawn.ts` rather than by theme, so the feed
+  follows the cards lives actually see.
+
+  **What that buys, and what an intro should cost.** Three players, because any one
+  of them would lie:
+
+  | | mean warmth | median | p90 |
+  |---|---|---|---|
+  | **cold** (pays a step to avoid company) | 2.7 | 2 | 6 |
+  | **greedy** (indifferent — warmth is invisible to it) | 6.6 | 6 | 12 |
+  | **sociable** (pays a step for company) | 7.6 | 7 | 13 |
+
+  So **price an intro at about 5**: a cold life affords nobody and dies alone as
+  agreed, an ordinary life affords one, and a warm one affords two or three at the
+  p90. The count is never capped — it falls out of this table. Lifespan is
+  unmoved (mean 34.1), so the feeds are free.
 
   **`socialWarmth` is a CURRENCY, not a threshold.** Earned in small amounts from
   options on cards most lives already draw — a payday you stand a round on, a

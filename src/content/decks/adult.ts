@@ -44,7 +44,7 @@ export const adultDecks = [
           kind: "one_time",
           prompt: "ya_tavern.prompt",
           options: {
-            left: { label: "ya_tavern.left", outcomes: [{ result: "ya_tavern.left.r0", effects: { vitals: { happiness: "+", health: "-", finances: "-" } } }] },
+            left: { label: "ya_tavern.left", outcomes: [{ result: "ya_tavern.left.r0", effects: { vitals: { happiness: "+", health: "-", finances: "-" }, incTraits: { socialWarmth: 3 } } }] },
             right: { label: "ya_tavern.right", outcomes: [{ result: "ya_tavern.right.r0", effects: { vitals: { health: "+", happiness: "-" } } }] },
           },
         },
@@ -160,7 +160,7 @@ export const adultDecks = [
           kind: "one_time",
           prompt: "adult_friend.prompt",
           options: {
-            left: { label: "adult_friend.left", outcomes: [{ result: "adult_friend.left.r0", effects: { vitals: { finances: "-", spirit: "+", happiness: "+" } } }] },
+            left: { label: "adult_friend.left", outcomes: [{ result: "adult_friend.left.r0", effects: { vitals: { finances: "-", spirit: "+", happiness: "+" }, incTraits: { socialWarmth: 3 } } }] },
             right: { label: "adult_friend.right", outcomes: [{ result: "adult_friend.right.r0", effects: { vitals: { finances: "+", spirit: "-" } } }] },
           },
         },

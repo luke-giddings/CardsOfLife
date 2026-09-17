@@ -8,12 +8,16 @@
 // banks when it is not trying) — the gap between them is the room an intro gate
 // has to sit in.
 //
-// Two players, because one would lie:
-//   greedy   — maximises the weakest vital one year ahead. socialWarmth is an
-//              `incTraits` payload and draws nothing on the card face, so this
-//              player declines it on principle. This is the FLOOR.
-//   sociable — same, but breaks ties towards warmth and pays up to one
-//              magnitude step of vitals for it. This is the SUPPLY.
+// Three players, because any one of them would lie:
+//   cold     — maximises the weakest vital one year ahead, and will give up a
+//              magnitude step to AVOID warmth. The floor: what an unsociable
+//              life banks in spite of itself.
+//   greedy   — the same player, indifferent to warmth. socialWarmth draws
+//              nothing on the card face, so this is what a player who has not
+//              worked the rule out yet lands on by accident.
+//   sociable — greedy, but will pay a step FOR warmth. The ceiling.
+// The gap cold→sociable is the range an intro price has to sit inside; the gap
+// greedy→sociable is how much knowing the rule is actually worth.
 // Run: node --experimental-strip-types scripts/social.ts [runs]
 import { chooseDirection, drawCard, initGame, quietYear, setContent } from "../src/engine/engine.ts";
 import { meets } from "../src/engine/conditions.ts";
@@ -76,7 +80,9 @@ function run(warm: number) {
     console.log(`    ${c.id.padEnd(22)} seen in ${(100 * (seen.get(c.id) ?? 0) / N).toFixed(1)}% of lives`);
 }
 
-console.log(`${N} lives — greedy (the floor: socialWarmth is invisible to it)`);
+console.log(`${N} lives — cold (pays a step to avoid company)`);
+run(-12);
+console.log(`\n${N} lives — greedy (indifferent: warmth is invisible to it)`);
 run(0);
-console.log(`\n${N} lives — sociable (the supply: pays up to a step for warmth)`);
+console.log(`\n${N} lives — sociable (pays a step for company)`);
 run(12);

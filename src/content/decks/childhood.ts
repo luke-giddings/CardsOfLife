@@ -44,8 +44,8 @@ export const childhoodDecks = [
             // Going all-out also builds the sporty counter (+1) -- the first
             // youth source toward re-earning what a sporty baby got for free.
             // (Backlog: more +1 sources so youth can actually reach the cap.)
-            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" }, incTraits: { persSporty: 1 } } }] },
-            right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", spirit: "+", health: "-" } } }] },
+            left: { label: "child_sports.left", outcomes: [{ result: "child_sports.left.r0", effects: { vitals: { health: "++", spirit: "+", happiness: "-" }, incTraits: { persSporty: 1, socialWarmth: 1 } } }] },
+            right: { label: "child_sports.right", outcomes: [{ result: "child_sports.right.r0", effects: { vitals: { happiness: "+", spirit: "+", health: "-" }, incTraits: { socialWarmth: 2 } } }] },
           },
         },
         // --- Hazards: childhood was deadly. Survival is earned through your

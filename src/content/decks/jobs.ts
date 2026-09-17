@@ -82,7 +82,7 @@ export const jobDecks = [
           conditions: { traits: { jobRenouncedCrime: false } },
           prompt: "job_unemployed_fagin.prompt",
           options: {
-            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, incTraits: { jobCriminality: 1 }, remember: "log.crime" } }] },
+            left: { label: "job_unemployed_fagin.left", outcomes: [{ result: "job_unemployed_fagin.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "pickpocket" }, incTraits: { jobCriminality: 1, socialWarmth: 2 }, remember: "log.crime" } }] },
             right: { label: "job_unemployed_fagin.right", outcomes: [{ result: "job_unemployed_fagin.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
@@ -432,7 +432,7 @@ export const jobDecks = [
           prompt: "job_apprentice_market.prompt",
           options: {
             left: { label: "job_apprentice_market.left", outcomes: [{ result: "job_apprentice_market.left.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { jobExperience: 1, jobSkill: 1 } } }] },
-            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_apprentice_market.right", outcomes: [{ result: "job_apprentice_market.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1, socialWarmth: 3 } } }] },
           },
         },
         {

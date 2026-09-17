@@ -44,7 +44,7 @@ export const educationDecks = [
           kind: "one_time",
           prompt: "edu_basicschool_friend.prompt",
           options: {
-            left: { label: "edu_basicschool_friend.left", outcomes: [{ result: "edu_basicschool_friend.left.r0", effects: { vitals: { happiness: "++", spirit: "-" } } }] },
+            left: { label: "edu_basicschool_friend.left", outcomes: [{ result: "edu_basicschool_friend.left.r0", effects: { vitals: { happiness: "++", spirit: "-" }, incTraits: { socialWarmth: 3 } } }] },
             right: { label: "edu_basicschool_friend.right", outcomes: [{ result: "edu_basicschool_friend.right.r0", effects: { vitals: { happiness: "-", spirit: "+" } } }] },
           },
         },

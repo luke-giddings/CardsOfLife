@@ -96,8 +96,9 @@ export const prisonDecks = [
         prompt: "prison_cellmate.prompt",
         options: {
           // BACKLOG: add `addDecks: ["rel_cellmate"]` (and seed a love trait) once
-          // the cellmate relationship deck exists.
-          left: { label: "prison_cellmate.left", outcomes: [{ result: "prison_cellmate.left.r0", effects: { vitals: { happiness: "+", spirit: "+" }, remember: "log.cellmate" } }] },
+          // the cellmate relationship deck exists. Until then it pays warmth like
+          // any other door to another person — this one just has a lock on it.
+          left: { label: "prison_cellmate.left", outcomes: [{ result: "prison_cellmate.left.r0", effects: { vitals: { happiness: "+", spirit: "+" }, incTraits: { socialWarmth: 3 }, remember: "log.cellmate" } }] },
           right: { label: "prison_cellmate.right", outcomes: [{ result: "prison_cellmate.right.r0", effects: { vitals: { spirit: "-" } } }] },
         },
       },
