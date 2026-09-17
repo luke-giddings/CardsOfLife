@@ -162,6 +162,31 @@ thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setu
 (skillVaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
 keeps you alive through childhood hazards.
 
+**THE GREEDY SIM CANNOT ANSWER A QUESTION ABOUT A PATH**, and
+`scripts/ambition.ts` is the answer to that. Greedy play maximises the weakest
+vital one year ahead, which makes it a stable yardstick for comparing two versions
+of the content and useless for asking whether a CAREER is achievable: it declines
+on principle anything that costs now and pays later. It sits in a schoolroom in
+0.8% of lives, because a child labourer's wage beats a pupil's nothing every
+single turn, and it scores 0% journeymen where a grafting player scores 17%. Every
+career number taken from it is a number about it.
+
+So give the player a ROUTE — an ordered list of statuses, with progress measured
+as the furthest ever reached — plus `wants`, the counters that route is gated
+behind, priced in points of your weakest vital. One dial, `ambition`, scales both,
+because a player who wants the end more also works harder at what it is gated
+behind. **Every goal is reported at two settings and they are read as a pair:** a
+result that holds across them is about the game, one that moves is about the
+player. "Three score years" carries no route, so it IS the greedy player, and sits
+in the table as the control.
+
+The dial bites hardest where a gate is tight, which is a feature. At a low setting
+the median apprentice reaches the qualifying trial with `jobSkill` 2 and needs 3,
+and almost nobody passes; at a high one the median is exactly 3 and most do. That
+is the apprenticeship working as designed — a check on how hard you actually
+tried — and it is why a goal whose two columns differ sharply is a goal worth
+looking at rather than averaging.
+
 **A LEVEL NEEDS A LADDER AND A VIEW.** `persSporty` and `persBookish` were 0..3
 with every reader gated at `{ min: 3 }`, on the idea that a baby who leaned in
 started at the cap and everyone else climbed to it. Nothing climbed: `persBookish`
