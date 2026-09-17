@@ -165,6 +165,30 @@ thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setu
 (skillVaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
 keeps you alive through childhood hazards.
 
+**THE SCHOLAR'S LAST RESORT.** A finances safety net only a pupil with something
+to sell can reach: `edu_basicschool_fund` / `edu_grammar_fund`, gated on
+`eduUniFund`, one shot, sharing one card body and one set of strings the way the
+prison deck's two "do your time" copies do (the fund is false after the first use,
+so a twin in each tier cannot pay out twice). Break into the university pot for
+`finances +++` and stay at your desk, or keep it whole and let the ordinary net —
+the workhouse or the streets, and your schooling with them — take you next. It
+wears ⚠ rather than ★ because the only thing you can see changing is the money;
+the asset you spent is hidden. Declining is survivable rather than suicide: the
+vital is floored at 1 and this card is spent, so the next collapse finds
+`child_hunger` still unused.
+
+Measured over 6,000 lives of a player who wants school AND wants to keep the fund:
+the net fired 1,425 times, 726 lives liquidated it, and **all 726 were still at
+school afterwards**. `child_hunger` fired 1,504 times, unchanged, and 39% of lives
+reaching the grammar leaver still hold the fund.
+
+It needed one engine change. **`findRescue` now picks the highest-`priority` net**,
+exactly as `dueMilestone` picks between due milestones; before, it was whichever
+deck happened to be earlier in `content.decks`, so a schoolboy with an asset to
+sell was caught by the childhood hunger card purely because `childhoodDecks` is
+listed above `educationDecks`. Deck order still breaks ties and no existing rescue
+card carries a priority, so every old net keeps its exact behaviour.
+
 **PASSING SCHOOL IS A TRIAL NOW, and it is the apprenticeship's trial in a
 gown.** `eduStudy` rises only when you choose the work over the easier thing, each
 schooling state stamps it back to 0 on entry so every tier is its own test, and

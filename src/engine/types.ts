@@ -405,7 +405,7 @@ export interface Card {
   options: CardOptions;
   copies?: number;      // one_time / milestone: max occurrences (default 1)
   conditions?: Condition; // eligibility on top of deck membership
-  priority?: number;    // milestone tie-break; higher wins (default 0)
+  priority?: number;    // milestone AND rescue tie-break; higher wins (default 0)
   deck?: string;        // filled in by the deck loader
   // A safety-net card: instead of drawing normally, it fires when this vital
   // would hit 0 — the engine floors the vital and forces this card next (a

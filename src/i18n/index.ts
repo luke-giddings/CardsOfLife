@@ -677,6 +677,11 @@ export const EN = {
   "edu_basicschool_errands.right": "Straight home",
   "edu_basicschool_errands.right.r0": "You keep your evenings for rest and your books — and stay skint.",
 
+  "edu_fund.prompt": "The last of the money is gone and there is nothing in the house to sell — except the pot your uncle put by for a university you have not reached yet.",
+  "edu_fund.left": "Break into the fund",
+  "edu_fund.left.r0": "It keeps you fed, and it keeps you at your desk. Nobody says out loud what it was for, which is how you know they are all thinking it.",
+  "edu_fund.right": "Not that money",
+  "edu_fund.right.r0": "You go hungry rather than touch it. The pot stays whole, and so does the idea of what you might be — which is, just now, about all you have.",
   "edu_basicschool_leaver.prompt": "You've reached the end of your schooling and earned your certificate. What now?",
   "edu_basicschool_leaver.left": "Sit for the grammar school",
   "edu_basicschool_leaver.left.r0": "You win a place at the grammar school — Latin, fees, and a future few of your street ever see.",
@@ -1601,6 +1606,7 @@ export const EN = {
   "log.courting": "Walked out with {lilly}.",
   "log.married": "Married {lilly}.",
   "log.lillylost": "Lost {lilly} to somebody else.",
+  "log.fundspent": "Spent the university money to stay at school.",
 } as const;
 
 export type StringId = keyof typeof EN;
@@ -2254,6 +2260,11 @@ export const IT: Record<StringId, string> = {
   "edu_basicschool_errands.right": "Dritto a casa",
   "edu_basicschool_errands.right.r0": "Ti tieni le sere per il riposo e i libri — e resti al verde.",
 
+  "edu_fund.prompt": "Gli ultimi soldi sono finiti e in casa non c'\u00e8 pi\u00f9 niente da vendere — tranne il gruzzolo che tuo zio ha messo da parte per un'universit\u00e0 a cui non sei ancora arrivato.",
+  "edu_fund.left": "Intaccare il fondo",
+  "edu_fund.left.r0": "Ti tiene sfamato e ti tiene al banco. Nessuno dice ad alta voce a cosa serviva, ed \u00e8 cos\u00ec che capisci che ci stanno pensando tutti.",
+  "edu_fund.right": "Non quei soldi",
+  "edu_fund.right.r0": "Preferisci la fame che toccarli. Il gruzzolo resta intero, e con esso l'idea di quello che potresti diventare — che, per ora, \u00e8 quasi tutto quello che hai.",
   "edu_basicschool_leaver.prompt": "Sei arrivato alla fine della scuola e hai ottenuto il tuo attestato. E adesso?",
   "edu_basicschool_leaver.left": "Dare l'esame per la superiore",
   "edu_basicschool_leaver.left.r0": "Ottieni un posto alla scuola superiore — latino, rette, e un futuro che pochi della tua via vedono mai.",
@@ -3178,6 +3189,7 @@ export const IT: Record<StringId, string> = {
   "log.courting": "Fidanzato con {lilly}.",
   "log.married": "Sposato con {lilly}.",
   "log.lillylost": "Persa {lilly}, andata a un altro.",
+  "log.fundspent": "Speso il fondo per l'universit\u00e0 per restare a scuola.",
 };
 
 const STRINGS = { en: EN, it: IT } as const;

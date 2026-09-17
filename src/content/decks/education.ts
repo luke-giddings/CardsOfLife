@@ -88,6 +88,36 @@ export const educationDecks = [
           },
         },
         {
+          // THE SCHOLAR'S LAST RESORT. A finances safety net that only a pupil
+          // with something to sell can reach: the university pot your uncle put
+          // by in the baby deck. Break into it and you eat, stay at your desk, and
+          // give up the thing it was for; keep it and the ordinary net catches you
+          // next — the workhouse or the streets, and your schooling with it.
+          //
+          // `priority: 100` so it outranks `child_hunger`, which is otherwise
+          // chosen first purely because the childhood deck is listed above this
+          // one. Declining is survivable, not suicide: the vital is floored at 1
+          // and this card is spent, so the next collapse finds the ordinary net
+          // still unused.
+          //
+          // Both tiers share one card body and one set of strings, as the prison
+          // deck's two "do your time" copies do. `eduUniFund` is false after the
+          // first use, so having a twin in each deck cannot pay out twice.
+          id: "edu_basicschool_fund",
+          kind: "one_time",
+          rescue: "finances",
+          priority: 100,
+          conditions: { traits: { eduUniFund: true } },
+          prompt: "edu_fund.prompt",
+          options: {
+            left: {
+              label: "edu_fund.left",
+              outcomes: [{ result: "edu_fund.left.r0", effects: { mark: "burden", vitals: { finances: "+++" }, setTraits: { eduUniFund: false }, remember: "log.fundspent" } }],
+            },
+            right: { label: "edu_fund.right", outcomes: [{ result: "edu_fund.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
           // End of basic school. BOTH choices earn the credential (education ->
           // basic); only reaching this counts, so dropping out earlier (for
           // work / the workhouse) leaves you "Illiterate". Then either go UP to
@@ -187,6 +217,36 @@ export const educationDecks = [
           options: {
             left: { label: "edu_grammar_tutoring.left", outcomes: [{ result: "edu_grammar_tutoring.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
             right: { label: "edu_grammar_tutoring.right", outcomes: [{ result: "edu_grammar_tutoring.right.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" }, incTraits: { eduStudy: 1 } } }] },
+          },
+        },
+        {
+          // THE SCHOLAR'S LAST RESORT. A finances safety net that only a pupil
+          // with something to sell can reach: the university pot your uncle put
+          // by in the baby deck. Break into it and you eat, stay at your desk, and
+          // give up the thing it was for; keep it and the ordinary net catches you
+          // next — the workhouse or the streets, and your schooling with it.
+          //
+          // `priority: 100` so it outranks `child_hunger`, which is otherwise
+          // chosen first purely because the childhood deck is listed above this
+          // one. Declining is survivable, not suicide: the vital is floored at 1
+          // and this card is spent, so the next collapse finds the ordinary net
+          // still unused.
+          //
+          // Both tiers share one card body and one set of strings, as the prison
+          // deck's two "do your time" copies do. `eduUniFund` is false after the
+          // first use, so having a twin in each deck cannot pay out twice.
+          id: "edu_grammar_fund",
+          kind: "one_time",
+          rescue: "finances",
+          priority: 100,
+          conditions: { traits: { eduUniFund: true } },
+          prompt: "edu_fund.prompt",
+          options: {
+            left: {
+              label: "edu_fund.left",
+              outcomes: [{ result: "edu_fund.left.r0", effects: { mark: "burden", vitals: { finances: "+++" }, setTraits: { eduUniFund: false }, remember: "log.fundspent" } }],
+            },
+            right: { label: "edu_fund.right", outcomes: [{ result: "edu_fund.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
           },
         },
         {

@@ -448,15 +448,24 @@ const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
 // e.g. the charity hospital only catches young children). Mirrors how `force`
 // already checks eligibility. (Rescue cards are never drawn normally — see
 // drawCard.)
+//
+// When several nets could catch you, the one with the HIGHEST `priority` does,
+// exactly as `dueMilestone` picks between due milestones. Before that it was
+// whichever deck happened to be earlier in `content.decks`, which is not a thing
+// content should have to reason about: a schoolboy with an asset to sell was
+// caught by the childhood hunger card (the workhouse or the streets) purely
+// because the childhood deck is listed above the school ones. Order still breaks
+// ties, so every existing net keeps its behaviour.
 export function findRescue(state: GameState, content: Content, key: VitalKey): Card | null {
+  let best: Card | null = null;
   for (const card of allCards(content)) {
     if (card.rescue !== key) continue;
     if (exhausted(card, state)) continue;
     if (!card.deck || !state.activeDecks.includes(card.deck)) continue;
     if (!meets(card.conditions, state, content)) continue;
-    return card;
+    if (!best || (card.priority ?? 0) > (best.priority ?? 0)) best = card;
   }
-  return null;
+  return best;
 }
 
 function checkGameOver(state: GameState, content: Content): void {
