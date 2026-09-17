@@ -325,6 +325,18 @@ export interface Effect {
   // they still earn the star (skillVaccinated, persSporty, …).
   setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
+  // Silence the card-face mark (★ / ⚠) for this outcome.
+  //
+  // The mark is otherwise DERIVED from which fields an outcome writes, and that
+  // derivation cannot tell a path change from bookkeeping: latching "her story is
+  // over", resetting a presence clock or recording which way a sibling went all
+  // write traits, so all three wore a reward star. The mark is for the handful of
+  // moments that change where your life is going — a job, a home, schooling, a
+  // new deck — not for every hidden number a card moves.
+  //
+  // Authored rather than computed, for the same reason `driftShown` is: the
+  // engine has no way to know which writes matter, and content does.
+  mark?: "none";
   // Record a MEMORABLE life event for the end-of-run recap: pushes { age, id } to
   // state.log when this outcome fires. Use for TRANSIENT moments the final state
   // won't show (went to the workhouse, ran away, moved out, a promotion) — durable

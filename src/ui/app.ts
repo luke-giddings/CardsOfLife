@@ -594,8 +594,12 @@ export class Game {
     const intoGrimStatus = Object.entries(e?.setStatus ?? {}).some(
       ([kind, value]) => grim(kind as StatusKind, value) && !grim(kind as StatusKind, this.state.statuses[kind as StatusKind]),
     );
-    const burden = intoGrimStatus || !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
-    const special = !burden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
+    // `mark: "none"` is content saying this write is bookkeeping, not a turn in
+    // the road. Both marks are suppressed, not just the star: an outcome that
+    // only latches a flag should look like what it is on the face.
+    const quiet = e?.mark === "none";
+    const burden = !quiet && (intoGrimStatus || !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0));
+    const special = !quiet && !burden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
     if (special) chips += MARK_SPECIAL;
     if (burden) chips += MARK_BURDEN;
     // No vital changes → show nothing (rather than a bare "—").

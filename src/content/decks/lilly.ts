@@ -216,7 +216,10 @@ export const lillyDecks = [
         },
       },
       {
-        // The other ending, and the commoner one: you let it run down. Both
+        // The other ending, and the commoner one: you let it run down. Neither
+        // swipe wears a mark: by the time this card is dealt nothing is being
+        // decided, so a ★ would be a reward for a loss and a ⚠ would be a warning
+        // about something already lost. Both
         // swipes close the story — by the time this card is drawn the decision
         // was made years ago, a year at a time. What is left is how you take it.
         id: "rel_lilly_lost",
@@ -225,8 +228,8 @@ export const lillyDecks = [
         conditions: { traits: { relLillyStoryDone: false, relLillyDistance: { min: 10 }, relLillyWarmth: { max: 14 } } },
         prompt: "rel_lilly_lost.prompt",
         options: {
-          left: { label: "rel_lilly_lost.left", outcomes: [{ result: "rel_lilly_lost.left.r0", effects: { vitals: { spirit: "+", happiness: "--" }, setFlaws: { relLillyStoryDone: true, relLillyActive: false }, removeDecks: ["rel_lilly"], remember: "log.lillylost" } }] },
-          right: { label: "rel_lilly_lost.right", outcomes: [{ result: "rel_lilly_lost.right.r0", effects: { vitals: { happiness: "-", spirit: "-" }, setFlaws: { relLillyStoryDone: true, relLillyActive: false }, removeDecks: ["rel_lilly"], remember: "log.lillylost" } }] },
+          left: { label: "rel_lilly_lost.left", outcomes: [{ result: "rel_lilly_lost.left.r0", effects: { vitals: { spirit: "+", happiness: "--" }, mark: "none", setTraits: { relLillyStoryDone: true, relLillyActive: false }, removeDecks: ["rel_lilly"], remember: "log.lillylost" } }] },
+          right: { label: "rel_lilly_lost.right", outcomes: [{ result: "rel_lilly_lost.right.r0", effects: { vitals: { happiness: "-", spirit: "-" }, mark: "none", setTraits: { relLillyStoryDone: true, relLillyActive: false }, removeDecks: ["rel_lilly"], remember: "log.lillylost" } }] },
         },
       },
     ],
