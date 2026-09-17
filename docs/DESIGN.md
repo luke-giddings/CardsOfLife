@@ -1332,6 +1332,13 @@ Roughly in likely order. None of these are started.
   > states tend to be life events; counters tend not to be.** Sharper still, and
   > what the code half-implemented already: `setTraits` says *a thing you now
   > are* and can earn a mark, `incTraits` says *a number went up* and never does.
+  >
+  > And ★ is about MOMENTUM, not about whether the choice is wise. A new job is a
+  > life event even when taking it is a mistake, so `job_unemployed_fagin`'s "join
+  > the gang" keeps its star: it moves you out of unemployment and into an
+  > occupation, and what it costs you arrives later, through `jobCriminality` and
+  > the gaol cards, where the game can charge you for it properly. The mark is not
+  > the game's opinion of you.
 
   Measured against every marked outcome (`persSporty`-style counters aside, all 32
   boolean writes and 6 enum writes are real life events and keep their star:
