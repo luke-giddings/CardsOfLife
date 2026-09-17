@@ -319,46 +319,35 @@ export const content = {
     // ALL THREE attached states, so an affair is open to the spoken-for whatever
     // shape their household has taken, and closes if they are single again.
     //
-    // The drift is the one place this feature pays into the game's biggest
-    // problem: happiness is 49.7% of deaths and has almost no reliable sources
-    // after childhood. Company is one. It is not free — every attached state
-    // costs money, and children cost money and health as well.
+    // NO DRIFT on any state, deliberately, and `education` is the precedent: a
+    // status can be a record that owns decks and gates cards without touching
+    // the ledger every year.
+    //
+    // Each state carried its own drift when this was first built, from the agreed
+    // shape — and married's happiness +8 was the largest single faucet in the
+    // game, opened in the middle of a drift table that has not been rebalanced
+    // (happiness is 49.7% of deaths, at a median age of 33). That table gets
+    // decided in one pass, with the live-past-thirty work, rather than one status
+    // at a time. See the backlog.
+    //
+    // Until then the household's feelings belong on the CARDS, where they are
+    // paid once and can be tuned one at a time: the proposal's happiness, the
+    // wedding's cost. Whatever reason there is to marry has to be in the writing
+    // and in that one card, not in a dividend drawn for forty years.
     family: {
       id: "family",
       show: { ageMin: 18 },
       states: {
         infant: { label: "status.family.infant" },
         single: { label: "status.family.single", addDecks: ["fam_single"] },
-        courting: {
-          label: "status.family.courting",
-          drift: { finances: -5, happiness: 5 },
-          driftShown: { finances: "-", happiness: "+" },
-        },
-        // Marriage has to be worth more than courting or there is no reason on
-        // the board to propose — measured, a devoted player turned the proposal
-        // down two times in three, because it cost a wedding and bought three
-        // points of happiness drift over the courting it replaced. The
-        // difference is HEALTH: somebody to feed you and nurse you, in a game
-        // where health is the scarcer of the two vitals that do the killing.
-        married: {
-          label: "status.family.married",
-          drift: { finances: -5, happiness: 8, health: 3 },
-          driftShown: { finances: "-", happiness: "++", health: "+" },
-        },
+        courting: { label: "status.family.courting" },
+        married: { label: "status.family.married" },
         // Married with children. NOT REACHED YET — the children cards are the
         // next slice; the state is declared because the shape was agreed and a
         // half-declared status is worse than an unreached one.
-        parent: {
-          label: "status.family.parent",
-          drift: { finances: -12, happiness: 10, health: -3 },
-          driftShown: { finances: "--", happiness: "++", health: "-" },
-        },
+        parent: { label: "status.family.parent" },
         // Also not reached yet: nothing kills a spouse.
-        widowed: {
-          label: "status.family.widowed",
-          drift: { happiness: -8 },
-          driftShown: { happiness: "--" },
-        },
+        widowed: { label: "status.family.widowed" },
       },
     },
   },

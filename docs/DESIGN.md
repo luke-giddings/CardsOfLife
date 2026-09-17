@@ -114,7 +114,7 @@ override falls back to deriving the strength from the magnitude (|v| ≥ 16 → 
 | **Job / occupation** | infant · child_labourer · labourer · studying · apprentice · unemployed · shophand · factory · pickpocket | Start = infant (no drain). Child labourer: **finances +10 / health −5**, opens `job_labour` — with an identical grown-up twin, **labourer** (same wage, same toll, same deck, same ways out), which exists only so an unlettered adult taking whatever work he can find is not labelled a *child* labourer. Coming of age turns a child labourer into a `labourer` (a rename, not a promotion — see §13), so the childhood rung never outlives childhood; the unemployment deck's unlettered fallback used to hand the child rung out at any age, and a man of 26 wore "Child labourer" for the rest of his working life — the wage is a real net income now (+5 after the family keep), so the work path can save toward moving out (→ renting → health recovery) instead of just treading water. Studying: spirit −5, opens `edu_basicschool`. Apprentice: finances +5. **Unemployed** (school-leaver, no work): **happiness −5 / spirit −5** — a grim state you want out of fast; opens `job_unemployed`. First jobs: **shophand** (finances +12, safe — **needs education ≥ school**), **factory** (finances +13 / health −5), or **pickpocket** (finances +10 / spirit −5 — the criminal life). Wages are tuned so every advancement out-earns the −10 rent line: unskilled child-labour/factory ≈ subsistence, the skilled ladder (apprentice +5 *housed*, journeyman +18, master +28) and the **three educated ladders** pay clearly more, so a promotion is a real raise. The educated paths are now **one distinct ladder per credential** (not a single ladder with a higher cap): **Commerce** (basic) shop assistant +12 → shopkeeper +18 → merchant +28; **Clerkly/Law** (grammar) clerk +16 → chief clerk +22 → solicitor +28; **Medicine** (university) junior physician +14 → physician +30 → **consulting physician +42** (the highest wage in the game — the rare degree's payoff). Your credential sets which ladder you enter (school leaver / graduation / the unemployed job-offer all route by it) and you climb within it by experience. All wages tunable. |
 | **Housing** | family · workhouse · renting · owned_small/large/estate · homeless · apprentice | Start = family: finances −5 drift (your keep — offset by a wage, not by studying), opens `home_family`; a well-off teen can **move out → renting**. Workhouse: health −5 / happiness −5, opens `home_workhouse`; **entering it also sets `job = pauper`** (a no-drift, no-deck occupation) so the institution cancels any schooling or job — the `home_workhouse` deck owns workhouse life and its exits, including a **"back to school"** route (a 3rd option on both the apprentice and runaway exits — so the window is ~7–13, not just 10–13 — shown only while school-age (≤13) and recovered enough — finances ≥ 40 and vitals off the floor — so you don't relapse straight into ruin). **renting** (moved out / bought out): **finances −10** rent but health +5 (your own place, better conditions — the childhood preview of the adult better-house→health ladder). Rent is set to **swallow the base child-labour wage** (+10), so a labourer renting nets ~0 money — you buy health recovery, not continued free savings; getting ahead again needs a better wage or the renting deck's income cards. **homeless** (ran away): health −5 / happiness −5, no deck yet. **apprentice** ("with a master"): safe, paired with job=apprentice. Entering it **remembers your prior housing** (`housingBeforeApprentice`); leaving the apprenticeship (qualify, fail, or the workshop closing) **returns you there** via the `restoreHousing` effect — the job ladder never silently grants or strips a home, so job and housing progress stay orthogonal. Drift is **suspended in babyhood** (the baby deck's `noDrift`), so the family cost doesn't bite the unloseable phase. |
 | **Education** | illiterate · basic · grammar · university (+ trade: journeyman/master) | Ordered (levels), a persisting **record** of the level reached (for later `atLeast` gating, e.g. grammar school). The *activity* of studying lives on `job = studying`. The credential (`school`) is earned by **effort** — studying hard at exams or winning the prize (you know your stuff even if you leave early) — or, failing that, granted at the **end-of-school leaver** (age 14) as the fallback. Drop out for work/the workhouse before earning it either way and you stay `none` (Illiterate). |
-| **Family** | infant · single · courting · married · parent · widowed | **Partly built** — the status, its drift and `fam_single` exist; courting onward is declared but nothing reaches it yet. Starts at `infant` exactly as `job` does and is moved to `single` by the school/work choice at ~5, so the unattached deck is live all through childhood — but `show: { ageMin: 18 }`, so the chip stays hidden until the player has any reason to care. Drift is the household's ledger: courting £− ☺+, married £− ☺++, parent £−− ☺++ ♥−, widowed ☺−−. Each state owns its deck, so marrying swaps your social life for your married life with no bespoke wiring. |
+| **Family** | infant · single · courting · married · parent · widowed | **Partly built** — the status and `fam_single` and `rel_lilly` exist; `parent` and `widowed` are declared and unreached. Starts at `infant` exactly as `job` does and is moved to `single` by the school/work choice at ~5, so the unattached deck is live all through childhood — but `show: { ageMin: 18 }`, so the chip stays hidden until the player has any reason to care. **NO DRIFT on any state**, like `education`: a record that owns decks and gates cards without touching the ledger. Each state owns its deck, so marrying swaps your social life for your married life with no bespoke wiring. |
 | **Lifestyle** | (default →) frugal · modest · comfortable · lavish | **Built.** The money↔happiness lever, unlocked at coming-of-age (§17b). Ordered; each tier trades £ for ☺ (and, high up, ♥/✦). Frugal is a ☺ *drain* on purpose. Changed via the `lifestyle` deck's live-better / economize cards. |
 
 **Deck naming:** decks owned by a status are prefixed by that status's kind —
@@ -1292,19 +1292,42 @@ Roughly in likely order. None of these are started.
   a relationship latches its flags in `setFlaws`, not `setTraits`, so it wears ⚠
   rather than ★.
 
-  **4. There has to be a reason to propose.** A devoted player turned the
-  proposal down two times in three: marriage cost a wedding and bought three
-  points of happiness drift over the courting it replaced. Married drift now
-  carries **health +3** — somebody to feed you and nurse you — which is the
-  scarcer of the two vitals that do the killing. (The sim still declines it often;
-  that is its documented blindness to anything paid for now and collected later,
-  the same reason it scores 0% journeymen.)
+  **4. A status does not have to drift, and this one does not.** Each family state
+  was first given its own drift, from the agreed shape. It was wrong twice over:
+  married's happiness +8 would have been the largest single faucet in the game,
+  opened in the middle of a drift table nobody has rebalanced — and a standing
+  dividend for *courting* is a reason to sit still, which is the opposite of what
+  a relationship deck wants. `education` is the precedent for the alternative: a
+  status that is a record, owns decks and gates cards, and never touches the
+  ledger. **The household's feelings belong on the cards**, paid once and tunable
+  one at a time. Removing the drift moved marriage from 1.4% of devoted lives to
+  2.1% and the proposal's acceptance from 33% to 40%, at no cost to lifespan. The
+  whole drift table gets decided in one pass with the live-past-thirty work.
+
+  **5. A card-face mark must be authored, not derived.** ★ and ⚠ were computed
+  from which fields an outcome writes, and that cannot tell a turn in the road
+  from bookkeeping: latching "her story is over", handing a deck back, resetting a
+  presence clock and recording which way a sibling went all write traits, so all
+  of them wore a mark. An outcome can now say `mark: "none"`. **45 outcomes across
+  the existing decks still wear a ★ for a bare trait write** and want a ruling:
+  clearly bookkeeping are `baby_birth` (both "Boy" and "Girl"), the four
+  `rel_*_fate` / `rel_*_estranged` story-done latches, `rel_bro_crisis` /
+  `rel_bro_repay`, and the pet age resets; arguably real path changes are
+  `baby_vaccine`, `baby_uncle`'s trust fund, `baby_disposition`, `baby_nursery`,
+  `child_martialarts`, `ya_charity_debt` and the sibling crossroads/audition/
+  dressmaker cards that decide what Tom or Sarah becomes.
 
   **What is still thin, and why it is not a content fault.** Courting happens at a
   median age of **35** and marriage lands in 1.4% of devoted lives. The arc is
   four cards deep, the deck is off during priority years, and the life ends at 34.
   This is the live-past-thirty item below wearing a different hat; do not tune it
   out by inflating her weights.
+- **THE DRIFT TABLE, decided in one pass.** Not just the family status (stripped
+  to nothing above, deliberately) — the whole table. Drift is what kills you (the
+  killing blow in 63.7% of deaths) and it is currently the sum of four
+  independent authors: age, job, housing and lifestyle. Decide together what a
+  year is supposed to cost and what it can pay, then reissue all of them. Blocked
+  on, and blocking with, the item below.
 - **LET A LIFE RUN PAST THIRTY. This is the blocking item for most of the
   written content.** A greedy life ends at ~35 and **2.3% reach 60**, and the
   decks are written for a whole life, so the back half of several of them is
