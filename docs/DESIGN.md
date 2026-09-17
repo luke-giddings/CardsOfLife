@@ -1129,6 +1129,87 @@ estate, having lived comfortably, aged 71."* No arithmetic.
 
 Roughly in likely order. None of these are started.
 
+- **RELATIONSHIPS: friends, lovers and the `family` status — agreed shape, not yet
+  built.** A set of person-decks that can go two ways, and a household status that
+  owns the rest of your life. Agreed in full; recorded here so it survives.
+
+  **`socialWarmth` is a CURRENCY, not a threshold.** Earned in small amounts from
+  options on cards most lives already draw — a payday you stand a round on, a
+  shift you cover, the fair, church, the tavern, plus one-shots in the school and
+  work decks — and **spent** when you take someone up. Total earnable across a
+  life is therefore the cap on how many people you can have: a warm, sociable
+  life banks enough for three, a cold one for one. `persSociable` raises what each
+  moment is worth, so it buys more people rather than a discount. **Nothing caps
+  the count explicitly — the cap falls out of the economy.**
+
+  **A `family` status** (`infant` → `single` → `courting` → `married` → `family`
+  (married with children) → `widowed`), starting at `infant` exactly as `job`
+  does, moved to `single` by the school/work choice. Each state carries its own
+  drift and owns its deck, so marrying swaps your social life for your married
+  life with no bespoke wiring — the pattern `job` and `housing` already use. A
+  separate `children` count, so a widow with three at home reads differently from
+  one alone. The status is **active from ~5 but not SHOWN until 18** (see the
+  visibility item below).
+
+  **Two shared decks.** `fam_single` is your unattached social life: a few generic
+  social cards plus one **intro card per potential partner**, each eligible once
+  you can afford it. `fam_attached` is added by all three attached states at once
+  (the engine allows several states to add the same deck), and holds the affair
+  intros — so an affair is structurally a different kind of relationship, open
+  only to the spoken-for. A third shared deck, live whenever two or more people
+  are, holds the cross-person cards: being seen, the forced choice between two
+  named people, the scandal. With five people, pairwise cards inside each person's
+  deck would be N²; a shared deck is one copy.
+
+  **Per person: three counters, and the second one is the point.**
+  `warmth` (how much THEY care — built by showing up and by choosing them over
+  something), `ardour` (how hard YOU push it past friendship), and `distance`
+  (the presence clock, as the siblings use it). Four outcomes from two axes:
+
+  | | low ardour | high ardour |
+  |---|---|---|
+  | **high warmth** | a friend for life | the marriage |
+  | **low warmth** | you drifted | **you pushed, and they didn't — and it is spoiled** |
+
+  That bottom-right is the friend-zone as a RISK THE PLAYER TAKES rather than a
+  state they are assigned: pushing costs you the friendship you had. Plus one
+  **global** `scandal` counter, so being caught is known beyond the person you
+  wronged and a new person starts warier. Cheating spends the wronged person's
+  warmth; no separate "faith" axis is needed.
+
+  **The intro card is "you made a friend", NOT "you started courting"** — so it
+  carries no age gate at all and can fire in childhood. Best friends who become
+  lovers is the arc the ardour axis exists for, and an age gate on the intro would
+  block it. Only the DATING cards inside a person's deck are age-gated. The intro
+  branches on your status when taken and records **where you met** —
+  `job: studying` → a schoolroom desk, `university` → lectures, labourer/factory →
+  the mill floor, else the street — in a per-person `met` trait, read later by the
+  deck for flavour and by the epilogue. **That is also what makes it reachable**:
+  measured over 6,000 greedy lives, only **0.8%** ever sit in a schoolroom and
+  `edu_basicschool_friend` is drawn in **0.1%**, so hanging a door off school would
+  hide the whole feature. The schoolroom becomes flavour on a door everyone has.
+
+  **Sizing.** The draw pool is ~8.6 cards in young adulthood and ~12.6 in
+  adulthood, so three live person-decks could be half of your twenties. Start with
+  **`chance: 0.2`** on the person-deck cards (the existing per-year re-roll, so a
+  miss is re-rolled next year rather than lost — unlike a window, which is what
+  killed the sibling late beats) and tune from measurement. A wrapping-tick phase
+  counter was considered and rejected as needing engine work for the same effect.
+
+  **Settled details:** romance open to any pairing (the historical criminality is
+  deliberately out of scope — wrong tone for this game); a gendered set of people,
+  a couple of lads and a couple of lasses, which also sidesteps Italian's gender
+  agreement far better than an ambiguous name would; **no consolation match** —
+  `ya_courting` and `adult_wed` are deleted rather than absorbed, and an
+  unsociable life dies alone; marriage does **not** close the other person-decks,
+  which is what makes the ardour axis and the scandal counter matter.
+- **Status chip visibility belongs in content, not in `syncTop`.** The rule is
+  currently a hard-coded chain: age always shows, lifestyle and pet show once they
+  leave their neutral start, everything else hides during babyhood. The `family`
+  status wants a fourth case ("shown from young adulthood"), which is the moment
+  to stop adding cases: put a declarative `show` on the status kind
+  (`"always" | "fromChildhood" | "whenSet" | { ageMin }`) and let `syncTop` ask the
+  content. A net REMOVAL of three special cases. Prerequisite for the family status.
 - **LET A LIFE RUN PAST THIRTY. This is the blocking item for most of the
   written content.** A greedy life ends at ~35 and **2.3% reach 60**, and the
   decks are written for a whole life, so the back half of several of them is
