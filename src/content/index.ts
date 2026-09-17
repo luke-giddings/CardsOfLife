@@ -98,12 +98,19 @@ export const content = {
         // family costs money; the labourer's wage offsets it, the pupil's
         // doesn't.) Owns the school-events deck; education records the level.
         studying: { label: "status.job.studying", drift: { spirit: -5 }, driftShown: { spirit: "-" }, addDecks: ["edu_basicschool"] },
-        // Fee-paying academia above the free board school: the grind on the
-        // spirit continues AND tuition bites the purse (−5/yr) — the "invest
-        // early, poor now" cost of the educated path — with no wage. Each owns
-        // its events deck. (eduUniFund/savings gate entry to university; see the
-        // grammar leaver.) Income cards inside the decks let you offset the fees.
-        grammar_school: { label: "status.job.grammar_school", drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_grammar"] },
+        // Fee-paying academia above the free board school. Grammar school takes
+        // the SAME total toll as before (10 a year) but takes all of it out of
+        // the SPIRIT rather than half out of the purse: a hard grind on a boy who
+        // is not paid for any of it. The money side of schooling already lives on
+        // the housing status (your keep, which a pupil has no wage to offset), so
+        // charging tuition on top taxed the same choice twice — and every route
+        // through grammar school runs from about 14, when a life has least money
+        // and can least afford a second bill.
+        //
+        // University keeps the tuition: it is the one credential that is supposed
+        // to be bought as well as earned, and eduUniFund/savings gate entry to it
+        // (see the grammar leaver). Income cards inside both decks offset fees.
+        grammar_school: { label: "status.job.grammar_school", drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
         university: { label: "status.job.university", drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.

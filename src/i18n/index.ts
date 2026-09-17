@@ -1316,7 +1316,7 @@ export const EN = {
   "status.job.child_labourer": "Child labourer",
   "status.job.labourer": "Labourer",
   "status.job.studying": "Pupil",
-  "status.job.grammar_school": "Pupil",
+  "status.job.grammar_school": "Scholar",
   "status.job.university": "Undergraduate",
   "status.job.apprentice": "Apprentice",
   "status.job.unemployed": "Unemployed",
