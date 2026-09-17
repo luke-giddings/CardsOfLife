@@ -123,7 +123,7 @@ const LEAN_CLASSES = ["lean-left", "lean-right", "lean-up", "lean-down"];
 const MARK_SPECIAL =
   `<span class="ep-v ep-special" title="This choice changes your path — a job, home, schooling, or a lasting boon">★</span>`;
 const MARK_BURDEN =
-  `<span class="ep-v ep-burden" title="This choice leaves a lasting mark — a debt, a disgrace, a warrant, a weakness">⚠</span>`;
+  `<span class="ep-v ep-burden" title="This choice leaves a lasting mark — a debt, a disgrace, a warrant, a weakness, a loss">⚠</span>`;
 const MARK_FATAL = `<span class="dbad ep-end" title="This would be fatal">☠</span>`;
 
 // The two parts are coloured from the stylesheet (.rescue-shield steel,
@@ -594,12 +594,15 @@ export class Game {
     const intoGrimStatus = Object.entries(e?.setStatus ?? {}).some(
       ([kind, value]) => grim(kind as StatusKind, value) && !grim(kind as StatusKind, this.state.statuses[kind as StatusKind]),
     );
-    // `mark: "none"` is content saying this write is bookkeeping, not a turn in
-    // the road. Both marks are suppressed, not just the star: an outcome that
-    // only latches a flag should look like what it is on the face.
-    const quiet = e?.mark === "none";
-    const burden = !quiet && (intoGrimStatus || !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0));
-    const special = !quiet && !burden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
+    // An authored `mark` wins outright — content knows what an outcome MEANS,
+    // where the rules above only know which fields it wrote.
+    const derivedBurden = intoGrimStatus || !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
+    const burden = e?.mark
+      ? e.mark === "burden"
+      : derivedBurden;
+    const special = e?.mark
+      ? e.mark === "special"
+      : !derivedBurden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
     if (special) chips += MARK_SPECIAL;
     if (burden) chips += MARK_BURDEN;
     // No vital changes → show nothing (rather than a bare "—").

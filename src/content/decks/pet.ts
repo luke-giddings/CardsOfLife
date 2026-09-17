@@ -69,15 +69,18 @@ export const petDecks = [
         {
           // Neglected, the cat stops coming home. Fires (milestone) once love has
           // sunk low enough — a smaller loss than the old-age passing, and it takes
-          // the pet away before it can reach that card. Both options end the pet.
+          // the pet away before it can reach that card. Both options end the pet,
+          // so both are marked `burden`: `pet: none` is where every life starts and
+          // is therefore not `grim`, which had the derived mark reading the loss of
+          // your cat as a reward.
           id: "pet_cat_runaway",
           kind: "milestone",
           priority: 90,
           conditions: { traits: { petCatLove: { max: -1 } } },
           prompt: "pet_cat_runaway.prompt",
           options: {
-            left: { label: "pet_cat_runaway.left", outcomes: [{ result: "pet_cat_runaway.left.r0", effects: { vitals: { happiness: "--" }, setStatus: { pet: "none" } } }] },
-            right: { label: "pet_cat_runaway.right", outcomes: [{ result: "pet_cat_runaway.right.r0", effects: { vitals: { happiness: "-", health: "-" }, setStatus: { pet: "none" } } }] },
+            left: { label: "pet_cat_runaway.left", outcomes: [{ result: "pet_cat_runaway.left.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { pet: "none" } } }] },
+            right: { label: "pet_cat_runaway.right", outcomes: [{ result: "pet_cat_runaway.right.r0", effects: { mark: "burden", vitals: { happiness: "-", health: "-" }, setStatus: { pet: "none" } } }] },
           },
         },
         {
@@ -91,8 +94,8 @@ export const petDecks = [
           conditions: { traits: { petCatAge: { min: 12 } } },
           prompt: "pet_cat_passing.prompt",
           options: {
-            left: { label: "pet_cat_passing.left", outcomes: [{ result: "pet_cat_passing.left.r0", effects: { vitals: { happiness: "--" }, setStatus: { pet: "none" } } }] },
-            right: { label: "pet_cat_passing.right", outcomes: [{ result: "pet_cat_passing.right.r0", effects: { vitals: { happiness: "-", finances: "--" }, setTraits: { petCatAge: 0, petCatLove: 3 } } }] },
+            left: { label: "pet_cat_passing.left", outcomes: [{ result: "pet_cat_passing.left.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { pet: "none" } } }] },
+            right: { label: "pet_cat_passing.right", outcomes: [{ result: "pet_cat_passing.right.r0", effects: { mark: "special", vitals: { happiness: "-", finances: "--" }, setTraits: { petCatAge: 0, petCatLove: 3 } } }] },
           },
         },
         {
@@ -109,7 +112,7 @@ export const petDecks = [
           prompt: "pet_cat_kittens.prompt",
           options: {
             left: { label: "pet_cat_kittens.left", outcomes: [{ result: "pet_cat_kittens.left.r0", effects: { vitals: { finances: "++", happiness: "-" } } }] },
-            right: { label: "pet_cat_kittens.right", outcomes: [{ result: "pet_cat_kittens.right.r0", effects: { vitals: { happiness: "+" }, setTraits: { petCatAge: 0 } } }] },
+            right: { label: "pet_cat_kittens.right", outcomes: [{ result: "pet_cat_kittens.right.r0", effects: { mark: "none", vitals: { happiness: "+" }, setTraits: { petCatAge: 0 } } }] },
           },
         },
       ],
@@ -185,8 +188,8 @@ export const petDecks = [
           conditions: { traits: { petDogLove: { max: -1 } } },
           prompt: "pet_dog_runaway.prompt",
           options: {
-            left: { label: "pet_dog_runaway.left", outcomes: [{ result: "pet_dog_runaway.left.r0", effects: { vitals: { spirit: "--" }, setStatus: { pet: "none" } } }] },
-            right: { label: "pet_dog_runaway.right", outcomes: [{ result: "pet_dog_runaway.right.r0", effects: { vitals: { spirit: "-", health: "-" }, setStatus: { pet: "none" } } }] },
+            left: { label: "pet_dog_runaway.left", outcomes: [{ result: "pet_dog_runaway.left.r0", effects: { mark: "burden", vitals: { spirit: "--" }, setStatus: { pet: "none" } } }] },
+            right: { label: "pet_dog_runaway.right", outcomes: [{ result: "pet_dog_runaway.right.r0", effects: { mark: "burden", vitals: { spirit: "-", health: "-" }, setStatus: { pet: "none" } } }] },
           },
         },
         {
@@ -199,8 +202,8 @@ export const petDecks = [
           conditions: { traits: { petDogAge: { min: 12 } } },
           prompt: "pet_dog_passing.prompt",
           options: {
-            left: { label: "pet_dog_passing.left", outcomes: [{ result: "pet_dog_passing.left.r0", effects: { vitals: { spirit: "--" }, setStatus: { pet: "none" } } }] },
-            right: { label: "pet_dog_passing.right", outcomes: [{ result: "pet_dog_passing.right.r0", effects: { vitals: { spirit: "-", finances: "--" }, setTraits: { petDogAge: 0, petDogLove: 3 } } }] },
+            left: { label: "pet_dog_passing.left", outcomes: [{ result: "pet_dog_passing.left.r0", effects: { mark: "burden", vitals: { spirit: "--" }, setStatus: { pet: "none" } } }] },
+            right: { label: "pet_dog_passing.right", outcomes: [{ result: "pet_dog_passing.right.r0", effects: { mark: "special", vitals: { spirit: "-", finances: "--" }, setTraits: { petDogAge: 0, petDogLove: 3 } } }] },
           },
         },
         {
@@ -214,7 +217,7 @@ export const petDecks = [
           prompt: "pet_dog_puppies.prompt",
           options: {
             left: { label: "pet_dog_puppies.left", outcomes: [{ result: "pet_dog_puppies.left.r0", effects: { vitals: { finances: "++", spirit: "-" } } }] },
-            right: { label: "pet_dog_puppies.right", outcomes: [{ result: "pet_dog_puppies.right.r0", effects: { vitals: { spirit: "+" }, setTraits: { petDogAge: 0 } } }] },
+            right: { label: "pet_dog_puppies.right", outcomes: [{ result: "pet_dog_puppies.right.r0", effects: { mark: "none", vitals: { spirit: "+" }, setTraits: { petDogAge: 0 } } }] },
           },
         },
       ],

@@ -1318,17 +1318,37 @@ Roughly in likely order. None of these are started.
   whole drift table gets decided in one pass with the live-past-thirty work.
 
   **5. A card-face mark must be authored, not derived.** ★ and ⚠ were computed
-  from which fields an outcome writes, and that cannot tell a turn in the road
-  from bookkeeping: latching "her story is over", handing a deck back, resetting a
-  presence clock and recording which way a sibling went all write traits, so all
-  of them wore a mark. An outcome can now say `mark: "none"`. **45 outcomes across
-  the existing decks still wear a ★ for a bare trait write** and want a ruling:
-  clearly bookkeeping are `baby_birth` (both "Boy" and "Girl"), the four
-  `rel_*_fate` / `rel_*_estranged` story-done latches, `rel_bro_crisis` /
-  `rel_bro_repay`, and the pet age resets; arguably real path changes are
-  `baby_vaccine`, `baby_uncle`'s trust fund, `baby_disposition`, `baby_nursery`,
-  `child_martialarts`, `ya_charity_debt` and the sibling crossroads/audition/
-  dressmaker cards that decide what Tom or Sarah becomes.
+  from which fields an outcome writes, and the fields say MECHANISM where the mark
+  means MEANING. Any `setTraits` starred, so latching "her story is over" or
+  winding a pet's age back to zero wore a reward mark; only a `grim` status
+  burdened, so losing your cat — `pet` moving to `none`, a state nothing is wrong
+  with, since every life starts there — wore a reward mark too. An outcome can now
+  declare `mark: "none" | "special" | "burden"`, and the declaration wins.
+
+  **The rule for when a mark is earned**, which the marked cards were then swept
+  against:
+
+  > A mark is for a life event, not for a number moving. **Booleans and named
+  > states tend to be life events; counters tend not to be.** Sharper still, and
+  > what the code half-implemented already: `setTraits` says *a thing you now
+  > are* and can earn a mark, `incTraits` says *a number went up* and never does.
+
+  Measured against every marked outcome (`persSporty`-style counters aside, all 32
+  boolean writes and 6 enum writes are real life events and keep their star:
+  vaccination, boxing, the nursery, the trust fund, settling the charity debt,
+  both sibling crossroads, the reckonings, the fates, the estrangements, gender,
+  and what Sarah becomes). **Only the pets were wrong**, and all ten are now
+  authored: getting an animal is a life event (★ — the pet-shop cards, "take it
+  in", and taking in a kitten after the old one dies), losing one is a bad event
+  (⚠ — both passing cards' "let them rest" and both runaways, which lose the
+  animal whichever way you swipe), and carrying the line on with one of the litter
+  is neither (no mark — the chip still says Cat, and the star was firing on the
+  age going back to zero).
+
+  One counter keeps its star deliberately: `baby_disposition` writes
+  `setTraits: { persSporty: 3 }`, a disposition rather than a tally, and its third
+  option ("a bit of both") has the best raw vitals and no lasting trait — the star
+  is the only thing telling you the other two leave a mark on you.
 
   **What is still thin, and why it is not a content fault.** Courting happens at a
   median age of **35** and marriage lands in 1.4% of devoted lives. The arc is

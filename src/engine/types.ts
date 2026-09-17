@@ -325,18 +325,23 @@ export interface Effect {
   // they still earn the star (skillVaccinated, persSporty, …).
   setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
-  // Silence the card-face mark (★ / ⚠) for this outcome.
+  // The card-face mark (★ / ⚠) this outcome carries, overriding the derived one.
+  // Omit it and the mark is worked out from the fields written, which is right
+  // most of the time.
   //
-  // The mark is otherwise DERIVED from which fields an outcome writes, and that
-  // derivation cannot tell a path change from bookkeeping: latching "her story is
-  // over", resetting a presence clock or recording which way a sibling went all
-  // write traits, so all three wore a reward star. The mark is for the handful of
-  // moments that change where your life is going — a job, a home, schooling, a
-  // new deck — not for every hidden number a card moves.
+  // It has to be overridable because the derivation reads MECHANISM where the
+  // mark means MEANING. It stars any `setTraits`, so latching "her story is over"
+  // or winding a pet's age back to zero wore a reward star; and it burdens only a
+  // status flagged `grim`, so losing your cat — `pet` moving to `none`, a state
+  // nothing is wrong with, since everyone starts there — wore one too.
+  //
+  //   "none"     bookkeeping. Nothing is being decided; draw no mark at all.
+  //   "special"  a turn in the road the derivation misses.
+  //   "burden"   a loss or a lasting mark the derivation misses.
   //
   // Authored rather than computed, for the same reason `driftShown` is: the
   // engine has no way to know which writes matter, and content does.
-  mark?: "none";
+  mark?: "none" | "special" | "burden";
   // Record a MEMORABLE life event for the end-of-run recap: pushes { age, id } to
   // state.log when this outcome fires. Use for TRANSIENT moments the final state
   // won't show (went to the workhouse, ran away, moved out, a promotion) — durable
