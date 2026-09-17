@@ -1232,6 +1232,22 @@ Roughly in likely order. None of these are started.
   | the settled years | 2.8% | 4.1% |
   | **the finale** | **0.1%** | **0.3%** |
 
+  **What is actually killing you is DRIFT, not cards** (`scripts/housing-ab.ts`,
+  and 4,000 greedy lives): happiness accounts for **49.7%** of deaths at a median
+  age of 33 and health for **46.0%** at 34 — 96% between them, against finances
+  3.0% and spirit 1.3% — and **the killing blow was the year's passive drift in
+  63.7%** of them, the card you had just answered in only 36%. The cards most
+  often holding the knife are the ones that keep you in a draining status:
+  `home_homeless_beg` 14.5%, `home_renting_eviction` 9.3%, `job_unemployed_pawn`
+  6.4%. So the fix is not kinder cards: **happiness and health have no reliable
+  sources to match their drains once childhood ends.** Housing is one such source,
+  which is why it matters that only 6% of lives ever own a home.
+  It is also **not the sim being a poor player**: a "settler" that takes any
+  housing upgrade whose upkeep its wage can carry gains half a year (mean 34.1 →
+  34.6, reaching 60 1.7% → 2.4%) and still owns a home in only 8.2% of lives.
+  Wanting a house barely gets you one, because `home_buy_small` wants finances ≥ 75
+  and costs a third of it.
+
   The sibling's clock stops at 25 (median), 37 at p90, because you die at 35.
   Every window above their 26 is content written for a part of life the game
   does not deliver — four of thirteen cards in Tom's deck, including the finale
