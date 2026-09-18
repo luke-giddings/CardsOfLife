@@ -190,6 +190,33 @@ clear it here against 30% there — which is the "grammar is short so keep it lo
 instinct honoured against the supply as it now is rather than as it was. At 2 it
 would pass nearly everyone and not distinguish a bookish scholar at all.
 
+**WHAT THE TWO SCHOOL GATES ACTUALLY COST** — one A/B, same instrument, content
+at `6eef20f` (before the scholarship paper) against content with both gates and
+the priority decks. The goals with no schooling on their route match across the
+pair (master craftsman 37.6 → 37.5, a house 36.6 → 36.7, Lilly 6.4% → 6.3%,
+control 34.9 → 34.3), which is what says the academic differences are real:
+
+| goal | succeeded before → after | mean age before → after |
+|---|---|---|
+| Consulting physician | 1.9% → 1.0% | **29.7 → 48.9** |
+| Solicitor | 1.2% → 0.4% | 44.2 → 39.6 |
+| Merchant | 1.6% → 1.2% | 51.2 → 43.3 |
+
+**The gates roughly halve the success rates and stop the academic path being a
+death sentence.** Pursuing medicine used to kill you at 29.7 — below a life that
+was not trying at all — and now you live to 48.9, because failing the scholarship
+at 14 puts you behind a shop counter with a wage instead of grinding through seven
+unpaid years and dying of it. The route depth says the same: 32% of lives used to
+stall *at university*, and now 27% stop at the `grammar` credential. People fail
+earlier and survive it.
+
+Whether that trade is the right one is a judgement, not a measurement. The gates
+exist to give `persBookish` something to be for, and they do (56% against 31% at
+the board school, 60% against 50% at matriculation). If the top of the ladder
+should be commoner, the matriculation bar is the cheapest dial —
+`eduStudy: { max: 1 }` takes it from 50% to 87% — but the starvation problem below
+is worth more than the bar is.
+
 **THE ACADEMIC PATH'S REAL PROBLEM IS NOT ITS GATES.** Measured over 4,000 lives:
 
 ```
