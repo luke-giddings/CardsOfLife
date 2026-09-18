@@ -105,7 +105,21 @@ function score(s: GameState, g: Goal, mark: number, ambition: number): number {
   const v = Object.values(s.vitals) as number[];
   const survival = Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
   const step = Math.max(mark, reached(s, g.route));
-  const want = (g.wants ?? []).reduce((a, [k, w]) => a + w * num((s.traits as any)[k]), 0);
+  // `wants` are a MEANS, never an end, so their total can never be worth more
+  // than one step of the route. Without the cap the player hoards: a scholar with
+  // 3 study refused the grammar school in 100% of lives, because entering it
+  // stamps `eduStudy` back to 0 (`enterTraits`) and 3 points of a want outweighed
+  // the step they exist to buy. That is the instrument being wrong about the
+  // game, and it is the failure mode to watch for whenever a want is spent or
+  // reset by the very move it pays for.
+  // Capped at half the REFERENCE ambition, so that after the `ambition / 20`
+  // scaling below a want is worth at most half a route step AT EVERY SETTING.
+  // Capping the raw figure instead made the cap grow with the square of the dial,
+  // and at 60 a want outweighed the step again.
+  const want = Math.min(
+    (g.wants ?? []).reduce((a, [k, w]) => a + w * num((s.traits as any)[k]), 0),
+    10,
+  );
   // Both terms scale with ambition: wanting the end more means working harder for
   // what it is gated behind. 20 is the reference setting the weights are written in.
   return survival + (step * ambition + want * (ambition / 20)) * 1000;

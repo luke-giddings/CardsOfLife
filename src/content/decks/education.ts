@@ -170,6 +170,14 @@ export const educationDecks = [
     //     to work. ------------------------------------------------------------
     {
       id: "edu_grammar",
+      // PRIORITY, as the workhouse and unemployment are — a state whose own cards
+      // should own the draw. Not because grammar school is grim, but because it is
+      // SHORT: measured, a scholar spends 2.4 years here and saw only 1.20 of the
+      // deck's own cards, the rest of the draw going to home life and the street.
+      // Three years cannot both be shared out and carry a trial at the end of it.
+      // Self-limiting, too: the cards are one_time, so once they are spent nothing
+      // of this deck is eligible and the pool opens back up.
+      priority: true,
       cards: [
         {
           id: "edu_grammar_classics",
@@ -274,6 +282,14 @@ export const educationDecks = [
             left: {
               label: "edu_grammar_leaver.left",
               outcomes: [
+                // Matriculation, the twin of the scholarship paper three years
+                // back. The bar is the same NUMBER as the board school's but a
+                // looser bar in practice, because this deck is `priority` and so
+                // hands you nearly two of its own cards in two and a half years
+                // where it used to hand you one: a determined scholar clears it
+                // half the time here against three times in ten there. Checked
+                // FIRST, so no amount of money buys a place you have not earned.
+                { if: { traits: { eduStudy: { max: 2 } } }, result: "edu_grammar_leaver.left.r3", effects: { vitals: { spirit: "-", happiness: "--" }, setStatus: { education: "grammar", job: "clerk" } } },
                 { if: { traits: { eduUniFund: true } }, result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduUniFund: false, eduWasUndergraduate: true } } },
                 { if: { vitals: { finances: { min: 50 } } }, result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
                 { result: "edu_grammar_leaver.left.r2", effects: { vitals: { spirit: "+", happiness: "--", health: "-" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
@@ -292,6 +308,9 @@ export const educationDecks = [
     //     workforce, where the degree already clears the solicitor gate.) ------
     {
       id: "edu_university",
+      // Priority for the same reason as grammar school above: 2.8 years, and only
+      // 0.95 of its own cards seen.
+      priority: true,
       cards: [
         {
           id: "edu_university_lectures",

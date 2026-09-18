@@ -165,6 +165,44 @@ thresholds (e.g. high `relBrotherLove` → a loyal-sibling arc). Baby-deck "setu
 (skillVaccinated, sporty, eduUniFund…) exist to **pay off later** — notably as what
 keeps you alive through childhood hazards.
 
+**GRAMMAR SCHOOL AND UNIVERSITY ARE `priority` DECKS**, alongside the workhouse
+and unemployment — not because they are grim, but because they are SHORT. A
+scholar spends 2.4 years at grammar school and 2.2 at university, and the decks
+were dealing 1.20 and 0.95 of their own cards in that time, the rest of the draw
+going to home life and the street. Three years cannot both be shared out and carry
+a trial at the end of them. As priority decks they deal **1.84** and **1.16**, and
+the share of scholars arriving at the leaver having banked NOTHING falls from
+**47% to 7%**. Self-limiting: the cards are `one_time`, so once they are spent
+nothing of the deck is eligible and the pool reopens.
+
+That is what makes a second trial possible. **`edu_grammar_leaver` now checks
+`eduStudy ≥ 3` FIRST**, before any of the three means branches, so no amount of
+money buys a place you have not earned:
+
+| gate | plain scholar passes | bookish passes |
+|---|---|---|
+| 2 | 87% | 89% |
+| **3 (chosen)** | **50%** | **60%** |
+| 4 | 32% | 36% |
+
+Nominally the same bar as the board school's, and materially a looser one — 50%
+clear it here against 30% there — which is the "grammar is short so keep it low"
+instinct honoured against the supply as it now is rather than as it was. At 2 it
+would pass nearly everyone and not distinguish a bookish scholar at all.
+
+**THE ACADEMIC PATH'S REAL PROBLEM IS NOT ITS GATES.** Measured over 4,000 lives:
+
+```
+why grammar_school ended: edu_grammar_leaver 294   child_hunger 214   died 14
+why university ended:     child_hunger 26          edu_university_grad 17
+```
+
+**41% of grammar schoolings end in destitution, and university ends in the
+workhouse more often than it ends in a degree.** No wage, and the family keep
+costs you every year; the scholar's fund catches you once and then there is
+nothing. This is the next thing to fix on this path and it is bigger than any
+threshold — see the backlog.
+
 **THE SCHOLAR'S LAST RESORT.** A finances safety net only a pupil with something
 to sell can reach: `edu_basicschool_fund` / `edu_grammar_fund`, gated on
 `eduUniFund`, one shot, sharing one card body and one set of strings the way the
@@ -1523,6 +1561,16 @@ Roughly in likely order. None of these are started.
   four cards deep, the deck is off during priority years, and the life ends at 34.
   This is the live-past-thirty item below wearing a different hat; do not tune it
   out by inflating her weights.
+- **THE ACADEMIC PATH STARVES YOU OUT.** 41% of grammar schoolings end in
+  `child_hunger`, and university ends in the workhouse (26) more often than in a
+  degree (17). The cause is structural: from 14 to 21 the academic path pays no
+  wage at all while the family keep goes on costing, and its two income cards
+  (`edu_grammar_tutoring`, `edu_university_stipend`) cannot carry seven years. The
+  scholar's fund is a one-shot. Options not yet weighed: a bursary or sizarship
+  drift on the schooling states; making the income cards `force` on low finances
+  so they surface when needed rather than at random; or letting the keep lapse for
+  a pupil, the way a labourer's wage offsets it. Worth deciding before any further
+  gate goes on this path.
 - **THE DRIFT TABLE, decided in one pass.** Not just the family status (stripped
   to nothing above, deliberately) — the whole table. Drift is what kills you (the
   killing blow in 63.7% of deaths) and it is currently the sum of four
