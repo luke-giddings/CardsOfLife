@@ -100,26 +100,26 @@ const reached = (s: GameState, route: Step[]): number => {
 
 const num = (v: unknown): number => (typeof v === "number" ? v : v === true ? 1 : 0);
 
-function score(s: GameState, g: Goal, mark: number, ambition: number): number {
+const wantOf = (s: GameState, g: Goal): number =>
+  (g.wants ?? []).reduce((a, [k, w]) => a + w * num((s.traits as any)[k]), 0);
+
+// Wants are scored on a HIGH-WATER MARK, exactly as route progress is, and for
+// exactly the same reason: several of them are SPENT by the step they pay for.
+// `eduStudy` is stamped back to 0 on entering the school it bought, and
+// `jobExperience` is zeroed by the promotion it earned. Scoring the live value
+// made the player hoard — a scholar holding 3 study refused the grammar school in
+// 100% of lives, because entering it lost more want than the step was worth.
+//
+// Capping the want instead was the first fix and it was wrong: it suppressed the
+// goals where the want IS the road rather than a means to it (Lilly's warmth is
+// never reset and has to reach 50), and it took her from 7.5% to 1.8%. A
+// high-water mark fixes the hoarding without ever penalising accumulation.
+function score(s: GameState, g: Goal, mark: number, wantMark: number, ambition: number): number {
   if (s.over) return -1e9;
   const v = Object.values(s.vitals) as number[];
   const survival = Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
   const step = Math.max(mark, reached(s, g.route));
-  // `wants` are a MEANS, never an end, so their total can never be worth more
-  // than one step of the route. Without the cap the player hoards: a scholar with
-  // 3 study refused the grammar school in 100% of lives, because entering it
-  // stamps `eduStudy` back to 0 (`enterTraits`) and 3 points of a want outweighed
-  // the step they exist to buy. That is the instrument being wrong about the
-  // game, and it is the failure mode to watch for whenever a want is spent or
-  // reset by the very move it pays for.
-  // Capped at half the REFERENCE ambition, so that after the `ambition / 20`
-  // scaling below a want is worth at most half a route step AT EVERY SETTING.
-  // Capping the raw figure instead made the cap grow with the square of the dial,
-  // and at 60 a want outweighed the step again.
-  const want = Math.min(
-    (g.wants ?? []).reduce((a, [k, w]) => a + w * num((s.traits as any)[k]), 0),
-    10,
-  );
+  const want = Math.max(wantMark, wantOf(s, g));
   // Both terms scale with ambition: wanting the end more means working harder for
   // what it is gated behind. 20 is the reference setting the weights are written in.
   return survival + (step * ambition + want * (ambition / 20)) * 1000;
@@ -131,7 +131,7 @@ function run(g: Goal, ambition: number, N: number) {
   const depth = new Array(g.route.length + 1).fill(0);
   for (let i = 0; i < N; i++) {
     let s = initGame(gameContent);
-    let mark = -1;
+    let mark = -1, wantMark = 0;
     for (let t = 0; t < 120 && !s.over; t++) {
       const d = drawCard(s); s = d.state;
       if (!d.card) { s = quietYear(s); continue; }
@@ -139,11 +139,12 @@ function run(g: Goal, ambition: number, N: number) {
       if (!ds.length) { s = quietYear(s); continue; }
       let best = ds[0], key = -Infinity;
       for (const dir of ds) {
-        const k = score(chooseDirection(structuredClone(s), d.card, dir).state, g, mark, ambition);
+        const k = score(chooseDirection(structuredClone(s), d.card, dir).state, g, mark, wantMark, ambition);
         if (k > key) { key = k; best = dir; }
       }
       s = chooseDirection(s, d.card, best).state;
       mark = Math.max(mark, reached(s, g.route));
+      wantMark = Math.max(wantMark, wantOf(s, g));
     }
     ages.push(s.age);
     depth[mark + 1]++;
