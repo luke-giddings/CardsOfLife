@@ -548,7 +548,12 @@ export class Game {
       // touch that vital — otherwise a drain the card leaves untouched kills you
       // with no warning. Vitals the card doesn't move and won't kill you: shown
       // as nothing (no bare "—").
-      const lethal = projected.vitals[key] + (drift[key] ?? 0) <= VITAL_MIN;
+      // ...unless this IS the net for that vital. `chooseDirection` floors the
+      // rescued vital again after the year's drift, so answering a net cannot
+      // kill you by the thing it caught — and the face must say so, or it shows a
+      // skull over a swipe you survive, which is the same lie the other way up.
+      const lethal =
+        projected.vitals[key] + (drift[key] ?? 0) <= VITAL_MIN && cur?.rescue !== key;
       if (!mag && !lethal) continue;
       // A vital hitting 0 is only really death if no safety net catches it. If a
       // one-shot rescue would fire (charity hospital, sell-up, eviction…), show a

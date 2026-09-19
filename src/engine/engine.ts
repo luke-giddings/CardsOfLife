@@ -519,6 +519,22 @@ export function chooseDirection(
   applyDrift(state, content);
   applyTick(state, content);
   clampVitals(state);
+  // ANSWERING A SAFETY NET MUST NOT KILL YOU BY THE VITAL IT CAUGHT. The net
+  // floors the vital and hands you the card NEXT turn, and that turn drifts like
+  // any other — so every point of drain still on you was charged against a bar
+  // holding RESCUE_FLOOR. A child caught by the hunger card with a dog at
+  // `finances: -3` went out of the family home, kept the dog, and died on the
+  // spot with the net already spent: 1 − 3, and no second net. Measured over
+  // 8,000 lives of a player who keeps a pet, that was 19 deaths, every one of
+  // them with an animal to feed.
+  //
+  // So the rescued vital is floored again here. That is one year of grace — the
+  // year you spend answering — which is the whole of what a net promises: not
+  // that you will live, but that you get a turn to act. The year after is on you,
+  // and the card is one-shot, so this cannot repeat.
+  if (card.rescue) {
+    state.vitals[card.rescue] = Math.max(state.vitals[card.rescue], RESCUE_FLOOR);
+  }
   checkGameOver(state, content);
   return { state, result: outcome.result };
 }

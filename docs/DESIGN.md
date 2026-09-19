@@ -564,6 +564,33 @@ time; careless/random play dies far more. The **work path** is a deliberate
 high-risk/high-reward gamble (money via drift, but a real chance it kills you);
 **school** is the safer route.
 
+**A SAFETY NET MUST NOT KILL YOU.** `RESCUE_FLOOR` is 1 — destitute but alive —
+and the net hands you its card on the NEXT turn, which drifts like any other. So
+every point of drain still on you is charged against a bar holding 1, and if
+anything survives the card's own status change you die answering the net, with the
+net already spent. Reported from play: a child of eleven with a dog
+(`finances: -3`) caught by `child_hunger`, which moves you out of the family home
+but not away from the animal. 1 − 3, and no second net. Both swipes showed the
+skull and both were fatal.
+
+`chooseDirection` now floors the rescued vital AGAIN after the year's drift, so
+answering a net cannot kill you by the thing it caught. That is one year of grace
+— the year you spend answering — which is the whole of what a net promises: not
+that you will live, but that you get a turn to act. The card is one-shot, so it
+cannot repeat.
+
+Measured over 8,000 lives of a player who keeps a pet: deaths caused by the net
+that caught you go **19 → 0**, every one of the nineteen having had an animal to
+feed. And the grace is a real chance rather than a stay of execution — of the
+lives `child_hunger` catches, the median lives **6** more years, 68% live five or
+more, and **none** die within a year (with a pet: median 5, half live five or
+more).
+
+The card face had to learn the same rule in the same breath. `vitalChips` projects
+the coming year's drift to decide on ☠, so it went on promising death over a swipe
+you now survive — the same lie the other way up. It exempts the vital a card is
+the net FOR.
+
 ## 12. End of run
 
 The run ends when any Vital hits 0 (a hazard's mortal blow drops one there like
