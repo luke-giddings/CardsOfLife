@@ -647,6 +647,19 @@ ageing-drift/natural-death model, and the qualitative epitaph are designed in
 §17b and still to build. (The old `grown_up` / "Survived Childhood" ending is
 retired; the string lingers unused.)
 
+**THE RUN REPORT (`copy run` / `save .txt`, in the debug panel).** The whole run
+as plain text, for pasting into a conversation: build SHA and timestamp, then
+every card with the four vitals as they stood, the choice taken, and a change line
+whenever a status, a non-clock trait or a deck moved. Then `NOW` — age, vitals,
+every status, every non-default trait, the active decks and the memorable-events
+log — and `POOL`, the live / held / gated cards by name.
+
+The pool is the half of the state nothing else can tell you. Statuses and traits
+say where a life IS; the pool says what the game can still deal it, and the gap
+between those two is where the traps live. A life stuck on the streets reads
+perfectly healthily in the lines above and has one card left to draw. Which doors
+are SHUT is the diagnosis, so the gated ones are named rather than counted.
+
 ## 13. Save / resume / reset
 
 Autosave to `localStorage` every turn; resume on load; a **Reset** control wipes

@@ -948,6 +948,25 @@ export class Game {
     lines.push(`     traits: ${set.map(([k, v]) => `${k}=${v}`).join(", ") || "(all default)"}`);
     lines.push(`     decks: ${now.activeDecks.join(" ")}`);
     if (now.log.length) lines.push(`     log: ${now.log.map((e) => `${e.age} ${e.id}`).join(" · ")}`);
+    // THE DRAW POOL, which is the half of the state you cannot infer from the
+    // rest. Statuses and traits say where a life IS; the pool says what the game
+    // can still deal it, and the gap between the two is where the traps live — a
+    // life stuck on the streets looks fine in the lines above and has one card
+    // left to draw. Live and held are named in full; gated ones are named too,
+    // because WHICH doors are shut is the diagnosis.
+    if (!now.over) {
+      const { milestone, pool, gated, held } = eligibleDraw(now);
+      const stale = new Set(held.map((c) => c.id));
+      const live = pool.filter((c) => !stale.has(c.id)).map((c) => c.id);
+      lines.push("");
+      lines.push(
+        `POOL ${live.length} live · ${held.length} held · ${gated.length} gated` +
+          (milestone ? ` · milestone due: ${milestone.id}` : ""),
+      );
+      lines.push(`     live: ${live.join(", ") || "(none)"}`);
+      if (held.length) lines.push(`     held: ${held.map((c) => c.id).join(", ")}`);
+      if (gated.length) lines.push(`     gated: ${gated.map((c) => c.id).join(", ")}`);
+    }
     return lines.join("\n");
   }
 
