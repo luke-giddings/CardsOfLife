@@ -1764,6 +1764,28 @@ Roughly in likely order. None of these are started.
   helps neither enough. **Loyalty**: they quarrel and whoever reaches you first
   gets a hearing (`rel_sis_quarrel`, `rel_bro_quarrel`); refusing to judge costs a
   little of both.
+- **EVERY JOB DECK IS `neverSuppressed`: your work is how you get out.**
+  `focusPool` is right when a priority state's own deck HOLDS the way out — the
+  workhouse's exits, unemployment's job offers. It is exactly wrong for the
+  streets, whose only real exit (`home_homeless_room`) wants finances 40 and whose
+  own cards cannot raise it. Measured over 6,000 lives, a homeless pickpocket saw
+  **0.00** of his own job cards live in every one of 3,791 years, with four shut
+  out — while `job_criminal`'s own comment says pulling a job is the only way a
+  criminal earns anything at all. He could not beg his way to forty and could not
+  work, so he begged until he died.
+
+  | | before | **job decks spared** | streets not priority |
+  |---|---|---|---|
+  | pickpocket's own job cards live | 0.00 | **3.00** | 3.00 |
+  | draw pool while homeless | 2.38 | 5.84 | 17.58 |
+  | longest spell on the streets | 16 yrs | 10 yrs | 13 yrs |
+  | **got off the streets** | 291 | **534** | 133 |
+  | still there at death | 2,354 | 2,275 | 2,460 |
+
+  Dropping `priority` from the streets was measured and is worse both ways: it
+  does not free the job cards, it just drowns the exit card among everything else.
+  Sparing the job decks only ever bites when you are EMPLOYED inside a priority
+  housing state, since you hold one job deck at a time.
 - **`neverSuppressed` — exemption from priority suppression, on a DECK or on a
   single CARD.** `Deck.neverSuppressed` spares all of a deck and is right when
   every one of its beats is on a clock the draw cannot pause: the sibling arcs are

@@ -1,6 +1,27 @@
 // Decks — domain group: jobs. Split out of content/index.ts; assembled there.
 // Player-facing text is by STRING ID (tables in src/i18n); typed
 // `satisfies Deck[]` so a misspelled id is still a compile error.
+// EVERY DECK HERE IS `neverSuppressed`, and it is one rule rather than nineteen
+// decisions: YOUR WORK IS HOW YOU GET OUT, so it must never be the thing a
+// priority deck crowds out.
+//
+// `focusPool` exists so that a state you should be escaping owns the draw. That
+// is right when the state's own deck HOLDS the way out — the workhouse's exits,
+// unemployment's job offers. It is exactly wrong for the streets, whose only real
+// exit (`home_homeless_room`) wants finances 40 and whose own cards cannot raise
+// it: a homeless pickpocket saw 0.00 of his own job cards live in every one of
+// 3,791 measured years, with four shut out, while the deck's own comment says
+// pulling a job is the only way a criminal earns at all. He could not beg his way
+// to forty and could not work, so he begged until he died — 291 lives got off the
+// streets against 2,354 that did not.
+//
+// Sparing the job decks takes that to 534 escapes and a pool of 5.84. The
+// alternative, dropping `priority` from the streets, was measured and is worse in
+// both directions (133 escapes, a 17-card pool): it does not free the job cards,
+// it just drowns the exit among everything else.
+//
+// This only ever bites when you are EMPLOYED inside a priority housing state,
+// because you hold one job deck at a time and the others are not active.
 import type { Deck } from "../../engine/types.ts";
 
 export const jobDecks = [
@@ -11,6 +32,7 @@ export const jobDecks = [
     //     offers — honest work, or the criminal life. -------------------------
     {
       id: "job_unemployed",
+      neverSuppressed: true,
       title: "deck.job_unemployed.title",
       unlock: "deck.job_unemployed.blurb",
       // Urgent: while jobless, the job-hunt/hardship cards own the draw so you
@@ -136,6 +158,7 @@ export const jobDecks = [
       // the second rung was dead content, and every factory hand in the game was
       // really made by a coming-of-age promotion that has since been removed.
       id: "job_labour",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_labour_machine",
@@ -304,6 +327,7 @@ export const jobDecks = [
     //     (→ unemployed); real progression/events are Backlog per the design. --
     {
       id: "job_shop",
+      neverSuppressed: true,
       cards: [
         {
           // A day behind the counter. Flavour + a tick of experience toward
@@ -342,6 +366,7 @@ export const jobDecks = [
     },
     {
       id: "job_factory",
+      neverSuppressed: true,
       cards: [
         {
           // A shift on the floor. Ticks experience; push hard for pay at a cost
@@ -383,6 +408,7 @@ export const jobDecks = [
     },
     {
       id: "job_apprentice",
+      neverSuppressed: true,
       // A `priority` deck: while you're apprenticed, the draw focuses on the trade
       // (bench tasks, then the trial) and other flavour is paused — you're living at
       // the master's, a focused ~4-year indenture. This is what makes the trial
@@ -502,6 +528,7 @@ export const jobDecks = [
     },
     {
       id: "job_criminal",
+      neverSuppressed: true,
       cards: [
         {
           // A SCORE card. Pulling the job is the only way to earn (there is no
@@ -585,6 +612,7 @@ export const jobDecks = [
     //     enter as a clerk on leaving grammar school; promotions climb within. ---
     {
       id: "job_clerk",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_clerk_day",
@@ -620,6 +648,7 @@ export const jobDecks = [
     },
     {
       id: "job_solicitor",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_solicitor_day",
@@ -645,6 +674,7 @@ export const jobDecks = [
     // === COMMERCE ladder (basic): shopkeeper (mid) → merchant (top) ==========
     {
       id: "job_shopkeeper",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_shopkeeper_day",
@@ -669,6 +699,7 @@ export const jobDecks = [
     },
     {
       id: "job_merchant",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_merchant_day",
@@ -694,6 +725,7 @@ export const jobDecks = [
     // === CLERKLY/LAW ladder (grammar): chief clerk (mid) → solicitor (top) ===
     {
       id: "job_chief_clerk",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_chief_clerk_day",
@@ -720,6 +752,7 @@ export const jobDecks = [
     // === MEDICINE ladder (university): junior physician → physician → consulting =
     {
       id: "job_physician_junior",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_physician_junior_day",
@@ -744,6 +777,7 @@ export const jobDecks = [
     },
     {
       id: "job_physician",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_physician_day",
@@ -768,6 +802,7 @@ export const jobDecks = [
     },
     {
       id: "job_physician_eminent",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_physician_eminent_day",
@@ -793,6 +828,7 @@ export const jobDecks = [
     // --- Unskilled ceiling: gang-master (tier 2, no promotion). --------------
     {
       id: "job_gangmaster",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_gangmaster_day",
@@ -818,6 +854,7 @@ export const jobDecks = [
     // --- Skilled: journeyman (tier 2) → master (tier 3). --------------------
     {
       id: "job_journeyman",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_journeyman_day",
@@ -853,6 +890,7 @@ export const jobDecks = [
     },
     {
       id: "job_master",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_master_day",
@@ -878,6 +916,7 @@ export const jobDecks = [
     // --- Criminal: burglar (tier 2, small wage + scores) → fence (tier 3). ---
     {
       id: "job_burglar",
+      neverSuppressed: true,
       cards: [
         {
           id: "job_burglar_job",
@@ -924,6 +963,7 @@ export const jobDecks = [
     },
     {
       id: "job_fence",
+      neverSuppressed: true,
       cards: [
         {
           // The fence deals in others' loot: a big score at a spirit cost, or
