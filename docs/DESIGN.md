@@ -1,3 +1,42 @@
+**PASSING SCHOOL IS A PRICE, NOT A GATE — and the gate version was a trap.**
+`eduStudy` rises only when you choose the work over the easier thing, and each
+schooling state stamps it back to 0 on entry, so every tier is its own test.
+`persBookish` earns 3 from the cards it already softened where everyone else earns
+2 — quicker, not excused — and a determined bookish pupil banks 3+ in 56% of lives
+against a plain one's 31%.
+
+What that buys is no longer ADMISSION but a DISCOUNT. Win the place on merit and
+it costs nothing; short of the bar you still go up, and your people buy you in:
+half of everything they have at the board school (`finances: "/"`, plus happiness
+and spirit), and at matriculation the uni fund entire, or two thirds of all you
+own (`finances: "//"`, plus happiness and health).
+
+It was a gate first, and that was wrong in a way worth keeping written down.
+**Failing sent you to `shophand` — which is exactly where the other swipe goes.**
+The losing branch was strictly worse than its sibling with an identical
+destination: not a hard choice but no choice, and a trap for anyone who read the
+card hopefully. The matriculation gate had the same fault, failing you to `clerk`
+where its own sibling already went. **A gate you can fail has to fail you
+somewhere the other option does not already go, or it should not be a gate.**
+
+The prices are on the card face, so an idle pupil sees exactly what the place will
+cost and can take the shop position with his eyes open:
+
+```
+eduStudy=0   Try for the grammar school £−− ☺−− ✦−   |   Take a position ✦+
+eduStudy=4   Try for the grammar school ✦+           |   Take a position ✦+
+```
+
+**Measured, and it is a real trade rather than a free win.** The road reopens —
+grammar-school entries go 582 → 2,414 of 4,000 and university 95 → 693 — and the
+consulting physician becomes the most reachable it has ever been at **1.4%**. But
+mean age on that route falls from **48.9 back to 32.2**, and **55% of grammar
+schoolings now end in `child_hunger`**, because everyone who buys in is exposed to
+the starvation below. Greedy lifespan is unmoved (34.8) since greedy never enrols.
+
+The gate was not making the academic path survivable. It was keeping people out of
+a path that starves them, and this change stops hiding that.
+
 # Cards of Life — Design Document
 
 > **Living document**, kept in sync with the build. This reflects the game as

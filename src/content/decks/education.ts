@@ -126,19 +126,21 @@ export const educationDecks = [
           // educated-path entry the `basic` credential unlocks) rather than the
           // punishing scramble through unemployment.
           //
-          // GOING UP IS NOW A TRIAL, not a choice, and it is the apprenticeship's
-          // trial wearing a gown: `eduStudy >= 3` or you sit the scholarship exam
-          // and fail. Nine years of board school supply it — a determined pupil
-          // banks a median 2 and a bookish one 3, of a possible 4 or more — so the
-          // bar is a real test that a bookish child clears more often, which is
-          // the point of being bookish.
+          // GOING UP IS A PRICE, NOT A GATE. `eduStudy >= 3` wins the place on
+          // merit and costs nothing; short of that you still go up, but your
+          // people buy you in and it takes half of everything they have.
           //
-          // The option is NOT hidden when you are short. That was tried on the
-          // university leaver and it turned the card into an announcement and a
-          // taunt (see the grammar leaver below); and the failing outcome's chips
-          // are on the card face, so an idle pupil can see the exam is beyond him
-          // and take the shop position with his eyes open. Failing costs more than
-          // never trying, exactly as it does at the bench.
+          // It was a gate first, and that was wrong in a way worth remembering:
+          // failing sent you to `shophand`, which is exactly where the OTHER swipe
+          // goes, so the losing branch was strictly worse than its sibling with an
+          // identical destination. Not a hard choice — no choice, and a trap for
+          // reading the card hopefully. A gate you can fail has to fail you
+          // somewhere the other option does not already go, or it should not be a
+          // gate at all.
+          //
+          // The option is never hidden when you are short, and the price is on the
+          // card face, so an idle pupil can see exactly what the place will cost
+          // him and take the shop position instead with his eyes open.
           //
           // Only this step is gated. Grammar school lasts three years and delivers
           // a measured 1.7 draws, and university 1.1: there is no room to bank
@@ -154,7 +156,13 @@ export const educationDecks = [
               label: "edu_basicschool_leaver.left",
               outcomes: [
                 { if: { traits: { eduStudy: { min: 3 } } }, result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "grammar_school" } } },
-                { result: "edu_basicschool_leaver.left.r1", effects: { vitals: { spirit: "-", happiness: "--" }, setStatus: { education: "basic", job: "shophand" } } },
+                // Not a scholar — but the place can still be had, and your people
+                // buy it. The proportional spend takes HALF of everything they
+                // have, so it costs a comfortable family a pang and a poor one
+                // nearly all of it, and (flooring at 1) it can never be the thing
+                // that kills you. You go up either way; what the study bought you
+                // was going up for nothing.
+                { result: "edu_basicschool_leaver.left.r1", effects: { vitals: { finances: "/", happiness: "--", spirit: "-" }, setStatus: { education: "basic", job: "grammar_school" } } },
               ],
             },
             right: { label: "edu_basicschool_leaver.right", outcomes: [{ result: "edu_basicschool_leaver.right.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "shophand" } } }] },
@@ -283,13 +291,14 @@ export const educationDecks = [
               label: "edu_grammar_leaver.left",
               outcomes: [
                 // Matriculation, the twin of the scholarship paper three years
-                // back. The bar is the same NUMBER as the board school's but a
-                // looser bar in practice, because this deck is `priority` and so
-                // hands you nearly two of its own cards in two and a half years
-                // where it used to hand you one: a determined scholar clears it
-                // half the time here against three times in ten there. Checked
-                // FIRST, so no amount of money buys a place you have not earned.
-                { if: { traits: { eduStudy: { max: 2 } } }, result: "edu_grammar_leaver.left.r3", effects: { vitals: { spirit: "-", happiness: "--" }, setStatus: { education: "grammar", job: "clerk" } } },
+                // back, and a price in the same way: three years of real work take
+                // you up on merit by one of the three roads below, and short of
+                // that you go up anyway — crammed for, paid for, and neither of
+                // them cheap. (It was a gate, and it failed you to `clerk`, which
+                // is where the other swipe already went. Same fault as the board
+                // school's; same fix.)
+                { if: { traits: { eduStudy: { max: 2 }, eduUniFund: true } }, result: "edu_grammar_leaver.left.r3", effects: { vitals: { happiness: "--", health: "-" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduUniFund: false, eduWasUndergraduate: true } } },
+                { if: { traits: { eduStudy: { max: 2 } } }, result: "edu_grammar_leaver.left.r4", effects: { vitals: { finances: "//", happiness: "--", health: "-" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
                 { if: { traits: { eduUniFund: true } }, result: "edu_grammar_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduUniFund: false, eduWasUndergraduate: true } } },
                 { if: { vitals: { finances: { min: 50 } } }, result: "edu_grammar_leaver.left.r1", effects: { vitals: { spirit: "+", finances: "--" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
                 { result: "edu_grammar_leaver.left.r2", effects: { vitals: { spirit: "+", happiness: "--", health: "-" }, setStatus: { education: "grammar", job: "university" }, setTraits: { eduWasUndergraduate: true } } },
