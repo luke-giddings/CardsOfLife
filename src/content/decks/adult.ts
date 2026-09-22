@@ -128,6 +128,12 @@ export const adultDecks = [
         {
           id: "adult_family",
           kind: "one_time",
+          // "Mouths to feed, a hearth to keep" is a card about a HOUSEHOLD, and
+          // it was dealt to everyone in adulthood — including a single man
+          // renting a room with a cat, to whom it read as nonsense. Only a life
+          // that has one: married, or with children (see `adult_children` on
+          // why the `parent` branch is not yet reachable).
+          conditions: { any: [{ status: { family: "married" } }, { status: { family: "parent" } }] },
           prompt: "adult_family.prompt",
           options: {
             left: { label: "adult_family.left", outcomes: [{ result: "adult_family.left.r0", effects: { vitals: { happiness: "++", finances: "-" } } }] },
@@ -183,6 +189,12 @@ export const adultDecks = [
           // sleepless nights) or raise them hard and set them to earning.
           id: "adult_children",
           kind: "one_time",
+          // "Little ones about the house now" — same fault as `adult_family`,
+          // dealt to single men. Gated the same way. NOTE: nothing in the game
+          // SETS `family: "parent"` yet, so today this is reached by `married`
+          // alone; the `parent` branch is there so the gate stays right the day
+          // something does.
+          conditions: { any: [{ status: { family: "married" } }, { status: { family: "parent" } }] },
           prompt: "adult_children.prompt",
           options: {
             left: { label: "adult_children.left", outcomes: [{ result: "adult_children.left.r0", effects: { vitals: { happiness: "++", finances: "-", health: "-" } } }] },

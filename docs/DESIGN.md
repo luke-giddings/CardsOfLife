@@ -2737,6 +2737,15 @@ Roughly in likely order. None of these are started.
 
 ## 19. Sharp edges (known rough spots — not yet fixed)
 
+- **`family: "parent"` IS UNREACHABLE.** The state exists (with `infant`,
+  `single`, `courting`, `married`, `widowed`) but no card anywhere sets it.
+  `adult_family` and `adult_children` are gated on `married` OR `parent`, so today
+  they are reached by marriage alone and the `parent` branch waits. The natural
+  fix is for `adult_children` itself to be the moment a married life becomes a
+  parent — but that makes it a status-changing card, which is the user's call.
+  (Found when both cards turned out to be dealt, ungated, to single adults: "the
+  household looks to you — mouths to feed" to a man renting a room with a cat.)
+
 Deliberately-parked rough edges. Recorded so they aren't forgotten; each is
 left unfixed on purpose (usually because a later tweak may dissolve it, or the
 fix is a design decision we haven't taken).
