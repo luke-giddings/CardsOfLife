@@ -1812,6 +1812,25 @@ estate, having lived comfortably, aged 71."* No arithmetic.
 
 ## 18. Backlog (agreed future work)
 
+- **MARRIAGE HAS NO CONTENT — deferred by the user, not forgotten.** Only
+  `family: "single"` adds a deck (`fam_single`); `courting`, `married`, `parent`
+  and `widowed` add none. Lilly is the ONLY road to marriage (`rel_lilly_courting`
+  and `rel_lilly_propose` are the only setters), and `rel_lilly_propose` sets
+  `relLillyStoryDone: true`, which every card in `rel_lilly` requires to be false —
+  so the deck stays active but empty after the wedding. Nothing in the game is
+  about the marriage except `adult_family` and `adult_children`, and those reach it
+  only because they were gated to `married`/`parent` after a playtest found them
+  dealt to single men. `family: "parent"` is set by nothing at all.
+
+  Proposed shape, NOT agreed: a married-life deck (either a new `fam_married`
+  added by `married`, or a continuation of `rel_lilly` past the wedding), with
+  `adult_family` and `adult_children` moved into it and `adult_children` becoming
+  the card that sets `family: "parent"`; later a small `fam_parent` deck. Open
+  questions for the user before building: (1) are children a CHOICE or something
+  that simply arrives (a milestone after some years married)? (2) a new
+  `fam_married` deck, or Lilly's deck continued? (3) first-cut size — roughly four
+  cards was suggested.
+
 Roughly in likely order. None of these are started.
 
 - **RELATIONSHIPS: friends, lovers and the `family` status — agreed shape, PART
@@ -2743,6 +2762,7 @@ Roughly in likely order. None of these are started.
   they are reached by marriage alone and the `parent` branch waits. The natural
   fix is for `adult_children` itself to be the moment a married life becomes a
   parent — but that makes it a status-changing card, which is the user's call.
+  Now on the Backlog as part of "marriage has no content".
   (Found when both cards turned out to be dealt, ungated, to single adults: "the
   household looks to you — mouths to feed" to a man renting a room with a cat.)
 
