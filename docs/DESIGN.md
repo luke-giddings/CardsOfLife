@@ -591,14 +591,44 @@ with (finances 1, happiness 16, health 26, spirit 65) and play him out:
   shophand              100%                 1              0%
   clerk                 100%                 1              0%
   labourer              100%                 1              0%
-  pickpocket             39%                 3             61%
-  unemployed             27%                 3             73%
+  pickpocket             56%                 3             44%
+  unemployed             33%                 3             67%
 ```
 
-**A man with a trade is off the street in a year, every time.** The jobless and the
-criminal still mostly die out there, which is the point — but see the Backlog: the
-pickpocket's 39% is the known "no wage" problem wearing another hat, not a fault in
-this card.
+**A man with a trade is off the street in a year, every time.**
+
+**THE CRIMINAL'S ESCAPE IS REAL, AND THE PURSE WAS NEVER THE GATE.** Both
+`job_criminal_job.left` and `job_criminal_score.left` pay `finances +++` = **+50**,
+against a room that wants 40 — so a single crime clears the bar outright from a
+purse the rescue floored at 1. Traced (`scripts/score.ts`):
+
+```
+800 pickpockets on the pavement at 17
+  reached 40 on a score        85%   median 1 yr to it
+  got a roof                   42%
+  died out there               58%   of whom 342 HAD the money and died anyway
+  the room card was dealt      316 times across all 800 lives
+```
+
+**342 of 464 deaths were men with the money in their pocket**, dying while they
+waited for the card that would let them spend it. `home_homeless_room` sat at the
+default `weight: 1` while the criminal deck's two earners were `weight: 3` apiece,
+so the way out was dealt about once in twelve draws to men who live two or three.
+
+Weighted to **3**, matching `home_homeless_lodging` — **the two doors out should be
+equally findable.** Pickpocket escapes **39% → 56%**, deaths **61% → 44%**, men
+dying with money **342 → 204**. Across all greedy lives, street deaths **80% →
+75%** and escapes **12% → 18%**.
+
+This is the third time in this document one rare card has been the whole
+difficulty: `edu_university_stipend` (weight 1 against three weight-3s, a 10%
+survival coin-flip at university), the lower-tier job one-shots that could not
+deliver enough draws to promote, and now this. **When a deck has exactly one card
+that resolves the situation it is about, check its weight before concluding
+anything about the situation.**
+
+The jobless still mostly die out there (33% roofed), which is the point — the
+streets are meant to be survivable by WORK, of whatever kind, and no other way.
 
 **WHY THE HEADLINE NUMBER BARELY MOVED, and why that is not a failure.** Rerunning
 the greedy sim after this card shipped, escapes went 12% → 14% and deaths 80% →

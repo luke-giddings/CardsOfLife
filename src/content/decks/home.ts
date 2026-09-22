@@ -640,6 +640,16 @@ export const homeDecks = [
           // doesn't sink you the moment you move in) → back to a rented room.
           id: "home_homeless_room",
           kind: "filler",
+          // WEIGHT 3, matching `home_homeless_lodging`: THE TWO DOORS OUT SHOULD BE
+          // EQUALLY FINDABLE. At the default 1 this was the rarest card in the
+          // pool while the criminal deck's earners sat at 3 apiece, so the way out
+          // was dealt about once in twelve draws to men who live two or three.
+          // Measured: 85% of homeless pickpockets clear the 40 on a score inside a
+          // year, and then **342 of 464 deaths were men who HAD the money** and
+          // never saw the card. The purse was never the gate; the shuffle was.
+          // (Same fault as `edu_university_stipend` — see §"the one card that can
+          // save you is the one the deck deals least".)
+          weight: 3,
           conditions: { vitals: { finances: { min: 40 } } },
           prompt: "home_homeless_room.prompt",
           options: {
