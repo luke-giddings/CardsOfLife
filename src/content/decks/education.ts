@@ -316,32 +316,29 @@ export const educationDecks = [
             // direction is not an option.
             //
             // So you keep your pride and nothing else. No money changes hands on
-            // either swipe any more — the WAGE of the job you are falling into
-            // pays now — so the whole card is pride against safety: this swipe
-            // buys `spirit ++` and pays for it in the body, `health -` at once and
-            // then the `homeless` drift, health and happiness five a year, for as
-            // long as it takes to get a roof back.
+            // either swipe — the WAGE of the job you are falling into pays now —
+            // so the whole card is pride against safety, and the price of the
+            // pride is the `homeless` drift: health and happiness, five a year,
+            // for as long as it takes to get a roof back.
             //
-            // The health cost came off when this landed you in wageless
-            // `unemployed` and the streets were killing people in a year. With a
-            // trade and a wage they can carry it again, and they have to: measured
-            // WITHOUT it, playing both swipes from the same state, the streets
-            // OUTLIVED home in 53–57% of the same lives. The streets are supposed
-            // to be the harsher road, not the cleverer one.
+            // A `health -` was briefly added here TO STEER THE SIM, which is not a
+            // reason. The harshness of the streets lives in the housing status and
+            // its drift, where a player can read it; it does not need a second
+            // copy on the card face to make a one-year-ahead scorer pick the other
+            // swipe. See §"do not balance to the sim's taste".
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++", health: "-" }, setStatus: { housing: "homeless", job: "shophand" }, remember: "log.streets" } }],
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "shophand" }, remember: "log.streets" } }],
             },
-            // Home: fed, sheltered, and looked at. `health +` is the shelter made
-            // visible, because a one-year-ahead player cannot SEE the thing that
-            // actually makes this the safe road — that the family keep drains
-            // money a wage replaces, where the streets drain health and happiness
-            // that nothing does. Without it, home read on the card face as pure
-            // penalty against the streets' pure gain, and nobody sane takes pure
-            // penalty. The shame is still the price: `happiness --`.
+            // Home: fed, sheltered, and looked at. The shame is the whole price,
+            // `happiness --`, and the shelter is not paid out on the card at all —
+            // it is the ABSENCE of the streets' drift. The family keep drains
+            // money a wage replaces; the streets drain health and happiness that
+            // nothing does. That asymmetry is the trade, and it is carried by the
+            // statuses rather than by the numbers on the face.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--", health: "+" }, setStatus: { housing: "family", job: "shophand" }, remember: "log.senthome" } }],
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "shophand" }, remember: "log.senthome" } }],
             },
           },
         },
@@ -499,32 +496,29 @@ export const educationDecks = [
             // direction is not an option.
             //
             // So you keep your pride and nothing else. No money changes hands on
-            // either swipe any more — the WAGE of the job you are falling into
-            // pays now — so the whole card is pride against safety: this swipe
-            // buys `spirit ++` and pays for it in the body, `health -` at once and
-            // then the `homeless` drift, health and happiness five a year, for as
-            // long as it takes to get a roof back.
+            // either swipe — the WAGE of the job you are falling into pays now —
+            // so the whole card is pride against safety, and the price of the
+            // pride is the `homeless` drift: health and happiness, five a year,
+            // for as long as it takes to get a roof back.
             //
-            // The health cost came off when this landed you in wageless
-            // `unemployed` and the streets were killing people in a year. With a
-            // trade and a wage they can carry it again, and they have to: measured
-            // WITHOUT it, playing both swipes from the same state, the streets
-            // OUTLIVED home in 53–57% of the same lives. The streets are supposed
-            // to be the harsher road, not the cleverer one.
+            // A `health -` was briefly added here TO STEER THE SIM, which is not a
+            // reason. The harshness of the streets lives in the housing status and
+            // its drift, where a player can read it; it does not need a second
+            // copy on the card face to make a one-year-ahead scorer pick the other
+            // swipe. See §"do not balance to the sim's taste".
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++", health: "-" }, setStatus: { housing: "homeless", job: "clerk" }, remember: "log.streets" } }],
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "clerk" }, remember: "log.streets" } }],
             },
-            // Home: fed, sheltered, and looked at. `health +` is the shelter made
-            // visible, because a one-year-ahead player cannot SEE the thing that
-            // actually makes this the safe road — that the family keep drains
-            // money a wage replaces, where the streets drain health and happiness
-            // that nothing does. Without it, home read on the card face as pure
-            // penalty against the streets' pure gain, and nobody sane takes pure
-            // penalty. The shame is still the price: `happiness --`.
+            // Home: fed, sheltered, and looked at. The shame is the whole price,
+            // `happiness --`, and the shelter is not paid out on the card at all —
+            // it is the ABSENCE of the streets' drift. The family keep drains
+            // money a wage replaces; the streets drain health and happiness that
+            // nothing does. That asymmetry is the trade, and it is carried by the
+            // statuses rather than by the numbers on the face.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--", health: "+" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } }],
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } }],
             },
           },
         },

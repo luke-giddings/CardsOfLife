@@ -380,37 +380,49 @@ keeps it for the people it is for — children ruined during BASIC school, who h
 no credential to fall back on. Every pupil in these two decks has one.
 
 **NO MONEY CHANGES HANDS ON EITHER SWIPE.** Both once paid finances, because both
-once landed in a wageless status. The wage of the job you are falling into pays
-now (`shophand +12`, `clerk +16`), so the whole card is **pride against safety**:
-the streets buy `spirit ++` and pay `health −` plus the `homeless` drift (health
-and happiness, five a year) for as long as it takes to get a roof back; home costs
-`happiness −−` and gives `health +`.
+once landed in a wageless status. The wage of the job you are falling into pays now
+(`shophand +12`, `clerk +16`), so the whole card is **pride against safety**: the
+streets buy `spirit ++`, home costs `happiness −−`, and that is the entire face of
+it. The shelter is not paid out on the card at all — **it is the ABSENCE of the
+streets' drift.** The family keep drains money a wage replaces; the streets drain
+health and happiness, five a year, that nothing does. The asymmetry is carried by
+the statuses, where a player reads it, not by numbers on the face.
 
-**That `health +` is doing a specific job.** A one-year-ahead player cannot SEE the
-thing that actually makes home the safe road — that the family keep drains money a
-wage replaces, where the streets drain health and happiness that nothing does.
-Without it, home read on the card face as pure penalty against the streets' pure
-gain, and nobody sane takes pure penalty.
+## Do not balance to the sim's taste
 
-**THE TUNING OF THIS CARD IS A CASE STUDY IN SELECTION EFFECTS — read the method,
-not just the numbers.** Comparing "lives that chose the streets" against "lives
-that chose home" compares two different POPULATIONS: the scorer takes each in
-different circumstances, so the gap is mostly about who chose, not what they chose.
-Done that way the streets looked like they granted 39 further years against home's
-24, which is nonsense. The honest instrument is a **counterfactual**: when the net
-fires, clone the state and play BOTH swipes to the end under the same policy —
-same person, same year, same deck (`scratchpad/counter.ts`).
+**A `health −` on the streets and a `health +` on home were briefly added for one
+reason: to change which swipe the scorer picked.** That is not a reason, and the
+rule is worth stating plainly because it is an easy and seductive mistake.
 
-| version of the card | streets outlive home, same life | uptake |
-|---|---|---|
-| first cut (`health −`, `spirit +`, home pays `finances ++`) | — (streets lived a median of **1** year) | 12% |
-| money removed, no health cost | **53–57%** | 56–71% |
-| shipped (`health −` restored, home gains `health +`) | **35–38%** | 36–42% |
+The sims are a **measuring instrument, not a player whose preferences matter.**
+They score one year ahead, so anything whose cost or benefit is structural and
+deferred — a housing drift, a credential, a deck that opens — is invisible to them
+by construction. Tuning a card face until the scorer picks "correctly" does not
+balance the card; it papers over the instrument's blind spot, and it pays for that
+with numbers a human player will read as noise. If an option looks unattractive to
+the sim and right to you, **the sim is what is wrong**, and the finding is about
+the player model.
 
-The middle row is the one to notice: stripping the money made the streets the
-*cleverer* road, which inverts the intent. The streets are supposed to be harsher.
-They now are, without being a cliff — a third of ruined pupils still take them and
-roughly a third of those do better for it.
+**What the sims CAN be trusted to answer is survivability**, which is a fact about
+the game rather than a preference: *does this option leave you a life?* That is a
+real question and it caught a real bug here. The first cut of the streets charged
+`health −` on top of the `homeless` drift and paid only `spirit +`, against a home
+that paid `finances ++` and kept a roof on you — better in every direction.
+Measured, pupils who took the streets lived a median of **one** more year against
+home's **eight**. That is the board school gate's fault wearing new clothes: an
+option whose sibling beats it on every axis is not an option. Fixing it was right.
+Going further, to make the scorer *prefer* home, was not.
+
+**And measure it with a counterfactual, because uptake comparisons lie.** Comparing
+"lives that chose the streets" against "lives that chose home" compares two
+POPULATIONS — the scorer takes each in different circumstances — and made the
+streets look as though they granted 39 further years against home's 24, which is
+nonsense. `scripts/counter.ts` clones the state when the net fires and plays BOTH
+swipes to the end under the same policy: same person, same year, same deck.
+
+So the shipped card is the plain one — `spirit ++` against `happiness −−`, no
+health on either side — and the streets are the harsher road because they leave you
+homeless, which is punishment enough and legible without help.
 
 Measured overall: **university deaths 26–30% → 6–8%**, and the funnel runs
 **83% → 57% → 8%** of all lives across the three tiers.
