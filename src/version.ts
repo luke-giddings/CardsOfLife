@@ -1,4 +1,4 @@
 // On-screen build label. Bump these when it helps to tell builds apart on the
 // phone; the git SHA + time are appended automatically (see vite.config.ts).
 export const APP_VERSION = "0.1";
-export const BUILD_DESC = "the loom comes round half as often, and childhood is survivable again";
+export const BUILD_DESC = "a scholar may give it up and take a position, instead of dying at his books";

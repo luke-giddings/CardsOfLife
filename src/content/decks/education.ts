@@ -369,6 +369,46 @@ export const educationDecks = [
           },
         },
         {
+          // THE WAY OUT. Until this card university had no exit but graduation:
+          // between matriculation and the degree at 21 no swipe in the deck
+          // changed your job, so an undergraduate whose purse ran dry survived the
+          // drift or died of it. Measured, a THIRD of them died in it — not
+          // failing the place, just running out of money inside it, with
+          // `child_hunger` gone with childhood and no adult net behind it.
+          //
+          // The authored curve is board school easy, grammar medium, university
+          // VERY HARD BUT NEVER IMPOSSIBLE, and it was "never impossible" that was
+          // missing. This makes the degree no commoner — fees and drift are
+          // untouched — it makes FAILING SURVIVABLE, giving the scholar the same
+          // dignified exit the tiers below already have: `edu_basicschool_leaver`
+          // drops you to `shophand`, `edu_grammar_leaver` to `clerk`, and quitting
+          // university now drops you to `clerk` too, the work the grammar
+          // credential you already hold has always earned you. You keep
+          // `eduWasUndergraduate`: you went up, you simply did not finish.
+          //
+          // A `filler` rather than a `one_time` on purpose. Giving it up is a
+          // temptation that returns every year you are still poor, not an offer
+          // made once and withdrawn — and the deck's one_times are spent in the
+          // first years, so a one-shot leaver declined at nineteen would leave
+          // behind the very trap it was written to remove.
+          id: "edu_university_leaver",
+          weight: 3,
+          kind: "filler",
+          prompt: "edu_university_leaver.prompt",
+          options: {
+            left: {
+              label: "edu_university_leaver.left",
+              outcomes: [{ result: "edu_university_leaver.left.r0", effects: { vitals: { spirit: "+" }, incTraits: { eduStudy: 1 } } }],
+            },
+            // A wage at last, and the first of your life. It wears the star every
+            // new job wears: leaving is a step taken, not a punishment suffered.
+            right: {
+              label: "edu_university_leaver.right",
+              outcomes: [{ result: "edu_university_leaver.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "clerk" }, remember: "log.leftuni" } }],
+            },
+          },
+        },
+        {
           // Graduation (age >= 21): earns the `university` credential and steps
           // STRAIGHT into the learned profession (job -> junior physician, the
           // top MEDICINE ladder) — the degree's payoff. Both options graduate;

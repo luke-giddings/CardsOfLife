@@ -31,11 +31,15 @@ eduStudy=4   Try for the grammar school ✦+           |   Take a position ✦+
 grammar-school entries go 582 → 2,414 of 4,000 and university 95 → 693 — and the
 consulting physician becomes the most reachable it has ever been at **1.4%**. But
 mean age on that route falls from **48.9 back to 32.2**, and **55% of grammar
-schoolings now end in `child_hunger`**, because everyone who buys in is exposed to
-the starvation below. Greedy lifespan is unmoved (34.8) since greedy never enrols.
+schoolings now END IN `child_hunger`** — meaning the SCHOOLING ends, not the life.
+Both of that card's swipes set a new `job` (`pauper` or `unemployed`), and `job` is
+the field carrying `grammar_school`, so being caught by the net marches you out of
+the classroom. The pupils are alive; they are simply no longer pupils. Deaths on
+this path are counted separately and are small. Greedy lifespan is unmoved (34.8)
+since greedy never enrols.
 
 The gate was not making the academic path survivable. It was keeping people out of
-a path that starves them, and this change stops hiding that.
+a path that costs more than they have, and this change stops hiding that.
 
 # Cards of Life — Design Document
 
@@ -263,11 +267,36 @@ why grammar_school ended: edu_grammar_leaver 294   child_hunger 214   died 14
 why university ended:     child_hunger 26          edu_university_grad 17
 ```
 
-**41% of grammar schoolings end in destitution, and university ends in the
-workhouse more often than it ends in a degree.** No wage, and the family keep
-costs you every year; the scholar's fund catches you once and then there is
-nothing. This is the next thing to fix on this path and it is bigger than any
-threshold — see the backlog.
+**These are SCHOOLINGS ending, not lives.** Of the 522 grammar schoolings above,
+14 were deaths — 2.7%. The other 214 were children who were alive at their desk and
+then alive in the workhouse. Read the row as "how this schooling finished".
+
+**AND THE 41% IS STALE.** It predates the leaver becoming a price rather than a
+gate. Re-measured on the current build, the workhouse takes **18%** of grammar
+schoolings and "on to university" is the commonest ending. Do not quote the 41%.
+
+**WHAT THE ROW ACTUALLY SHOWS IS A CLASS GATE.** Sorted by whether the pupil held
+`eduUniFund` walking in:
+
+```
+how the schooling ended        spells   % of spells   held fund on entry   had SOLD the fund
+on to university                 1163        41.6%                  55%          593 (51%)
+left for clerk                   1083        38.7%                  47%          677 (63%)
+the workhouse (child_hunger)      494        17.6%                   1%           58 (12%)
+died                               37         1.3%                  51%           15 (41%)
+```
+
+**55% of the pupils who reach university held a fund; 1% of the pupils the
+workhouse takes did.** Having one is very nearly the whole difference between
+finishing and being marched out, and 88% of those marched out never sold a fund
+because 87% never had one. At ambition 60 the effect sharpens rather than washing
+out — university 64%, the clerk's counter 15%, and the workhouse UNCHANGED at 20%:
+the signature of a floor that effort cannot buy past.
+
+The fund has exactly one source, `baby_uncle`, a `one_time` card in the ages 2–4
+window that you must be dealt AND choose over `happiness ++` and `health ++`. **A
+card at age three decides whether you can finish grammar school**, which is why
+studying harder never moves the workhouse number.
 
 **THE SCHOLAR'S LAST RESORT.** A finances safety net only a pupil with something
 to sell can reach: `edu_basicschool_fund` / `edu_grammar_fund`, gated on
@@ -292,6 +321,27 @@ deck happened to be earlier in `content.decks`, so a schoolboy with an asset to
 sell was caught by the childhood hunger card purely because `childhoodDecks` is
 listed above `educationDecks`. Deck order still breaks ties and no existing rescue
 card carries a priority, so every old net keeps its exact behaviour.
+
+**EVERY TIER HAS A DOOR OUT NOW, AND EACH ONE OPENS ONTO WORK.** The board
+school's leaver drops you to `shophand`, grammar's to `clerk`, and — new —
+`edu_university_leaver` drops a quitting undergraduate to `clerk` as well, the
+work the grammar credential he already holds has always earned him. He keeps
+`eduWasUndergraduate`: he went up, he simply did not finish.
+
+Until that card, **university had no exit but graduation**. Between matriculation
+and the degree at 21 no swipe in the deck changed your job, so an undergraduate
+whose purse ran dry survived the drift or died of it, and a measured third died of
+it. The card is a `filler`, not a `one_time`, on purpose: giving it up is a
+temptation that returns every year you are still poor, not an offer made once and
+withdrawn — and the deck's `one_time`s are spent in the first years, so a one-shot
+leaver declined at nineteen would leave behind the very trap it was written to
+remove. Leaving wears the ★ every new job wears; it is a step taken, not a
+punishment suffered.
+
+It bought agency, not safety. Measured, 13–16% of undergraduates now walk out to a
+clerk's stool — but deaths moved only 32% → 26–30%, because the scholar it was
+meant to save is the one who never draws it. **The remaining deaths are the missing
+adult finances net, not the missing door** (see the Backlog).
 
 **PASSING SCHOOL IS A TRIAL NOW, and it is the apprenticeship's trial in a
 gown.** `eduStudy` rises only when you choose the work over the easier thing, each
@@ -1763,16 +1813,72 @@ Roughly in likely order. None of these are started.
   four cards deep, the deck is off during priority years, and the life ends at 34.
   This is the live-past-thirty item below wearing a different hat; do not tune it
   out by inflating her weights.
-- **THE ACADEMIC PATH STARVES YOU OUT.** 41% of grammar schoolings end in
-  `child_hunger`, and university ends in the workhouse (26) more often than in a
-  degree (17). The cause is structural: from 14 to 21 the academic path pays no
-  wage at all while the family keep goes on costing, and its two income cards
-  (`edu_grammar_tutoring`, `edu_university_stipend`) cannot carry seven years. The
-  scholar's fund is a one-shot. Options not yet weighed: a bursary or sizarship
-  drift on the schooling states; making the income cards `force` on low finances
-  so they surface when needed rather than at random; or letting the keep lapse for
-  a pupil, the way a labourer's wage offsets it. Worth deciding before any further
-  gate goes on this path.
+- **THE ACADEMIC PATH IS A RETENTION PROBLEM, NOT AN INCOME ONE.** This item
+  previously read "the academic path starves you out" and that was wrong twice
+  over; both errors are worth keeping on the record.
+
+  **First error: the money is there.** A dozen cards pay a child, often —
+  `baby_grandma` (346 times in 600 lives), `child_charity_hospital`,
+  `home_family_market/fair/pet/dog/chores/relative/sweets/scrump`,
+  `child_martialarts`, `edu_basicschool_fund`. The diagnosis came from measuring
+  the MEDIAN purse by age, which is flat at 20–25 — and a flat median is exactly
+  what you get when every life spikes and decays. Measuring the PEAK instead:
+
+  ```
+   amb  thrift   reached grammar   PEAK by 13   kept to school   eaten by keep
+    20       0               434           35               11              24
+    20     200               386           40               15              20
+    60       0               451           35               13              22
+  ```
+
+  **The median child earns their way to £35 and arrives at grammar school with
+  £11. The family keep eats £24 of it** — two-thirds of everything earned, at −5 a
+  year for nine years. Trying harder does not help: at thrift 200 the peak rises
+  35 → 40 and arrival 11 → 15, because the drain scales with the YEARS, not with
+  the effort. (A real playthrough confirmed it card for card: +25 earned at the
+  errand round aged eight, £35 at nine, £10 by seventeen, no spending choice made.)
+
+  **Second error: it was a measurement artefact all along.** Money in this game is
+  a VITAL, and a vital cannot be saved — only spent down by drift. There is no
+  container. `eduUniFund` is the only thing in the game that holds value across
+  years, which is exactly why it is the strongest predictor of finishing school.
+
+  **A money box** — an earnable asset the keep cannot drain, the working sibling
+  of the uncle's fund — was proposed and **declined**: the intended answer to the
+  academic path's costs is the inheritance meta (see the curve below), not a new
+  childhood mechanic. Do not re-propose it without asking.
+
+- **THE AUTHORED DIFFICULTY CURVE (decided, build to it).** Board school **easy**
+  to complete, grammar school **medium**, university **very hard but NEVER
+  impossible on a first run**. University is deliberately the top tier and is meant
+  to be the INHERITANCE-RUN tier — a starting purse of ~50, or the uni fund granted
+  at birth, is the intended way in, once that meta exists. **Its difficulty is not
+  a defect and should not be tuned away.** What is a defect is dying in it.
+
+  Measured against the curve on the current build:
+
+  ```
+  tier            entered   COMPLETED  left for work  workhouse  DIED IN IT
+  board school        800         84%             0%        13%          3%
+  grammar             584         81%             0%        17%          2%
+  university          261         22%            16%        36%         26%
+  ```
+
+  Two gaps. **The curve is flat where it should rise** — board school 84% and
+  grammar 81% are the same difficulty, so grammar is not "medium", it is board
+  school again. And **university is not hard, it is lethal**: a quarter to a third
+  die inside it. `edu_university_leaver` (below) gave them a door; it did not give
+  them safety, because a scholar whose purse empties between draws never draws it.
+
+- **NO ADULT FINANCES NET — now the binding constraint on university.** This is
+  what is killing the 26–30%. `child_hunger` lives in `age_childhood` and
+  `findRescue` only considers cards in ACTIVE decks, so the moment you come of age
+  the game's only finances safety net leaves with your childhood. An undergraduate
+  at nineteen has none. The authored intent is already settled — **failing out of
+  school should land you in the workhouse or on the streets, not in a grave** — so
+  the fix is a `child_hunger` twin for adults rather than anything school-specific.
+  It would also serve the 346 of 350 adult finance deaths that never touched a net.
+  Needs the go-ahead before building.
 - **THE PICKPOCKET STILL CANNOT PROMOTE** (0% in 4,200 spells of nine years). His
   two work cards only tick experience if he COMMITS the crime, so a cautious thief
   serves no years at all. Whether that is the deck or the sim is genuinely open —

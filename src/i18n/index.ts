@@ -746,6 +746,11 @@ export const EN = {
   "edu_university_grad.left.r0": "A university man at last — and you mean to make it count. You take up your calling as a junior physician, the first rung of a great profession.",
   "edu_university_grad.right": "Seek a steady place",
   "edu_university_grad.right.r0": "Degree in hand, you take a junior physician's post — long hours and little pay now, but a physician's standing to come.",
+  "edu_university_leaver.prompt": "The term's fees fall due again and your purse will not meet them. A clerkship in a respectable firm is yours for the asking — steady money, and an end to all this.",
+  "edu_university_leaver.left": "See it through",
+  "edu_university_leaver.left.r0": "You stay, and you learn to live on less than you thought a man could. The books are still there in the morning, and so are you.",
+  "edu_university_leaver.right": "Take the position",
+  "edu_university_leaver.right.r0": "You give up your rooms and your gown and present yourself at the office on Monday. The first wage you close your hand on is the first money you have ever earned — and you try not to think about the degree you will not have.",
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Out of Work",
@@ -1686,6 +1691,7 @@ export const EN = {
   "log.married": "Married {lilly}.",
   "log.lillylost": "Lost {lilly} to somebody else.",
   "log.fundspent": "Spent the university money to stay at school.",
+  "log.leftuni": "Left the university for a clerk's stool.",
 } as const;
 
 export type StringId = keyof typeof EN;
@@ -2408,6 +2414,11 @@ export const IT: Record<StringId, string> = {
   "edu_university_grad.left.r0": "Un uomo d'università, finalmente — e intendi farlo valere. Prendi la tua vocazione come medico junior, il primo gradino di una grande professione.",
   "edu_university_grad.right": "Cercare un posto sicuro",
   "edu_university_grad.right.r0": "Laurea in mano, prendi un posto da medico junior — ora tante ore e poca paga, ma il prestigio del medico è in arrivo.",
+  "edu_university_leaver.prompt": "Le rette del trimestre scadono di nuovo e la tua borsa non basta. Un posto da scrivano in uno studio rispettabile è tuo se lo chiedi: denaro sicuro, e la fine di tutto questo.",
+  "edu_university_leaver.left": "Andare fino in fondo",
+  "edu_university_leaver.left.r0": "Resti, e impari a vivere con meno di quanto credessi possibile per un uomo. La mattina i libri sono ancora lì, e ci sei anche tu.",
+  "edu_university_leaver.right": "Accettare il posto",
+  "edu_university_leaver.right.r0": "Lasci le tue stanze e la tua toga e lunedì ti presenti allo studio. La prima paga che stringi in mano è il primo denaro che tu abbia mai guadagnato — e cerchi di non pensare alla laurea che non avrai.",
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Senza lavoro",
@@ -3348,6 +3359,7 @@ export const IT: Record<StringId, string> = {
   "log.married": "Sposato con {lilly}.",
   "log.lillylost": "Persa {lilly}, andata a un altro.",
   "log.fundspent": "Speso il fondo per l'universit\u00e0 per restare a scuola.",
+  "log.leftuni": "Lasciata l'università per uno sgabello da scrivano.",
 };
 
 const STRINGS = { en: EN, it: IT } as const;
