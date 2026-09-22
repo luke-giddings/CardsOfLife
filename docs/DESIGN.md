@@ -369,24 +369,51 @@ university money first if you still hold it, failing that be sent down to your
 family, and only someone with neither, who is not in this deck at all, meets the
 workhouse. `findRescue` takes the highest priority, so the ordering is automatic.
 
-**THE FIRST CUT OF THE STREETS WAS A TRAP, and it is the board school gate's fault
-wearing new clothes.** It charged `health −` on top of the `homeless` drift and
-paid only `spirit +`, against a home that paid `finances ++` and kept a roof on
-you — better in every direction. Measured, pupils who took the streets lived a
-median of **one** more year against home's **eight**, and only 12% took it. An
-option whose sibling beats it on every axis is not an option, which is precisely
-what §"the board school's old gate" says and why that gate was turned into a price.
+**YOU LAND AT THE LEVEL OF THE SCHOOLING YOU ALREADY HOLD.** A grammar pupil holds
+`basic` (the board school leaver grants it on BOTH swipes) so ruin drops him to
+`shophand`; an undergraduate holds `grammar` so he drops to `clerk` — the same tier
+drop the leavers use, because **ruin does not unteach you your letters**. The first
+cut sent both to `unemployed`, which was wrong twice over: `unemployed` pays no
+wage at all AND is `grim: true`, so a qualified pupil was being dropped BELOW the
+uneducated child the workhouse catches. `child_hunger` keeps the workhouse and
+keeps it for the people it is for — children ruined during BASIC school, who have
+no credential to fall back on. Every pupil in these two decks has one.
 
-Rebalanced so the axis is **money against pride**: the streets now pay `finances +`
-(your books and your good coat, sold) and `spirit ++` with no health cost, and home
-pays `finances ++` at `happiness −−` AND `spirit −`, because being taken back in is
-the swipe where you stop being the man who was going to be somebody. The streets
-are still the harsher road and should be — the `homeless` drift is punishment
-enough — but they are now a road rather than a cliff: **uptake 12% → 25–34%, median
-years after 1 → 3**, against home's 8–10.
+**NO MONEY CHANGES HANDS ON EITHER SWIPE.** Both once paid finances, because both
+once landed in a wageless status. The wage of the job you are falling into pays
+now (`shophand +12`, `clerk +16`), so the whole card is **pride against safety**:
+the streets buy `spirit ++` and pay `health −` plus the `homeless` drift (health
+and happiness, five a year) for as long as it takes to get a roof back; home costs
+`happiness −−` and gives `health +`.
 
-Measured overall: **university deaths 26–30% → 6–8%**, completion 18–22%. The tier
-stays very hard; it stopped being lethal, which was the whole of the brief.
+**That `health +` is doing a specific job.** A one-year-ahead player cannot SEE the
+thing that actually makes home the safe road — that the family keep drains money a
+wage replaces, where the streets drain health and happiness that nothing does.
+Without it, home read on the card face as pure penalty against the streets' pure
+gain, and nobody sane takes pure penalty.
+
+**THE TUNING OF THIS CARD IS A CASE STUDY IN SELECTION EFFECTS — read the method,
+not just the numbers.** Comparing "lives that chose the streets" against "lives
+that chose home" compares two different POPULATIONS: the scorer takes each in
+different circumstances, so the gap is mostly about who chose, not what they chose.
+Done that way the streets looked like they granted 39 further years against home's
+24, which is nonsense. The honest instrument is a **counterfactual**: when the net
+fires, clone the state and play BOTH swipes to the end under the same policy —
+same person, same year, same deck (`scratchpad/counter.ts`).
+
+| version of the card | streets outlive home, same life | uptake |
+|---|---|---|
+| first cut (`health −`, `spirit +`, home pays `finances ++`) | — (streets lived a median of **1** year) | 12% |
+| money removed, no health cost | **53–57%** | 56–71% |
+| shipped (`health −` restored, home gains `health +`) | **35–38%** | 36–42% |
+
+The middle row is the one to notice: stripping the money made the streets the
+*cleverer* road, which inverts the intent. The streets are supposed to be harsher.
+They now are, without being a cliff — a third of ruined pupils still take them and
+roughly a third of those do better for it.
+
+Measured overall: **university deaths 26–30% → 6–8%**, and the funnel runs
+**83% → 57% → 8%** of all lives across the three tiers.
 
 **PASSING SCHOOL IS A TRIAL NOW, and it is the apprenticeship's trial in a
 gown.** `eduStudy` rises only when you choose the work over the easier thing, each

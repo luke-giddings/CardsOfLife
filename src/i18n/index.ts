@@ -753,9 +753,9 @@ export const EN = {
   "edu_university_leaver.right.r0": "You give up your rooms and your gown and present yourself at the office on Monday. The first wage you close your hand on is the first money you have ever earned — and you try not to think about the degree you will not have.",
   "edu_ruin.prompt": "The fees are due, the money is gone, and the bursar has your name on a list. Whatever happens next, you will not be at your desk for it.",
   "edu_ruin.left": "Take to the streets",
-  "edu_ruin.left.r0": "You do not go home to be looked at. You walk out with what you can carry and let the city have you, and nobody who knew you at your books ever hears where you went.",
+  "edu_ruin.left.r0": "You do not go home to be looked at. You take whatever position your letters can still get you and find a bed where you can, and nobody who knew you at your desk ever hears where you went.",
   "edu_ruin.right": "Go home to your people",
-  "edu_ruin.right.r0": "They settle what is owed and take you back without a word of reproach, which is worse than if they had shouted. Your books go in the box under the bed, and the neighbours are told you finished early.",
+  "edu_ruin.right.r0": "They take you back without a word of reproach, which is worse than if they had shouted. You are at work by Monday, in a smaller way than you intended; your books go in the box under the bed, and the neighbours are told you finished early.",
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Out of Work",
@@ -1697,7 +1697,7 @@ export const EN = {
   "log.lillylost": "Lost {lilly} to somebody else.",
   "log.fundspent": "Spent the university money to stay at school.",
   "log.leftuni": "Left the university for a clerk's stool.",
-  "log.senthome": "Sent down, and went home with nothing.",
+  "log.senthome": "Sent down, and went home to humbler work.",
 } as const;
 
 export type StringId = keyof typeof EN;
@@ -2427,9 +2427,9 @@ export const IT: Record<StringId, string> = {
   "edu_university_leaver.right.r0": "Lasci le tue stanze e la tua toga e lunedì ti presenti allo studio. La prima paga che stringi in mano è il primo denaro che tu abbia mai guadagnato — e cerchi di non pensare alla laurea che non avrai.",
   "edu_ruin.prompt": "Le rette sono scadute, il denaro è finito, e l'economo ha il tuo nome su una lista. Qualunque cosa accada adesso, non sarai al tuo banco a viverla.",
   "edu_ruin.left": "Darsi alla strada",
-  "edu_ruin.left.r0": "Non torni a casa per farti guardare. Esci con quel che puoi portare e lasci che la città ti prenda, e nessuno di quelli che ti conoscevano sui libri sa più dove sei finito.",
+  "edu_ruin.left.r0": "Non torni a casa per farti guardare. Prendi il posto che le tue lettere riescono ancora a procurarti e trovi un giaciglio dove capita, e nessuno di quelli che ti conoscevano sui libri sa più dove sei finito.",
   "edu_ruin.right": "Tornare dai tuoi",
-  "edu_ruin.right.r0": "Saldano quel che devi e ti riprendono senza una parola di rimprovero, il che è peggio che se avessero gridato. I tuoi libri finiscono nella cassa sotto il letto, e ai vicini dicono che hai finito prima.",
+  "edu_ruin.right.r0": "Ti riprendono senza una parola di rimprovero, il che è peggio che se avessero gridato. Lunedì sei già al lavoro, in modo più modesto di quanto volessi; i tuoi libri finiscono nella cassa sotto il letto, e ai vicini dicono che hai finito prima.",
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Senza lavoro",
@@ -3371,7 +3371,7 @@ export const IT: Record<StringId, string> = {
   "log.lillylost": "Persa {lilly}, andata a un altro.",
   "log.fundspent": "Speso il fondo per l'universit\u00e0 per restare a scuola.",
   "log.leftuni": "Lasciata l'università per uno sgabello da scrivano.",
-  "log.senthome": "Mandato via, e tornato a casa senza nulla.",
+  "log.senthome": "Mandato via, e tornato a casa a un lavoro più modesto.",
 };
 
 const STRINGS = { en: EN, it: IT } as const;

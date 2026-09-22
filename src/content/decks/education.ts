@@ -288,6 +288,18 @@ export const educationDecks = [
           // with the one-shot net already spent. Both wear ⚠ — you have lost
           // something that took years, and no status change should dress that as
           // momentum.
+          //
+          // YOU LAND AT THE LEVEL OF THE SCHOOLING YOU ALREADY HOLD, not on the
+          // parish. A grammar pupil holds `basic` (the board school leaver grants
+          // it on BOTH swipes) so he drops to `shophand`; an undergraduate holds
+          // `grammar` so he drops to `clerk` — the same tier drop the leavers use,
+          // because ruin does not unteach you your letters. The first cut sent
+          // both to `unemployed`, which was wrong twice: it pays no wage at all
+          // AND it is `grim: true`, so a qualified pupil was being dropped below
+          // the uneducated child the workhouse catches. `child_hunger` keeps the
+          // workhouse, and keeps it for the people it is for: children ruined
+          // during BASIC school, who have no credential to fall back on. This
+          // deck's pupils all have one.
           id: "edu_grammar_ruin",
           kind: "one_time",
           rescue: "finances",
@@ -303,24 +315,33 @@ export const educationDecks = [
             // school's old gate had: an option whose sibling is better in every
             // direction is not an option.
             //
-            // So you leave with what you can sell — your books and your good coat
-            // — and with your pride whole. The health cost is gone; the harshness
-            // is the `homeless` drift, which is punishment enough and at least
-            // gives you years to do something with.
+            // So you keep your pride and nothing else. No money changes hands on
+            // either swipe any more — the WAGE of the job you are falling into
+            // pays now — so the whole card is pride against safety: this swipe
+            // buys `spirit ++` and pays for it in the body, `health -` at once and
+            // then the `homeless` drift, health and happiness five a year, for as
+            // long as it takes to get a roof back.
+            //
+            // The health cost came off when this landed you in wageless
+            // `unemployed` and the streets were killing people in a year. With a
+            // trade and a wage they can carry it again, and they have to: measured
+            // WITHOUT it, playing both swipes from the same state, the streets
+            // OUTLIVED home in 53–57% of the same lives. The streets are supposed
+            // to be the harsher road, not the cleverer one.
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { finances: "+", spirit: "++" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++", health: "-" }, setStatus: { housing: "homeless", job: "shophand" }, remember: "log.streets" } }],
             },
-            // Home: your people settle what is owed and take you back, which is
-            // why this pays. The keep goes on costing, so it buys years, not
-            // safety, and the shame is the price on the face of the card — now
-            // spirit as well as happiness, because being taken back in is the
-            // swipe where you stop being the man who was going to be somebody.
-            // The axis is money against pride, and it should read that way on
-            // the card face before you commit to it.
+            // Home: fed, sheltered, and looked at. `health +` is the shelter made
+            // visible, because a one-year-ahead player cannot SEE the thing that
+            // actually makes this the safe road — that the family keep drains
+            // money a wage replaces, where the streets drain health and happiness
+            // that nothing does. Without it, home read on the card face as pure
+            // penalty against the streets' pure gain, and nobody sane takes pure
+            // penalty. The shame is still the price: `happiness --`.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--", spirit: "-" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--", health: "+" }, setStatus: { housing: "family", job: "shophand" }, remember: "log.senthome" } }],
             },
           },
         },
@@ -450,6 +471,18 @@ export const educationDecks = [
           // with the one-shot net already spent. Both wear ⚠ — you have lost
           // something that took years, and no status change should dress that as
           // momentum.
+          //
+          // YOU LAND AT THE LEVEL OF THE SCHOOLING YOU ALREADY HOLD, not on the
+          // parish. A grammar pupil holds `basic` (the board school leaver grants
+          // it on BOTH swipes) so he drops to `shophand`; an undergraduate holds
+          // `grammar` so he drops to `clerk` — the same tier drop the leavers use,
+          // because ruin does not unteach you your letters. The first cut sent
+          // both to `unemployed`, which was wrong twice: it pays no wage at all
+          // AND it is `grim: true`, so a qualified pupil was being dropped below
+          // the uneducated child the workhouse catches. `child_hunger` keeps the
+          // workhouse, and keeps it for the people it is for: children ruined
+          // during BASIC school, who have no credential to fall back on. This
+          // deck's pupils all have one.
           id: "edu_university_ruin",
           kind: "one_time",
           rescue: "finances",
@@ -465,24 +498,33 @@ export const educationDecks = [
             // school's old gate had: an option whose sibling is better in every
             // direction is not an option.
             //
-            // So you leave with what you can sell — your books and your good coat
-            // — and with your pride whole. The health cost is gone; the harshness
-            // is the `homeless` drift, which is punishment enough and at least
-            // gives you years to do something with.
+            // So you keep your pride and nothing else. No money changes hands on
+            // either swipe any more — the WAGE of the job you are falling into
+            // pays now — so the whole card is pride against safety: this swipe
+            // buys `spirit ++` and pays for it in the body, `health -` at once and
+            // then the `homeless` drift, health and happiness five a year, for as
+            // long as it takes to get a roof back.
+            //
+            // The health cost came off when this landed you in wageless
+            // `unemployed` and the streets were killing people in a year. With a
+            // trade and a wage they can carry it again, and they have to: measured
+            // WITHOUT it, playing both swipes from the same state, the streets
+            // OUTLIVED home in 53–57% of the same lives. The streets are supposed
+            // to be the harsher road, not the cleverer one.
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { finances: "+", spirit: "++" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++", health: "-" }, setStatus: { housing: "homeless", job: "clerk" }, remember: "log.streets" } }],
             },
-            // Home: your people settle what is owed and take you back, which is
-            // why this pays. The keep goes on costing, so it buys years, not
-            // safety, and the shame is the price on the face of the card — now
-            // spirit as well as happiness, because being taken back in is the
-            // swipe where you stop being the man who was going to be somebody.
-            // The axis is money against pride, and it should read that way on
-            // the card face before you commit to it.
+            // Home: fed, sheltered, and looked at. `health +` is the shelter made
+            // visible, because a one-year-ahead player cannot SEE the thing that
+            // actually makes this the safe road — that the family keep drains
+            // money a wage replaces, where the streets drain health and happiness
+            // that nothing does. Without it, home read on the card face as pure
+            // penalty against the streets' pure gain, and nobody sane takes pure
+            // penalty. The shame is still the price: `happiness --`.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--", spirit: "-" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--", health: "+" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } }],
             },
           },
         },
