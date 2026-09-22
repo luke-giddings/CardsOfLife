@@ -545,6 +545,94 @@ lives ever sit in one, because the sim takes the child-labourer wage at
 to go to school collects all of it. Same blindness that scores 0% journeymen where
 a grafting player scores 17%. **Do not "rebalance" this card off these numbers.**
 
+## 7c. The streets are a transit state
+
+**You should not last long out there, and the reason should be that you GET OUT —
+into renting, off the back of whatever job you hold.** Measured before this was
+built, that was not what happened:
+
+```
+1500 greedy lives — 41% slept rough at least once, 676 spells
+  DIED on the streets   538   80%
+  -> renting             84   12%
+  -> prison              52    8%
+```
+
+**Four in five homeless spells ended in a grave and one in eight in a room.** The
+streets were short-lived for exactly the wrong reason.
+
+**The cause was a door shut against the people standing at it.**
+`home_homeless_room`, the only way into `renting`, wants **forty pounds saved** —
+because a rented room drifts `finances −10` and a lump sum was the only way the
+card could prove you would carry it. But the two statuses that actually fill the
+streets are `unemployed` and `pickpocket`, and **neither has a wage to accumulate
+with.** The one exit was gated on the one thing that population cannot get.
+
+**`home_homeless_lodging`** is the second door: a room let week by week out of your
+pay, no deposit. Its gate is not what you HAVE but what is coming IN —
+
+```ts
+conditions: { drift: { finances: { min: 10 } } }   // your wage covers the rent
+```
+
+**The two doors are deliberately different shapes, and that is the design: THE
+WAGED ESCAPE ON INCOME, THE CRIMINAL ESCAPES ON A SCORE.** A pickpocket has no
+drift at all and never satisfies the income gate; he gets out through
+`home_homeless_room` instead, on forty pounds taken at once, which is exactly how
+that life is supposed to work. Taking the lodging costs no finances at all,
+deliberately — the rescue that put you there floors the vital at 1, and charging
+even a `−` would kill the man the card was written to save.
+
+Put a man on the pavement at 17 with the vitals a ruined pupil actually arrives
+with (finances 1, happiness 16, health 26, spirit 65) and play him out:
+
+```
+  job held        got a roof  median yrs to it  died out there
+  shophand              100%                 1              0%
+  clerk                 100%                 1              0%
+  labourer              100%                 1              0%
+  pickpocket             39%                 3             61%
+  unemployed             27%                 3             73%
+```
+
+**A man with a trade is off the street in a year, every time.** The jobless and the
+criminal still mostly die out there, which is the point — but see the Backlog: the
+pickpocket's 39% is the known "no wage" problem wearing another hat, not a fault in
+this card.
+
+**WHY THE HEADLINE NUMBER BARELY MOVED, and why that is not a failure.** Rerunning
+the greedy sim after this card shipped, escapes went 12% → 14% and deaths 80% →
+78%. That is because **greedy never enrols**, so it never gets ruined out of school
+and never produces a homeless man holding a trade — the population this card is
+for. The path had to be started by hand (`scripts/roughsleep.ts`). A sim that
+cannot reach a situation cannot measure it, and a flat headline from one is not
+evidence of nothing happening.
+
+**What the streets do to you is mostly done before you arrive.** Median vitals on
+the day you hit the pavement: **finances 11, happiness 16, health 26**, spirit 65 —
+against a `homeless` drift of `health −5, happiness −5`. Happiness finishes 222 of
+542 street deaths and health another 133. The streets are lethal, but they are
+chiefly receiving the already-broken.
+
+### `Condition.drift` — a new engine primitive
+
+```ts
+drift?: Partial<Record<VitalKey, { min?: number; max?: number }>>;
+```
+
+Matches the per-turn drift the current statuses sum to, exactly as `vitals` matches
+what you hold. **Where `vitals` asks what you HAVE, this asks what is coming IN** —
+income, upkeep, a wasting illness — without the card needing to know which statuses
+produce it. It reads `totalDrift`, the same sum the turn applies and the UI
+previews, so a gate written against it cannot fall out of step with the number the
+player is shown.
+
+It is deliberately general rather than a job lookup: **a new job that pays satisfies
+an income gate the day it is written, with no gate to go back and update.** The
+alternative — an `any` list of every waged job — would rot on the next job added,
+and `status: { job: { atLeast } }` cannot work because jobs have no `levels` and
+never will, being several parallel ladders rather than one.
+
 ## 8. Cards: front and back
 
 - **Front:** a prompt + 2–4 options mapped to swipe directions (left/right

@@ -5,7 +5,9 @@ import type {
   NumberMatch,
   StatusKind,
   Traits,
+  VitalKey,
 } from "./types.ts";
+import { totalDrift } from "./engine.ts";
 
 function matchNumber(value: number, m: NumberMatch): boolean {
   if (typeof m === "number") return value === m;
@@ -35,6 +37,18 @@ export function meets(
   if (cond.vitals) {
     for (const [key, range] of Object.entries(cond.vitals)) {
       const v = state.vitals[key as keyof typeof state.vitals];
+      if (range.min !== undefined && v < range.min) return false;
+      if (range.max !== undefined && v > range.max) return false;
+    }
+  }
+
+  // What is coming IN each year, rather than what you have. `totalDrift` is the
+  // same sum the turn applies and the UI previews, so a gate written here cannot
+  // drift out of step with the number the player is shown.
+  if (cond.drift) {
+    const d = totalDrift(state, content);
+    for (const [key, range] of Object.entries(cond.drift)) {
+      const v = d[key as VitalKey] ?? 0;
       if (range.min !== undefined && v < range.min) return false;
       if (range.max !== undefined && v > range.max) return false;
     }

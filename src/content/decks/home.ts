@@ -648,6 +648,40 @@ export const homeDecks = [
           },
         },
         {
+          // THE WAY OUT THAT THE WAGE PAYS FOR, and the commonest way off the
+          // streets there ought to be. `home_homeless_room` wants FORTY SAVED,
+          // because a rented room drifts finances −10 and a lump sum was the only
+          // way to prove you could carry it. But the two statuses that actually
+          // fill the streets — `unemployed` and `pickpocket` — have no wage to
+          // accumulate with, so the only door was shut to exactly the people
+          // standing at it. Measured before this card: 80% of homeless spells
+          // ended in DEATH and 12% in a room.
+          //
+          // So: a room let week by week out of your pay, no deposit. The gate is
+          // `drift: { finances: { min: 10 } }` — not what you HAVE but what is
+          // coming IN, at least the rent a room will cost. A wage covers it the
+          // day you take the job, and no savings are needed or asked for.
+          //
+          // The two doors are deliberately different shapes, which is the whole
+          // design: THE WAGED ESCAPE ON INCOME, THE CRIMINAL ESCAPES ON A SCORE.
+          // A pickpocket has no drift at all and never satisfies this gate — he
+          // gets out through `home_homeless_room` instead, on forty pounds taken
+          // at once, which is exactly how that life is supposed to work.
+          //
+          // No finances cost on taking it, deliberately: the rescue that put you
+          // here floors the vital at 1, and charging even a "−" would kill the
+          // man it was written to save.
+          id: "home_homeless_lodging",
+          kind: "filler",
+          weight: 3,
+          conditions: { drift: { finances: { min: 10 } } },
+          prompt: "home_homeless_lodging.prompt",
+          options: {
+            left: { label: "home_homeless_lodging.left", outcomes: [{ result: "home_homeless_lodging.left.r0", effects: { vitals: { happiness: "++", spirit: "+" }, setStatus: { housing: "renting" } } }] },
+            right: { label: "home_homeless_lodging.right", outcomes: [{ result: "home_homeless_lodging.right.r0", effects: { vitals: { happiness: "-" } } }] },
+          },
+        },
+        {
           // Back to your books — but only once you've clawed your vitals off the
           // floor (recovered), and to the rung your credential+age allow: a former
           // undergraduate RETURNS to UNIVERSITY to finish (18–25, `eduWasUndergraduate`

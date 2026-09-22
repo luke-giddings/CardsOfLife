@@ -322,6 +322,12 @@ export interface Condition {
   ageMin?: number;
   ageMax?: number;
   vitals?: Partial<Record<VitalKey, { min?: number; max?: number }>>;
+  // The per-turn DRIFT the current statuses add up to, matched the same way as
+  // `vitals`. Where `vitals` asks what you HAVE, this asks what is coming IN (or
+  // going out) each year — income, upkeep, a wasting illness — without the card
+  // needing to know which statuses produce it. A new job that pays satisfies an
+  // income gate the day it is written, with no gate to update.
+  drift?: Partial<Record<VitalKey, { min?: number; max?: number }>>;
   status?: Partial<Record<StatusKind, StatusMatch>>;
   traits?: TraitConditions;
   // OR-gate: passes if ANY listed sub-condition holds (each is a full Condition).
