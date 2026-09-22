@@ -697,15 +697,20 @@ export class Game {
     // Current traits, grouped into collapsible sub-sections so the (growing)
     // list stays scannable. One chip each: numbers get −/+ buttons; the rest tap
     // to toggle.
+    // A chip lights up when the trait has MOVED FROM ITS STARTING VALUE — not when
+    // it is truthy. Text traits used to light up unconditionally, so
+    // `relSisterCalling=none` looked "set" in a life with no sister, and read as
+    // though something had happened to a girl who was never born.
+    const moved = (k: string, v: unknown): boolean =>
+      v !== (DEFAULT_TRAITS as unknown as Record<string, unknown>)[k];
     const traitChip = ([k, v]: [string, unknown]): string => {
       if (typeof v === "number") {
         const step = TRAIT_STEP[k] ?? 1;
-        return `<span class="dbg-trait ${v !== 0 ? "set" : ""}">${k}=${v}
+        return `<span class="dbg-trait ${moved(k, v) ? "set" : ""}">${k}=${v}
           <button data-trait="${k}" data-tdelta="-${step}">−</button>
           <button data-trait="${k}" data-tdelta="${step}">+</button></span>`;
       }
-      const set = typeof v === "boolean" ? v : true;
-      return `<span class="dbg-trait ${set ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
+      return `<span class="dbg-trait ${moved(k, v) ? "set" : ""}" data-trait="${k}">${k}=${v}</span>`;
     };
     // Explicit trait grouping. Most traits sit loose at the top; the rest fall
     // into fixed categories — Personality (`pers*`), Skills (`skill*`), Education
