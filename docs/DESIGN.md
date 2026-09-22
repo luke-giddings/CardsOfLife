@@ -663,6 +663,47 @@ alternative — an `any` list of every waged job — would rot on the next job a
 and `status: { job: { atLeast } }` cannot work because jobs have no `levels` and
 never will, being several parallel ladders rather than one.
 
+## 7d. The gang-master, and what a terminal deck is for
+
+`job_gangmaster` was the last **day+loss stub** on a job anyone actually reaches —
+two cards, the routine and the sack, held by 5.2% of lives for a measured nine
+years apiece. Everything above it on the census is a terminal tier nobody gets to.
+
+**A ceiling needs different cards from a rung.** Gang-master is the unskilled
+CEILING: the best wage an unlettered man can reach (`finances +15`, `health −5`),
+promoted into from `job_factory_promote`, with nothing above it. Every other job
+deck trades your own body or spirit for wages, and that works because you are
+climbing. Here there is nothing left to climb toward, so the cards are about **the
+men under you** — you were one of them last year:
+
+- `job_gangmaster_stand` — forty men at the hiring stand for twenty places. Take
+  the strongest (`finances +`, `spirit −`) or split the day so everyone eats
+  (`spirit +`, `finances −`, `socialWarmth +2`).
+- `job_gangmaster_squeeze` — the contractor's bonus for finishing short-handed.
+  Drive them through it (`finances ++`, `health −`, `spirit −−`) or tell him it
+  cannot be done (`finances −`, `spirit +`).
+- `job_gangmaster_old` — the man who taught you the work, too slow now. Carry him
+  out of your own end, or let him go for a few shillings and `happiness −−`.
+
+**`jobExperience` on every swipe, and it is NOT dead state on a terminal job.**
+`unemployed` carries `keepExperience`, so a sacked gang-master takes his years into
+whatever he finds next, where they still count toward a promotion. The kind swipes
+pay `socialWarmth` through `incTraits` following `job_labour_mate` — a counter, so
+no ★; those are for life events.
+
+**Checked, and NOT tuned to.** The greedy player takes the kind swipe on `old`
+98:7 and refuses the `squeeze` 100:14, because the cruel options carry `−−` spirit
+and happiness costs that a survival scorer will not pay. Per §"do not balance to
+the sim's taste" that is not a reason to change anything. The check that DOES
+matter is dominance, and it passes: no swipe here is beaten by its sibling on every
+axis. All three cards are dealt about 0.6 times per gang-master.
+
+**One pre-existing smell, left alone deliberately.** `job_gangmaster_day` pays
+`spirit +` for nothing on the right and `finances +` at `health −` on the left, so
+the right is free upside — played 66:1. But that is the HOUSE PATTERN for every
+`*_day` card in every job deck, not a gang-master fault, and changing it would
+touch the whole job layer. Recorded, not fixed.
+
 ## 8. Cards: front and back
 
 - **Front:** a prompt + 2–4 options mapped to swipe directions (left/right

@@ -952,6 +952,58 @@ export const jobDecks = [
           },
         },
         {
+          // THE GANG-MASTER'S DECK IS ABOUT THE MEN UNDER HIM, and that is what
+          // makes it worth writing rather than another money-against-health rung.
+          // Every other job trades your OWN body or spirit for wages. This one is
+          // the unskilled CEILING — the best wage an unlettered man can reach
+          // (`finances +15`) and no promotion above it — so there is nothing left
+          // to climb toward and the only thing still at stake is what you are
+          // willing to do to people who were your mates last year. All three
+          // one-shots put money on one side and someone else's back on the other.
+          //
+          // `jobExperience` on every swipe as the house style, and it is NOT dead
+          // state on a terminal job: `unemployed` carries `keepExperience`, so a
+          // sacked gang-master takes his years with him into whatever he finds
+          // next, where they still count toward a promotion.
+          //
+          // The kind swipes pay `socialWarmth` through `incTraits`, following
+          // `job_labour_mate` — a counter, so no ★; those are for life events.
+          id: "job_gangmaster_stand",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_gangmaster_stand.prompt",
+          options: {
+            left: { label: "job_gangmaster_stand.left", outcomes: [{ result: "job_gangmaster_stand.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_gangmaster_stand.right", outcomes: [{ result: "job_gangmaster_stand.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { jobExperience: 1, socialWarmth: 2 } } }] },
+          },
+        },
+        {
+          // The contractor's bonus for finishing short-handed. The only swipe in
+          // the deck that pays `++`, and it costs the most of you: you drive the
+          // gang through it and take a share of the damage yourself.
+          id: "job_gangmaster_squeeze",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_gangmaster_squeeze.prompt",
+          options: {
+            left: { label: "job_gangmaster_squeeze.left", outcomes: [{ result: "job_gangmaster_squeeze.left.r0", effects: { vitals: { finances: "++", health: "-", spirit: "--" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_gangmaster_squeeze.right", outcomes: [{ result: "job_gangmaster_squeeze.right.r0", effects: { vitals: { finances: "-", spirit: "+" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          // The man who taught you the work, too old now to keep up. Carrying him
+          // costs money every week and buys nothing but your own good opinion —
+          // which is, on this deck, the entire point.
+          id: "job_gangmaster_old",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_gangmaster_old.prompt",
+          options: {
+            left: { label: "job_gangmaster_old.left", outcomes: [{ result: "job_gangmaster_old.left.r0", effects: { vitals: { finances: "-", happiness: "+" }, incTraits: { jobExperience: 1, socialWarmth: 2 } } }] },
+            right: { label: "job_gangmaster_old.right", outcomes: [{ result: "job_gangmaster_old.right.r0", effects: { vitals: { finances: "+", happiness: "--" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
           id: "job_gangmaster_sacked",
           kind: "filler",
           prompt: "job_gangmaster_sacked.prompt",
