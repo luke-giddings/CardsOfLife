@@ -340,8 +340,37 @@ punishment suffered.
 
 It bought agency, not safety. Measured, 13–16% of undergraduates now walk out to a
 clerk's stool — but deaths moved only 32% → 26–30%, because the scholar it was
-meant to save is the one who never draws it. **The remaining deaths are the missing
-adult finances net, not the missing door** (see the Backlog).
+meant to save is the one who never draws it. A door in the pool is not a floor
+under the feet: `eligibleDraw` filters on `!c.rescue`, so **a card is either
+drawable or a safety net and can never be both**, which is why the fund cards are
+separate cards from the leavers rather than extra swipes on them.
+
+**RUIN: THE PUPIL'S NET, AND WHY IT IS NOT THE WORKHOUSE.** `edu_grammar_ruin` and
+`edu_university_ruin` (one card body, one set of `edu_ruin.*` strings, a copy in
+each deck, as the fund cards do) fire when a pupil's purse would empty. **A
+schoolboy has PEOPLE.** The destitute child's net offers the workhouse or the
+streets because he has nowhere else; a grammar-school boy or an undergraduate can
+go home and be fed, and what he loses is his education and his face, not his
+shelter. So the swipes are **the streets or home** — the streets proud and free of
+the keep entirely (`homeless` drifts health and happiness, never money), home
+paying `finances ++` because your people settle what is owed, at `happiness --`
+because they do it without a word of reproach.
+
+**There is no choice to stay, and that is the point.** The leaver is the door you
+walk out of on your own feet with a position waiting; this is the one you are
+carried out of. Both swipes set `job` for the reason `child_hunger` does — the
+rescue floors the vital at 1, and an occupation still charging tuition would empty
+it again next year with the one-shot net spent. Both wear ⚠: you have lost
+something that took years, and no status change should dress that as momentum.
+
+`priority: 50` sits below the scholar's fund (100) and above `child_hunger`
+(unset, so 0), which is exactly the order the three should be offered in — sell the
+university money first if you still hold it, failing that be sent down to your
+family, and only someone with neither, who is not in this deck at all, meets the
+workhouse. `findRescue` takes the highest priority, so the ordering is automatic.
+
+Measured: **university deaths 26–30% → 10–11%**, completion unmoved at 20–23%. The
+tier stays very hard; it stopped being lethal, which was the whole of the brief.
 
 **PASSING SCHOOL IS A TRIAL NOW, and it is the apprenticeship's trial in a
 gown.** `eduStudy` rises only when you choose the work over the easier thing, each
@@ -1858,27 +1887,33 @@ Roughly in likely order. None of these are started.
   Measured against the curve on the current build:
 
   ```
-  tier            entered   COMPLETED  left for work  workhouse  DIED IN IT
-  board school        800         84%             0%        13%          3%
-  grammar             584         81%             0%        17%          2%
-  university          261         22%            16%        36%         26%
+  tier            entered   COMPLETED  left for work  thrown out  DIED IN IT
+  board school        800         84%             0%         14%          2%
+  grammar             566         80%             0%         19%          1%
+  university          227         23%            16%         49%         11%
   ```
 
-  Two gaps. **The curve is flat where it should rise** — board school 84% and
-  grammar 81% are the same difficulty, so grammar is not "medium", it is board
-  school again. And **university is not hard, it is lethal**: a quarter to a third
-  die inside it. `edu_university_leaver` (below) gave them a door; it did not give
-  them safety, because a scholar whose purse empties between draws never draws it.
+  ("thrown out" is the net firing — the workhouse or the streets for a child, the
+  streets or home for a pupil. It is not a death; the life goes on.)
 
-- **NO ADULT FINANCES NET — now the binding constraint on university.** This is
-  what is killing the 26–30%. `child_hunger` lives in `age_childhood` and
-  `findRescue` only considers cards in ACTIVE decks, so the moment you come of age
-  the game's only finances safety net leaves with your childhood. An undergraduate
-  at nineteen has none. The authored intent is already settled — **failing out of
-  school should land you in the workhouse or on the streets, not in a grave** — so
-  the fix is a `child_hunger` twin for adults rather than anything school-specific.
-  It would also serve the 346 of 350 adult finance deaths that never touched a net.
-  Needs the go-ahead before building.
+  **University is no longer lethal** — the ruin net took it from a quarter-to-a-third
+  dying to 10–11%, at 23% completion. Very hard, never impossible: done.
+
+  **One gap left: the curve is flat where it should rise.** Board school 84% and
+  grammar 80% are the same difficulty, so grammar is not "medium", it is board
+  school again. Nothing has been changed for it yet.
+
+- **NO ADULT FINANCES NET, outside the schoolroom.** `child_hunger` lives in
+  `age_childhood`, and `findRescue` only considers cards in ACTIVE decks, so the
+  moment you come of age the game's only general finances net leaves with your
+  childhood — and 346 of 350 adult finance deaths never touched a net.
+
+  **A blanket adult twin of `child_hunger` was proposed and DECLINED.** The pupil's
+  case was carved out instead and is now built (`edu_grammar_ruin` /
+  `edu_university_ruin`, above), which was the right call: it cut university deaths
+  from 26–30% to 10–11% without giving every adult in the game a floor. The rest of
+  adult life still has none, deliberately. Do not re-propose a general net without
+  asking.
 - **THE PICKPOCKET STILL CANNOT PROMOTE** (0% in 4,200 spells of nine years). His
   two work cards only tick experience if he COMMITS the crime, so a cautious thief
   serves no years at all. Whether that is the deck or the sim is genuinely open —

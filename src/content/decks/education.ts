@@ -266,6 +266,50 @@ export const educationDecks = [
           },
         },
         {
+          // RUIN. The finances net for a pupil, and the reason it exists rather
+          // than letting `child_hunger` do the job: a schoolboy has PEOPLE. The
+          // destitute child's net offers the workhouse or the streets because he
+          // has nowhere else; a grammar-school boy or an undergraduate can go home
+          // and be fed, and the loss he takes is his education and his face, not
+          // his shelter.
+          //
+          // `priority: 50` sits BELOW the scholar's fund (100) and ABOVE
+          // `child_hunger` (unset, so 0), which is exactly the order these three
+          // should be offered in: sell the university money first if you still
+          // have it; failing that be sent down to your family; and only a pupil
+          // with neither — who is not in this deck at all — meets the workhouse.
+          // `findRescue` picks the highest priority, so the ordering is automatic.
+          //
+          // THERE IS NO CHOICE TO STAY, and that is the point. The leaver is the
+          // door you walk out of on your own feet, with a position waiting. This
+          // is the one you are carried out of. Both swipes set `job`, for the
+          // reason `child_hunger` does: the rescue floors the vital at 1, and an
+          // occupation that still charges tuition would empty it again next year
+          // with the one-shot net already spent. Both wear ⚠ — you have lost
+          // something that took years, and no status change should dress that as
+          // momentum.
+          id: "edu_grammar_ruin",
+          kind: "one_time",
+          rescue: "finances",
+          priority: 50,
+          prompt: "edu_ruin.prompt",
+          options: {
+            // The streets: proud, and free of the keep entirely, since `homeless`
+            // drifts health and happiness but never money.
+            left: {
+              label: "edu_ruin.left",
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
+            },
+            // Home: your people settle what is owed and take you back, which is
+            // why this pays. The keep goes on costing, so it buys years, not
+            // safety, and the shame is the price on the face of the card.
+            right: {
+              label: "edu_ruin.right",
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
+            },
+          },
+        },
+        {
           // End of grammar school (age >= 17): earns the `grammar` credential.
           // Then UP to university, or leave for work.
           //
@@ -366,6 +410,50 @@ export const educationDecks = [
           options: {
             left: { label: "edu_university_stipend.left", outcomes: [{ result: "edu_university_stipend.left.r0", effects: { vitals: { finances: "++", health: "-" } } }] },
             right: { label: "edu_university_stipend.right", outcomes: [{ result: "edu_university_stipend.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { eduStudy: 1 } } }] },
+          },
+        },
+        {
+          // RUIN. The finances net for a pupil, and the reason it exists rather
+          // than letting `child_hunger` do the job: a schoolboy has PEOPLE. The
+          // destitute child's net offers the workhouse or the streets because he
+          // has nowhere else; a grammar-school boy or an undergraduate can go home
+          // and be fed, and the loss he takes is his education and his face, not
+          // his shelter.
+          //
+          // `priority: 50` sits BELOW the scholar's fund (100) and ABOVE
+          // `child_hunger` (unset, so 0), which is exactly the order these three
+          // should be offered in: sell the university money first if you still
+          // have it; failing that be sent down to your family; and only a pupil
+          // with neither — who is not in this deck at all — meets the workhouse.
+          // `findRescue` picks the highest priority, so the ordering is automatic.
+          //
+          // THERE IS NO CHOICE TO STAY, and that is the point. The leaver is the
+          // door you walk out of on your own feet, with a position waiting. This
+          // is the one you are carried out of. Both swipes set `job`, for the
+          // reason `child_hunger` does: the rescue floors the vital at 1, and an
+          // occupation that still charges tuition would empty it again next year
+          // with the one-shot net already spent. Both wear ⚠ — you have lost
+          // something that took years, and no status change should dress that as
+          // momentum.
+          id: "edu_university_ruin",
+          kind: "one_time",
+          rescue: "finances",
+          priority: 50,
+          prompt: "edu_ruin.prompt",
+          options: {
+            // The streets: proud, and free of the keep entirely, since `homeless`
+            // drifts health and happiness but never money.
+            left: {
+              label: "edu_ruin.left",
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
+            },
+            // Home: your people settle what is owed and take you back, which is
+            // why this pays. The keep goes on costing, so it buys years, not
+            // safety, and the shame is the price on the face of the card.
+            right: {
+              label: "edu_ruin.right",
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
+            },
           },
         },
         {
