@@ -604,11 +604,24 @@ Because labourers now promote, the factory goes from 437 spells in 6,000 lives t
 That is the "live past thirty" item moving for the first time, and it moved
 because of a promotion ladder, not because anything was made kinder.
 
-**One thing got worse and it should be watched:** deaths under 18 went **7.7% →
-10.3%**. The labour deck is weighted more heavily now, so children draw more of
-it — including `job_labour_machine`, whose failed reach is `health "---"` and
-kills a child. More child labour is more danger, which is the right story; whether
-it is the right number is a balance call, not a measurement.
+**Childhood got deadlier, and the fix is a counter-weight.** Deaths under 18 went
+**7.5% → 10.4%** when the deck got heavier, because `job_labour_machine` came up
+with it. Dropping that one card to `weight: 1` takes it back to **8.8%** and costs
+the ladder nothing — mean age 35.9 → 36.1, reaching 60 unchanged at 4.7% — because
+it is a hazard, not a rung.
+
+**Do not attribute a death to the last card held.** `job_labour_machine` killed 81
+per 10,000 lives before the change and 81 after, which read as "not the culprit"
+and was wrong. Surviving its `---` leaves a child weak enough for the fever or the
+runaway cart to finish months later: `child_accident` rose from 195 to 249 with
+nothing about that card changed. **A maiming card kills mostly under someone
+else's name**, so the test of a hazard is the whole under-18 rate, not its own
+tally.
+
+The obvious alternative — no factory work under 14, since 33% of promotions were
+going to children — was measured and rejected. It fixes the deaths (8.6%) and
+hands back the entire prize: reaching 60 falls **4.7% → 2.2%**. Children reaching
+the factory early is part of what drives the ladder.
 
 `job_criminal` is deliberately untouched. Its 0% promotion rate looks like the
 same supply problem, but a thief weighted to value the work still spent 31 years
@@ -1765,10 +1778,6 @@ Roughly in likely order. None of these are started.
   serves no years at all. Whether that is the deck or the sim is genuinely open —
   see §11. It needs a player model built around crime, not around experience,
   before anything is changed.
-- **CHILDHOOD GOT DEADLIER** with the weighted labour deck: deaths under 18 went
-  7.7% to 10.3%, because children draw `job_labour_machine` more often and its
-  failed reach is a `---` to the health of someone who has very little. Decide
-  whether that is the intended price of a working childhood.
 - **THE DRIFT TABLE, decided in one pass.** Not just the family status (stripped
   to nothing above, deliberately) — the whole table. Drift is what kills you (the
   killing blow in 63.7% of deaths) and it is currently the sum of four

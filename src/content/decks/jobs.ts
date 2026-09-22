@@ -138,9 +138,21 @@ export const jobDecks = [
       id: "job_labour",
       cards: [
         {
+          // `weight: 1` where the rest of the deck is 2 or 3. The deck got heavier
+          // when the one-shots went in, and this card came with it: deaths under
+          // 18 went 7.5% to 10.4%. Halving its share takes that back to 8.8% and
+          // costs the promotion ladder NOTHING — mean age 35.9 to 36.1, reaching
+          // 60 unchanged at 4.7% — because it is a hazard, not a rung.
+          //
+          // Its own death count barely moved either way (81 per 10,000 lives,
+          // before and after), which is exactly why attributing deaths to the LAST
+          // card is a trap: surviving a `---` to the health leaves a child weak
+          // enough for the fever or the runaway cart to finish months later, and
+          // `child_accident` rose from 195 to 249 with nothing about that card
+          // changed. A maiming card kills mostly under someone else's name.
           id: "job_labour_machine",
           kind: "one_time",
-          weight: 2,
+          weight: 1,
           prompt: "job_labour_machine.prompt",
           options: {
             left: {
