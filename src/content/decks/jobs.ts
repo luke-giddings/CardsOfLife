@@ -193,6 +193,44 @@ export const jobDecks = [
           },
         },
         {
+          // Three one-shots for the entry rung, and they carry the same weight as
+          // the upper rungs' because this deck serves BOTH child_labourer and
+          // labourer — up to seventeen years of one life — on four work cards
+          // that were all fillers, 0.96 of them held back by the discard pile
+          // every year. Nothing here is gated on age: the mill treats a boy of
+          // ten and a man of thirty much the same, which is rather the point.
+          id: "job_labour_foreman",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_labour_foreman.prompt",
+          options: {
+            left: { label: "job_labour_foreman.left", outcomes: [{ result: "job_labour_foreman.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_labour_foreman.right", outcomes: [{ result: "job_labour_foreman.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          // The warmth here is the "a shift you cover" feed the relationship
+          // economy was always meant to have on a commonly-drawn card.
+          id: "job_labour_mate",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_labour_mate.prompt",
+          options: {
+            left: { label: "job_labour_mate.left", outcomes: [{ result: "job_labour_mate.left.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1, socialWarmth: 2 } } }] },
+            right: { label: "job_labour_mate.right", outcomes: [{ result: "job_labour_mate.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_labour_shorttime",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_labour_shorttime.prompt",
+          options: {
+            left: { label: "job_labour_shorttime.left", outcomes: [{ result: "job_labour_shorttime.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_labour_shorttime.right", outcomes: [{ result: "job_labour_shorttime.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
           // The ordinary escape up the UNSKILLED ladder: a steady factory job,
           // experience-gated — you work your way onto the floor.
           //

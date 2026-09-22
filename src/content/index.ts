@@ -139,7 +139,14 @@ export const content = {
         // straight to the factory (see child_adult), so nobody is ever a child
         // labourer past 18; this is what the unemployment deck hands a grown man
         // who never reached the mill.
-        labourer: { label: "status.job.labourer", drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"] },
+        // `keepExperience` because coming of age is A RENAME, NOT A PROMOTION: the
+        // child labourer and the labourer are the same job, same wage, same toll,
+        // same deck. Without it the engine wiped `jobExperience` on the status
+        // change like any other, so a boy who had worked seven years arrived at
+        // eighteen with nothing served — measured, 1.25 years before the rename
+        // and 0.00 after, every time. He then needed three more years for a
+        // promotion he had already earned twice over.
+        labourer: { label: "status.job.labourer", drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"], keepExperience: true },
         factory: { label: "status.job.factory", drift: { finances: 13, health: -5 }, driftShown: { finances: "++", health: "-" }, addDecks: ["job_factory"] },
         gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, driftShown: { finances: "+++", health: "-" }, addDecks: ["job_gangmaster"] },
 

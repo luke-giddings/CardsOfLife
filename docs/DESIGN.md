@@ -576,14 +576,46 @@ Three weighted one-shots went into `job_factory`, `job_shop`, `job_clerk` and
 | factory | 0.4 → **1.9** | 0% → **40%** | 0% → **19%** |
 | shophand | 1.0 → **2.6** | 7% → **65%** | 4% → **37%** |
 
-**And the chain it was meant to fix has NOT moved yet**, which is the honest part.
-Splitting 8,000 lives by whether they ever rose above the entry rung: those who
-did live to **39.4** and reach renting-or-better 69.7%; those who did not live to
-**33.0** and 57.2%. Six years. But **73% never rise**, and they are stuck on the
-rungs that were not in this pass — `labourer` (2,327 spells, ten years each, 1.0
-experience) and `pickpocket` (4,397 spells, 0% ever promoted, because his cards
-only tick experience if he COMMITS the crime). The pattern is proven; it has been
-applied to rungs most lives never reach.
+**Then the entry rung, which is where it actually pays.** `job_labour` got the
+same three one-shots — and a BUG came out from under them. Coming of age is
+documented as "a rename, not a promotion", but the engine wipes `jobExperience`
+on any job change without `keepExperience`, and only `unemployed` had it. Measured
+over 359 transitions, a boy arrived at eighteen with **1.25 years served before
+the rename and 0.00 after**, every time, and then needed three more for a
+promotion he had already earned twice over. `labourer` carries `keepExperience`
+now.
+
+| | mean exp | reached exp≥3 | promoted |
+|---|---|---|---|
+| child_labourer | 1.5 → **2.5** | 16% → **53%** | 66% → 72% |
+| labourer | 1.0 → **3.1** | 11% → **61%** | 7% → **33%** |
+
+Because labourers now promote, the factory goes from 437 spells in 6,000 lives to
+**1,839** — the rung above fills up from below. And the chain finally moves:
+
+| | before | after |
+|---|---|---|
+| lives that rise above the entry rung | 2,139 (27%) | **3,504 (44%)** |
+| of those, ever housed / mean age | 69.7% / 39.4 | **77.7% / 40.9** |
+| of those who don't, ever housed / mean age | 57.2% / 33.0 | 51.3% / 31.8 |
+| **mean age, all lives** | 34.7 | **35.9** |
+| **reached 60** | 2.1% | **4.7%** |
+
+That is the "live past thirty" item moving for the first time, and it moved
+because of a promotion ladder, not because anything was made kinder.
+
+**One thing got worse and it should be watched:** deaths under 18 went **7.7% →
+10.3%**. The labour deck is weighted more heavily now, so children draw more of
+it — including `job_labour_machine`, whose failed reach is `health "---"` and
+kills a child. More child labour is more danger, which is the right story; whether
+it is the right number is a balance call, not a measurement.
+
+`job_criminal` is deliberately untouched. Its 0% promotion rate looks like the
+same supply problem, but a thief weighted to value the work still spent 31 years
+as a burglar across 5,000 lives against 30 for an indifferent one — and weighting
+experience changes his earlier choices too (3,594 thieves down to 1,525), so the
+test does not separate the deck from the sim. It needs a player model that is
+about crime rather than about experience.
 
 ## 11. Mortality & hazards
 
@@ -1728,14 +1760,15 @@ Roughly in likely order. None of these are started.
   so they surface when needed rather than at random; or letting the keep lapse for
   a pupil, the way a labourer's wage offsets it. Worth deciding before any further
   gate goes on this path.
-- **THE ENTRY RUNGS NEED THE SAME ONE-SHOTS.** `job_labour` and `job_criminal`
-  are where 73% of lives sit and neither can promote: a labourer banks 1.0
-  experience in ten years (his four work cards are all fillers, 0.96 held back a
-  year), and a pickpocket banks 0.8 in nine because `job_criminal_job` and
-  `_score` only tick experience if you actually commit the crime — a cautious
-  thief serves no years at all. The fix is the one just proven on the four upper
-  rungs: three weighted one-shots each, plus a decision on whether declining a
-  crime should still count as a year in the trade.
+- **THE PICKPOCKET STILL CANNOT PROMOTE** (0% in 4,200 spells of nine years). His
+  two work cards only tick experience if he COMMITS the crime, so a cautious thief
+  serves no years at all. Whether that is the deck or the sim is genuinely open —
+  see §11. It needs a player model built around crime, not around experience,
+  before anything is changed.
+- **CHILDHOOD GOT DEADLIER** with the weighted labour deck: deaths under 18 went
+  7.7% to 10.3%, because children draw `job_labour_machine` more often and its
+  failed reach is a `---` to the health of someone who has very little. Decide
+  whether that is the intended price of a working childhood.
 - **THE DRIFT TABLE, decided in one pass.** Not just the family status (stripped
   to nothing above, deliberately) — the whole table. Drift is what kills you (the
   killing blow in 63.7% of deaths) and it is currently the sum of four
