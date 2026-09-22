@@ -369,8 +369,24 @@ university money first if you still hold it, failing that be sent down to your
 family, and only someone with neither, who is not in this deck at all, meets the
 workhouse. `findRescue` takes the highest priority, so the ordering is automatic.
 
-Measured: **university deaths 26–30% → 10–11%**, completion unmoved at 20–23%. The
-tier stays very hard; it stopped being lethal, which was the whole of the brief.
+**THE FIRST CUT OF THE STREETS WAS A TRAP, and it is the board school gate's fault
+wearing new clothes.** It charged `health −` on top of the `homeless` drift and
+paid only `spirit +`, against a home that paid `finances ++` and kept a roof on
+you — better in every direction. Measured, pupils who took the streets lived a
+median of **one** more year against home's **eight**, and only 12% took it. An
+option whose sibling beats it on every axis is not an option, which is precisely
+what §"the board school's old gate" says and why that gate was turned into a price.
+
+Rebalanced so the axis is **money against pride**: the streets now pay `finances +`
+(your books and your good coat, sold) and `spirit ++` with no health cost, and home
+pays `finances ++` at `happiness −−` AND `spirit −`, because being taken back in is
+the swipe where you stop being the man who was going to be somebody. The streets
+are still the harsher road and should be — the `homeless` drift is punishment
+enough — but they are now a road rather than a cliff: **uptake 12% → 25–34%, median
+years after 1 → 3**, against home's 8–10.
+
+Measured overall: **university deaths 26–30% → 6–8%**, completion 18–22%. The tier
+stays very hard; it stopped being lethal, which was the whole of the brief.
 
 **PASSING SCHOOL IS A TRIAL NOW, and it is the apprenticeship's trial in a
 gown.** `eduStudy` rises only when you choose the work over the easier thing, each
@@ -1897,11 +1913,25 @@ Roughly in likely order. None of these are started.
   streets or home for a pupil. It is not a death; the life goes on.)
 
   **University is no longer lethal** — the ruin net took it from a quarter-to-a-third
-  dying to 10–11%, at 23% completion. Very hard, never impossible: done.
+  dying to 6–8%, at 18–22% completion. Very hard, never impossible: done.
 
-  **One gap left: the curve is flat where it should rise.** Board school 84% and
-  grammar 80% are the same difficulty, so grammar is not "medium", it is board
-  school again. Nothing has been changed for it yet.
+  **THE CURVE IS NOT FLAT, AND THE TABLE ABOVE CANNOT TELL YOU WHETHER IT IS.**
+  Per-tier completion is measured CONDITIONAL ON ENTRY, which throws the funnel
+  away: the 562 who reach grammar are already a filtered population, so 80% of
+  them passing is not the same difficulty as 84% of everybody. Measured as a share
+  of ALL lives:
+
+  ```
+  tier            ever entered   COMPLETED   (share of all 800 lives)
+  board school            100%         82%
+  grammar                  69%         55%
+  university               28%          6%
+  ```
+
+  **82% → 55% → 6%.** The ladder rises exactly as the curve asks. An earlier
+  version of this section called it "flat where it should rise" and listed it as a
+  gap; that was an artefact of conditioning on entry and is retracted. **When
+  judging the curve, always read the cumulative column.**
 
 - **NO ADULT FINANCES NET, outside the schoolroom.** `child_hunger` lives in
   `age_childhood`, and `findRescue` only considers cards in ACTIVE decks, so the

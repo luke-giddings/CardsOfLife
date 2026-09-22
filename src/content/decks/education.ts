@@ -294,18 +294,33 @@ export const educationDecks = [
           priority: 50,
           prompt: "edu_ruin.prompt",
           options: {
-            // The streets: proud, and free of the keep entirely, since `homeless`
-            // drifts health and happiness but never money.
+            // The streets. FIRST CUT OF THIS CARD MADE IT A TRAP: it charged
+            // health on top of the `homeless` drift (health and happiness, five a
+            // year each) and paid only `spirit +`, against a home that paid
+            // `finances ++` and kept a roof on you. Measured, the pupils who took
+            // it lived a median of ONE more year against home's EIGHT — not a
+            // harsher road, a shorter one, which is the same fault the board
+            // school's old gate had: an option whose sibling is better in every
+            // direction is not an option.
+            //
+            // So you leave with what you can sell — your books and your good coat
+            // — and with your pride whole. The health cost is gone; the harshness
+            // is the `homeless` drift, which is punishment enough and at least
+            // gives you years to do something with.
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { finances: "+", spirit: "++" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
             },
             // Home: your people settle what is owed and take you back, which is
             // why this pays. The keep goes on costing, so it buys years, not
-            // safety, and the shame is the price on the face of the card.
+            // safety, and the shame is the price on the face of the card — now
+            // spirit as well as happiness, because being taken back in is the
+            // swipe where you stop being the man who was going to be somebody.
+            // The axis is money against pride, and it should read that way on
+            // the card face before you commit to it.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--", spirit: "-" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
             },
           },
         },
@@ -441,18 +456,33 @@ export const educationDecks = [
           priority: 50,
           prompt: "edu_ruin.prompt",
           options: {
-            // The streets: proud, and free of the keep entirely, since `homeless`
-            // drifts health and happiness but never money.
+            // The streets. FIRST CUT OF THIS CARD MADE IT A TRAP: it charged
+            // health on top of the `homeless` drift (health and happiness, five a
+            // year each) and paid only `spirit +`, against a home that paid
+            // `finances ++` and kept a roof on you. Measured, the pupils who took
+            // it lived a median of ONE more year against home's EIGHT — not a
+            // harsher road, a shorter one, which is the same fault the board
+            // school's old gate had: an option whose sibling is better in every
+            // direction is not an option.
+            //
+            // So you leave with what you can sell — your books and your good coat
+            // — and with your pride whole. The health cost is gone; the harshness
+            // is the `homeless` drift, which is punishment enough and at least
+            // gives you years to do something with.
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
+              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { finances: "+", spirit: "++" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }],
             },
             // Home: your people settle what is owed and take you back, which is
             // why this pays. The keep goes on costing, so it buys years, not
-            // safety, and the shame is the price on the face of the card.
+            // safety, and the shame is the price on the face of the card — now
+            // spirit as well as happiness, because being taken back in is the
+            // swipe where you stop being the man who was going to be somebody.
+            // The axis is money against pride, and it should read that way on
+            // the card face before you commit to it.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
+              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { finances: "++", happiness: "--", spirit: "-" }, setStatus: { housing: "family", job: "unemployed" }, remember: "log.senthome" } }],
             },
           },
         },
