@@ -317,6 +317,36 @@ export const jobDecks = [
           },
         },
         {
+          id: "job_shop_window",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_shop_window.prompt",
+          options: {
+            left: { label: "job_shop_window.left", outcomes: [{ result: "job_shop_window.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_shop_window.right", outcomes: [{ result: "job_shop_window.right.r0", effects: { vitals: { happiness: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_shop_regular",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_shop_regular.prompt",
+          options: {
+            left: { label: "job_shop_regular.left", outcomes: [{ result: "job_shop_regular.left.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_shop_regular.right", outcomes: [{ result: "job_shop_regular.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_shop_stock",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_shop_stock.prompt",
+          options: {
+            left: { label: "job_shop_stock.left", outcomes: [{ result: "job_shop_stock.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_shop_stock.right", outcomes: [{ result: "job_shop_stock.right.r0", effects: { vitals: { happiness: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
           // COMMERCE ladder rung: shop assistant → shopkeeper (your own shop).
           // Eligible once you've served your time (experience >= 3). Accept →
           // shopkeeper (experience resets for the next rung); decline → stay put.
@@ -352,6 +382,36 @@ export const jobDecks = [
           options: {
             left: { label: "job_factory_day.left", outcomes: [{ result: "job_factory_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { jobExperience: 1 } } }] },
             right: { label: "job_factory_day.right", outcomes: [{ result: "job_factory_day.right.r0", effects: { vitals: { health: "+" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_factory_speed",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_factory_speed.prompt",
+          options: {
+            left: { label: "job_factory_speed.left", outcomes: [{ result: "job_factory_speed.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_factory_speed.right", outcomes: [{ result: "job_factory_speed.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_factory_combination",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_factory_combination.prompt",
+          options: {
+            left: { label: "job_factory_combination.left", outcomes: [{ result: "job_factory_combination.left.r0", effects: { vitals: { spirit: "++", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_factory_combination.right", outcomes: [{ result: "job_factory_combination.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_factory_boy",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_factory_boy.prompt",
+          options: {
+            left: { label: "job_factory_boy.left", outcomes: [{ result: "job_factory_boy.left.r0", effects: { vitals: { spirit: "++", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_factory_boy.right", outcomes: [{ result: "job_factory_boy.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
           },
         },
         {
@@ -604,6 +664,36 @@ export const jobDecks = [
           },
         },
         {
+          id: "job_clerk_error",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_clerk_error.prompt",
+          options: {
+            left: { label: "job_clerk_error.left", outcomes: [{ result: "job_clerk_error.left.r0", effects: { vitals: { spirit: "++", happiness: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_clerk_error.right", outcomes: [{ result: "job_clerk_error.right.r0", effects: { vitals: { happiness: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_clerk_copy",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_clerk_copy.prompt",
+          options: {
+            left: { label: "job_clerk_copy.left", outcomes: [{ result: "job_clerk_copy.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_clerk_copy.right", outcomes: [{ result: "job_clerk_copy.right.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_clerk_late",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_clerk_late.prompt",
+          options: {
+            left: { label: "job_clerk_late.left", outcomes: [{ result: "job_clerk_late.left.r0", effects: { vitals: { spirit: "+", health: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_clerk_late.right", outcomes: [{ result: "job_clerk_late.right.r0", effects: { vitals: { happiness: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
           // Promotion to chief clerk (experience >= 3). You're already on the
           // grammar ladder (that's how you became a clerk), so no extra gate.
           id: "job_clerk_promote",
@@ -834,6 +924,36 @@ export const jobDecks = [
           options: {
             left: { label: "job_journeyman_day.left", outcomes: [{ result: "job_journeyman_day.left.r0", effects: { vitals: { finances: "+", health: "-" }, incTraits: { jobExperience: 1 } } }] },
             right: { label: "job_journeyman_day.right", outcomes: [{ result: "job_journeyman_day.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_journeyman_apprentice",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_journeyman_apprentice.prompt",
+          options: {
+            left: { label: "job_journeyman_apprentice.left", outcomes: [{ result: "job_journeyman_apprentice.left.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_journeyman_apprentice.right", outcomes: [{ result: "job_journeyman_apprentice.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_journeyman_tools",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_journeyman_tools.prompt",
+          options: {
+            left: { label: "job_journeyman_tools.left", outcomes: [{ result: "job_journeyman_tools.left.r0", effects: { vitals: { spirit: "++", finances: "--" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_journeyman_tools.right", outcomes: [{ result: "job_journeyman_tools.right.r0", effects: { vitals: { finances: "+", happiness: "-" }, incTraits: { jobExperience: 1 } } }] },
+          },
+        },
+        {
+          id: "job_journeyman_commission",
+          weight: 3,
+          kind: "one_time",
+          prompt: "job_journeyman_commission.prompt",
+          options: {
+            left: { label: "job_journeyman_commission.left", outcomes: [{ result: "job_journeyman_commission.left.r0", effects: { vitals: { finances: "++", health: "-" }, incTraits: { jobExperience: 1 } } }] },
+            right: { label: "job_journeyman_commission.right", outcomes: [{ result: "job_journeyman_commission.right.r0", effects: { vitals: { spirit: "+", finances: "-" }, incTraits: { jobExperience: 1 } } }] },
           },
         },
         {

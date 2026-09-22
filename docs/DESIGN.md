@@ -544,6 +544,47 @@ hands its decks over. First-time deck unlocks show a "new chapter"
 announcement (the shared `childhood` deck and the `workhouse` carry one; the
 rest are silent to avoid double interstitials).
 
+**A JOB DECK MUST BE SIZED TO THE JOB'S LENGTH, AND MOSTLY IN ONE-SHOTS.**
+`jobExperience` ticks on BOTH swipes of any work card — it is years served, not a
+reward — so a promotion gated at 3 asks only that the deck be dealt three times.
+It was not being dealt. Measured over 4,000 lives, per year spent in the job:
+
+| job | deck cards | pool | deck's share | dealt/yr | **held back/yr** | **exp/yr** |
+|---|---|---|---|---|---|---|
+| labourer | 8 | 19.4 | 22% | 0.15 | **0.96** | 0.11 |
+| factory | 3 | 15.4 | 12% | 0.09 | 0.60 | **0.03** |
+| shophand | 3 | 16.1 | 13% | 0.09 | 0.74 | 0.04 |
+| **apprentice** | 7 | **5.2** | **91%** | **0.74** | 0.09 | **0.50** |
+
+A factory hand worked **ten years and banked 0.4 experience** against a gate of 3.
+Three causes compound, and the third is the one that is easy to miss:
+
+1. **Too few cards** — one work card for a ten-year job.
+2. **Pool dilution** — the deck is a tenth of a fifteen-card pool, where the
+   apprenticeship is 91% of five (it suspends housing, so `home_family` is gone).
+3. **The filler discard pile** — every `_day` card was a `filler`, so once played
+   it is held out while ANY unplayed filler sits in the pool. A labourer had
+   **0.96 of his own cards held back every year**, of a deck of eight.
+
+That third is why the fix is ONE-SHOTS rather than more fillers: `one_time` cards
+are not subject to the pile at all. It is exactly why the apprentice deck works.
+Three weighted one-shots went into `job_factory`, `job_shop`, `job_clerk` and
+`job_journeyman`:
+
+| | mean exp | reached exp≥3 | **promoted** |
+|---|---|---|---|
+| factory | 0.4 → **1.9** | 0% → **40%** | 0% → **19%** |
+| shophand | 1.0 → **2.6** | 7% → **65%** | 4% → **37%** |
+
+**And the chain it was meant to fix has NOT moved yet**, which is the honest part.
+Splitting 8,000 lives by whether they ever rose above the entry rung: those who
+did live to **39.4** and reach renting-or-better 69.7%; those who did not live to
+**33.0** and 57.2%. Six years. But **73% never rise**, and they are stuck on the
+rungs that were not in this pass — `labourer` (2,327 spells, ten years each, 1.0
+experience) and `pickpocket` (4,397 spells, 0% ever promoted, because his cards
+only tick experience if he COMMITS the crime). The pattern is proven; it has been
+applied to rungs most lives never reach.
+
 ## 11. Mortality & hazards
 
 Childhood carries real, **earned** risk — never a pure random rug-pull. A hazard
@@ -1687,6 +1728,14 @@ Roughly in likely order. None of these are started.
   so they surface when needed rather than at random; or letting the keep lapse for
   a pupil, the way a labourer's wage offsets it. Worth deciding before any further
   gate goes on this path.
+- **THE ENTRY RUNGS NEED THE SAME ONE-SHOTS.** `job_labour` and `job_criminal`
+  are where 73% of lives sit and neither can promote: a labourer banks 1.0
+  experience in ten years (his four work cards are all fillers, 0.96 held back a
+  year), and a pickpocket banks 0.8 in nine because `job_criminal_job` and
+  `_score` only tick experience if you actually commit the crime — a cautious
+  thief serves no years at all. The fix is the one just proven on the four upper
+  rungs: three weighted one-shots each, plus a decision on whether declining a
+  crime should still count as a year in the trade.
 - **THE DRIFT TABLE, decided in one pass.** Not just the family status (stripped
   to nothing above, deliberately) — the whole table. Drift is what kills you (the
   killing blow in 63.7% of deaths) and it is currently the sum of four
