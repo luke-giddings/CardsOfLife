@@ -1103,6 +1103,13 @@ fire given the current state. Two extra markers:
   it** even when the same outcome also changes status (so selling up → renting, or
   the charity-hospital debt, don't star). Incremental ticks (experience, +1
   sporty) don't qualify either, keeping the star rare.
+- **`setSilent`** is the third setter: mechanically identical to `setTraits`, but it
+  draws **no mark at all**. It is for BOOKKEEPING — winding a clock, starting a
+  cooldown, closing a story flag — none of which is a life event. Before it
+  existed the only way to write such a value without a stray ★ was to fake it
+  with an `incTraits` of exactly the right size (Lilly's clocks still do, from
+  before). So: `setTraits` for a boon (★), `setFlaws` for a burden (⚠),
+  `setSilent` for anything the player should not see as a turn in the road.
 - A red **⚠** is its opposite, and fires on either of two things: a **lasting
   burden** (`setFlaws` — the charity-hospital ledger, the sold-up disgrace, a
   warrant, a sweet tooth), or a **fall into a setback status**
@@ -2504,6 +2511,15 @@ Roughly in likely order. None of these are started.
   out. `rel_bro_fate`'s `weight: 25` is deliberately sized against the pool old
   age *will* have, not today's. Re-check any late-life weight, `chance` or gate
   when that content lands.
+- **`ticks` — tick rules with their own conditions** (on decks and on status
+  states): `ticks: [{ traits: { x: -1 }, while: { traits: { x: { min: 1 } } } }]`.
+  `tickWhile` gates a deck's WHOLE `tick`, so it cannot hold one counter at zero
+  while another keeps running. The canonical use is a cooldown that counts down
+  and STOPS at 0 — without that it runs negative and swallows the next time it is
+  wound. Every rule's condition is read before any of the turn's ticks land, so
+  listing order never matters. Ticks, like drift, run after the card's effects
+  and on quiet years too, so a counter set to N at year Y reads N−1 at year Y+1:
+  **to block the next N years, set it to N+1.**
 - **`Deck.tickWhile`** — a deck's `tick` can be gated on a condition, suspending it
   while the condition fails (the deck stays active). Added because the sibling
   deck's `relBrotherDistance` ticked up every year forever: once Tom's arc had

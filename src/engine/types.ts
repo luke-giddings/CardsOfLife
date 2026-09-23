@@ -318,6 +318,13 @@ export type TraitConditions = {
   [K in keyof Traits]?: Traits[K] extends number ? NumberMatch : Traits[K];
 };
 
+// One conditional tick: add `traits` each turn, but only in turns where `while`
+// holds (evaluated before the tick). With no `while` it is an ordinary tick.
+export interface TickRule {
+  traits: Partial<Record<NumericTraitKey, number>>;
+  while?: Condition;
+}
+
 export interface Condition {
   ageMin?: number;
   ageMax?: number;
@@ -351,6 +358,13 @@ export interface Effect {
   // they still earn the star (skillVaccinated, persSporty, …).
   setFlaws?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
+  // Like setTraits, but for BOOKKEEPING: sets trait values and draws NO card-face
+  // mark. setTraits earns the ★ because a set trait is usually a life event
+  // ("booleans tend to be big life events, counters aren't"); a clock being
+  // wound, a cooldown started or a story flag closed is not one, and before this
+  // existed the only way to write one without a stray ★ was to fake it with an
+  // incTraits of the right size. Mechanically identical to setTraits.
+  setSilent?: Partial<Traits>;
   // The card-face mark (★ / ⚠) this outcome carries, overriding the derived one.
   // Omit it and the mark is worked out from the fields written, which is right
   // most of the time.
@@ -477,6 +491,14 @@ export interface Deck {
   // is nothing left to show up for, or a long life drifts away from him no matter
   // how devoted you were.
   tickWhile?: Condition;
+  // Tick rules that each carry their OWN condition, for counters that must stop
+  // somewhere `tick` + `tickWhile` cannot express — `tickWhile` gates the WHOLE
+  // deck's `tick`, so it cannot hold one counter at zero while another keeps
+  // running. The canonical use is a cooldown: count down by 1 while the counter
+  // is at least 1, so it stops at 0 instead of going negative and swallowing the
+  // next time it is wound. Independent of `tick`/`tickWhile`; the deck must be
+  // active. See TickRule.
+  ticks?: TickRule[];
   // An "urgent" deck: while it is active, its eligible cards OWN the draw pool —
   // incidental flavour from other active decks is suppressed so you can escape
   // the state (unemployment, the workhouse) instead of drifting in it for years.
@@ -508,6 +530,8 @@ export interface StatusStateDef {
   // milestone can fire ~N years on. Runs even during the babyhood `noDrift`
   // grace period (a pet isn't around then anyway).
   tick?: Partial<Record<NumericTraitKey, number>>;
+  // As Deck.ticks: tick rules with their own conditions, while this state holds.
+  ticks?: TickRule[];
   // Per-vital override for how `drift` READS on the chip (see DriftShown). When a
   // vital is listed here the chip shows exactly this, ignoring the number's size
   // (the sign, too, comes from the token). Omitted vitals fall back to deriving

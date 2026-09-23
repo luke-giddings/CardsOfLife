@@ -28,6 +28,9 @@ for (const d of gameContent.decks) if (SIB.includes(d.id)) for (const c of d.car
 function run(N: number, cool: number, shared: boolean) {
   const fired = new Map<string, number>(); const had = new Map<string, number>();
   const apYears: number[] = [];
+  // priority-phase draws: years with a priority deck active, split by sibling decks live
+  const pri = new Map<number, { draws: number; sib: number }>();
+  const PRI = new Set(gameContent.decks.filter((d) => d.priority).map((d) => d.id));
   for (let i = 0; i < N; i++) {
     let s = initGame(gameContent);
     const last: Record<string, number> = {}; const seen = new Set<string>();
@@ -45,6 +48,13 @@ function run(N: number, cool: number, shared: boolean) {
       if (!dr.card) { s = quietYear(s); continue; }
       const ds = dirsFor(dr.card, s);
       if (!ds.length) { s = quietYear(s); continue; }
+      if (s.activeDecks.some((d) => PRI.has(d))) {
+        const live = SIB.filter((d) => s.activeDecks.includes(d)).length;
+        if (live > 0) {
+          if (!pri.has(live)) pri.set(live, { draws: 0, sib: 0 });
+          const r = pri.get(live)!; r.draws++; if (beats.has(dr.card.id)) r.sib++;
+        }
+      }
       if (beats.has(dr.card.id)) { fired.set(dr.card.id, (fired.get(dr.card.id) ?? 0) + 1); last[dr.card.deck!] = s.age; }
       s = chooseDirection(s, dr.card, greedy(dr.card, s, ds)).state;
       if (apAt < 0 && s.statuses.job === "apprentice") apAt = s.age;
@@ -52,7 +62,7 @@ function run(N: number, cool: number, shared: boolean) {
     }
     for (const d of seen) had.set(d, (had.get(d) ?? 0) + 1);
   }
-  return { fired, had, apYears };
+  return { fired, had, apYears, pri };
 }
 const med = (a: number[]) => a.length ? [...a].sort((x,y)=>x-y)[Math.floor(a.length/2)] : NaN;
 const p90 = (a: number[]) => a.length ? [...a].sort((x,y)=>x-y)[Math.floor(0.9*(a.length-1))] : NaN;
@@ -66,4 +76,5 @@ for (const [id, deck] of beats) {
   const cells = res.map((r) => `${(100*(r.fired.get(id) ?? 0)/Math.max(1, r.had.get(deck) ?? 0)).toFixed(0)}%`.padStart(16));
   console.log(`  ${id.padEnd(20)}${cells.join("")}`);
 }
+for (const live of [1, 2]) console.log(`\n  ${`priority draws, ${live} sib`.padEnd(20)}${res.map((r) => { const x = r.pri.get(live); return x ? `${(100*x.sib/x.draws).toFixed(0)}% sibling`.padStart(16) : "".padStart(16); }).join("")}`);
 console.log(`\n  ${"apprenticeship yrs".padEnd(20)}${res.map((r) => `med ${med(r.apYears)} / 90th ${p90(r.apYears)}`.padStart(16)).join("")}`);

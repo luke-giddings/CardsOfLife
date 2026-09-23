@@ -15,6 +15,7 @@ import {
   type GameState,
   type Outcome,
   type StatusKind,
+  type TickRule,
   type Vitals,
   type VitalKey,
 } from "./types.ts";
@@ -358,6 +359,9 @@ export function applyEffect(state: GameState, effect: Effect, content: Content):
   if (effect.setFlaws) {
     Object.assign(state.traits, effect.setFlaws); // same as setTraits; the star logic treats it differently
   }
+  if (effect.setSilent) {
+    Object.assign(state.traits, effect.setSilent); // same as setTraits; never draws a mark
+  }
   if (effect.incTraits) {
     for (const [k, delta] of Object.entries(effect.incTraits)) {
       const key = k as keyof typeof state.traits;
@@ -434,17 +438,25 @@ function applyTick(state: GameState, content: Content): void {
       (state.traits[key] as number) = (state.traits[key] as number) + (v ?? 0);
     }
   };
+  // Every rule's condition is read against the state BEFORE any of this turn's
+  // ticks land, so the order rules are listed in can never change the result.
+  const rules: TickRule[] = [];
   for (const kind of Object.keys(state.statuses) as StatusKind[]) {
     const st = content.statuses[kind]?.states[state.statuses[kind]];
     if (st?.tick) add(st.tick);
+    if (st?.ticks) rules.push(...st.ticks);
   }
   for (const deck of content.decks) {
-    if (!deck.tick || !state.activeDecks.includes(deck.id)) continue;
+    if (!state.activeDecks.includes(deck.id)) continue;
+    if (deck.ticks) rules.push(...deck.ticks);
+    if (!deck.tick) continue;
     // A deck may suspend its own tick once its story no longer needs it — see
     // Deck.tickWhile. Content names the condition; the engine just honours it.
     if (!meets(deck.tickWhile, state, content)) continue;
     add(deck.tick);
   }
+  const due = rules.filter((r) => meets(r.while, state, content));
+  for (const r of due) add(r.traits);
 }
 
 const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
