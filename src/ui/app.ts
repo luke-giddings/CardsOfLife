@@ -591,7 +591,7 @@ export class Game {
     //     trait (setTraits), or a life-stage deck swap — so a rewarding choice
     //     (seize the apprenticeship, buy the house, get vaccinated) doesn't look
     //     weaker than a plain sibling that only moves a stat.
-    //   ⚠ a BURDEN: either a lasting mark (setFlaws — the charity-hospital debt,
+    //   ⚠ a BURDEN: either a lasting mark (setTraitsFlaw — the charity-hospital debt,
     //     the sold-up shame, a warrant, a sweet tooth) or a move into a SETBACK
     //     status (StatusStateDef.grim — sacked, on the street, the workhouse,
     //     gaol). It used to show NOTHING, which read as a clean choice: the
@@ -614,7 +614,7 @@ export class Game {
     );
     // An authored `mark` wins outright — content knows what an outcome MEANS,
     // where the rules above only know which fields it wrote.
-    const derivedBurden = intoGrimStatus || !!(e?.setFlaws && Object.keys(e.setFlaws).length > 0);
+    const derivedBurden = intoGrimStatus || !!(e?.setTraitsFlaw && Object.keys(e.setTraitsFlaw).length > 0);
     const burden = e?.mark
       ? e.mark === "burden"
       : derivedBurden;
@@ -728,7 +728,7 @@ export class Game {
     };
     // Explicit trait grouping. Most traits sit loose at the top; the rest fall
     // into fixed categories — Personality (`pers*`), Skills (`skill*`), Education
-    // (`edu*`), Jobs (`job*`), Flaws (`flaw*`, the burdens set via setFlaws), and
+    // (`edu*`), Jobs (`job*`), Flaws (`flaw*`, the burdens set via setTraitsFlaw), and
     // a Relationships category that nests per-sibling (Brother `relBrother*`,
     // Sister `relSister*`). A collapsed group holding a non-default ("set") trait
     // is bolded (has-active) so you can spot live state without expanding it.
@@ -1933,7 +1933,7 @@ function fmtEffect(e?: Effect): string {
   }
   if (e.setStatus) for (const [k, v] of Object.entries(e.setStatus)) parts.push(`${k}=${v}`);
   if (e.setTraits) for (const [k, v] of Object.entries(e.setTraits)) parts.push(`${k}=${v}`);
-  if (e.setFlaws) for (const [k, v] of Object.entries(e.setFlaws)) parts.push(`${k}=${v}`);
+  if (e.setTraitsFlaw) for (const [k, v] of Object.entries(e.setTraitsFlaw)) parts.push(`${k}=${v}`);
   if (e.setTraitsHidden) for (const [k, v] of Object.entries(e.setTraitsHidden)) parts.push(`${k}=${v}`);
   if (e.incTraits) for (const [k, v] of Object.entries(e.incTraits)) parts.push(`${k}+=${v}`);
   if (e.addDecks) parts.push(`+deck ${e.addDecks.join(",")}`);

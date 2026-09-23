@@ -82,7 +82,7 @@ export const prisonDecks = [
         kind: "one_time",
         prompt: "prison_escape.prompt",
         options: {
-          left: { label: "prison_escape.left", outcomes: [{ result: "prison_escape.left.r0", effects: { setFlaws: { flawWanted: true }, setTraits: { jobCriminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, vitals: { spirit: "+", health: "-" }, remember: "log.escaped" } }] },
+          left: { label: "prison_escape.left", outcomes: [{ result: "prison_escape.left.r0", effects: { setTraitsFlaw: { flawWanted: true }, setTraits: { jobCriminality: 0 }, setStatus: { housing: "homeless", job: "unemployed" }, vitals: { spirit: "+", health: "-" }, remember: "log.escaped" } }] },
           right: { label: "prison_escape.right", outcomes: [{ result: "prison_escape.right.r0" }] },
         },
       },

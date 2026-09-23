@@ -179,7 +179,7 @@ Arbitrary persistent variables, set by effects and read by conditions **and
 results**:
 Traits carry **sensible prefixes** so the debug panel can group them:
 `pers*` (personality/disposition), `skill*` (learned abilities), `edu*`
-(education), `job*` (work life), `flaw*` (burdens, set via `setFlaws`), and
+(education), `job*` (work life), `flaw*` (burdens, set via `setTraitsFlaw`), and
 `rel<Sibling>*` (relationships, nested per sibling — Brother `relBrother*`,
 Sister `relSister*`).
 - **Booleans:** `persSporty`, `persBookish`, `skillMartialArts`, `skillVaccinated`, `eduUniFund`,
@@ -1098,8 +1098,8 @@ fire given the current state. Two extra markers:
   sporty, a uni fund…), or a life-stage deck swap — so a rewarding option (seize
   the apprenticeship; buy the house; get vaccinated) doesn't look weaker than a
   plain sibling that only moves a stat. The star reads as *good*, so a trait that
-  is a **burden** is set via **`setFlaws`** instead of `setTraits` (mechanically
-  identical, but flagged bad): `setFlaws` never earns the star, **and suppresses
+  is a **burden** is set via **`setTraitsFlaw`** instead of `setTraits` (mechanically
+  identical, but flagged bad): `setTraitsFlaw` never earns the star, **and suppresses
   it** even when the same outcome also changes status (so selling up → renting, or
   the charity-hospital debt, don't star). Incremental ticks (experience, +1
   sporty) don't qualify either, keeping the star rare.
@@ -1108,10 +1108,10 @@ fire given the current state. Two extra markers:
   cooldown, closing a story flag — none of which is a life event. Before it
   existed the only way to write such a value without a stray ★ was to fake it
   with an `incTraits` of exactly the right size (Lilly's clocks still do, from
-  before). So: `setTraits` for a boon (★), `setFlaws` for a burden (⚠),
+  before). So: `setTraits` for a boon (★), `setTraitsFlaw` for a burden (⚠),
   `setTraitsHidden` for anything the player should not see as a turn in the road.
 - A red **⚠** is its opposite, and fires on either of two things: a **lasting
-  burden** (`setFlaws` — the charity-hospital ledger, the sold-up disgrace, a
+  burden** (`setTraitsFlaw` — the charity-hospital ledger, the sold-up disgrace, a
   warrant, a sweet tooth), or a **fall into a setback status**
   (`StatusStateDef.grim` — unemployed, pauper, convict, the workhouse, the
   street, gaol). Suppressing the star was not enough on its own: a burden then
@@ -2026,7 +2026,7 @@ Roughly in likely order. None of these are started.
   swipe in the deck — including "tell her to mind her own business". The sibling
   decks' `incTraits: { …Distance: -6 }` earns no mark and reads better anyway: a
   visit buys you six years, it does not stop time. Likewise an outcome that ENDS
-  a relationship latches its flags in `setFlaws`, not `setTraits`, so it wears ⚠
+  a relationship latches its flags in `setTraitsFlaw`, not `setTraits`, so it wears ⚠
   rather than ★.
 
   **4. A status does not have to drift, and this one does not.** Each family state
@@ -2696,7 +2696,7 @@ Roughly in likely order. None of these are started.
 - **Sweet tooth — now a flaw that actually bites.** `flawSweetTooth` (latched in
   babyhood by grandma's second helpings) was read by exactly ONE card, and was
   set via `setTraits`, so the option that inflicted it wore the reward ★. It is
-  now a `setFlaws` burden (⚠ on the card face) and is read by **five** cards
+  now a `setTraitsFlaw` burden (⚠ on the card face) and is read by **five** cards
   spanning the whole life: `home_family_sweets`, `_market` and `_fair` in
   childhood, `ya_thrift` in the green years, and `old_grandchildren` at the end,
   where grandma's habit comes full circle and you are the one with the tin. It

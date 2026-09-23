@@ -66,13 +66,13 @@ export const babyDecks = [
           kind: "one_time",
           prompt: "baby_grandma.prompt",
           options: {
-            // setFlaws, not setTraits: a sweet tooth is a lifelong liability, not a
+            // setTraitsFlaw, not setTraits: a sweet tooth is a lifelong liability, not a
             // boon, so the card shows the burden mark rather than the reward star.
             // The pudding is the ONLY "++" on this card, and the flaw is what pays
             // for it. The other two forgo the spoiling, so each takes the same
             // happiness dip and gains its own smaller thing — otherwise banking the
             // money was a bigger visible prize than the flaw, with nothing to pay.
-            left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setFlaws: { flawSweetTooth: true } } }] },
+            left: { label: "baby_grandma.left", outcomes: [{ result: "baby_grandma.left.r0", effects: { vitals: { happiness: "++" }, setTraitsFlaw: { flawSweetTooth: true } } }] },
             right: { label: "baby_grandma.right", outcomes: [{ result: "baby_grandma.right.r0", effects: { vitals: { health: "+", happiness: "-" } } }] },
             up: { label: "baby_grandma.up", outcomes: [{ result: "baby_grandma.up.r0", effects: { vitals: { finances: "+", happiness: "-" } } }] },
           },

@@ -411,8 +411,8 @@ export const homeDecks = [
           rescue: "finances",
           prompt: "home_sellup_small.prompt",
           options: {
-            left: { label: "home_sellup_small.left", outcomes: [{ result: "home_sellup_small.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { flawSoldUp: true } } }] },
-            right: { label: "home_sellup_small.right", outcomes: [{ result: "home_sellup_small.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { flawSoldUp: true } } }] },
+            left: { label: "home_sellup_small.left", outcomes: [{ result: "home_sellup_small.left.r0", effects: { vitals: { finances: "++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraitsFlaw: { flawSoldUp: true } } }] },
+            right: { label: "home_sellup_small.right", outcomes: [{ result: "home_sellup_small.right.r0", effects: { vitals: { finances: "++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraitsFlaw: { flawSoldUp: true } } }] },
           },
         },
       ],
@@ -441,8 +441,8 @@ export const homeDecks = [
           rescue: "finances",
           prompt: "home_sellup_large.prompt",
           options: {
-            left: { label: "home_sellup_large.left", outcomes: [{ result: "home_sellup_large.left.r0", effects: { vitals: { finances: "+++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { flawSoldUp: true } } }] },
-            right: { label: "home_sellup_large.right", outcomes: [{ result: "home_sellup_large.right.r0", effects: { vitals: { finances: "+++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { flawSoldUp: true } } }] },
+            left: { label: "home_sellup_large.left", outcomes: [{ result: "home_sellup_large.left.r0", effects: { vitals: { finances: "+++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraitsFlaw: { flawSoldUp: true } } }] },
+            right: { label: "home_sellup_large.right", outcomes: [{ result: "home_sellup_large.right.r0", effects: { vitals: { finances: "+++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraitsFlaw: { flawSoldUp: true } } }] },
           },
         },
       ],
@@ -470,8 +470,8 @@ export const homeDecks = [
           rescue: "finances",
           prompt: "home_sellup_estate.prompt",
           options: {
-            left: { label: "home_sellup_estate.left", outcomes: [{ result: "home_sellup_estate.left.r0", effects: { vitals: { finances: "++++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setFlaws: { flawSoldUp: true } } }] },
-            right: { label: "home_sellup_estate.right", outcomes: [{ result: "home_sellup_estate.right.r0", effects: { vitals: { finances: "++++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setFlaws: { flawSoldUp: true } } }] },
+            left: { label: "home_sellup_estate.left", outcomes: [{ result: "home_sellup_estate.left.r0", effects: { vitals: { finances: "++++", happiness: "-", spirit: "-" }, setStatus: { housing: "renting" }, setTraitsFlaw: { flawSoldUp: true } } }] },
+            right: { label: "home_sellup_estate.right", outcomes: [{ result: "home_sellup_estate.right.r0", effects: { vitals: { finances: "++++", happiness: "--", spirit: "+" }, setStatus: { housing: "renting" }, setTraitsFlaw: { flawSoldUp: true } } }] },
           },
         },
       ],

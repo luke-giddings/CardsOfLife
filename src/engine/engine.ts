@@ -356,8 +356,8 @@ export function applyEffect(state: GameState, effect: Effect, content: Content):
   if (effect.setTraits) {
     Object.assign(state.traits, effect.setTraits);
   }
-  if (effect.setFlaws) {
-    Object.assign(state.traits, effect.setFlaws); // same as setTraits; the star logic treats it differently
+  if (effect.setTraitsFlaw) {
+    Object.assign(state.traits, effect.setTraitsFlaw); // same as setTraits; the star logic treats it differently
   }
   if (effect.setTraitsHidden) {
     Object.assign(state.traits, effect.setTraitsHidden); // same as setTraits; never draws a mark

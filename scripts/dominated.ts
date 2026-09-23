@@ -45,7 +45,7 @@ function read(opt: CardOption): Reading {
     traits: { ...(effects.incTraits ?? {}) } as Record<string, number>,
     forksThePath:
       opt.outcomes.length > 1 ||
-      !!(effects.setStatus || effects.setTraits || effects.setFlaws || effects.addDecks || effects.removeDecks),
+      !!(effects.setStatus || effects.setTraits || effects.setTraitsFlaw || effects.addDecks || effects.removeDecks),
     label: (EN as Record<string, string>)[opt.label] ?? opt.label,
   };
 }

@@ -363,7 +363,7 @@ export interface Effect {
   // beneficial-choice ★ does NOT fire for it (and is suppressed if the outcome
   // also changes status, e.g. selling up → renting). Keep boons in setTraits so
   // they still earn the star (skillVaccinated, persSporty, …).
-  setFlaws?: Partial<Traits>;
+  setTraitsFlaw?: Partial<Traits>;
   incTraits?: Partial<Record<NumericTraitKey, number>>;
   // Like setTraits, but for BOOKKEEPING: sets trait values and draws NO card-face
   // mark. setTraits earns the ★ because a set trait is usually a life event

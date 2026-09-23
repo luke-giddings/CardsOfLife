@@ -33,7 +33,7 @@ const grim = (kind: string, value: string): boolean =>
 // that DRAW something the player can read, beyond the four vital chips.
 function marked(e?: Effect): boolean {
   if (!e) return false;
-  if (e.setFlaws && Object.keys(e.setFlaws).length) return true;
+  if (e.setTraitsFlaw && Object.keys(e.setTraitsFlaw).length) return true;
   if (e.setStatus && Object.entries(e.setStatus).some(([k, v]) => grim(k, v as string))) return true;
   return !!(e.setStatus || e.setTraits || e.addDecks || e.removeDecks);
 }
