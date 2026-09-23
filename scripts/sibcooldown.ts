@@ -1,3 +1,9 @@
+// NOTE: written to DECIDE the sibling cooldown, before it existed. The real
+// per-sibling 3-year cooldown is now in the content, so the "today" column IS
+// that cooldown, and the other two columns emulate a second cooldown stacked on
+// top of it. Kept for the method; rerun its comparisons against a pre-cooldown
+// build if they are ever needed again.
+//
 // WOULD A COOLDOWN ON THE SIBLING DECKS BREAK ANY BEATS? Simulated without
 // touching the engine: before each draw, a sibling deck on cooldown is hidden
 // from the DRAW ONLY (the life keeps it, so its age clock still ticks), unless

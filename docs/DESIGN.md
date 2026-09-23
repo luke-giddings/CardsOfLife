@@ -2520,6 +2520,35 @@ Roughly in likely order. None of these are started.
   listing order never matters. Ticks, like drift, run after the card's effects
   and on quiet years too, so a counter set to N at year Y reads N−1 at year Y+1:
   **to block the next N years, set it to N+1.**
+- **The sibling cooldown (per sibling, 3 years).** After one of a sibling's beats,
+  that sibling's next beat waits three years: each gated beat sets
+  `relBrotherCooldown` / `relSisterCooldown` to 4 with `setSilent` (no mark), and
+  the sibling's deck counts it down with a `ticks` rule that stops at 0. **Exempt:
+  milestones** (crossroads, estranged) **and the childhood beats** (his play /
+  bully / share, her dance / mend / slippers), which neither wait for it nor start
+  it — three beats share a window of five to eight years, and a cooldown there
+  loses a third to a half of them. Checked: consecutive gated beats of one sibling
+  are never less than 4 years apart.
+
+  Why: both sibling decks are `neverSuppressed`, so they are the only thing that
+  shares the pool with a `priority` deck. A playtest had a man apprenticed at 22
+  still apprenticed at 35 — twelve draws, three trade cards, eight sibling cards
+  — his brother and sister's stories consumed in a burst while his own life
+  stood still. With both siblings, the sibling share of priority-phase draws went
+  38% → 34%, and a committed apprentice's time 9 → 7 years median (13 → 11 at the
+  90th percentile).
+
+  **Per sibling, not shared, by decision.** A single shared cooldown gave priority
+  decks more room (38% → 29%) but roughly halved the four both-sibling cards
+  (`*_purse`, `*_quarrel`) — the beats where you choose between them, which are
+  much of the point of having both.
+
+  **What it does NOT fix: apprenticeship length in general.** With no siblings at
+  all, a committed apprentice still serves a median 4 years (90th percentile 7)
+  and only about one in five ever qualifies. The one-sibling lives' extra two
+  years are not sibling cards (about one is drawn) but a different kind of life
+  reaching the indenture. The length lever is the apprenticeship itself: it has no
+  term, and its trade one-shots and qualifying card are weight 1.
 - **`Deck.tickWhile`** — a deck's `tick` can be gated on a condition, suspending it
   while the condition fails (the deck stays active). Added because the sibling
   deck's `relBrotherDistance` ticked up every year forever: once Tom's arc had

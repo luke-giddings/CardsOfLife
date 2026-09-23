@@ -137,6 +137,10 @@ export interface Traits {
   relBrotherSchooled: boolean;  // his crossroads branch: true = you sent him to school, false = to work
   relBrotherReckoned: boolean;  // the adult "reckoning" beat has happened (its two housing variants can't both fire)
   relBrotherStoryDone: boolean; // his arc has concluded (finale or estrangement) — the deck goes dormant
+  // Years before his next beat may be dealt. Each beat past childhood sets it
+  // (setSilent) and rel_bro's `ticks` counts it down, stopping at 0. Milestones
+  // and his childhood beats neither wait for it nor start it.
+  relBrotherCooldown: number;
   // Sarah's arc (rel_sis deck) mirrors Tom's SHAPE — love + distance, beats in
   // windows of her own life, a crossroads, a weighted finale, an estrangement —
   // but inverts his second axis. Tom's `grit` is his backbone, and it grows when
@@ -153,6 +157,7 @@ export interface Traits {
   relSisterPromise: number;
   relSisterSchooled: boolean;   // her crossroads branch: true = school, false = the needle
   relSisterStoryDone: boolean;  // arc concluded (finale or estrangement) — freezes the tick
+  relSisterCooldown: number;    // as relBrotherCooldown, for her beats
   // Where her life landed. Read by the epilogue; set by the audition (school road)
   // or the dressmaker (work road).
   relSisterCalling: "none" | "ballerina" | "chorus" | "seamstress";
@@ -270,6 +275,7 @@ export const DEFAULT_TRAITS: Traits = {
   relBrotherSchooled: false,
   relBrotherReckoned: false,
   relBrotherStoryDone: false,
+  relBrotherCooldown: 0,
   relSisterActive: false,
   relSisterLove: 0,
   relSisterAge: 0,
@@ -277,6 +283,7 @@ export const DEFAULT_TRAITS: Traits = {
   relSisterPromise: 0,
   relSisterSchooled: false,
   relSisterStoryDone: false,
+  relSisterCooldown: 0,
   relSisterCalling: "none",
   jobTimesChanged: 0,
   jobExperience: 0,

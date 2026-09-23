@@ -8,11 +8,14 @@ import type { GameState } from "./types.ts";
 // `housingBeforeApprentice` became the general `suspendedStatuses`, so a v1 save
 // mid-apprenticeship had no stash to restore and left you housed "With Master".
 // v2 -> v3: `playedFillers` arrived, and a save without it crashes the draw.
-// v3 -> v4: `seed` arrived, the life's starting seed, shown in the footer.)
+// v3 -> v4: `seed` arrived, the life's starting seed, shown in the footer.
+// v4 -> v5: the sibling cooldown traits. loadGame does not back-fill traits from
+// DEFAULT_TRAITS, and a missing counter fails its `max: 0` gate — so an old save
+// would have silently stopped every sibling beat.)
 // One number, two keys: the history holds whole GameStates, so it can never be
 // read against a save of a different shape. Bumping them separately is the one
 // way this scheme breaks, so there is only one place to bump.
-const SAVE_VERSION = 4;
+const SAVE_VERSION = 5;
 const KEY = `cardsoflife.save.v${SAVE_VERSION}`;
 
 // The debug rewind list: the pre-choice snapshot at each card played, so the
