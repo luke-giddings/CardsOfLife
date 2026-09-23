@@ -138,7 +138,7 @@ export interface Traits {
   relBrotherReckoned: boolean;  // the adult "reckoning" beat has happened (its two housing variants can't both fire)
   relBrotherStoryDone: boolean; // his arc has concluded (finale or estrangement) — the deck goes dormant
   // Years before his next beat may be dealt. Each beat past childhood sets it
-  // (setSilent) and rel_bro's `ticks` counts it down, stopping at 0. Milestones
+  // (setTraitsQuiet) and rel_bro's `ticks` counts it down, stopping at 0. Milestones
   // and his childhood beats neither wait for it nor start it.
   relBrotherCooldown: number;
   // Sarah's arc (rel_sis deck) mirrors Tom's SHAPE — love + distance, beats in
@@ -371,7 +371,7 @@ export interface Effect {
   // wound, a cooldown started or a story flag closed is not one, and before this
   // existed the only way to write one without a stray ★ was to fake it with an
   // incTraits of the right size. Mechanically identical to setTraits.
-  setSilent?: Partial<Traits>;
+  setTraitsQuiet?: Partial<Traits>;
   // The card-face mark (★ / ⚠) this outcome carries, overriding the derived one.
   // Omit it and the mark is worked out from the fields written, which is right
   // most of the time.

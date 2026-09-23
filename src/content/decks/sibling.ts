@@ -50,7 +50,7 @@ export const siblingDecks = [
       // 3 years, so their story is spread across a life rather than dealt
       // in a burst — and so a `priority` phase (an apprenticeship, the
       // workhouse) is not swamped by a never-suppressed deck. Each gated beat
-      // sets `relBrotherCooldown` to 4 with setSilent (ticks land after the card, so
+      // sets `relBrotherCooldown` to 4 with setTraitsQuiet (ticks land after the card, so
       // 4 blocks the next 3 years) and this counts it down, stopping at
       // 0. Milestones and the childhood beats are exempt: they neither wait for
       // it nor start it — the childhood ones share a window too narrow to
@@ -187,15 +187,15 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_rift.left",
               outcomes: [
-                { if: { traits: { relBrotherDistance: { min: 2 } } }, result: "rel_bro_rift.left.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 6, relBrotherGrit: -2, relBrotherDistance: -10 } } },
-                { result: "rel_bro_rift.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { health: "-", happiness: "+" }, incTraits: { relBrotherLove: 12, relBrotherGrit: -4, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherDistance: { min: 2 } } }, result: "rel_bro_rift.left.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 6, relBrotherGrit: -2, relBrotherDistance: -10 } } },
+                { result: "rel_bro_rift.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { health: "-", happiness: "+" }, incTraits: { relBrotherLove: 12, relBrotherGrit: -4, relBrotherDistance: -10 } } },
               ],
             },
             right: {
               label: "rel_bro_rift.right",
               outcomes: [
-                { if: { traits: { relBrotherDistance: { min: 2 } } }, result: "rel_bro_rift.right.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 6, relBrotherLove: -12, relBrotherDistance: -10 } } },
-                { result: "rel_bro_rift.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 10, relBrotherLove: -6, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherDistance: { min: 2 } } }, result: "rel_bro_rift.right.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 6, relBrotherLove: -12, relBrotherDistance: -10 } } },
+                { result: "rel_bro_rift.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 10, relBrotherLove: -6, relBrotherDistance: -10 } } },
               ],
             },
           },
@@ -213,15 +213,15 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_way.left",
               outcomes: [
-                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_way.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -10 } } },
-                { result: "rel_bro_way.left.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_way.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -10 } } },
+                { result: "rel_bro_way.left.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: -4, relBrotherDistance: -10 } } },
               ],
             },
             right: {
               label: "rel_bro_way.right",
               outcomes: [
-                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_way.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 8, relBrotherLove: 4, relBrotherDistance: -10 } } },
-                { result: "rel_bro_way.right.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "-" }, incTraits: { relBrotherGrit: 4, relBrotherLove: -8, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_way.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherGrit: 8, relBrotherLove: 4, relBrotherDistance: -10 } } },
+                { result: "rel_bro_way.right.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "-" }, incTraits: { relBrotherGrit: 4, relBrotherLove: -8, relBrotherDistance: -10 } } },
               ],
             },
           },
@@ -240,15 +240,15 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_crisis.left",
               outcomes: [
-                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_crisis.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "--", happiness: "-", spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 15, relBrotherGrit: 4, relBrotherDistance: -10 } } },
-                { result: "rel_bro_crisis.left.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "--", happiness: "-", spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 12, relBrotherGrit: -6, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_crisis.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "--", happiness: "-", spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 15, relBrotherGrit: 4, relBrotherDistance: -10 } } },
+                { result: "rel_bro_crisis.left.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "--", happiness: "-", spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 12, relBrotherGrit: -6, relBrotherDistance: -10 } } },
               ],
             },
             right: {
               label: "rel_bro_crisis.right",
               outcomes: [
-                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_crisis.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "-" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: -6, relBrotherGrit: 6, relBrotherDistance: -10 } } },
-                { result: "rel_bro_crisis.right.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "--" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: -15, relBrotherGrit: -6, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherGrit: { min: 8 } } }, result: "rel_bro_crisis.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "-" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: -6, relBrotherGrit: 6, relBrotherDistance: -10 } } },
+                { result: "rel_bro_crisis.right.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "--" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: -15, relBrotherGrit: -6, relBrotherDistance: -10 } } },
               ],
             },
           },
@@ -267,11 +267,11 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_repay.left",
               outcomes: [
-                { if: { traits: { relBrotherLove: { min: 20 } } }, result: "rel_bro_repay.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "++", happiness: "+" }, setStatus: { housing: "renting", job: "unemployed" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 6, relBrotherDistance: -10 } } },
-                { result: "rel_bro_repay.left.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "-" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: -4, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherLove: { min: 20 } } }, result: "rel_bro_repay.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "++", happiness: "+" }, setStatus: { housing: "renting", job: "unemployed" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: 6, relBrotherDistance: -10 } } },
+                { result: "rel_bro_repay.left.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "-" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherLove: -4, relBrotherDistance: -10 } } },
               ],
             },
-            right: { label: "rel_bro_repay.right", outcomes: [{ result: "rel_bro_repay.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherGrit: 4, relBrotherDistance: -10 } } }] },
+            right: { label: "rel_bro_repay.right", outcomes: [{ result: "rel_bro_repay.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, setTraits: { relBrotherReckoned: true }, incTraits: { relBrotherGrit: 4, relBrotherDistance: -10 } } }] },
           },
         },
 
@@ -289,15 +289,15 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_settled.left",
               outcomes: [
-                { if: { traits: { relBrotherDistance: { min: 18 } } }, result: "rel_bro_settled.left.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relBrotherLove: 8, relBrotherDistance: -10 } } },
-                { result: "rel_bro_settled.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherDistance: -10 } } },
+                { if: { traits: { relBrotherDistance: { min: 18 } } }, result: "rel_bro_settled.left.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relBrotherLove: 8, relBrotherDistance: -10 } } },
+                { result: "rel_bro_settled.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherDistance: -10 } } },
               ],
             },
             right: {
               label: "rel_bro_settled.right",
               outcomes: [
-                { if: { traits: { relBrotherDistance: { min: 18 } } }, result: "rel_bro_settled.right.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relBrotherLove: -8, relBrotherDistance: -5 } } },
-                { result: "rel_bro_settled.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relBrotherLove: -4, relBrotherDistance: -5 } } },
+                { if: { traits: { relBrotherDistance: { min: 18 } } }, result: "rel_bro_settled.right.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relBrotherLove: -8, relBrotherDistance: -5 } } },
+                { result: "rel_bro_settled.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relBrotherLove: -4, relBrotherDistance: -5 } } },
               ],
             },
           },
@@ -319,13 +319,13 @@ export const siblingDecks = [
           conditions: { traits: { relBrotherStoryDone: false, relBrotherCooldown: { max: 0 }, relBrotherActive: true, relSisterActive: true, relBrotherAge: { min: 18 } } },
           prompt: "rel_bro_purse.prompt",
           options: {
-            left: { label: "rel_bro_purse.left", outcomes: [{ result: "rel_bro_purse.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -6, relSisterLove: -8, relSisterPromise: -3 } } }] },
-            right: { label: "rel_bro_purse.right", outcomes: [{ result: "rel_bro_purse.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "-", spirit: "+" }, incTraits: { relBrotherLove: -8, relSisterLove: 10, relSisterPromise: 4, relSisterDistance: -6 } } }] },
+            left: { label: "rel_bro_purse.left", outcomes: [{ result: "rel_bro_purse.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -6, relSisterLove: -8, relSisterPromise: -3 } } }] },
+            right: { label: "rel_bro_purse.right", outcomes: [{ result: "rel_bro_purse.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "-", spirit: "+" }, incTraits: { relBrotherLove: -8, relSisterLove: 10, relSisterPromise: 4, relSisterDistance: -6 } } }] },
             // Splitting it costs DOUBLE and buys a little of both — which is what
             // the result says happened. Without the happiness it was simply the
             // same spirit as keeping the money back, for twice the money: fair on
             // the page, strictly worse on the card face.
-            up: { label: "rel_bro_purse.up", outcomes: [{ result: "rel_bro_purse.up.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { finances: "--", happiness: "+", spirit: "+" }, incTraits: { relBrotherLove: 2, relSisterLove: 2, relSisterPromise: 1, relBrotherDistance: -6, relSisterDistance: -6 } } }] },
+            up: { label: "rel_bro_purse.up", outcomes: [{ result: "rel_bro_purse.up.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { finances: "--", happiness: "+", spirit: "+" }, incTraits: { relBrotherLove: 2, relSisterLove: 2, relSisterPromise: 1, relBrotherDistance: -6, relSisterDistance: -6 } } }] },
           },
         },
         {
@@ -335,9 +335,9 @@ export const siblingDecks = [
           conditions: { traits: { relBrotherStoryDone: false, relBrotherCooldown: { max: 0 }, relBrotherActive: true, relSisterActive: true, relBrotherAge: { min: 14 } } },
           prompt: "rel_bro_quarrel.prompt",
           options: {
-            left: { label: "rel_bro_quarrel.left", outcomes: [{ result: "rel_bro_quarrel.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherLove: 12, relBrotherDistance: -6, relSisterLove: -10 } } }] },
-            right: { label: "rel_bro_quarrel.right", outcomes: [{ result: "rel_bro_quarrel.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10, relSisterLove: 12, relSisterDistance: -6 } } }] },
-            up: { label: "rel_bro_quarrel.up", outcomes: [{ result: "rel_bro_quarrel.up.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
+            left: { label: "rel_bro_quarrel.left", outcomes: [{ result: "rel_bro_quarrel.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherLove: 12, relBrotherDistance: -6, relSisterLove: -10 } } }] },
+            right: { label: "rel_bro_quarrel.right", outcomes: [{ result: "rel_bro_quarrel.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relBrotherLove: -10, relSisterLove: 12, relSisterDistance: -6 } } }] },
+            up: { label: "rel_bro_quarrel.up", outcomes: [{ result: "rel_bro_quarrel.up.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relBrotherLove: -4, relSisterLove: -4 } } }] },
           },
         },
         {
@@ -368,18 +368,18 @@ export const siblingDecks = [
             left: {
               label: "rel_bro_fate.left", // be at his side
               outcomes: [
-                { if: { traits: { relBrotherLove: { min: 25 }, relBrotherDistance: { max: 24 } } }, result: "rel_bro_fate.left.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "++", spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
-                { if: { traits: { relBrotherLove: { min: 25 } } }, result: "rel_bro_fate.left.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "+", spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
-                { if: { traits: { relBrotherLove: { min: 0 } } }, result: "rel_bro_fate.left.r2", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, setTraits: { relBrotherStoryDone: true } } },
-                { result: "rel_bro_fate.left.r3", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { happiness: "-", spirit: "-" }, setTraits: { relBrotherStoryDone: true } } },
+                { if: { traits: { relBrotherLove: { min: 25 }, relBrotherDistance: { max: 24 } } }, result: "rel_bro_fate.left.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "++", spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
+                { if: { traits: { relBrotherLove: { min: 25 } } }, result: "rel_bro_fate.left.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "+", spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
+                { if: { traits: { relBrotherLove: { min: 0 } } }, result: "rel_bro_fate.left.r2", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "+" }, setTraits: { relBrotherStoryDone: true } } },
+                { result: "rel_bro_fate.left.r3", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { happiness: "-", spirit: "-" }, setTraits: { relBrotherStoryDone: true } } },
               ],
             },
             right: {
               label: "rel_bro_fate.right", // make your peace from afar
               outcomes: [
-                { if: { traits: { relBrotherLove: { min: 25 } } }, result: "rel_bro_fate.right.r0", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
-                { if: { traits: { relBrotherLove: { min: 0 } } }, result: "rel_bro_fate.right.r1", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
-                { result: "rel_bro_fate.right.r2", effects: { setSilent: { relBrotherCooldown: 4 }, vitals: { spirit: "--" }, setTraits: { relBrotherStoryDone: true } } },
+                { if: { traits: { relBrotherLove: { min: 25 } } }, result: "rel_bro_fate.right.r0", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
+                { if: { traits: { relBrotherLove: { min: 0 } } }, result: "rel_bro_fate.right.r1", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "+" }, setTraits: { relBrotherStoryDone: true } } },
+                { result: "rel_bro_fate.right.r2", effects: { setTraitsQuiet: { relBrotherCooldown: 4 }, vitals: { spirit: "--" }, setTraits: { relBrotherStoryDone: true } } },
               ],
             },
           },

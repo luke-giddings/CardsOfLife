@@ -1103,13 +1103,13 @@ fire given the current state. Two extra markers:
   it** even when the same outcome also changes status (so selling up → renting, or
   the charity-hospital debt, don't star). Incremental ticks (experience, +1
   sporty) don't qualify either, keeping the star rare.
-- **`setSilent`** is the third setter: mechanically identical to `setTraits`, but it
+- **`setTraitsQuiet`** is the third setter: mechanically identical to `setTraits`, but it
   draws **no mark at all**. It is for BOOKKEEPING — winding a clock, starting a
   cooldown, closing a story flag — none of which is a life event. Before it
   existed the only way to write such a value without a stray ★ was to fake it
   with an `incTraits` of exactly the right size (Lilly's clocks still do, from
   before). So: `setTraits` for a boon (★), `setFlaws` for a burden (⚠),
-  `setSilent` for anything the player should not see as a turn in the road.
+  `setTraitsQuiet` for anything the player should not see as a turn in the road.
 - A red **⚠** is its opposite, and fires on either of two things: a **lasting
   burden** (`setFlaws` — the charity-hospital ledger, the sold-up disgrace, a
   warrant, a sweet tooth), or a **fall into a setback status**
@@ -2522,7 +2522,7 @@ Roughly in likely order. None of these are started.
   **to block the next N years, set it to N+1.**
 - **The sibling cooldown (per sibling, 3 years).** After one of a sibling's beats,
   that sibling's next beat waits three years: each gated beat sets
-  `relBrotherCooldown` / `relSisterCooldown` to 4 with `setSilent` (no mark), and
+  `relBrotherCooldown` / `relSisterCooldown` to 4 with `setTraitsQuiet` (no mark), and
   the sibling's deck counts it down with a `ticks` rule that stops at 0. **Exempt:
   milestones** (crossroads, estranged) **and the childhood beats** (his play /
   bully / share, her dance / mend / slippers), which neither wait for it nor start

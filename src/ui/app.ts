@@ -1934,7 +1934,7 @@ function fmtEffect(e?: Effect): string {
   if (e.setStatus) for (const [k, v] of Object.entries(e.setStatus)) parts.push(`${k}=${v}`);
   if (e.setTraits) for (const [k, v] of Object.entries(e.setTraits)) parts.push(`${k}=${v}`);
   if (e.setFlaws) for (const [k, v] of Object.entries(e.setFlaws)) parts.push(`${k}=${v}`);
-  if (e.setSilent) for (const [k, v] of Object.entries(e.setSilent)) parts.push(`${k}=${v}`);
+  if (e.setTraitsQuiet) for (const [k, v] of Object.entries(e.setTraitsQuiet)) parts.push(`${k}=${v}`);
   if (e.incTraits) for (const [k, v] of Object.entries(e.incTraits)) parts.push(`${k}+=${v}`);
   if (e.addDecks) parts.push(`+deck ${e.addDecks.join(",")}`);
   if (e.removeDecks) parts.push(`−deck ${e.removeDecks.join(",")}`);
