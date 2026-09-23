@@ -304,14 +304,24 @@ body {
   align-items: center;
   gap: 8px;
   padding: 3px 0;
-  cursor: pointer;
   font-size: 0.72rem;
 }
-.dbg-hist:active { color: var(--ink); }
 .dbg-hist-age { color: var(--gold); min-width: 2ch; text-align: right; }
 .dbg-hist-card { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dbg-hist-choice { color: var(--muted); }
-.dbg-hist-rw { color: var(--baize); }
+/* the only rewind target: a button at the row's end, armed by the first tap */
+.dbg-hist-rw {
+  font-family: inherit;
+  font-size: 0.72rem;
+  min-width: 4.8em;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--baize);
+  cursor: pointer;
+}
+.dbg-hist-rw.armed { color: #fff; background: #c0392b; border-color: #c0392b; }
 
 .dbg-traits {
   display: flex;

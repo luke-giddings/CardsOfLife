@@ -199,6 +199,9 @@ export class Game {
   // the panel is usually open to answer is "what can come up next", and the
   // gated cards are the long tail of every deck you are standing in.
   private debugPoolOnlyLive = true;
+  // A rewind waiting for its confirming tap: which row, its button, and the timer
+  // that stands it down again.
+  private rewindArm: { index: number; el: HTMLElement; timer: number } | null = null;
   // Debug history: the pre-choice snapshot at each played card, so we can list
   // what was drawn/chosen and rewind to try a different choice.
   private history: HistoryEntry[] = [];
@@ -371,7 +374,7 @@ export class Game {
       );
       if (!hit) return;
       const d = hit.dataset;
-      if (d.hist != null) return this.rewind(Number(d.hist));
+      if (d.hist != null) return this.armOrRewind(hit, Number(d.hist));
       if (d.vital) return this.adjustVital(d.vital as VitalKey, Number(d.delta));
       if (d.age) return this.adjustAge(Number(d.age));
       if (d.deck) return this.toggleDeck(d.deck);
@@ -658,6 +661,7 @@ export class Game {
   }
 
   private renderDebug(): void {
+    this.disarmRewind();
     if (!this.debug) {
       this.debugPanel.innerHTML = "";
       return;
@@ -868,11 +872,11 @@ export class Game {
     const histRows = this.history
       .map(
         (h, i) =>
-          `<div class="dbg-hist" data-hist="${i}" title="Rewind to here">
+          `<div class="dbg-hist">
             <span class="dbg-hist-age">${h.age}</span>
             <span class="dbg-hist-card">${h.cardId}</span>
             <span class="dbg-hist-choice">${h.choice}</span>
-            <span class="dbg-hist-rw">⟲</span>
+            <button class="dbg-hist-rw" data-hist="${i}" title="Rewind to here (tap twice)">⟲</button>
           </div>`,
       )
       .reverse()
@@ -908,7 +912,7 @@ export class Game {
       sec("detail", `${sel ? sel.id : "card"} — choices &amp; results`, detail) +
       sec(
         "history",
-        `History — tap to rewind (${this.history.length})`,
+        `History — ⟲ twice to rewind (${this.history.length})`,
         `<div class="dbg-poolbar">
            <button class="dbg-filter" data-run="copy">copy run</button>
            <button class="dbg-filter" data-run="save">save .txt</button>
@@ -1428,6 +1432,32 @@ export class Game {
   // Debug: restore the pre-choice snapshot at a history entry (un-consuming any
   // one_time cards, since the whole state is restored) and re-show that card so
   // a different choice can be tried.
+  // REWIND TAKES TWO TAPS. With the history read more and more, a whole-row tap
+  // target meant a thumb scrolling the list could throw away half a life. Now only
+  // the ⟲ button acts, and its first tap only ARMS it ("rewind?"); a second tap on
+  // the same button within three seconds rewinds. Arming another row, a re-render,
+  // or the timer stands it down.
+  private armOrRewind(el: HTMLElement, index: number): void {
+    if (this.rewindArm?.index === index) {
+      this.disarmRewind();
+      return this.rewind(index);
+    }
+    this.disarmRewind();
+    el.textContent = "rewind?";
+    el.classList.add("armed");
+    const timer = window.setTimeout(() => this.disarmRewind(), 3000);
+    this.rewindArm = { index, el, timer };
+  }
+
+  private disarmRewind(): void {
+    if (!this.rewindArm) return;
+    const { el, timer } = this.rewindArm;
+    window.clearTimeout(timer);
+    el.textContent = "⟲";
+    el.classList.remove("armed");
+    this.rewindArm = null;
+  }
+
   private rewind(index: number): void {
     const entry = this.history[index];
     if (!entry) return;
