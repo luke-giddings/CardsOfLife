@@ -22,6 +22,8 @@ function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   return best;
 }
 const SIB = ["rel_bro", "rel_sis"];
+// the childhood trios: exempt from the cooldown, as are milestones
+const EXEMPT = new Set(["rel_bro_play","rel_bro_bully","rel_bro_share","rel_sis_dance","rel_sis_mend","rel_sis_slippers"]);
 const beats = new Map<string, string>(); // card -> deck
 for (const d of gameContent.decks) if (SIB.includes(d.id)) for (const c of d.cards) beats.set(c.id, d.id);
 
@@ -42,9 +44,16 @@ function run(N: number, cool: number, shared: boolean) {
         const refs = shared ? SIB : [d];
         return refs.some((r) => last[r] !== undefined && s.age - last[r] <= cool) && d !== due;
       };
-      const view = { ...s, activeDecks: s.activeDecks.filter((d) => !(SIB.includes(d) && cool > 0 && cooling(d))) };
-      const dr = drawCard(view);
-      s = { ...dr.state, activeDecks: s.activeDecks };
+      // Exempt beats (milestones by construction, plus the childhood trios) are
+      // drawn as normal. Emulated by drawing from the full pool and, if a cooling
+      // deck's non-exempt card comes up, redrawing from a view without that deck.
+      let dr = drawCard(s);
+      if (cool > 0 && dr.card && SIB.includes(dr.card.deck ?? "") && cooling(dr.card.deck!) && !EXEMPT.has(dr.card.id)) {
+        const view = { ...s, activeDecks: s.activeDecks.filter((d) => !(SIB.includes(d) && cooling(d))) };
+        dr = drawCard(view);
+        dr = { ...dr, state: { ...dr.state, activeDecks: s.activeDecks } };
+      }
+      s = dr.state;
       if (!dr.card) { s = quietYear(s); continue; }
       const ds = dirsFor(dr.card, s);
       if (!ds.length) { s = quietYear(s); continue; }
@@ -55,7 +64,10 @@ function run(N: number, cool: number, shared: boolean) {
           const r = pri.get(live)!; r.draws++; if (beats.has(dr.card.id)) r.sib++;
         }
       }
-      if (beats.has(dr.card.id)) { fired.set(dr.card.id, (fired.get(dr.card.id) ?? 0) + 1); last[dr.card.deck!] = s.age; }
+      if (beats.has(dr.card.id)) {
+        fired.set(dr.card.id, (fired.get(dr.card.id) ?? 0) + 1);
+        if (!EXEMPT.has(dr.card.id) && dr.card.kind !== "milestone") last[dr.card.deck!] = s.age;
+      }
       s = chooseDirection(s, dr.card, greedy(dr.card, s, ds)).state;
       if (apAt < 0 && s.statuses.job === "apprentice") apAt = s.age;
       if (apAt >= 0 && s.statuses.job !== "apprentice") { apYears.push(s.age - apAt); apAt = -2; }
