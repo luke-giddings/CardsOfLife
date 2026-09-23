@@ -64,6 +64,8 @@ function report(label: string, r: ReturnType<typeof run>) {
 const N = Number(process.argv[2]) || 3000;
 const weights: Record<string, number | undefined> = {};
 for (const [, [id]] of Object.entries(LADDERS)) weights[id] = card(id).weight;
-report("AS BUILT", run(N));
-for (const id of ["job_factory_promote","job_shop_promote","job_clerk_promote","job_journeyman_promote"]) (card(id) as any).weight = 6;
-report("PROMOTION CARDS AT WEIGHT 6 (factory, shop, clerk, journeyman)", run(N));
+// The four ladders' promotion cards now carry weight 6 in the content; this
+// reruns the before/after by putting them back to 1 in memory.
+report("AS BUILT (promotion cards at weight 6)", run(N));
+for (const id of ["job_factory_promote","job_shop_promote","job_clerk_promote","job_journeyman_promote"]) (card(id) as any).weight = 1;
+report("FOR COMPARISON: those four back at weight 1", run(N));

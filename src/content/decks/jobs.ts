@@ -402,6 +402,13 @@ export const jobDecks = [
           // shopkeeper (experience resets for the next rung); decline → stay put.
           id: "job_shop_promote",
           kind: "filler",
+          // WEIGHT 6, for the reason given on `job_labour_factory`: a qualified
+          // worker draws his own deck only a few times a decade, and at weight 1
+          // this card was exactly as likely as the sack. Gated, so it carries no
+          // weight until you qualify, and taking it closes the window. Measured on
+          // the factory: qualified hands promoted 46% -> 71%, sacked first
+          // 35% -> 18%, median qualified wait 7 -> 2 years.
+          weight: 6,
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_shop_promote.prompt",
           options: {
@@ -469,6 +476,13 @@ export const jobDecks = [
           // experienced enough (>= 3).
           id: "job_factory_promote",
           kind: "filler",
+          // WEIGHT 6, for the reason given on `job_labour_factory`: a qualified
+          // worker draws his own deck only a few times a decade, and at weight 1
+          // this card was exactly as likely as the sack. Gated, so it carries no
+          // weight until you qualify, and taking it closes the window. Measured on
+          // the factory: qualified hands promoted 46% -> 71%, sacked first
+          // 35% -> 18%, median qualified wait 7 -> 2 years.
+          weight: 6,
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_factory_promote.prompt",
           options: {
@@ -748,6 +762,13 @@ export const jobDecks = [
           // grammar ladder (that's how you became a clerk), so no extra gate.
           id: "job_clerk_promote",
           kind: "filler",
+          // WEIGHT 6, for the reason given on `job_labour_factory`: a qualified
+          // worker draws his own deck only a few times a decade, and at weight 1
+          // this card was exactly as likely as the sack. Gated, so it carries no
+          // weight until you qualify, and taking it closes the window. Measured on
+          // the factory: qualified hands promoted 46% -> 71%, sacked first
+          // 35% -> 18%, median qualified wait 7 -> 2 years.
+          weight: 6,
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_clerk_promote.prompt",
           options: {
@@ -1063,6 +1084,13 @@ export const jobDecks = [
           // the `master` trade credential.
           id: "job_journeyman_promote",
           kind: "filler",
+          // WEIGHT 6, for the reason given on `job_labour_factory`: a qualified
+          // worker draws his own deck only a few times a decade, and at weight 1
+          // this card was exactly as likely as the sack. Gated, so it carries no
+          // weight until you qualify, and taking it closes the window. Measured on
+          // the factory: qualified hands promoted 46% -> 71%, sacked first
+          // 35% -> 18%, median qualified wait 7 -> 2 years.
+          weight: 6,
           conditions: { traits: { jobExperience: { min: 4 } } },
           prompt: "job_journeyman_promote.prompt",
           options: {

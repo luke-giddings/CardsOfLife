@@ -627,6 +627,16 @@ deliver enough draws to promote, and now this. **When a deck has exactly one car
 that resolves the situation it is about, check its weight before concluding
 anything about the situation.**
 
+A fourth instance, found in play: when the shop, factory, clerk and journeyman
+decks were filled out, their new one-shots got weight 3 so experience would
+accrue — but their PROMOTION cards were left at weight 1, the same weight as the
+sack. A factory hand qualified at 33, drew his own deck twice in ten years, and
+was sacked before the promotion came. All four promotion cards now carry weight
+6, as `job_labour_factory` already did for exactly this reason. Qualified factory
+hands: promoted 44% → 70%, sacked first 41% → 17%, median wait 6 → 3 years
+(`scripts/promote.ts`). The apprenticeship's qualifying card was left at 1 by
+decision: `job_apprentice` is a priority deck, so its pool is already small.
+
 The jobless still mostly die out there (33% roofed), which is the point — the
 streets are meant to be survivable by WORK, of whatever kind, and no other way.
 
