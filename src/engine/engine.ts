@@ -21,7 +21,12 @@ import {
 
 // --- setup -------------------------------------------------------------------
 
-export function initGame(content: Content): GameState {
+// `seed` is used exactly as given when supplied. With none, a full-range one is
+// drawn — which is what the headless sims rely on: a caller that restricted
+// seeds to a small range here would quietly cap every measurement at that many
+// distinct lives. Any narrowing for human convenience belongs to the caller.
+export function initGame(content: Content, seed?: number): GameState {
+  const start = seed ?? randomSeed();
   // Gender starts at the default and is chosen on the birth card.
   return {
     age: 0,
@@ -31,7 +36,8 @@ export function initGame(content: Content): GameState {
     activeDecks: [...content.start.decks],
     usedCards: {},
     playedFillers: [],
-    rng: randomSeed(),
+    rng: start,
+    seed: start,
     over: false,
     log: [],
   };

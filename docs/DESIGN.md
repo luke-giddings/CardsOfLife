@@ -1041,6 +1041,28 @@ are SHUT is the diagnosis, so the gated ones are named rather than counted.
 
 ## 13. Save / resume / reset
 
+**Seeds and replay.** Every random thing in the engine comes from one seeded
+generator (`state.rng`, mulberry32); `Math.random` is used once, to choose a
+starting seed. So a life is fully determined by **its starting seed plus the
+swipes taken**. `rng` overwrites itself on every draw, so the starting seed is
+kept separately as `GameState.seed` (save v4).
+
+- **The engine takes any seed.** `initGame(content, seed?)` uses a supplied seed
+  exactly as given and draws a full 32-bit one when none is passed. The headless
+  sims pass none, which matters: a small seed range in the engine would quietly
+  cap every measurement at that many distinct lives.
+- **The app narrows it for people.** A played life gets a seed from 1–999
+  (`UI_SEED_MAX` in `src/ui/app.ts`, the one number to widen later), shown in the
+  footer beside the build and in the run report's first line.
+- **Replay:** the debug panel's Seed section is pre-filled with the current life's
+  seed; "New life with this seed" (or Enter) starts again from it. Out-of-range
+  input is refused and marked, never clamped into a different life. Keys typed in
+  the box go to the box, not to the swipe handler.
+- **What replay does and does not promise.** Same seed + same swipes + same build
+  = the same life, card for card (checked for all 999 seeds). After a content
+  change the deals diverge from the first draw whose pool differs — which is the
+  point when checking a change, but means an old seed is not a fixed script.
+
 Autosave to `localStorage` every turn; resume on load; a **Reset** control wipes
 and restarts. A separate **Debug** toggle (persisted) unlocks the debug toolkit.
 An **Easy** toggle (persisted, player-facing) previews each choice's vital

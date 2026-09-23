@@ -7,11 +7,12 @@ import type { GameState } from "./types.ts";
 // restart is cheap, a half-converted state is confusing. (v1 -> v2:
 // `housingBeforeApprentice` became the general `suspendedStatuses`, so a v1 save
 // mid-apprenticeship had no stash to restore and left you housed "With Master".
-// v2 -> v3: `playedFillers` arrived, and a save without it crashes the draw.)
+// v2 -> v3: `playedFillers` arrived, and a save without it crashes the draw.
+// v3 -> v4: `seed` arrived, the life's starting seed, shown in the footer.)
 // One number, two keys: the history holds whole GameStates, so it can never be
 // read against a save of a different shape. Bumping them separately is the one
 // way this scheme breaks, so there is only one place to bump.
-const SAVE_VERSION = 3;
+const SAVE_VERSION = 4;
 const KEY = `cardsoflife.save.v${SAVE_VERSION}`;
 
 // The debug rewind list: the pre-choice snapshot at each card played, so the

@@ -36,6 +36,13 @@ import { t, tf, getLocale, setLocale, LOCALES, type StringId } from "../i18n/ind
 import { APP_VERSION, BUILD_DESC } from "../version.ts";
 
 const DEBUG_KEY = "cardsoflife.debug";
+// Seeds a PLAYED life can have: small enough to read off the footer and type
+// back into the debug panel to replay a run. This is a UI convenience only —
+// the engine takes any seed, and the headless sims draw full-range ones so a
+// measurement is never capped at this many distinct lives. Widening it is this
+// one number.
+const UI_SEED_MAX = 999;
+const uiSeed = (): number => 1 + Math.floor(Math.random() * UI_SEED_MAX);
 // Latched the first time anyone finishes the opening flow, so it is shown once
 // ever. Not part of the save: wiping a life must not re-run the tutorial.
 const INTRO_KEY = "cardsoflife.intro";
@@ -167,6 +174,7 @@ export class Game {
   private hard = false; // "hard mode": HIDE each choice's vital-change preview (shown by default)
   private hardBtn!: HTMLButtonElement;
   private ageNumEl!: HTMLElement;
+  private versionEl!: HTMLElement;
   private fills!: Record<VitalKey, HTMLElement>;
   private flashes!: Record<VitalKey, HTMLElement>;
   private drains!: Record<VitalKey, HTMLElement>;
@@ -223,9 +231,10 @@ export class Game {
       this.state = saved;
       this.history = loadHistory() ?? [];
     } else {
-      this.state = initGame(content);
+      this.state = initGame(content, uiSeed());
       clearSave();
     }
+    this.syncVersion();
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
     this.captureDisplay();
@@ -351,6 +360,7 @@ export class Game {
         void this.copyRun(run);
         return;
       }
+      if (target.closest<HTMLElement>("[data-seed-go]")) return this.replaySeed();
       // Draw pool: show everything, or only what could actually come up now.
       if (target.closest<HTMLElement>("[data-pool-filter]")) {
         this.debugPoolOnlyLive = !this.debugPoolOnlyLive;
@@ -375,10 +385,9 @@ export class Game {
     });
     stage.append(this.scene, this.debugPanel);
 
-    const version = el("div", "version");
-    version.innerHTML = `<b>v${APP_VERSION} · ${BUILD_DESC}</b><br>build ${__BUILD__}`;
+    this.versionEl = el("div", "version");
 
-    this.root.append(this.topbar, stage, version);
+    this.root.append(this.topbar, stage, this.versionEl);
     this.dbgBtn.classList.toggle("on", this.debug);
   }
 
@@ -474,6 +483,7 @@ export class Game {
     const next = codes[(codes.indexOf(getLocale()) + 1) % codes.length];
     setLocale(next);
     this.buildShell(); // rebuilds the topbar + a fresh scene with new labels
+    this.syncVersion(); // …and a fresh, empty footer: refill it
     this.syncTop();
     if (this.state.over) this.showEnd();
     else if (this.pendingUnlock) this.showUnlock();
@@ -874,7 +884,17 @@ export class Game {
         ${body}
       </details>`;
 
+    // Replay: pre-filled with this life's own seed, so replaying the life in
+    // front of you is one tap. The same seed and the same swipes give the same
+    // life — until the content changes, when the deals diverge wherever the
+    // pools differ, which is what makes it useful for checking a change.
+    const seedCtl = `<div class="dbg-ctlrow">
+        <input class="dbg-seed" type="number" inputmode="numeric" min="1" max="${UI_SEED_MAX}"
+          value="${this.state.seed}" aria-label="Seed, 1 to ${UI_SEED_MAX}">
+        <button data-seed-go>New life with this seed</button></div>`;
+
     this.debugPanel.innerHTML =
+      sec("seed", `Seed ${this.state.seed}`, `<div class="dbg-ctl">${seedCtl}</div>`) +
       sec("vitals", "Vitals", `<div class="dbg-ctl">${vitalCtl}</div>`) +
       sec("age", "Age", `<div class="dbg-ctl">${ageCtl}</div>`) +
       sec("traits", "Traits — tap to toggle", traitHtml) +
@@ -917,7 +937,7 @@ export class Game {
     // number is what matters anyway.
     const clocks = new Set(content.decks.flatMap((d) => Object.keys(d.tick ?? {})));
     const lines: string[] = [];
-    lines.push(`Cards of Life v${APP_VERSION} · build ${__BUILD__}`);
+    lines.push(`Cards of Life v${APP_VERSION} · build ${__BUILD__} · seed ${this.state.seed}`);
     lines.push(`${this.hard ? "HARD" : "easy"} · ${getLocale()} · ${this.history.length} cards played`);
 
     let prev: GameState | null = null;
@@ -1625,9 +1645,10 @@ export class Game {
   // out of restart so the opening flow can start the life the moment you ask for
   // one: the cards after the title show the vital bars, and they have to be a new
   // life's bars, not the leftovers of the life this one replaced.
-  private newLife(): void {
+  private newLife(seed?: number): void {
     clearSave();
-    this.state = initGame(content);
+    this.state = initGame(content, seed ?? uiSeed());
+    this.syncVersion();
     this.hasSave = false;
     this.scene.innerHTML = "";
     this.holder = null;
@@ -1641,9 +1662,30 @@ export class Game {
     this.syncTop();
   }
 
-  private restart(): void {
-    this.newLife();
+  private restart(seed?: number): void {
+    this.newLife(seed);
     this.beginTurn();
+  }
+
+  // Start again from the seed typed into the debug panel. Whole numbers in the
+  // UI's range only; anything else is left in the box to be corrected rather than
+  // silently clamped into a DIFFERENT life than the one you asked for.
+  private replaySeed(): void {
+    const box = this.debugPanel.querySelector<HTMLInputElement>(".dbg-seed");
+    const n = Number(box?.value);
+    if (!Number.isInteger(n) || n < 1 || n > UI_SEED_MAX) {
+      box?.classList.add("bad");
+      return;
+    }
+    if (this.busy) return;
+    this.restart(n);
+  }
+
+  // The footer: build, and the seed this life started from, so a run seen on a
+  // phone can be replayed by typing that number into the debug panel.
+  private syncVersion(): void {
+    this.versionEl.innerHTML =
+      `<b>v${APP_VERSION} · ${BUILD_DESC}</b><br>build ${__BUILD__} · seed ${this.state.seed}`;
   }
 
   // Advance the lagging chip snapshot to live state. Called whenever the visible
@@ -1714,6 +1756,13 @@ export class Game {
   }
 
   private onKey = (e: KeyboardEvent): void => {
+    // A key pressed in a text field belongs to the field. Without this, arrow
+    // keys in the seed box would step the number AND swipe the card.
+    const field = (e.target as HTMLElement | null)?.closest?.("input, textarea, select");
+    if (field) {
+      if (e.key === "Enter" && field.classList.contains("dbg-seed")) this.replaySeed();
+      return;
+    }
     if (this.busy) return;
     const map: Record<string, Direction> = {
       ArrowLeft: "left",

@@ -612,6 +612,11 @@ export interface GameState {
   suspendedStatuses?: Partial<Record<StatusKind, string>>;
   pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent
+  // The seed this life STARTED from. `rng` overwrites itself on every draw, so
+  // without this the only record of where a life began is gone by the first
+  // card. Every random thing in the engine comes from `rng`, so this seed plus
+  // the swipes taken reproduces a life exactly.
+  seed: number;
   over: boolean;
   endReason?: string;                 // ENDINGS id (vital key, or a named ending)
   log: LifeEvent[];                   // dated memorable events, for the end recap

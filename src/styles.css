@@ -954,3 +954,16 @@ button:focus-visible,
 @media (prefers-reduced-motion: reduce) {
   .flip, .holder, .fill { transition: none; }
 }
+
+/* debug: the replay seed box */
+.dbg-seed {
+  font-family: inherit;
+  font-size: 0.8rem;
+  width: 5.5em;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.dbg-seed.bad { border-color: #d9534f; }
