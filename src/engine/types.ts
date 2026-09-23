@@ -251,6 +251,7 @@ export interface Traits {
   // reachable wherever you are, and this only records which wherever it was.
   relLillyMet: "none" | "school" | "university" | "work" | "street";
   relLillyStoryDone: boolean;
+  relLillyCooldown: number; // as relBrotherCooldown, for her beats (drift, lost and idle exempt)
   petCatAge: number;
   petCatLove: number;
   petDogAge: number;
@@ -305,6 +306,7 @@ export const DEFAULT_TRAITS: Traits = {
   relLillyDistance: 0,
   relLillyMet: "none",
   relLillyStoryDone: false,
+  relLillyCooldown: 0,
   petCatAge: 0,
   petCatLove: 0,
   petDogAge: 0,

@@ -2559,6 +2559,21 @@ Roughly in likely order. None of these are started.
   years are not sibling cards (about one is drawn) but a different kind of life
   reaching the indenture. The length lever is the apprenticeship itself: it has no
   term, and its trade one-shots and qualifying card are weight 1.
+- **Lilly's cooldown (3 years, same mechanism as the siblings').** Gated: books,
+  walk, saving, ownplace, more, courting, propose, each setting `relLillyCooldown`
+  to 4. Exempt: `rel_lilly_drift` and `rel_lilly_lost` (the consequences of
+  neglect answer her distance clock, not a queue) and `rel_lilly_idle` (the one
+  card built to reach you while you are out of work). From a playtest that went
+  from "tell her how you feel" to married in two years.
+
+  **It halves the marriage**, measured with a player trying to marry her:
+  8.7% -> 4.2% of lives, median wedding age 39 -> 46, and drift/lost dealt about a
+  third more often — her beats come further apart than four years in play, so
+  her distance clock climbs. That player is the short-lived greedy family, so a
+  human who lives to 50 feels the delay less; but it is a real cost, and the
+  first knob if the courtship now feels too slow (a shorter cooldown for her, or
+  exempting `propose` once you are courting). `scripts/lilly-cooldown.ts`.
+
 - **`Deck.tickWhile`** — a deck's `tick` can be gated on a condition, suspending it
   while the condition fails (the deck stays active). Added because the sibling
   deck's `relBrotherDistance` ticked up every year forever: once Tom's arc had
