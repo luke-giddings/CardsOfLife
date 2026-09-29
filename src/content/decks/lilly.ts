@@ -94,10 +94,12 @@ export const lillyDecks = [
       // === WHAT SHE ASKS OF YOU ==========================================
       {
         // "Upset with you if you are unemployed for ages" — and ages is the
-        // mechanic, not the text. It reads `jobYearsIdle`, the years the
-        // unemployed status has ticked: three of them, and she has something to
-        // say. One-shot, because the counter only ever grows — a repeating card
-        // would scold you every few years for one bad decade twenty years back.
+        // mechanic, not the text. It reads `jobYearsIdle`, the years of the
+        // CURRENT stretch out of work: three of them, and she has something to
+        // say. Gated on being unemployed NOW, because the text is in the present
+        // ("there have been years now with no work in them") — it was once dealt
+        // to a man twelve years back at the mill, when the counter never came
+        // down. One-shot: she says it once in a life.
         //
         // The ONE card in the deck that keeps its place while `job_unemployed`
         // is focusing the draw. Without that it was unreachable by construction
@@ -108,7 +110,7 @@ export const lillyDecks = [
         weight: 3,
         kind: "one_time",
         neverSuppressed: true,
-        conditions: { traits: { relLillyStoryDone: false, jobYearsIdle: { min: 3 } } },
+        conditions: { status: { job: "unemployed" }, traits: { relLillyStoryDone: false, jobYearsIdle: { min: 3 } } },
         prompt: "rel_lilly_idle.prompt",
         options: {
           left: { label: "rel_lilly_idle.left", outcomes: [{ result: "rel_lilly_idle.left.r0", effects: { vitals: { happiness: "-", spirit: "+" }, incTraits: { relLillyWarmth: 2, relLillyDistance: -6 } } }] },

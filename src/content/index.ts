@@ -114,7 +114,7 @@ export const content = {
         university: { label: "status.job.university", enterTraits: { eduStudy: 0 }, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
-        unemployed: { label: "status.job.unemployed", drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], tick: { jobYearsIdle: 1 }, keepExperience: true, grim: true },
+        unemployed: { label: "status.job.unemployed", enterTraits: { jobYearsIdle: 0 }, drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], tick: { jobYearsIdle: 1 }, keepExperience: true, grim: true },
         // A workhouse inmate — the institution IS your occupation now, so entering
         // the workhouse cancels any schooling/job (child_hunger sets this). No
         // drift and NO deck of its own: the home_workhouse housing deck already

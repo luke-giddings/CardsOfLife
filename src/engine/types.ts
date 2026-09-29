@@ -168,12 +168,13 @@ export interface Traits {
   // promotion card gates on it and resets it to 0 on the step up.
   jobExperience: number;
   // Years out of work in the CURRENT stretch of it — ticked by the unemployed
-  // status, as gaol ticks its own years. Cards that care about a long spell of
-  // idleness (rather than about being idle this minute) read this and zero it,
-  // so each stretch is worth one such card. It exists because `job_unemployed`
-  // is a `priority` deck: while you are in that state the draw is focused onto
-  // the escape routes, so a card about being out of work can never be dealt
-  // WHILE you are out of work. It has to be dealt afterwards, about the years.
+  // status, as gaol ticks its own years, and zeroed by that status's
+  // `enterTraits` each time a new stretch begins. (For a long while nothing
+  // zeroed it, so it was a LIFETIME total that never came down: four idle years
+  // at thirty kept `rel_lilly_idle` live at forty-six, back in work, telling you
+  // there had been "years now with no work in them".) Cards about a long spell
+  // should also gate on `job: "unemployed"`, so they are dealt DURING it —
+  // reachable despite the `priority` focus via card-level `neverSuppressed`.
   jobYearsIdle: number;
   // Apprenticeship craftsmanship. Unlike `jobExperience` (time served — every
   // apprentice work card ticks it whichever way you choose), `jobSkill` only rises
