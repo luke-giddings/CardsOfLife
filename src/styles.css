@@ -307,6 +307,8 @@ body {
   font-size: 0.72rem;
 }
 .dbg-hist-age { color: var(--gold); min-width: 2ch; text-align: right; }
+/* the card waiting for a swipe: shown above the history, not rewindable */
+.dbg-hist-now .dbg-hist-card, .dbg-hist-now .dbg-hist-choice { color: var(--baize); font-weight: 600; }
 .dbg-hist-card { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dbg-hist-choice { color: var(--muted); }
 /* the only rewind target: a button at the row's end, armed by the first tap */

@@ -629,6 +629,14 @@ export class Game {
 
   // An option is available only if it exists AND its per-option `if` holds in the
   // current state. Hidden options don't render an edge and can't be swiped to.
+  // The card waiting for a swipe, if any. A card only enters the history when it
+  // is ANSWERED, so without this the debug history and the run report both
+  // stopped one card short of the screen — the card you were asking about was
+  // the one card they never showed.
+  private onScreen(): Card | null {
+    return !this.state.over && !this.introCard && this.phase === "front" ? this.card : null;
+  }
+
   private availOpt(card: Card, dir: Direction): CardOption | undefined {
     const o = card.options[dir];
     return o && meets(o.if, this.state, content) ? o : undefined;
@@ -881,6 +889,14 @@ export class Game {
       )
       .reverse()
       .join("");
+    const showing = this.onScreen();
+    const nowRow = showing
+      ? `<div class="dbg-hist dbg-hist-now">
+          <span class="dbg-hist-age">${this.state.age}</span>
+          <span class="dbg-hist-card">${showing.id}</span>
+          <span class="dbg-hist-choice">on screen</span>
+        </div>`
+      : "";
 
     const sec = (id: string, title: string, body: string): string =>
       `<details class="dbg-sec" ${this.debugOpen.has(id) ? "open" : ""}>
@@ -918,7 +934,7 @@ export class Game {
            <button class="dbg-filter" data-run="save">save .txt</button>
            <span class="dbg-hint">the whole run, as text</span>
          </div>
-         <div class="dbg-list">${histRows || "<div>(nothing played yet)</div>"}</div>`,
+         <div class="dbg-list">${nowRow}${histRows || (nowRow ? "" : "<div>(nothing played yet)</div>")}</div>`,
       );
   }
 
@@ -970,6 +986,12 @@ export class Game {
     const now = this.state;
     lines.push("");
     lines.push(`NOW  age ${now.age}  ${vitals(now)}`);
+    const showing = this.onScreen();
+    if (showing) {
+      const offered = DIRECTIONS.filter((d) => this.availOpt(showing, d))
+        .map((d) => `${d} "${this.txt(showing.options[d]!.label)}"`);
+      lines.push(`     showing: ${showing.id} (not yet answered) — ${offered.join(" · ")}`);
+    }
     lines.push(`     ${st(now)}`);
     if (now.over) lines.push(`     ENDED: ${now.endReason ?? "?"}`);
     const defaults = DEFAULT_TRAITS as unknown as Record<string, unknown>;
