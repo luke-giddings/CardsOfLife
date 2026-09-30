@@ -112,6 +112,9 @@ export const content = {
         // (see the grammar leaver). Income cards inside both decks offset fees.
         grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
         university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
+        // Adult school — see the edu_adult deck. keepExperience: a man who walks
+        // out goes back to his old rung with his years.
+        adult_school: { label: "status.job.adult_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_adult"], keepExperience: true },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
         unemployed: { label: "status.job.unemployed", enterTraits: { jobYearsIdle: 0 }, drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], tick: { jobYearsIdle: 1 }, keepExperience: true, grim: true },

@@ -746,14 +746,53 @@ the same three swipes:
   - grammar → university: free on `eduUniFund`, or `--` from your own purse at
     50+.
   - a degree, or a trade → not offered.
-  - Unlettered or basic adults → **adult school**, the second half of this work
-    (not yet built).
+  - unlettered or basic, 18 and over → **adult school** (below), a flat 40,
+    offered once you have saved 80.
 - **Hold out for something else (up)** — always there. The card is a filler, so
   the offer comes round again.
 
 Crime is never on this card; `job_unemployed_fagin` is that road.
 `scripts/offer.ts` is its truth table: every case above, plus a sacked
 gang-master returning with his experience intact.
+
+**Adult school** (`edu_adult`, status `adult_school`, labelled "Mature student").
+A grown man with no schooling, or only the board school's, goes back to his books
+full time at a working men's college. It is built the same size and shape as
+grammar school, and is a priority deck like it: three study one-shots (the first
+pays a bookish man more), a day's casual work as the way to earn, the uncle's
+fund net (sharing `edu_fund.*`), a ruin net, and a leaver after three years on
+the enrolment clock.
+
+- **The leaver copies the board school's.** "Sit the examination" always takes
+  you up a level (none → basic and a shop counter; basic → grammar and a clerk's
+  stool): free if you studied (`eduStudy` ≥ 3), half your money and `happiness
+  −−` if not. "Leave without sitting it" puts you back at your old rung.
+- **Experience is held** (`keepExperience`), so a man who walks out or is ruined
+  goes back to his old job with his years intact.
+- **Ruin lands you in work, not idleness.** The rescue floors money at 1, and a
+  spell out of work with rent still due would kill him the next year with the
+  net spent. It returns you to your old rung: walk away with your head up and
+  lose your lodging, or go back cap in hand and keep it.
+- **Tradesmen are not offered it.** Their education *is* their trade
+  (journeyman / master), and passing would write over it.
+
+**The price was measured, not guessed.** The first cut took two-thirds of
+whatever you had. A man arriving with 60 was on 10 after a year's rent, **77%
+were ruined inside two years**, a keen scholar passed 24% of the time, and
+saving up bought nothing, since two-thirds of more is still two-thirds. A flat
+40 makes saving the strategy, as the school path is meant to reward:
+
+```
+arriving with   after year one   unlettered passed   basic passed
+      60              10          24% (77% ruined)        8%
+      80              30               100%               68%   (the rest go back
+     100              50               100%               68%    to shopkeeper)
+```
+
+So it is offered only from 80. Below that it would be a trap the card face does
+not show, and survivability is the one thing the sims can be trusted to judge
+(§"Do not balance to the sim's taste"). `scripts/adultschool.ts` plays it end to
+end; pass `proportional` to compare against the first cut's price.
 
 **The enrolment clock.** Once grown men can enrol, an age gate would graduate a
 thirty-year-old the year after he went up. `eduYearsEnrolled` is zeroed on

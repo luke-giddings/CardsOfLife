@@ -587,4 +587,157 @@ export const educationDecks = [
         },
       ],
     },
+
+    // --- Adult school: active while job = adult_school. A grown man with no
+    //     schooling, or only the board school's, goes back to his books full
+    //     time — the working men's college of the age. Built the same size and
+    //     shape as grammar school (three study one-shots, a way to earn, the fund
+    //     and ruin nets, a leaver after three years), and a PRIORITY deck like it.
+    //
+    //     Very expensive by design: a flat 40 on the way in, offered only once
+    //     you have saved 80 (see `job_unemployed_offer`), no wage while you are
+    //     here, a spirit drain, and your rent still due. Experience is HELD, not wiped
+    //     (`keepExperience`), so a man who walks out goes back to his old rung
+    //     with his years intact.
+    //
+    //     Tradesmen are not offered it: their education IS their trade
+    //     (journeyman / master), and passing would write over it.
+    {
+      id: "edu_adult",
+      priority: true,
+      cards: [
+        {
+          id: "edu_adult_letters",
+          weight: 3,
+          kind: "one_time",
+          prompt: "edu_adult_letters.prompt",
+          options: {
+            left: { label: "edu_adult_letters.left", outcomes: [
+              { if: { traits: { persBookish: true } }, result: "edu_adult_letters.left.r1", effects: { vitals: { spirit: "++", happiness: "+" }, incTraits: { eduStudy: 3 } } },
+              { result: "edu_adult_letters.left.r0", effects: { vitals: { spirit: "++", happiness: "-" }, incTraits: { eduStudy: 2 } } },
+            ] },
+            right: { label: "edu_adult_letters.right", outcomes: [{ result: "edu_adult_letters.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "edu_adult_master",
+          weight: 3,
+          kind: "one_time",
+          prompt: "edu_adult_master.prompt",
+          options: {
+            left: { label: "edu_adult_master.left", outcomes: [{ result: "edu_adult_master.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { eduStudy: 2 } } }] },
+            right: { label: "edu_adult_master.right", outcomes: [{ result: "edu_adult_master.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          id: "edu_adult_mates",
+          weight: 3,
+          kind: "one_time",
+          prompt: "edu_adult_mates.prompt",
+          options: {
+            left: { label: "edu_adult_mates.left", outcomes: [{ result: "edu_adult_mates.left.r0", effects: { vitals: { spirit: "++", health: "-" }, incTraits: { eduStudy: 2 } } }] },
+            right: { label: "edu_adult_mates.right", outcomes: [{ result: "edu_adult_mates.right.r0", effects: { vitals: { happiness: "+", spirit: "-" } } }] },
+          },
+        },
+        {
+          // The way to earn, as tutoring is at grammar school: a day's casual
+          // work, at the price of the day's lessons.
+          id: "edu_adult_dayswork",
+          weight: 3,
+          kind: "filler",
+          prompt: "edu_adult_dayswork.prompt",
+          options: {
+            left: { label: "edu_adult_dayswork.left", outcomes: [{ result: "edu_adult_dayswork.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
+            right: { label: "edu_adult_dayswork.right", outcomes: [{ result: "edu_adult_dayswork.right.r0", effects: { vitals: { spirit: "+", happiness: "+", finances: "-" }, incTraits: { eduStudy: 1 } } }] },
+          },
+        },
+        {
+          // The uncle's pot, as at the board and grammar schools; same card
+          // body and strings (their wording fits a grown man too).
+          id: "edu_adult_fund",
+          kind: "one_time",
+          rescue: "finances",
+          priority: 100,
+          conditions: { traits: { eduUniFund: true } },
+          prompt: "edu_fund.prompt",
+          options: {
+            left: {
+              label: "edu_fund.left",
+              outcomes: [{ result: "edu_fund.left.r0", effects: { mark: "burden", vitals: { finances: "+++" }, setTraits: { eduUniFund: false }, remember: "log.fundspent" } }],
+            },
+            right: { label: "edu_fund.right", outcomes: [{ result: "edu_fund.right.r0", effects: { vitals: { spirit: "+", happiness: "-" } } }] },
+          },
+        },
+        {
+          // RUIN, for a grown man: the fees are due and the money is gone. As
+          // with the pupil's net he lands in WORK, not idleness — the rescue
+          // floors money at 1, and a spell out of work with rent still due would
+          // kill him the next year with the net already spent. Back to the rung
+          // his schooling and years earned him; the swipe is only pride against
+          // shame, and whether he keeps his roof.
+          id: "edu_adult_ruin",
+          kind: "one_time",
+          rescue: "finances",
+          priority: 50,
+          prompt: "edu_adult_ruin.prompt",
+          options: {
+            left: {
+              label: "edu_adult_ruin.left",
+              outcomes: [
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 3 } } }, result: "edu_adult_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "merchant" } } },
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 2 } } }, result: "edu_adult_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "shopkeeper" } } },
+                { if: { status: { education: "basic" } }, result: "edu_adult_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "shophand" } } },
+                { if: { traits: { jobRungLabour: { min: 3 } } }, result: "edu_adult_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "gang_master" } } },
+                { if: { traits: { jobRungLabour: { min: 2 } } }, result: "edu_adult_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "factory" } } },
+                { result: "edu_adult_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "labourer" } } },
+              ],
+            },
+            right: {
+              label: "edu_adult_ruin.right",
+              outcomes: [
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 3 } } }, result: "edu_adult_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { job: "merchant" } } },
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 2 } } }, result: "edu_adult_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { job: "shopkeeper" } } },
+                { if: { status: { education: "basic" } }, result: "edu_adult_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { job: "shophand" } } },
+                { if: { traits: { jobRungLabour: { min: 3 } } }, result: "edu_adult_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { job: "gang_master" } } },
+                { if: { traits: { jobRungLabour: { min: 2 } } }, result: "edu_adult_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { job: "factory" } } },
+                { result: "edu_adult_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { job: "labourer" } } },
+              ],
+            },
+          },
+        },
+        {
+          // The leaver, after three years enrolled (the clock, not an age). As
+          // at the board school, sitting the examination always takes you up a
+          // level — free if you studied, dear if you did not. Walking out instead
+          // puts you back at your old rung with your years intact.
+          id: "edu_adult_leaver",
+          kind: "milestone",
+          priority: 60,
+          conditions: { traits: { eduYearsEnrolled: { min: 3 } } },
+          prompt: "edu_adult_leaver.prompt",
+          options: {
+            left: {
+              label: "edu_adult_leaver.left",
+              outcomes: [
+                { if: { status: { education: "illiterate" }, traits: { eduStudy: { min: 3 } } }, result: "edu_adult_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "shophand" } } },
+                { if: { status: { education: "illiterate" } }, result: "edu_adult_leaver.left.r1", effects: { vitals: { finances: "/", happiness: "--" }, setStatus: { education: "basic", job: "shophand" } } },
+                { if: { traits: { eduStudy: { min: 3 } } }, result: "edu_adult_leaver.left.r2", effects: { vitals: { spirit: "+" }, setStatus: { education: "grammar", job: "clerk" } } },
+                { result: "edu_adult_leaver.left.r3", effects: { vitals: { finances: "/", happiness: "--" }, setStatus: { education: "grammar", job: "clerk" } } },
+              ],
+            },
+            right: {
+              label: "edu_adult_leaver.right",
+              outcomes: [
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 3 } } }, result: "edu_adult_leaver.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "merchant" } } },
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 2 } } }, result: "edu_adult_leaver.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "shopkeeper" } } },
+                { if: { status: { education: "basic" } }, result: "edu_adult_leaver.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "shophand" } } },
+                { if: { traits: { jobRungLabour: { min: 3 } } }, result: "edu_adult_leaver.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "gang_master" } } },
+                { if: { traits: { jobRungLabour: { min: 2 } } }, result: "edu_adult_leaver.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "factory" } } },
+                { result: "edu_adult_leaver.right.r0", effects: { vitals: { happiness: "-" }, setStatus: { job: "labourer" } } },
+              ],
+            },
+          },
+        },
+      ],
+    },
 ] satisfies Deck[];

@@ -35,6 +35,9 @@ const rows: [string, GameState][] = [
   ["unlettered 14, can pay premium", out(14, "illiterate", {}, 45)],
   ["unlettered 14, too poor", out(14, "illiterate", {}, 20)],
   ["basic, 15", out(15, "basic", {}, 30)],
+  ["unlettered man of 30, saved 85", out(30, "illiterate", { jobRungLabour: 2 }, 85)],
+  ["unlettered man of 30, saved 60", out(30, "illiterate", { jobRungLabour: 2 }, 60)],
+  ["basic man of 35, saved 85", out(35, "basic", { jobRungShop: 2 }, 85)],
 ];
 console.log(`${"case".padEnd(32)} ${"WORK ->".padEnd(18)} BETTER YOURSELF ->`);
 for (const [name, s] of rows) {

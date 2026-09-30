@@ -41,6 +41,8 @@ export const jobDecks = [
           //                 basic schooling, under 18 -> grammar school, bought in;
           //                 grammar -> the university, free on the trust fund or
           //                   paid from your own purse if you can afford it;
+          //                 unlettered or basic, 18 and over -> ADULT SCHOOL (the
+          //                   edu_adult deck), a flat 40, offered from 80;
           //                 a degree, or a trade -> not offered.
           //                 Hidden when none of those applies to you.
           //   HOLD OUT (up) for something else. Always there.
@@ -78,8 +80,19 @@ export const jobDecks = [
                 { ageMax: 17, status: { education: "basic" } },
                 { status: { education: "grammar" }, traits: { eduUniFund: true } },
                 { status: { education: "grammar" }, vitals: { finances: { min: 50 } } },
+                { ageMin: 18, status: { education: "illiterate" }, vitals: { finances: { min: 80 } } },
+                { ageMin: 18, status: { education: "basic" }, vitals: { finances: { min: 80 } } },
               ] },
               outcomes: [
+                // Adult school first: an unlettered man of 30 must not fall through to
+                // the boy's apprenticeship below. A FLAT price (40), offered only from
+                // 80. Measured: two-thirds of whatever you had (the first cut) left a
+                // man arriving with 60 on 10 after a year's rent, 77% were ruined
+                // inside two years, and saving up bought nothing. Flat, from 80: the
+                // unlettered pass 100%. Saving up first IS the strategy, as the
+                // school path is meant to reward.
+                { if: { ageMin: 18, status: { education: "illiterate" } }, result: "job_unemployed_offer.right.adult", effects: { vitals: { finances: "---", spirit: "+" }, setStatus: { job: "adult_school" } } },
+                { if: { ageMin: 18, status: { education: "basic" } }, result: "job_unemployed_offer.right.adult", effects: { vitals: { finances: "---", spirit: "+" }, setStatus: { job: "adult_school" } } },
                 { if: { ageMax: 11, status: { education: "illiterate" } }, result: "job_unemployed_offer.right.school", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "studying" } } },
                 // The premium: a master is paid to take a boy on. Gated at 40 so
                 // it can be paid, and it takes most of it.
