@@ -95,8 +95,8 @@ export const sisterDecks = [
         prompt: "rel_sis_mend.prompt",
         options: {
           left: { label: "rel_sis_mend.left", outcomes: [{ result: "rel_sis_mend.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterDistance: -6 } } }] },
-          right: { label: "rel_sis_mend.right", outcomes: [{ result: "rel_sis_mend.right.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: 4, relSisterDistance: -6 } } }] },
-          up: { label: "rel_sis_mend.up", outcomes: [{ result: "rel_sis_mend.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: -12, relSisterDistance: -6 } } }] },
+          right: { label: "rel_sis_mend.right", outcomes: [{ result: "rel_sis_mend.right.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: -12, relSisterDistance: -6 } } }] },
+          up: { label: "rel_sis_mend.up", outcomes: [{ result: "rel_sis_mend.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: 4, relSisterDistance: -6 } } }] },
         },
       },
       {
