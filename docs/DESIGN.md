@@ -2143,7 +2143,16 @@ Roughly in likely order. None of these are started.
   presence clock with `setTraits: { …Distance: 0 }` put a reward star on every
   swipe in the deck — including "tell her to mind her own business". The sibling
   decks' `incTraits: { …Distance: -6 }` earns no mark and reads better anyway: a
-  visit buys you six years, it does not stop time. Likewise an outcome that ENDS
+  visit buys you six years, it does not stop time.
+  **Superseded:** with `setTraitsHidden` a reset no longer stars the card, and
+  the −6 turned out wrong in play: a decade with no beats (an apprenticeship's
+  priority deck crowding the sibling or Lilly out) left the clock so high that
+  the visit which ended the gap was followed straight away by "it has been a
+  good while since you saw her". Every card where you see them now resets the
+  clock to 0, so Distance reads *years since you last saw them*. Measured by
+  `scripts/distclock.ts` (caring player, 5000 lives): marriage unchanged (6.2%);
+  `rel_bro_rift`'s arm's-length branch rescaled from ≥2 to ≥8 to keep its old
+  share (43% vs 36%); settled (≥18/≥20) and fate (≤24) thresholds kept. Likewise an outcome that ENDS
   a relationship latches its flags in `setTraitsFlaw`, not `setTraits`, so it wears ⚠
   rather than ★.
 

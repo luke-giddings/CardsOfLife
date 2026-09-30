@@ -41,6 +41,8 @@ export const sisterDecks = [
     neverSuppressed: true,
     title: "deck.rel_sis.title",
     unlock: "deck.rel_sis.blurb",
+    // Presence clock: +1 a year, back to 0 on any card where you see her
+    // (years since you last did), as on the brother's deck.
     tick: { relSisterAge: 1, relSisterDistance: 1 },
     // Frozen once her story concludes — see the brother deck for why (a long life
     // would otherwise drift away from her however devoted you had been).
@@ -79,11 +81,11 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 7 } } },
         prompt: "rel_sis_dance.prompt",
         options: {
-          left: { label: "rel_sis_dance.left", outcomes: [{ result: "rel_sis_dance.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterPromise: 2, relSisterDistance: -6 } } }] },
-          right: { label: "rel_sis_dance.right", outcomes: [{ result: "rel_sis_dance.right.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: 4, relSisterDistance: -6 } } }] },
+          left: { label: "rel_sis_dance.left", outcomes: [{ result: "rel_sis_dance.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterPromise: 2 } } }] },
+          right: { label: "rel_sis_dance.right", outcomes: [{ result: "rel_sis_dance.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { finances: "+" }, incTraits: { relSisterLove: 4 } } }] },
           // Cold: not neglect but scorn — the cheapest way to teach a child that
           // her one talent is an embarrassment.
-          up: { label: "rel_sis_dance.up", outcomes: [{ result: "rel_sis_dance.up.r0", effects: { vitals: { finances: "+", spirit: "+" }, incTraits: { relSisterLove: -12, relSisterPromise: -2, relSisterDistance: -6 } } }] },
+          up: { label: "rel_sis_dance.up", outcomes: [{ result: "rel_sis_dance.up.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { finances: "+", spirit: "+" }, incTraits: { relSisterLove: -12, relSisterPromise: -2 } } }] },
         },
       },
       {
@@ -94,9 +96,9 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 7 } } },
         prompt: "rel_sis_mend.prompt",
         options: {
-          left: { label: "rel_sis_mend.left", outcomes: [{ result: "rel_sis_mend.left.r0", effects: { vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterDistance: -6 } } }] },
-          right: { label: "rel_sis_mend.right", outcomes: [{ result: "rel_sis_mend.right.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: -12, relSisterDistance: -6 } } }] },
-          up: { label: "rel_sis_mend.up", outcomes: [{ result: "rel_sis_mend.up.r0", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: 4, relSisterDistance: -6 } } }] },
+          left: { label: "rel_sis_mend.left", outcomes: [{ result: "rel_sis_mend.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 10 } } }] },
+          right: { label: "rel_sis_mend.right", outcomes: [{ result: "rel_sis_mend.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { finances: "+" }, incTraits: { relSisterLove: -12 } } }] },
+          up: { label: "rel_sis_mend.up", outcomes: [{ result: "rel_sis_mend.up.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { spirit: "+" }, incTraits: { relSisterLove: 4 } } }] },
         },
       },
       {
@@ -106,12 +108,12 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterAge: { max: 7 } } },
         prompt: "rel_sis_slippers.prompt",
         options: {
-          left: { label: "rel_sis_slippers.left", outcomes: [{ result: "rel_sis_slippers.left.r0", effects: { vitals: { finances: "-", happiness: "+" }, incTraits: { relSisterLove: 10, relSisterPromise: 3, relSisterDistance: -6 } } }] },
+          left: { label: "rel_sis_slippers.left", outcomes: [{ result: "rel_sis_slippers.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { finances: "-", happiness: "+" }, incTraits: { relSisterLove: 10, relSisterPromise: 3 } } }] },
           // The middle road costs no money but an evening of your own: spirit "+"
           // for doing what you could with what you had, so the option isn't blank
           // on the card face (it used to show no change at all).
-          right: { label: "rel_sis_slippers.right", outcomes: [{ result: "rel_sis_slippers.right.r0", effects: { vitals: { spirit: "+" }, incTraits: { relSisterLove: 4, relSisterPromise: 1, relSisterDistance: -6 } } }] },
-          up: { label: "rel_sis_slippers.up", outcomes: [{ result: "rel_sis_slippers.up.r0", effects: { vitals: { finances: "+" }, incTraits: { relSisterLove: -12, relSisterDistance: -6 } } }] },
+          right: { label: "rel_sis_slippers.right", outcomes: [{ result: "rel_sis_slippers.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { spirit: "+" }, incTraits: { relSisterLove: 4, relSisterPromise: 1 } } }] },
+          up: { label: "rel_sis_slippers.up", outcomes: [{ result: "rel_sis_slippers.up.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { finances: "+" }, incTraits: { relSisterLove: -12 } } }] },
         },
       },
 
@@ -127,8 +129,8 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterAge: { min: 5 } } },
         prompt: "rel_sis_crossroads.prompt",
         options: {
-          left: { label: "rel_sis_crossroads.left", outcomes: [{ result: "rel_sis_crossroads.left.r0", effects: { vitals: { finances: "-", spirit: "+" }, setTraits: { relSisterSchooled: true }, incTraits: { relSisterLove: 12, relSisterPromise: 2, relSisterDistance: -10 } } }] },
-          right: { label: "rel_sis_crossroads.right", outcomes: [{ result: "rel_sis_crossroads.right.r0", effects: { vitals: { finances: "+" }, setTraits: { relSisterSchooled: false }, incTraits: { relSisterLove: -12, relSisterDistance: -10 } } }] },
+          left: { label: "rel_sis_crossroads.left", outcomes: [{ result: "rel_sis_crossroads.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { finances: "-", spirit: "+" }, setTraits: { relSisterSchooled: true }, incTraits: { relSisterLove: 12, relSisterPromise: 2 } } }] },
+          right: { label: "rel_sis_crossroads.right", outcomes: [{ result: "rel_sis_crossroads.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0 }, vitals: { finances: "+" }, setTraits: { relSisterSchooled: false }, incTraits: { relSisterLove: -12 } } }] },
         },
       },
 
@@ -140,9 +142,9 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterCooldown: { max: 0 }, relSisterSchooled: true, relSisterAge: { min: 8 } } },
         prompt: "rel_sis_lessons.prompt",
         options: {
-          left: { label: "rel_sis_lessons.left", outcomes: [{ result: "rel_sis_lessons.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "--" }, incTraits: { relSisterLove: 8, relSisterPromise: 4, relSisterDistance: -6 } } }] },
-          right: { label: "rel_sis_lessons.right", outcomes: [{ result: "rel_sis_lessons.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 2, relSisterPromise: 1, relSisterDistance: -6 } } }] },
-          up: { label: "rel_sis_lessons.up", outcomes: [{ result: "rel_sis_lessons.up.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "++" }, incTraits: { relSisterLove: -12, relSisterPromise: -2, relSisterDistance: -6 } } }] },
+          left: { label: "rel_sis_lessons.left", outcomes: [{ result: "rel_sis_lessons.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "--" }, incTraits: { relSisterLove: 8, relSisterPromise: 4 } } }] },
+          right: { label: "rel_sis_lessons.right", outcomes: [{ result: "rel_sis_lessons.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 2, relSisterPromise: 1 } } }] },
+          up: { label: "rel_sis_lessons.up", outcomes: [{ result: "rel_sis_lessons.up.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "++" }, incTraits: { relSisterLove: -12, relSisterPromise: -2 } } }] },
         },
       },
       {
@@ -154,7 +156,7 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterCooldown: { max: 0 }, relSisterSchooled: true, relSisterAge: { min: 12 } } },
         prompt: "rel_sis_recital.prompt",
         options: {
-          left: { label: "rel_sis_recital.left", outcomes: [{ result: "rel_sis_recital.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { happiness: "+", finances: "--" }, incTraits: { relSisterLove: 12, relSisterPromise: 3, relSisterDistance: -10 } } }] },
+          left: { label: "rel_sis_recital.left", outcomes: [{ result: "rel_sis_recital.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { happiness: "+", finances: "--" }, incTraits: { relSisterLove: 12, relSisterPromise: 3 } } }] },
           right: { label: "rel_sis_recital.right", outcomes: [{ result: "rel_sis_recital.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relSisterLove: -6 } } }] },
           up: { label: "rel_sis_recital.up", outcomes: [{ result: "rel_sis_recital.up.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "-" }, incTraits: { relSisterLove: 2, relSisterPromise: 2 } } }] },
         },
@@ -192,11 +194,11 @@ export const sisterDecks = [
           left: {
             label: "rel_sis_audition.left",
             outcomes: [
-              { if: { traits: { relSisterPromise: { min: 6 } } }, result: "rel_sis_audition.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { happiness: "++", spirit: "+" }, setTraits: { relSisterCalling: "ballerina" }, incTraits: { relSisterLove: 15, relSisterDistance: -10 }, remember: "log.sisBallerina" } },
-              { result: "rel_sis_audition.left.r1", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { happiness: "-" }, setTraits: { relSisterCalling: "chorus" }, incTraits: { relSisterLove: 6, relSisterDistance: -10 } } },
+              { if: { traits: { relSisterPromise: { min: 6 } } }, result: "rel_sis_audition.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { happiness: "++", spirit: "+" }, setTraits: { relSisterCalling: "ballerina" }, incTraits: { relSisterLove: 15 }, remember: "log.sisBallerina" } },
+              { result: "rel_sis_audition.left.r1", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { happiness: "-" }, setTraits: { relSisterCalling: "chorus" }, incTraits: { relSisterLove: 6 } } },
             ],
           },
-          right: { label: "rel_sis_audition.right", outcomes: [{ result: "rel_sis_audition.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "+" }, setTraits: { relSisterCalling: "seamstress" }, incTraits: { relSisterLove: -10, relSisterDistance: -6 } } }] },
+          right: { label: "rel_sis_audition.right", outcomes: [{ result: "rel_sis_audition.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "+" }, setTraits: { relSisterCalling: "seamstress" }, incTraits: { relSisterLove: -10 } } }] },
         },
       },
 
@@ -209,9 +211,9 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterCooldown: { max: 0 }, relSisterSchooled: false, relSisterAge: { min: 8 } } },
         prompt: "rel_sis_sweatshop.prompt",
         options: {
-          left: { label: "rel_sis_sweatshop.left", outcomes: [{ result: "rel_sis_sweatshop.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { health: "-" }, incTraits: { relSisterLove: 10, relSisterDistance: -6 } } }] },
-          right: { label: "rel_sis_sweatshop.right", outcomes: [{ result: "rel_sis_sweatshop.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relSisterLove: -4, relSisterDistance: -6 } } }] },
-          up: { label: "rel_sis_sweatshop.up", outcomes: [{ result: "rel_sis_sweatshop.up.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "++" }, incTraits: { relSisterLove: -12, relSisterDistance: -6 } } }] },
+          left: { label: "rel_sis_sweatshop.left", outcomes: [{ result: "rel_sis_sweatshop.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { health: "-" }, incTraits: { relSisterLove: 10 } } }] },
+          right: { label: "rel_sis_sweatshop.right", outcomes: [{ result: "rel_sis_sweatshop.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relSisterLove: -4 } } }] },
+          up: { label: "rel_sis_sweatshop.up", outcomes: [{ result: "rel_sis_sweatshop.up.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "++" }, incTraits: { relSisterLove: -12 } } }] },
         },
       },
       {
@@ -224,8 +226,8 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterCooldown: { max: 0 }, relSisterSchooled: false, relSisterAge: { min: 16 } } },
         prompt: "rel_sis_dressmaker.prompt",
         options: {
-          left: { label: "rel_sis_dressmaker.left", outcomes: [{ result: "rel_sis_dressmaker.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "--" }, setTraits: { relSisterCalling: "seamstress" }, incTraits: { relSisterLove: 12, relSisterPromise: 2, relSisterDistance: -10 }, remember: "log.sisSeamstress" } }] },
-          right: { label: "rel_sis_dressmaker.right", outcomes: [{ result: "rel_sis_dressmaker.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "+" }, setTraits: { relSisterCalling: "seamstress" }, incTraits: { relSisterLove: -6, relSisterDistance: -6 } } }] },
+          left: { label: "rel_sis_dressmaker.left", outcomes: [{ result: "rel_sis_dressmaker.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "--" }, setTraits: { relSisterCalling: "seamstress" }, incTraits: { relSisterLove: 12, relSisterPromise: 2 }, remember: "log.sisSeamstress" } }] },
+          right: { label: "rel_sis_dressmaker.right", outcomes: [{ result: "rel_sis_dressmaker.right.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "+" }, setTraits: { relSisterCalling: "seamstress" }, incTraits: { relSisterLove: -6 } } }] },
         },
       },
 
@@ -239,10 +241,10 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterCooldown: { max: 0 }, relBrotherActive: true, relSisterActive: true, relSisterAge: { min: 10 } } },
         prompt: "rel_sis_purse.prompt",
         options: {
-          left: { label: "rel_sis_purse.left", outcomes: [{ result: "rel_sis_purse.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "-" }, incTraits: { relSisterLove: 10, relSisterPromise: 4, relSisterDistance: -6, relBrotherLove: -8, relBrotherGrit: -4 } } }] },
-          right: { label: "rel_sis_purse.right", outcomes: [{ result: "rel_sis_purse.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "-" }, incTraits: { relSisterLove: -8, relSisterPromise: -2, relBrotherLove: 10, relBrotherGrit: 4, relBrotherDistance: -6 } } }] },
+          left: { label: "rel_sis_purse.left", outcomes: [{ result: "rel_sis_purse.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "-" }, incTraits: { relSisterLove: 10, relSisterPromise: 4, relBrotherLove: -8, relBrotherGrit: -4 } } }] },
+          right: { label: "rel_sis_purse.right", outcomes: [{ result: "rel_sis_purse.right.r0", effects: { setTraitsHidden: { relBrotherDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "-" }, incTraits: { relSisterLove: -8, relSisterPromise: -2, relBrotherLove: 10, relBrotherGrit: 4 } } }] },
           // Splitting it helps neither enough — the honest cost of fairness.
-          up: { label: "rel_sis_purse.up", outcomes: [{ result: "rel_sis_purse.up.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "--" }, incTraits: { relSisterLove: 2, relSisterPromise: 1, relBrotherLove: 2, relSisterDistance: -6, relBrotherDistance: -6 } } }] },
+          up: { label: "rel_sis_purse.up", outcomes: [{ result: "rel_sis_purse.up.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relBrotherDistance: 0, relSisterCooldown: 4 }, vitals: { finances: "--" }, incTraits: { relSisterLove: 2, relSisterPromise: 1, relBrotherLove: 2 } } }] },
         },
       },
       {
@@ -253,8 +255,8 @@ export const sisterDecks = [
         conditions: { traits: { relSisterStoryDone: false, relSisterCooldown: { max: 0 }, relBrotherActive: true, relSisterActive: true, relSisterAge: { min: 14 } } },
         prompt: "rel_sis_quarrel.prompt",
         options: {
-          left: { label: "rel_sis_quarrel.left", outcomes: [{ result: "rel_sis_quarrel.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, incTraits: { relSisterLove: 12, relSisterDistance: -6, relBrotherLove: -10 } } }] },
-          right: { label: "rel_sis_quarrel.right", outcomes: [{ result: "rel_sis_quarrel.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, incTraits: { relSisterLove: -10, relBrotherLove: 12, relBrotherDistance: -6 } } }] },
+          left: { label: "rel_sis_quarrel.left", outcomes: [{ result: "rel_sis_quarrel.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, incTraits: { relSisterLove: 12, relBrotherLove: -10 } } }] },
+          right: { label: "rel_sis_quarrel.right", outcomes: [{ result: "rel_sis_quarrel.right.r0", effects: { setTraitsHidden: { relBrotherDistance: 0, relSisterCooldown: 4 }, incTraits: { relSisterLove: -10, relBrotherLove: 12 } } }] },
           up: { label: "rel_sis_quarrel.up", outcomes: [{ result: "rel_sis_quarrel.up.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { spirit: "+" }, incTraits: { relSisterLove: -4, relBrotherLove: -4 } } }] },
         },
       },
@@ -271,8 +273,8 @@ export const sisterDecks = [
           left: {
             label: "rel_sis_settled.left",
             outcomes: [
-              { if: { traits: { relSisterDistance: { min: 20 } } }, result: "rel_sis_settled.left.r1", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 6, relSisterDistance: -10 } } },
-              { result: "rel_sis_settled.left.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 10, relSisterDistance: -10 } } },
+              { if: { traits: { relSisterDistance: { min: 20 } } }, result: "rel_sis_settled.left.r1", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 6 } } },
+              { result: "rel_sis_settled.left.r0", effects: { setTraitsHidden: { relSisterDistance: 0, relSisterCooldown: 4 }, vitals: { happiness: "+" }, incTraits: { relSisterLove: 10 } } },
             ],
           },
           right: { label: "rel_sis_settled.right", outcomes: [{ result: "rel_sis_settled.right.r0", effects: { setTraitsHidden: { relSisterCooldown: 4 }, vitals: { finances: "+" }, incTraits: { relSisterLove: -6 } } }] },

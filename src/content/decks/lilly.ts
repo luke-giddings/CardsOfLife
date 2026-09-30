@@ -73,8 +73,8 @@ export const lillyDecks = [
         conditions: { traits: { relLillyStoryDone: false, relLillyCooldown: { max: 0 } } },
         prompt: "rel_lilly_books.prompt",
         options: {
-          left: { label: "rel_lilly_books.left", outcomes: [{ result: "rel_lilly_books.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "-", spirit: "+" }, incTraits: { relLillyWarmth: 12, relLillyDistance: -6 } } }] },
-          right: { label: "rel_lilly_books.right", outcomes: [{ result: "rel_lilly_books.right.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "++" }, incTraits: { relLillyWarmth: -4, relLillyDistance: -6 } } }] },
+          left: { label: "rel_lilly_books.left", outcomes: [{ result: "rel_lilly_books.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "-", spirit: "+" }, incTraits: { relLillyWarmth: 12 } } }] },
+          right: { label: "rel_lilly_books.right", outcomes: [{ result: "rel_lilly_books.right.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "++" }, incTraits: { relLillyWarmth: -4 } } }] },
         },
       },
       {
@@ -86,7 +86,7 @@ export const lillyDecks = [
         conditions: { traits: { relLillyStoryDone: false, relLillyCooldown: { max: 0 } } },
         prompt: "rel_lilly_walk.prompt",
         options: {
-          left: { label: "rel_lilly_walk.left", outcomes: [{ result: "rel_lilly_walk.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "+", finances: "-" }, incTraits: { relLillyWarmth: 6, relLillyDistance: -6 } } }] },
+          left: { label: "rel_lilly_walk.left", outcomes: [{ result: "rel_lilly_walk.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "+", finances: "-" }, incTraits: { relLillyWarmth: 6 } } }] },
           right: { label: "rel_lilly_walk.right", outcomes: [{ result: "rel_lilly_walk.right.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { spirit: "+", happiness: "-" } } }] },
         },
       },
@@ -113,8 +113,8 @@ export const lillyDecks = [
         conditions: { status: { job: "unemployed" }, traits: { relLillyStoryDone: false, jobYearsIdle: { min: 3 } } },
         prompt: "rel_lilly_idle.prompt",
         options: {
-          left: { label: "rel_lilly_idle.left", outcomes: [{ result: "rel_lilly_idle.left.r0", effects: { vitals: { happiness: "-", spirit: "+" }, incTraits: { relLillyWarmth: 2, relLillyDistance: -6 } } }] },
-          right: { label: "rel_lilly_idle.right", outcomes: [{ result: "rel_lilly_idle.right.r0", effects: { vitals: { happiness: "+", spirit: "-" }, incTraits: { relLillyWarmth: -8, relLillyDistance: -6 } } }] },
+          left: { label: "rel_lilly_idle.left", outcomes: [{ result: "rel_lilly_idle.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0 }, vitals: { happiness: "-", spirit: "+" }, incTraits: { relLillyWarmth: 2 } } }] },
+          right: { label: "rel_lilly_idle.right", outcomes: [{ result: "rel_lilly_idle.right.r0", effects: { setTraitsHidden: { relLillyDistance: 0 }, vitals: { happiness: "+", spirit: "-" }, incTraits: { relLillyWarmth: -8 } } }] },
         },
       },
       {
@@ -129,8 +129,8 @@ export const lillyDecks = [
         conditions: { ageMin: 14, status: { housing: "family" }, traits: { relLillyStoryDone: false, relLillyCooldown: { max: 0 }, relLillyWarmth: { min: 12 } } },
         prompt: "rel_lilly_saving.prompt",
         options: {
-          left: { label: "rel_lilly_saving.left", outcomes: [{ result: "rel_lilly_saving.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { finances: "++", happiness: "-" }, incTraits: { relLillyWarmth: 8, relLillyDistance: -6 } } }] },
-          right: { label: "rel_lilly_saving.right", outcomes: [{ result: "rel_lilly_saving.right.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "+", finances: "-" }, incTraits: { relLillyWarmth: -4, relLillyDistance: -6 } } }] },
+          left: { label: "rel_lilly_saving.left", outcomes: [{ result: "rel_lilly_saving.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { finances: "++", happiness: "-" }, incTraits: { relLillyWarmth: 8 } } }] },
+          right: { label: "rel_lilly_saving.right", outcomes: [{ result: "rel_lilly_saving.right.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "+", finances: "-" }, incTraits: { relLillyWarmth: -4 } } }] },
         },
       },
       {
@@ -150,7 +150,7 @@ export const lillyDecks = [
         },
         prompt: "rel_lilly_ownplace.prompt",
         options: {
-          left: { label: "rel_lilly_ownplace.left", outcomes: [{ result: "rel_lilly_ownplace.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "++", finances: "-" }, incTraits: { relLillyWarmth: 14, relLillyDistance: -6 } } }] },
+          left: { label: "rel_lilly_ownplace.left", outcomes: [{ result: "rel_lilly_ownplace.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "++", finances: "-" }, incTraits: { relLillyWarmth: 14 } } }] },
           right: { label: "rel_lilly_ownplace.right", outcomes: [{ result: "rel_lilly_ownplace.right.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { finances: "+", happiness: "-" } } }] },
         },
       },
@@ -166,7 +166,7 @@ export const lillyDecks = [
         conditions: { traits: { relLillyStoryDone: false, relLillyDistance: { min: 5 } } },
         prompt: "rel_lilly_drift.prompt",
         options: {
-          left: { label: "rel_lilly_drift.left", outcomes: [{ result: "rel_lilly_drift.left.r0", effects: { vitals: { happiness: "+", finances: "-" }, incTraits: { relLillyWarmth: 6, relLillyDistance: -6 } } }] },
+          left: { label: "rel_lilly_drift.left", outcomes: [{ result: "rel_lilly_drift.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0 }, vitals: { happiness: "+", finances: "-" }, incTraits: { relLillyWarmth: 6 } } }] },
           right: { label: "rel_lilly_drift.right", outcomes: [{ result: "rel_lilly_drift.right.r0", effects: { vitals: { spirit: "+", happiness: "-" }, incTraits: { relLillyWarmth: -8 } } }] },
         },
       },
@@ -191,14 +191,14 @@ export const lillyDecks = [
               // rather than waiting for another card. Measured, a life is too
               // short to spend four separate draws getting from a friend to a
               // wife, and this is the beat where the drama actually is.
-              { if: { ageMin: 18, status: { family: "single" }, traits: { relLillyWarmth: { min: 25 } } }, result: "rel_lilly_more.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "+++" }, setStatus: { family: "courting" }, incTraits: { relLillyWarmth: 12, relLillyArdour: 10, relLillyDistance: -6 }, remember: "log.courting" } },
+              { if: { ageMin: 18, status: { family: "single" }, traits: { relLillyWarmth: { min: 25 } } }, result: "rel_lilly_more.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "+++" }, setStatus: { family: "courting" }, incTraits: { relLillyWarmth: 12, relLillyArdour: 10 }, remember: "log.courting" } },
               // Said it too young for the parish to have a word for it. The
               // ardour is banked; `rel_lilly_courting` picks it up at eighteen.
-              { if: { traits: { relLillyWarmth: { min: 25 } } }, result: "rel_lilly_more.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "+++" }, incTraits: { relLillyWarmth: 12, relLillyArdour: 10, relLillyDistance: -6 } } },
-              { result: "rel_lilly_more.left.r1", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "--", spirit: "-" }, incTraits: { relLillyWarmth: -25, relLillyArdour: 10, relLillyDistance: -6 } } },
+              { if: { traits: { relLillyWarmth: { min: 25 } } }, result: "rel_lilly_more.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "+++" }, incTraits: { relLillyWarmth: 12, relLillyArdour: 10 } } },
+              { result: "rel_lilly_more.left.r1", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "--", spirit: "-" }, incTraits: { relLillyWarmth: -25, relLillyArdour: 10 } } },
             ],
           },
-          right: { label: "rel_lilly_more.right", outcomes: [{ result: "rel_lilly_more.right.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { spirit: "+", happiness: "-" }, incTraits: { relLillyWarmth: 4, relLillyDistance: -6 } } }] },
+          right: { label: "rel_lilly_more.right", outcomes: [{ result: "rel_lilly_more.right.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { spirit: "+", happiness: "-" }, incTraits: { relLillyWarmth: 4 } } }] },
         },
       },
 
@@ -215,8 +215,8 @@ export const lillyDecks = [
         conditions: { ageMin: 18, status: { family: "single" }, traits: { relLillyStoryDone: false, relLillyCooldown: { max: 0 }, relLillyArdour: { min: 10 }, relLillyWarmth: { min: 25 } } },
         prompt: "rel_lilly_courting.prompt",
         options: {
-          left: { label: "rel_lilly_courting.left", outcomes: [{ result: "rel_lilly_courting.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "++" }, setStatus: { family: "courting" }, incTraits: { relLillyWarmth: 8, relLillyDistance: -6 }, remember: "log.courting" } }] },
-          right: { label: "rel_lilly_courting.right", outcomes: [{ result: "rel_lilly_courting.right.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { spirit: "+", happiness: "-" }, incTraits: { relLillyWarmth: 2, relLillyArdour: -10, relLillyDistance: -6 } } }] },
+          left: { label: "rel_lilly_courting.left", outcomes: [{ result: "rel_lilly_courting.left.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { happiness: "++" }, setStatus: { family: "courting" }, incTraits: { relLillyWarmth: 8 }, remember: "log.courting" } }] },
+          right: { label: "rel_lilly_courting.right", outcomes: [{ result: "rel_lilly_courting.right.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { spirit: "+", happiness: "-" }, incTraits: { relLillyWarmth: 2, relLillyArdour: -10 } } }] },
         },
       },
       {
@@ -230,7 +230,7 @@ export const lillyDecks = [
         prompt: "rel_lilly_propose.prompt",
         options: {
           left: { label: "rel_lilly_propose.left", outcomes: [{ result: "rel_lilly_propose.left.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { happiness: "+++", finances: "--" }, setStatus: { family: "married" }, setTraits: { relLillyStoryDone: true }, remember: "log.married" } }] },
-          right: { label: "rel_lilly_propose.right", outcomes: [{ result: "rel_lilly_propose.right.r0", effects: { setTraitsHidden: { relLillyCooldown: 4 }, vitals: { finances: "+", happiness: "-" }, incTraits: { relLillyWarmth: -10, relLillyDistance: -6 } } }] },
+          right: { label: "rel_lilly_propose.right", outcomes: [{ result: "rel_lilly_propose.right.r0", effects: { setTraitsHidden: { relLillyDistance: 0, relLillyCooldown: 4 }, vitals: { finances: "+", happiness: "-" }, incTraits: { relLillyWarmth: -10 } } }] },
         },
       },
       {
