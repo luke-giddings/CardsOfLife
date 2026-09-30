@@ -18,59 +18,80 @@ export const jobDecks = [
       priority: true,
       cards: [
         {
-          // Honest work. The shop counter needs your letters and figures
-          // (education >= school); the factory floor takes anyone.
+          // THE OFFER, rebuilt from a playtest: a sacked gang-master was sent back
+          // as a factory hand, and an unlettered man was offered "Try the shop",
+          // which could never get him the shop and quietly made him a labourer —
+          // worse in every way than the mill beside it. Three choices now, always
+          // the same three:
+          //
+          //   WORK (left)   the best job you can have back, never a lower one.
+          //                 Your EDUCATION picks the ladder and your rung on it
+          //                 (`jobRung*`, stamped on entering each job) picks the
+          //                 level — just a series of ifs, highest first. No wages
+          //                 in it, so wages can be rebalanced without moving this.
+          //                 Going back to the SAME job keeps your experience: the
+          //                 engine only resets it on a change of job, and the old
+          //                 card lost your years by sending you to a different one.
+          //   BETTER YOURSELF (right), by age and schooling:
+          //                 unlettered, 11 or under -> back to school (this was its
+          //                   own card, `job_unemployed_school`, folded in here);
+          //                 unlettered, 12-17 -> an apprenticeship, if you can pay
+          //                   the master his PREMIUM (a real Victorian cost, and what
+          //                   stops a guaranteed trade always being the pick);
+          //                 basic schooling, under 18 -> grammar school, bought in;
+          //                 grammar -> the university, free on the trust fund or
+          //                   paid from your own purse if you can afford it;
+          //                 a degree, or a trade -> not offered.
+          //                 Hidden when none of those applies to you.
+          //   HOLD OUT (up) for something else. Always there.
+          //
+          // Crime is never on this card: `job_unemployed_fagin` is that road.
           id: "job_unemployed_offer",
           kind: "filler",
           prompt: "job_unemployed_offer.prompt",
           options: {
             left: {
-              // Resume the career your CREDENTIAL fits — each education level
-              // re-enters its own ladder at the bottom rung: university → junior
-              // physician (medicine), grammar → clerk (clerkly/law), basic → shop
-              // assistant (commerce). Unlettered → no wasted swipe: back to
-              // casual labour (the loom-deck floor, which keeps the lucky-break
-              // apprenticeship in reach) — as a CHILD labourer while you are still
-              // a child, and as a grown labourer once you are not. Without that
-              // split an unlettered man of 26 was handed the childhood rung and
-              // wore "Child labourer" for the rest of his working life. The result
-              // text always described casual graft, never a child's shift, so both
-              // outcomes share it. Outcomes resolve top-to-bottom, so the highest
-              // credential wins. Contrast the right option (the steadier
-              // factory), so the illiterate still get a real choice.
               label: "job_unemployed_offer.left",
               outcomes: [
-                { if: { status: { education: { atLeast: "university" } } }, result: "job_unemployed_offer.left.r2", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician_junior" } } },
-                { if: { status: { education: { atLeast: "grammar" } } }, result: "job_unemployed_offer.left.r3", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" } } },
-                { if: { status: { education: { atLeast: "basic" } } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
+                { if: { status: { education: "university" }, traits: { jobRungMedic: { min: 3 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician_eminent" } } },
+                { if: { status: { education: "university" }, traits: { jobRungMedic: { min: 2 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician" } } },
+                { if: { status: { education: "university" } }, result: "job_unemployed_offer.left.r2", effects: { vitals: { spirit: "+" }, setStatus: { job: "physician_junior" } } },
+                { if: { status: { education: "grammar" }, traits: { jobRungClerk: { min: 3 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "solicitor" } } },
+                { if: { status: { education: "grammar" }, traits: { jobRungClerk: { min: 2 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "chief_clerk" } } },
+                { if: { status: { education: "grammar" } }, result: "job_unemployed_offer.left.r3", effects: { vitals: { spirit: "+" }, setStatus: { job: "clerk" } } },
+                { if: { status: { education: "master" } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "master" } } },
+                { if: { status: { education: "journeyman" } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "journeyman" } } },
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 3 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "merchant" } } },
+                { if: { status: { education: "basic" }, traits: { jobRungShop: { min: 2 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { spirit: "+" }, setStatus: { job: "shopkeeper" } } },
+                { if: { status: { education: "basic" } }, result: "job_unemployed_offer.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { job: "shophand" } } },
+                { if: { traits: { jobRungLabour: { min: 3 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { finances: "+" }, setStatus: { job: "gang_master" } } },
+                { if: { traits: { jobRungLabour: { min: 2 } } }, result: "job_unemployed_offer.left.back", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } },
                 { if: { ageMax: 17 }, result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "child_labourer" } } },
                 { result: "job_unemployed_offer.left.r1", effects: { vitals: { finances: "+" }, setStatus: { job: "labourer" } } },
               ],
             },
-            // Return to the factory — but only if you've *been* there (the
-            // durable `jobReachedFactory` marker, earned via the child-labour →
-            // factory promotion). So a green worker can't use unemployment to
-            // skip the years of graft, while a fired factory hand can pick their
-            // career back up without re-grinding. Hidden entirely otherwise (no
-            // dead/duplicate option), via per-option `if`.
-            right: { label: "job_unemployed_offer.right", if: { traits: { jobReachedFactory: true } }, outcomes: [{ result: "job_unemployed_offer.right.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
+            right: {
+              label: "job_unemployed_offer.right",
+              if: { any: [
+                { ageMax: 11, status: { education: "illiterate" } },
+                { ageMin: 12, ageMax: 17, status: { education: "illiterate" }, vitals: { finances: { min: 40 } } },
+                { ageMax: 17, status: { education: "basic" } },
+                { status: { education: "grammar" }, traits: { eduUniFund: true } },
+                { status: { education: "grammar" }, vitals: { finances: { min: 50 } } },
+              ] },
+              outcomes: [
+                { if: { ageMax: 11, status: { education: "illiterate" } }, result: "job_unemployed_offer.right.school", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "studying" } } },
+                // The premium: a master is paid to take a boy on. Gated at 40 so
+                // it can be paid, and it takes most of it.
+                { if: { status: { education: "illiterate" } }, result: "job_unemployed_offer.right.apprentice", effects: { vitals: { finances: "--", spirit: "+" }, setStatus: { job: "apprentice" } } },
+                // Bought in, as the board school's leaver buys an idle pupil in:
+                // half of what your people have.
+                { if: { status: { education: "basic" } }, result: "job_unemployed_offer.right.grammar", effects: { vitals: { finances: "/", happiness: "-" }, setStatus: { job: "grammar_school" } } },
+                { if: { traits: { eduUniFund: true } }, result: "job_unemployed_offer.right.unifund", effects: { vitals: { spirit: "+" }, setStatus: { job: "university" }, setTraits: { eduUniFund: false, eduWasUndergraduate: true } } },
+                { result: "job_unemployed_offer.right.unipaid", effects: { vitals: { finances: "--", spirit: "+" }, setStatus: { job: "university" }, setTraits: { eduWasUndergraduate: true } } },
+              ],
+            },
             up: { label: "job_unemployed_offer.up", outcomes: [{ result: "job_unemployed_offer.up.r0", effects: { vitals: { spirit: "-" } } }] },
-          },
-        },
-        {
-          // A second chance at schooling — but only while you're still young
-          // enough (ageMax). Enrolling → job=studying (its edu_basicschool deck),
-          // the way onto the EDUCATED path for a child who went to work first.
-          id: "job_unemployed_school",
-          kind: "filler",
-          conditions: { ageMax: 11 },
-          prompt: "job_unemployed_school.prompt",
-          options: {
-            // A real trade: schooling is the future (spirit + the education path,
-            // ★) but a hard, penniless road now (happiness −); keeping on the job
-            // hunt scrapes a little casual coin now (finances +) but no letters.
-            left: { label: "job_unemployed_school.left", outcomes: [{ result: "job_unemployed_school.left.r0", effects: { vitals: { spirit: "+", happiness: "-" }, setStatus: { job: "studying" } } }] },
-            right: { label: "job_unemployed_school.right", outcomes: [{ result: "job_unemployed_school.right.r0", effects: { vitals: { finances: "+" } } }] },
           },
         },
         {
@@ -269,7 +290,7 @@ export const jobDecks = [
           conditions: { traits: { jobExperience: { min: 3 } } },
           prompt: "job_labour_factory.prompt",
           options: {
-            left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" }, setTraits: { jobReachedFactory: true } } }] },
+            left: { label: "job_labour_factory.left", outcomes: [{ result: "job_labour_factory.left.r0", effects: { vitals: { finances: "+" }, setStatus: { job: "factory" } } }] },
             right: { label: "job_labour_factory.right", outcomes: [{ result: "job_labour_factory.right.r0", effects: { vitals: { happiness: "+" } } }] },
           },
         },

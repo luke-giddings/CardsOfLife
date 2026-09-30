@@ -98,6 +98,11 @@ export interface Traits {
   // grammar school. `persBookish` earns MORE from the same choice rather than
   // lowering the bar — the bookish child is quicker, not excused.
   eduStudy: number;
+  // Years enrolled at the school you are AT — zeroed on entry and ticked by the
+  // schooling status, so a leaver can fire after N years of school rather than
+  // at an age. Needed once grown men could enrol: an age gate would graduate a
+  // thirty-year-old undergraduate the year after he went up.
+  eduYearsEnrolled: number;
   // Personality / disposition. `pers*` so the debug panel groups them under a
   // Personality category. PLAIN BOOLEANS: you are the sort of person who does
   // this, or you are not.
@@ -187,7 +192,19 @@ export interface Traits {
   // return to the factory without re-grinding, while a green worker cannot skip
   // straight there. (Stopgap: will fold into a per-path "highest tier reached"
   // cache when adult job re-entry lands.)
-  jobReachedFactory: boolean;
+  // The highest rung reached on each honest ladder: 1 = its entry rung, 2 the
+  // next, 3 its top. Stamped by each job state's `enterTraits`, so every route
+  // into a job records it. The out-of-work offer reads the ladder that matches
+  // your EDUCATION and returns you to your rung on it — a sacked gang-master
+  // goes back as a gang-master, not a factory hand. One counter per ladder so
+  // a rung earned on one cannot leak onto another when your education changes
+  // (a gang-master who gains his letters is a shop assistant, not a merchant).
+  // The trade ladder needs none: its rung IS your education (journeyman/master).
+  // Crime is deliberately not a ladder here. (Replaces `jobReachedFactory`.)
+  jobRungLabour: number;
+  jobRungShop: number;
+  jobRungClerk: number;
+  jobRungMedic: number;
   // Once you renounce the life of crime (the "give up" swipe on a score card),
   // this latches true and the criminal offer (job_unemployed_fagin) never appears
   // again — a one-way door out of the underworld.
@@ -266,6 +283,7 @@ export const DEFAULT_TRAITS: Traits = {
   eduUniFund: false,
   eduWasUndergraduate: false,
   eduStudy: 0,
+  eduYearsEnrolled: 0,
   persBookish: false,
   persSporty: false,
   persSociable: false,
@@ -291,7 +309,10 @@ export const DEFAULT_TRAITS: Traits = {
   jobExperience: 0,
   jobYearsIdle: 0,
   jobSkill: 0,
-  jobReachedFactory: false,
+  jobRungLabour: 0,
+  jobRungShop: 0,
+  jobRungClerk: 0,
+  jobRungMedic: 0,
   jobRenouncedCrime: false,
   jobCriminality: 0,
   flawYearsInGaol: 0,

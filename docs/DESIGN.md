@@ -714,6 +714,60 @@ the right is free upside — played 66:1. But that is the HOUSE PATTERN for ever
 `*_day` card in every job deck, not a gang-master fault, and changing it would
 touch the whole job layer. Recorded, not fixed.
 
+## 7e. The out-of-work offer
+
+Rebuilt from a playtest. A sacked gang-master was offered only "back to the mill",
+and came back as a factory hand. An unlettered man was offered "Try the shop",
+which could never get him the shop and quietly made him a labourer — worse in
+every way than the mill option beside it. `job_unemployed_offer` now always has
+the same three swipes:
+
+- **Go back to work (left)** — the best job you can have back, never a lower one.
+  Your **education picks the ladder** and your **rung on it picks the level**:
+  just a series of `if`s, highest first (university → physician ladder; grammar →
+  clerk ladder; master / journeyman → the trade, whose rung IS the education; basic
+  → shop ladder; none → labour ladder). Wages play no part, so they can be
+  rebalanced without moving this.
+  - The rung is one counter **per ladder**, stamped on entering each job. A single
+    counter would leak across ladders when your education changes: a gang-master
+    (labour rung 3) who gained his letters would be offered *merchant*.
+  - **Experience survives going back to the same job.** The engine resets
+    `jobExperience` only when the job differs from the one it was earned in, so
+    this came free; the old card lost your years by sending you to a different
+    job.
+- **Better yourself (right)**, by age and schooling, and hidden when none applies:
+  - unlettered, 11 or under → board school, free. This was its own card,
+    `job_unemployed_school`, now folded in.
+  - unlettered, 12–17 → an apprenticeship, if you can pay the master his
+    **premium** (offered at 40+, costs `--`). The premium is what stops a
+    guaranteed trade from always being the pick.
+  - basic schooling, under 18 → grammar school, bought in for half of what your
+    people have.
+  - grammar → university: free on `eduUniFund`, or `--` from your own purse at
+    50+.
+  - a degree, or a trade → not offered.
+  - Unlettered or basic adults → **adult school**, the second half of this work
+    (not yet built).
+- **Hold out for something else (up)** — always there. The card is a filler, so
+  the offer comes round again.
+
+Crime is never on this card; `job_unemployed_fagin` is that road.
+`scripts/offer.ts` is its truth table: every case above, plus a sacked
+gang-master returning with his experience intact.
+
+**The enrolment clock.** Once grown men can enrol, an age gate would graduate a
+thirty-year-old the year after he went up. `eduYearsEnrolled` is zeroed on
+entering grammar school or university and ticked each year there. The leavers
+read it: grammar after 3 years, the degree after 4. This keeps today's timing
+for a normal pupil (grammar at 14 → 17, university at 17 → 21). It corrects
+late entrants, who used to be graduated at 21 after as little as two years. Two
+lines that assumed a boy have a grown-man version from 25: the university
+leaver's "first money you have ever earned", and the ruin card's "go home to
+your people".
+
+**Open:** nothing caps the age for going up to university from the offer. The
+sims found men enrolling in their 80s.
+
 ## 8. Cards: front and back
 
 - **Front:** a prompt + 2–4 options mapped to swipe directions (left/right
@@ -2622,13 +2676,9 @@ Roughly in likely order. None of these are started.
   - top-level singletons stay ungrouped (e.g. `gender`)
   Do it as one focused pass (rename + reference update + recursive tree) rather
   than piecemeal, to avoid mixed conventions.
-- **Highest-tier-reached cache (job re-entry)** — `jobReachedFactory` (bool, set by
-  the child-labour→factory promotion) is a stopgap that gates the "back to the
-  mill" option so a sacked factory hand can resume without re-grinding. Generalise
-  it to a **per-path "highest tier reached"** record (set on entering each job) so
-  that being fired from *any* tier (e.g. a tier-3 solicitor) lets you return near
-  your former level rather than restarting at the bottom. Real once adult re-entry
-  to tier 2/3 jobs exists; fold `jobReachedFactory` into it then.
+- ~~**Highest-tier-reached cache (job re-entry)**~~ — **BUILT** as `jobRungLabour`,
+  `jobRungShop`, `jobRungClerk`, `jobRungMedic` (stamped by each job state's
+  `enterTraits`), replacing `jobReachedFactory`. See §"The out-of-work offer".
 - **"Keep your job" / `jobStrikes` mechanic** — *prototyped on the labour deck.* A
   per-job `jobStrikes` counter (resets on any job change) rises when you shirk
   (`job_labour_machine`/`errand` "refuse/dawdle" options) and each time you grovel;

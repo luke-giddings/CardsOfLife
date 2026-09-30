@@ -361,7 +361,7 @@ export const educationDecks = [
           id: "edu_grammar_leaver",
           kind: "milestone",
           priority: 60,
-          conditions: { ageMin: 17 },
+          conditions: { traits: { eduYearsEnrolled: { min: 3 } } }, // 3 years at the school, not an age
           prompt: "edu_grammar_leaver.prompt",
           options: {
             left: {
@@ -518,7 +518,11 @@ export const educationDecks = [
             // statuses rather than by the numbers on the face.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } }],
+              outcomes: [
+                // A man who went up at thirty is not "sent home to his people".
+                { if: { ageMin: 25 }, result: "edu_ruin.right.r1", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } },
+                { result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } },
+              ],
             },
           },
         },
@@ -558,7 +562,11 @@ export const educationDecks = [
             // new job wears: leaving is a step taken, not a punishment suffered.
             right: {
               label: "edu_university_leaver.right",
-              outcomes: [{ result: "edu_university_leaver.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "clerk" }, remember: "log.leftuni" } }],
+              outcomes: [
+                // "The first money you have ever earned" is only true of a boy.
+                { if: { ageMin: 25 }, result: "edu_university_leaver.right.r1", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "clerk" }, remember: "log.leftuni" } },
+                { result: "edu_university_leaver.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "clerk" }, remember: "log.leftuni" } },
+              ],
             },
           },
         },
@@ -570,7 +578,7 @@ export const educationDecks = [
           id: "edu_university_grad",
           kind: "milestone",
           priority: 60,
-          conditions: { ageMin: 21 },
+          conditions: { traits: { eduYearsEnrolled: { min: 4 } } }, // 4 years up, not an age
           prompt: "edu_university_grad.prompt",
           options: {
             left: { label: "edu_university_grad.left", outcomes: [{ result: "edu_university_grad.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "university", job: "physician_junior" } } }] },

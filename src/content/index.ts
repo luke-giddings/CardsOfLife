@@ -110,8 +110,8 @@ export const content = {
         // University keeps the tuition: it is the one credential that is supposed
         // to be bought as well as earned, and eduUniFund/savings gate entry to it
         // (see the grammar leaver). Income cards inside both decks offset fees.
-        grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
-        university: { label: "status.job.university", enterTraits: { eduStudy: 0 }, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
+        grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
+        university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
         unemployed: { label: "status.job.unemployed", enterTraits: { jobYearsIdle: 0 }, drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], tick: { jobYearsIdle: 1 }, keepExperience: true, grim: true },
@@ -130,7 +130,7 @@ export const content = {
         // Dangerous child labour → factory hand → gang-master. Decent money
         // early, a hard ceiling. Never a dead-end: the lucky-break apprenticeship
         // crosses you onto the skilled ladder.
-        child_labourer: { label: "status.job.child_labourer", drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"] },
+        child_labourer: { label: "status.job.child_labourer", enterTraits: { jobRungLabour: 1 }, drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"] },
         // The GROWN-UP form of the same rung: casual day labour. Identical in every
         // mechanical respect — same wage, same toll, same deck, same routes out
         // (the factory step, the apprentice's lucky break) — and it exists purely
@@ -146,9 +146,9 @@ export const content = {
         // eighteen with nothing served — measured, 1.25 years before the rename
         // and 0.00 after, every time. He then needed three more years for a
         // promotion he had already earned twice over.
-        labourer: { label: "status.job.labourer", drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"], keepExperience: true },
-        factory: { label: "status.job.factory", drift: { finances: 13, health: -5 }, driftShown: { finances: "++", health: "-" }, addDecks: ["job_factory"] },
-        gang_master: { label: "status.job.gang_master", drift: { finances: 15, health: -5 }, driftShown: { finances: "+++", health: "-" }, addDecks: ["job_gangmaster"] },
+        labourer: { label: "status.job.labourer", enterTraits: { jobRungLabour: 1 }, drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"], keepExperience: true },
+        factory: { label: "status.job.factory", enterTraits: { jobRungLabour: 2 }, drift: { finances: 13, health: -5 }, driftShown: { finances: "++", health: "-" }, addDecks: ["job_factory"] },
+        gang_master: { label: "status.job.gang_master", enterTraits: { jobRungLabour: 3 }, drift: { finances: 15, health: -5 }, driftShown: { finances: "+++", health: "-" }, addDecks: ["job_gangmaster"] },
 
         // --- SKILLED (credential: journeyman → master; safe; high ceiling) -
         // Apprentice is a low-stipend, TIME-LIMITED indenture entered by a
@@ -174,15 +174,15 @@ export const content = {
         //   MEDICINE   (university degree):  junior physician → physician → consulting
         // Wages rise along each ladder, and the university (medicine) ladder tops
         // out highest of all — the reward for the rare degree. All values tunable.
-        shophand: { label: "status.job.shophand", drift: { finances: 12 }, driftShown: { finances: "+" }, addDecks: ["job_shop"] },
-        shopkeeper: { label: "status.job.shopkeeper", drift: { finances: 18, happiness: -3 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_shopkeeper"] },
-        merchant: { label: "status.job.merchant", drift: { finances: 28, spirit: -3 }, driftShown: { finances: "+++", spirit: "-" }, addDecks: ["job_merchant"] },
-        clerk: { label: "status.job.clerk", drift: { finances: 16, happiness: -5 }, driftShown: { finances: "+", happiness: "-" }, addDecks: ["job_clerk"] },
-        chief_clerk: { label: "status.job.chief_clerk", drift: { finances: 22, happiness: -5 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_chief_clerk"] },
-        solicitor: { label: "status.job.solicitor", drift: { finances: 28, happiness: -5, spirit: -5 }, driftShown: { finances: "+++", happiness: "-", spirit: "-" }, addDecks: ["job_solicitor"] },
-        physician_junior: { label: "status.job.physician_junior", drift: { finances: 14, health: -3 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_physician_junior"] },
-        physician: { label: "status.job.physician", drift: { finances: 30, happiness: -5 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_physician"] },
-        physician_eminent: { label: "status.job.physician_eminent", drift: { finances: 42, happiness: -5, spirit: -5 }, driftShown: { finances: "+++", happiness: "-", spirit: "-" }, addDecks: ["job_physician_eminent"] },
+        shophand: { label: "status.job.shophand", enterTraits: { jobRungShop: 1 }, drift: { finances: 12 }, driftShown: { finances: "+" }, addDecks: ["job_shop"] },
+        shopkeeper: { label: "status.job.shopkeeper", enterTraits: { jobRungShop: 2 }, drift: { finances: 18, happiness: -3 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_shopkeeper"] },
+        merchant: { label: "status.job.merchant", enterTraits: { jobRungShop: 3 }, drift: { finances: 28, spirit: -3 }, driftShown: { finances: "+++", spirit: "-" }, addDecks: ["job_merchant"] },
+        clerk: { label: "status.job.clerk", enterTraits: { jobRungClerk: 1 }, drift: { finances: 16, happiness: -5 }, driftShown: { finances: "+", happiness: "-" }, addDecks: ["job_clerk"] },
+        chief_clerk: { label: "status.job.chief_clerk", enterTraits: { jobRungClerk: 2 }, drift: { finances: 22, happiness: -5 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_chief_clerk"] },
+        solicitor: { label: "status.job.solicitor", enterTraits: { jobRungClerk: 3 }, drift: { finances: 28, happiness: -5, spirit: -5 }, driftShown: { finances: "+++", happiness: "-", spirit: "-" }, addDecks: ["job_solicitor"] },
+        physician_junior: { label: "status.job.physician_junior", enterTraits: { jobRungMedic: 1 }, drift: { finances: 14, health: -3 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_physician_junior"] },
+        physician: { label: "status.job.physician", enterTraits: { jobRungMedic: 2 }, drift: { finances: 30, happiness: -5 }, driftShown: { finances: "++", happiness: "-" }, addDecks: ["job_physician"] },
+        physician_eminent: { label: "status.job.physician_eminent", enterTraits: { jobRungMedic: 3 }, drift: { finances: 42, happiness: -5, spirit: -5 }, driftShown: { finances: "+++", happiness: "-", spirit: "-" }, addDecks: ["job_physician_eminent"] },
 
         // --- CRIMINAL (no credential; earn-now via big scores; arrest risk) -
         // Pickpocket has NO wage (0 drift) — money & experience come only from
