@@ -187,12 +187,12 @@ Sister `relSister*`).
   `persSweetTooth`, `persSociable`, `relBrotherActive`, `relSisterActive` (whether
   you have that sibling), `jobReachedFactory`, and the burdens `flawOwesCharity`,
   `flawSoldUp`.
-- **Enum:** `gender` (boy/girl), chosen on the birth card — currently unused, so
+- **Enum:** `gender` (unborn until the birth card picks boy/girl) — currently unused, so
   left ungrouped until it has a purpose.
 - **Counters:** `relBrotherLove`/`relSisterLove` (bond warmth, can go negative =
   rivalry), `relBrotherGrit` (his backbone), `relBrotherDistance` (how present
-  you've been — ticked UP each year, pulled DOWN when you engage a Tom card; high =
-  drifted apart), `relBrotherAge` (Tom's own age — ticked up by the rel_bro deck from the year he's
+  you've been — ticked UP each year, reset to 0 when you engage a Tom card, so
+  it counts years since you last saw him; high = drifted apart), `relBrotherAge` (Tom's own age — ticked up by the rel_bro deck from the year he's
   born, so his beats fire at his age not yours; e.g. the crossroads at 5),
   `jobExperience` (years in the current job), `jobSkill` (apprentice
   craftsmanship), `jobStrikes`, `jobTimesChanged`; `petCatAge`/`petDogAge` (years
@@ -2138,23 +2138,15 @@ Roughly in likely order. None of these are started.
   (reaching 60 is 1.4% either way), where sparing the two whole decks cost 1.5% →
   0.9%. **Prefer the card.**
 
-  **3. Author a relationship clock with `incTraits`, never `setTraits`.** The
-  card-face ★ fires on any `setTraits`/`addDecks`/`removeDecks`, so resetting a
-  presence clock with `setTraits: { …Distance: 0 }` put a reward star on every
-  swipe in the deck — including "tell her to mind her own business". The sibling
-  decks' `incTraits: { …Distance: -6 }` earns no mark and reads better anyway: a
-  visit buys you six years, it does not stop time.
-  **Superseded:** with `setTraitsHidden` a reset no longer stars the card, and
-  the −6 turned out wrong in play: a decade with no beats (an apprenticeship's
-  priority deck crowding the sibling or Lilly out) left the clock so high that
-  the visit which ended the gap was followed straight away by "it has been a
-  good while since you saw her". Every card where you see them now resets the
-  clock to 0, so Distance reads *years since you last saw them*. Measured by
-  `scripts/distclock.ts` (caring player, 5000 lives): marriage unchanged (6.2%);
-  `rel_bro_rift`'s arm's-length branch rescaled from ≥2 to ≥8 to keep its old
-  share (43% vs 36%); settled (≥18/≥20) and fate (≤24) thresholds kept. Likewise an outcome that ENDS
-  a relationship latches its flags in `setTraitsFlaw`, not `setTraits`, so it wears ⚠
-  rather than ★.
+  **3. A presence clock resets to 0 when you see them.** Every card where you
+  see the person sets `…Distance: 0` with `setTraitsHidden`, so it earns no ★,
+  and Distance reads *years since you last saw them*. A long gap (a priority
+  deck crowding them out for a decade) is then answered by the visit that ends
+  it, rather than outlasting it. Thresholds read in those terms: drift at 5
+  years, `rel_bro_rift`'s arm's-length branch at 8, settled at 18/20, a close
+  fate within 24; `scripts/distclock.ts` measures them. An outcome that ENDS a
+  relationship latches its flags in `setTraitsFlaw`, not `setTraits`, so it
+  wears ⚠ rather than ★.
 
   **4. A status does not have to drift, and this one does not.** Each family state
   was first given its own drift, from the agreed shape. It was wrong twice over:
@@ -2701,8 +2693,7 @@ Roughly in likely order. None of these are started.
   counter freezes when the story ends. `rel_bro_fate` is also heavily **weighted**
   (25) so the finale actually lands — unweighted it was missed in most lives that
   reached it, leaving the arc open and the counter running. Weight rather than a
-  milestone, so it stays near-certain to happen without fixing exactly when. Distance now measures PRESENCE, not lifespan: break-even
-  is catching ~5 of his ~10 beats (4 beats reads close 7% of the time, 5 reads 91%).
+  milestone, so it stays near-certain to happen without fixing exactly when. Distance measures PRESENCE, not lifespan.
 - **Two-choice vs three-choice sweep** — the game is currently **178 two-swipe
   cards to 18 three-swipe** ones, and the third swipe has been added ad hoc where a
   card needed it (the criminal "give up the life", the apprentice "beg for more
@@ -2910,7 +2901,7 @@ Roughly in likely order. None of these are started.
   hidden axes carry it: **`relBrotherLove`** (bond warmth, from your choices),
   **`relBrotherGrit`** (his backbone, from your choices), and **`relBrotherDistance`**
   (how present you've been — the deck ticks it UP every year and every Tom card you
-  engage pulls it DOWN). The key move: **a missed beat isn't a dead end, it's drift.**
+  engage resets it to 0). The key move: **a missed beat isn't a dead end, it's drift.**
   Distance climbs while you're away, so the beats you *do* catch (and the finale) read
   colder — "you drifted apart" is a distinct outcome from "you fell out". Beats branch
   on love + distance so the same choice lands warmer when you've been present and

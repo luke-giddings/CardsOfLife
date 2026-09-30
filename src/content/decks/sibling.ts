@@ -39,8 +39,6 @@ export const siblingDecks = [
       // home_family_brother and never removed), and DRIFTS a year at a time too: distance
       // climbs unless you show up. Every card where you see him puts it back to 0
       // (setTraitsHidden, so no star), so it reads "years since you last saw him".
-      // It used to take 6 or 10 off instead, which let a long gap (a priority deck
-      // crowding him out for a decade) outlast the visit that ended it.
       tick: { relBrotherAge: 1, relBrotherDistance: 1 },
       // ...but only while his story is still running. Distance measures how
       // PRESENT you have been, and once the arc has concluded there is nothing
