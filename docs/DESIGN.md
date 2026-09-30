@@ -1215,6 +1215,12 @@ fire given the current state. Two extra markers:
   it** even when the same outcome also changes status (so selling up → renting, or
   the charity-hospital debt, don't star). Incremental ticks (experience, +1
   sporty) don't qualify either, keeping the star rare.
+- **A mark is for a CHANGE.** Each field that can earn ★ or ⚠ (`setStatus`,
+  `setTraits`, `setTraitsFlaw`, `addDecks`, `removeDecks`) counts only if writing
+  it would change your current state. Setting a trait you already have, entering
+  the status you are already in, or adding a deck you already hold draws nothing.
+  From a playtest: an already-sporty child was shown ★ on "Go all-out" for
+  becoming sporty. An authored `mark` still overrides all of this.
 - **`setTraitsHidden`** is the third setter: mechanically identical to `setTraits`, but it
   draws **no mark at all**. It is for BOOKKEEPING — winding a clock, starting a
   cooldown, closing a story flag — none of which is a life event. Before it

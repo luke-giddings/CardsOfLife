@@ -612,15 +612,31 @@ export class Game {
     const intoGrimStatus = Object.entries(e?.setStatus ?? {}).some(
       ([kind, value]) => grim(kind as StatusKind, value) && !grim(kind as StatusKind, this.state.statuses[kind as StatusKind]),
     );
+    // A mark is for a CHANGE, so each field counts only if writing it would
+    // change something. Setting a trait you already have, entering the status
+    // you are already in, or adding a deck you already hold is no turn in the
+    // road: a sporty child offered the sports card again was shown the star for
+    // "becoming" sporty, which he already was.
+    const traitsNow = this.state.traits as unknown as Record<string, unknown>;
+    const changesTraits = (t?: Record<string, unknown>): boolean =>
+      !!t && Object.entries(t).some(([k, v]) => traitsNow[k] !== v);
+    const changesStatus = Object.entries(e?.setStatus ?? {}).some(
+      ([kind, value]) => this.state.statuses[kind as StatusKind] !== value,
+    );
+    const addsDeck = (e?.addDecks ?? []).some((d) => !this.state.activeDecks.includes(d));
+    const removesDeck = (e?.removeDecks ?? []).some((pat) =>
+      this.state.activeDecks.some((d) => (pat.endsWith("*") ? d.startsWith(pat.slice(0, -1)) : d === pat)),
+    );
     // An authored `mark` wins outright — content knows what an outcome MEANS,
     // where the rules above only know which fields it wrote.
-    const derivedBurden = intoGrimStatus || !!(e?.setTraitsFlaw && Object.keys(e.setTraitsFlaw).length > 0);
+    const derivedBurden = intoGrimStatus || changesTraits(e?.setTraitsFlaw as Record<string, unknown> | undefined);
     const burden = e?.mark
       ? e.mark === "burden"
       : derivedBurden;
     const special = e?.mark
       ? e.mark === "special"
-      : !derivedBurden && !!(e?.setStatus || e?.setTraits || e?.addDecks || e?.removeDecks);
+      : !derivedBurden &&
+        (changesStatus || changesTraits(e?.setTraits as Record<string, unknown> | undefined) || addsDeck || removesDeck);
     if (special) chips += MARK_SPECIAL;
     if (burden) chips += MARK_BURDEN;
     // No vital changes → show nothing (rather than a bare "—").
