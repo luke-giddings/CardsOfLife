@@ -804,8 +804,17 @@ lines that assumed a boy have a grown-man version from 25: the university
 leaver's "first money you have ever earned", and the ruin card's "go home to
 your people".
 
-**Open:** nothing caps the age for going up to university from the offer. The
-sims found men enrolling in their 80s.
+**Coming down early goes back to your old rung too.** Quitting university
+(`edu_university_leaver`) or being ruined out of it (`edu_university_ruin`)
+returns a grown man to the rung he held on the clerk ladder (solicitor / chief
+clerk / clerk), not its bottom, with his years: university holds experience
+(`keepExperience`) as adult school does. The grammar pupils' ruin does the same
+on the shop ladder. A man coming back above the bottom rung gets his own line
+("back to your old desk at your old standing"). `scripts/comedown.ts` checks it.
+
+**Deferred, by decision:** nothing caps the age for going up to university from
+the offer (the sims found men enrolling in their 80s). That belongs to a future
+retirement life stage, which should close it.
 
 ## 8. Cards: front and back
 

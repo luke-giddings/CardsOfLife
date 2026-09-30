@@ -328,7 +328,12 @@ export const educationDecks = [
             // swipe. See §"do not balance to the sim's taste".
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "shophand" }, remember: "log.streets" } }],
+              outcomes: [
+                // Back to the rung you had on this ladder, not its bottom.
+                { if: { traits: { jobRungShop: { min: 3 } } }, result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "merchant" }, remember: "log.streets" } },
+                { if: { traits: { jobRungShop: { min: 2 } } }, result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "shopkeeper" }, remember: "log.streets" } },
+                { result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "shophand" }, remember: "log.streets" } },
+              ],
             },
             // Home: fed, sheltered, and looked at. The shame is the whole price,
             // `happiness --`, and the shelter is not paid out on the card at all —
@@ -338,7 +343,12 @@ export const educationDecks = [
             // statuses rather than by the numbers on the face.
             right: {
               label: "edu_ruin.right",
-              outcomes: [{ result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "shophand" }, remember: "log.senthome" } }],
+              outcomes: [
+                // Back to the rung you had on this ladder, not its bottom.
+                { if: { traits: { jobRungShop: { min: 3 } } }, result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "merchant" }, remember: "log.senthome" } },
+                { if: { traits: { jobRungShop: { min: 2 } } }, result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "shopkeeper" }, remember: "log.senthome" } },
+                { result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "shophand" }, remember: "log.senthome" } },
+              ],
             },
           },
         },
@@ -508,7 +518,12 @@ export const educationDecks = [
             // swipe. See §"do not balance to the sim's taste".
             left: {
               label: "edu_ruin.left",
-              outcomes: [{ result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "clerk" }, remember: "log.streets" } }],
+              outcomes: [
+                // Back to the rung you had on this ladder, not its bottom.
+                { if: { traits: { jobRungClerk: { min: 3 } } }, result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "solicitor" }, remember: "log.streets" } },
+                { if: { traits: { jobRungClerk: { min: 2 } } }, result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "chief_clerk" }, remember: "log.streets" } },
+                { result: "edu_ruin.left.r0", effects: { mark: "burden", vitals: { spirit: "++" }, setStatus: { housing: "homeless", job: "clerk" }, remember: "log.streets" } },
+              ],
             },
             // Home: fed, sheltered, and looked at. The shame is the whole price,
             // `happiness --`, and the shelter is not paid out on the card at all —
@@ -520,6 +535,9 @@ export const educationDecks = [
               label: "edu_ruin.right",
               outcomes: [
                 // A man who went up at thirty is not "sent home to his people".
+                // Back to the rung you had on this ladder, not its bottom.
+                { if: { traits: { jobRungClerk: { min: 3 } } }, result: "edu_ruin.right.r2", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "solicitor" }, remember: "log.senthome" } },
+                { if: { traits: { jobRungClerk: { min: 2 } } }, result: "edu_ruin.right.r2", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "chief_clerk" }, remember: "log.senthome" } },
                 { if: { ageMin: 25 }, result: "edu_ruin.right.r1", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } },
                 { result: "edu_ruin.right.r0", effects: { mark: "burden", vitals: { happiness: "--" }, setStatus: { housing: "family", job: "clerk" }, remember: "log.senthome" } },
               ],
@@ -564,6 +582,9 @@ export const educationDecks = [
               label: "edu_university_leaver.right",
               outcomes: [
                 // "The first money you have ever earned" is only true of a boy.
+                // Back to the rung you had on this ladder, not its bottom.
+                { if: { traits: { jobRungClerk: { min: 3 } } }, result: "edu_university_leaver.right.r2", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "solicitor" }, remember: "log.leftuni" } },
+                { if: { traits: { jobRungClerk: { min: 2 } } }, result: "edu_university_leaver.right.r2", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "chief_clerk" }, remember: "log.leftuni" } },
                 { if: { ageMin: 25 }, result: "edu_university_leaver.right.r1", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "clerk" }, remember: "log.leftuni" } },
                 { result: "edu_university_leaver.right.r0", effects: { vitals: { finances: "+", spirit: "-" }, setStatus: { job: "clerk" }, remember: "log.leftuni" } },
               ],

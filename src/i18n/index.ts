@@ -757,12 +757,14 @@ export const EN = {
   "edu_university_leaver.right": "Take the position",
   "edu_university_leaver.right.r0": "You give up your rooms and your gown and present yourself at the office on Monday. The first wage you close your hand on is the first money you have ever earned — and you try not to think about the degree you will not have.",
   "edu_university_leaver.right.r1": "You give up your rooms and your gown and go back to a clerk's stool. It is not the first wage you have earned, not by twenty years, but it is the first that tastes of giving up.",
+  "edu_university_leaver.right.r2": "You give up your rooms and your gown and go back to your old desk at your old standing. The firm is glad to have you; you try to be glad too.",
   "edu_ruin.prompt": "The fees are due, the money is gone, and the bursar has your name on a list. Whatever happens next, you will not be at your desk for it.",
   "edu_ruin.left": "Take to the streets",
   "edu_ruin.left.r0": "You do not go home to be looked at. You take whatever position your letters can still get you and find a bed where you can, and nobody who knew you at your desk ever hears where you went.",
   "edu_ruin.right": "Go home to your people",
   "edu_ruin.right.r0": "They take you back without a word of reproach, which is worse than if they had shouted. You are at work by Monday, in a smaller way than you intended; your books go in the box under the bed, and the neighbours are told you finished early.",
   "edu_ruin.right.r1": "Your family take you in again, a grown man back under their roof with his books in a box, and nobody says the word failure in your hearing. You are at work by Monday, a clerk again.",
+  "edu_ruin.right.r2": "Your family take you in again, a grown man back under their roof with his books in a box. By Monday you are back at your old desk at your old standing, and nobody there asks where you have been.",
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Out of Work",
@@ -2489,12 +2491,14 @@ export const IT: Record<StringId, string> = {
   "edu_university_leaver.right": "Accettare il posto",
   "edu_university_leaver.right.r0": "Lasci le tue stanze e la tua toga e lunedì ti presenti allo studio. La prima paga che stringi in mano è il primo denaro che tu abbia mai guadagnato — e cerchi di non pensare alla laurea che non avrai.",
   "edu_university_leaver.right.r1": "Lasci le tue stanze e la tua toga e torni a uno sgabello da impiegato. Non è la prima paga che guadagni, non da vent'anni, ma è la prima che sa di resa.",
+  "edu_university_leaver.right.r2": "Lasci le tue stanze e la tua toga e torni alla tua vecchia scrivania, al tuo vecchio posto. Lo studio è contento di riaverti; tu cerchi di esserlo anche tu.",
   "edu_ruin.prompt": "Le rette sono scadute, il denaro è finito, e l'economo ha il tuo nome su una lista. Qualunque cosa accada adesso, non sarai al tuo banco a viverla.",
   "edu_ruin.left": "Darsi alla strada",
   "edu_ruin.left.r0": "Non torni a casa per farti guardare. Prendi il posto che le tue lettere riescono ancora a procurarti e trovi un giaciglio dove capita, e nessuno di quelli che ti conoscevano sui libri sa più dove sei finito.",
   "edu_ruin.right": "Tornare dai tuoi",
   "edu_ruin.right.r0": "Ti riprendono senza una parola di rimprovero, il che è peggio che se avessero gridato. Lunedì sei già al lavoro, in modo più modesto di quanto volessi; i tuoi libri finiscono nella cassa sotto il letto, e ai vicini dicono che hai finito prima.",
   "edu_ruin.right.r1": "La tua famiglia ti riprende in casa, un uomo fatto di nuovo sotto il loro tetto con i libri in una cassa, e nessuno pronuncia la parola fallimento davanti a te. Lunedì sei al lavoro, di nuovo impiegato.",
+  "edu_ruin.right.r2": "La tua famiglia ti riprende in casa, un uomo fatto di nuovo sotto il loro tetto con i libri in una cassa. Lunedì sei di nuovo alla tua vecchia scrivania, al tuo vecchio posto, e nessuno là ti chiede dove sei stato.",
 
   // ---- JOB: UNEMPLOYED --------------------------------------------------
   "deck.job_unemployed.title": "Senza lavoro",

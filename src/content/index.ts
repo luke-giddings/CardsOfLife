@@ -111,7 +111,7 @@ export const content = {
         // to be bought as well as earned, and eduUniFund/savings gate entry to it
         // (see the grammar leaver). Income cards inside both decks offset fees.
         grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
-        university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
+        university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, keepExperience: true, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Adult school — see the edu_adult deck. keepExperience: a man who walks
         // out goes back to his old rung with his years.
         adult_school: { label: "status.job.adult_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_adult"], keepExperience: true },
