@@ -1355,7 +1355,7 @@ export const EN = {
   "fam_single_alone.right.r0": "You put your coat on and go where the noise is. It costs you a round and an early night, and it's worth both.",
 
   // ---- LILLY: {lilly} (the intro lives in fam_single; the arc in rel_lilly) ---
-  "fam_single_lilly.prompt": "There's a girl called {lilly} who is always the last one still at it when everyone else has packed up. She looks up, once, and says something dry that makes you laugh.",
+  "fam_single_lilly.prompt": "There's someone called {lilly} who is always the last one still at it when everyone else has packed up. She looks up, once, and says something dry that makes you laugh.",
   "fam_single_lilly.left": "Make a friend of her",
   "fam_single_lilly.left.r0": "You share a desk after that, and she corrects your sums without being asked. It is the beginning of something, though neither of you would call it that.",
   "fam_single_lilly.left.r1": "You fall into arguing about a book neither of you has finished, and are still at it when they put the lamps out.",
@@ -3089,7 +3089,7 @@ export const IT: Record<StringId, string> = {
   "fam_single_alone.right.r0": "Ti metti il cappotto e vai dove c'\u00e8 rumore. Ti costa un giro da bere e una nottata corta, e vale entrambi.",
 
   // ---- LILLY: {lilly} (l'incontro sta in fam_single; l'arco in rel_lilly) -----
-  "fam_single_lilly.prompt": "C'\u00e8 una ragazza di nome {lilly} che \u00e8 sempre l'ultima ancora al lavoro quando tutti gli altri hanno gi\u00e0 chiuso bottega. Alza gli occhi, una volta, e dice qualcosa di tagliente che ti fa ridere.",
+  "fam_single_lilly.prompt": "C'\u00e8 una certa {lilly} che \u00e8 sempre l'ultima ancora al lavoro quando tutti gli altri hanno gi\u00e0 chiuso bottega. Alza gli occhi, una volta, e dice qualcosa di tagliente che ti fa ridere.",
   "fam_single_lilly.left": "Farne un'amica",
   "fam_single_lilly.left.r0": "Da allora dividete il banco, e lei ti corregge i conti senza che glielo chieda. \u00c8 l'inizio di qualcosa, anche se nessuno dei due lo chiamerebbe cos\u00ec.",
   "fam_single_lilly.left.r1": "Finite a litigare su un libro che nessuno dei due ha finito, e siete ancora l\u00ec quando spengono i lumi.",
