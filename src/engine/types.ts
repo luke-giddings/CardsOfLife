@@ -76,7 +76,8 @@ export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education",
 // --- Traits: hidden state. Booleans, enums, counters. ------------------------
 // Add a field here and it is instantly usable (and type-checked) in content.
 export interface Traits {
-  gender: "boy" | "girl";
+  // "unborn" until the birth card picks one, so choosing either is a change (and earns its mark).
+  gender: "unborn" | "boy" | "girl";
   // Learned abilities / protections. `skill*` so the debug panel groups them
   // under a Skills category. (Distinct from `jobSkill`, which is apprenticeship
   // craftsmanship under the Jobs category.) `skillVaccinated` = smallpox immunity
@@ -277,7 +278,7 @@ export interface Traits {
 }
 
 export const DEFAULT_TRAITS: Traits = {
-  gender: "boy",
+  gender: "unborn",
   skillMartialArts: false,
   skillVaccinated: false,
   eduUniFund: false,
