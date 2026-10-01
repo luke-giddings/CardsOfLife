@@ -342,6 +342,10 @@ export interface Content {
   // drain that year cannot kill you through the net you are answering.
   // Default: one above the minimum.
   rescueFloor?: number;
+  // Where saves live, and their version. Raising the version drops every save
+  // written before it (you get a fresh life) — deliberately not migration. When
+  // to raise it is the game's call.
+  save: { prefix: string; version: number };
 }
 
 // --- Runtime game state (this is what gets saved) ----------------------------

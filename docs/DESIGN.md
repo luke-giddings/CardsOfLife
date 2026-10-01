@@ -1550,7 +1550,7 @@ playable on a phone.
   in the engine's empty `Register` interface (declaration merging), so every
   engine type is this game's and content is still checked at compile time. The
   engine imports nothing from `src/content` or `src/i18n`; the game hands it the
-  content (`setContent`) and a storage prefix (`setSavePrefix`). The rules that
+  content (`setContent`), including where its saves live (`Content.save`). The rules that
   were special cases now live in content as data: a kind's `tenure` counter and
   `enterTraits`, `driftWhile` grace periods, `ticks` rules, `rescueFloor`.
 - Four Vitals; any at 0 = game over; only Health's ending is "death".

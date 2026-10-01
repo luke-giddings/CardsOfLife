@@ -60,6 +60,9 @@ export const content = {
   // renaming a sibling is this one line rather than ~60 string edits.
   vars: { brother: "Tom", sister: "Sarah", lilly: "Lilly" },
   vitals: VITAL_KEYS,
+  // Saves are dropped by raising the version; content changes start fresh lives
+  // in playtesting anyway, so it is raised for a shape change, not every trait.
+  save: { prefix: "cardsoflife", version: 9 },
   // A vital caught by a safety net lands at 1: destitute, but alive.
   rescueFloor: 1,
 

@@ -16,7 +16,7 @@ import {
   totalDrift,
 } from "../engine/engine.ts";
 import { meets } from "../engine/conditions.ts";
-import { clearSave, loadGame, loadHistory, readStore, removeStore, saveGame, saveHistory, setSavePrefix, storageAvailable, writeStore } from "../engine/save.ts";
+import { clearSave, loadGame, loadHistory, readStore, removeStore, saveGame, saveHistory, storageAvailable, writeStore } from "../engine/save.ts";
 import type { HistoryEntry } from "../engine/save.ts";
 import { FIRST_RUN, PLAY, RETURNING, type IntroCard, type IntroOption } from "./intro.ts";
 import {
@@ -234,7 +234,6 @@ export class Game {
   constructor(root: HTMLElement) {
     this.root = root;
     setContent(content);
-    setSavePrefix("cardsoflife");
     this.debug = loadDebug();
     this.hard = loadHard();
     this.buildShell();
