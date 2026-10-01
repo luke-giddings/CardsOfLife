@@ -284,23 +284,22 @@ function changeStatus(state: GameState, kind: StatusKind, value: string): void {
   // card removed comes back); nothing below fires without a real change.
   if (value === previous) return;
   state.statuses[kind] = value;
-  // `jobExperience` is time-in-the-current-job, tagged with the job it was earned
-  // in (state.experienceJob). On a job change:
-  //  - entering a `keepExperience` state preserves both the counter and its tag,
-  //    so a sacking doesn't wipe your progress;
-  //  - otherwise reset only when the new job differs from the tagged one, so a
-  //    re-hire into the SAME job keeps its experience, while a promotion or a
-  //    move to a different career starts the counter fresh.
-  if (kind === "job" && !newState?.keepExperience) {
-    if (state.experienceJob !== value) {
-      state.traits.jobExperience = 0;
-      state.experienceJob = value;
+  // A kind's TENURE counter (StatusDef.tenure) is time in the current value,
+  // tagged with the value it was earned in (state.tenureOf). Entering a
+  // `keepTenure` state preserves both, so a spell between values doesn't wipe
+  // the count; otherwise it resets only when the new value differs from the
+  // tagged one, so a return to the SAME value keeps it.
+  const def = CONTENT.statuses[kind];
+  if (def?.tenure && !newState?.keepTenure) {
+    const tags = (state.tenureOf ??= {});
+    if (tags[kind] !== value) {
+      state.traits[def.tenure] = 0;
+      tags[kind] = value;
     }
   }
-  // Standing with your employer is per-job: a new employer means a fresh start,
-  // so any job change (including into unemployment) wipes the strike count.
-  if (kind === "job") state.traits.jobStrikes = 0;
-  // Traits a state stamps on entry (StatusStateDef.enterTraits).
+  // Traits stamped on ANY change of this kind (StatusDef.enterTraits), then on
+  // entering this particular state (StatusStateDef.enterTraits).
+  if (def?.enterTraits) Object.assign(state.traits, def.enterTraits);
   if (newState?.enterTraits) Object.assign(state.traits, newState.enterTraits);
   // A state may SUSPEND other status kinds while you are in it (see
   // StatusStateDef.suspends): entering stashes what you had and forces the

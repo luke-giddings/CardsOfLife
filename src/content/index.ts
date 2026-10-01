@@ -92,6 +92,10 @@ export const content = {
     },
     job: {
       id: "job",
+      // Time in the current job (ticked by the job decks), kept through the
+      // `keepTenure` states between jobs; and a new employer wipes your strikes.
+      tenure: "jobExperience",
+      enterTraits: { jobStrikes: 0 },
       driftWhile: PAST_BABYHOOD,
       show: { ageMin: 5 }, // babyhood ends at the schooling milestone; nothing to show before it
       states: {
@@ -114,13 +118,13 @@ export const content = {
         // to be bought as well as earned, and eduUniFund/savings gate entry to it
         // (see the grammar leaver). Income cards inside both decks offset fees.
         grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
-        university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], keepExperience: true, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
-        // Adult school — see the edu_adult deck. keepExperience: a man who walks
+        university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], keepTenure: true, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
+        // Adult school — see the edu_adult deck. keepTenure: a man who walks
         // out goes back to his old rung with his years.
-        adult_school: { label: "status.job.adult_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_adult"], keepExperience: true },
+        adult_school: { label: "status.job.adult_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_adult"], keepTenure: true },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
-        unemployed: { label: "status.job.unemployed", enterTraits: { jobYearsIdle: 0 }, drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], ticks: [{ traits: { jobYearsIdle: 1 } }], keepExperience: true, grim: true },
+        unemployed: { label: "status.job.unemployed", enterTraits: { jobYearsIdle: 0 }, drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], ticks: [{ traits: { jobYearsIdle: 1 } }], keepTenure: true, grim: true },
         // A workhouse inmate — the institution IS your occupation now, so entering
         // the workhouse cancels any schooling/job (child_hunger sets this). No
         // drift and NO deck of its own: the home_workhouse housing deck already
@@ -145,14 +149,14 @@ export const content = {
         // straight to the factory (see child_adult), so nobody is ever a child
         // labourer past 18; this is what the unemployment deck hands a grown man
         // who never reached the mill.
-        // `keepExperience` because coming of age is A RENAME, NOT A PROMOTION: the
+        // `keepTenure` because coming of age is A RENAME, NOT A PROMOTION: the
         // child labourer and the labourer are the same job, same wage, same toll,
         // same deck. Without it the engine wiped `jobExperience` on the status
         // change like any other, so a boy who had worked seven years arrived at
         // eighteen with nothing served — measured, 1.25 years before the rename
         // and 0.00 after, every time. He then needed three more years for a
         // promotion he had already earned twice over.
-        labourer: { label: "status.job.labourer", enterTraits: { jobRungLabour: 1 }, drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"], keepExperience: true },
+        labourer: { label: "status.job.labourer", enterTraits: { jobRungLabour: 1 }, drift: { finances: 10, health: -5 }, driftShown: { finances: "+", health: "-" }, addDecks: ["job_labour"], keepTenure: true },
         factory: { label: "status.job.factory", enterTraits: { jobRungLabour: 2 }, drift: { finances: 13, health: -5 }, driftShown: { finances: "++", health: "-" }, addDecks: ["job_factory"] },
         gang_master: { label: "status.job.gang_master", enterTraits: { jobRungLabour: 3 }, drift: { finances: 15, health: -5 }, driftShown: { finances: "+++", health: "-" }, addDecks: ["job_gangmaster"] },
 

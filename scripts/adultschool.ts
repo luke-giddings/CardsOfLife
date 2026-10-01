@@ -26,7 +26,7 @@ function man(seed: number, education: string, job: string, rung: Record<string, 
   s.age = 30; s.statuses.age = "adult"; s.statuses.education = education; s.statuses.housing = "renting";
   s.statuses.family = "single"; s.vitals = { finances: MONEY, happiness: 50, health: 50, spirit: 50 };
   s.activeDecks = ["age_adult", "home_renting", "fam_single"];
-  Object.assign(s.traits, rung); s.statuses.job = job; (s as any).experienceJob = job; s.traits.jobExperience = exp;
+  Object.assign(s.traits, rung); s.statuses.job = job; s.tenureOf = { job }; s.traits.jobExperience = exp;
   s.statuses.job = "unemployed"; s.activeDecks.push("job_unemployed");
   return chooseDirection(s, offer, "right").state; // takes adult school
 }

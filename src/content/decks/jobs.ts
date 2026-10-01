@@ -1017,7 +1017,7 @@ export const jobDecks = [
           // one-shots put money on one side and someone else's back on the other.
           //
           // `jobExperience` on every swipe as the house style, and it is NOT dead
-          // state on a terminal job: `unemployed` carries `keepExperience`, so a
+          // state on a terminal job: `unemployed` carries `keepTenure`, so a
           // sacked gang-master takes his years with him into whatever he finds
           // next, where they still count toward a promotion.
           //

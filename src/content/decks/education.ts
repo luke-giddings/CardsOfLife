@@ -618,7 +618,7 @@ export const educationDecks = [
     //     Very expensive by design: a flat 40 on the way in, offered only once
     //     you have saved 80 (see `job_unemployed_offer`), no wage while you are
     //     here, a spirit drain, and your rent still due. Experience is HELD, not wiped
-    //     (`keepExperience`), so a man who walks out goes back to his old rung
+    //     (`keepTenure`), so a man who walks out goes back to his old rung
     //     with his years intact.
     //
     //     Tradesmen are not offered it: their education IS their trade

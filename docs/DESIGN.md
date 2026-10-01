@@ -696,7 +696,7 @@ men under you** — you were one of them last year:
   out of your own end, or let him go for a few shillings and `happiness −−`.
 
 **`jobExperience` on every swipe, and it is NOT dead state on a terminal job.**
-`unemployed` carries `keepExperience`, so a sacked gang-master takes his years into
+`unemployed` carries `keepTenure`, so a sacked gang-master takes his years into
 whatever he finds next, where they still count toward a promotion. The kind swipes
 pay `socialWarmth` through `incTraits` following `job_labour_mate` — a counter, so
 no ★; those are for life events.
@@ -731,9 +731,9 @@ the same three swipes:
   - The rung is one counter **per ladder**, stamped on entering each job. A single
     counter would leak across ladders when your education changes: a gang-master
     (labour rung 3) who gained his letters would be offered *merchant*.
-  - **Experience survives going back to the same job.** The engine resets
-    `jobExperience` only when the job differs from the one it was earned in, so
-    this came free; the old card lost your years by sending you to a different
+  - **Experience survives going back to the same job.** `jobExperience` is the
+    job kind's `tenure` counter, reset only when the job differs from the one it
+    was earned in, so this came free; the old card lost your years by sending you to a different
     job.
 - **Better yourself (right)**, by age and schooling, and hidden when none applies:
   - unlettered, 11 or under → board school, free. This was its own card,
@@ -767,7 +767,7 @@ the enrolment clock.
   you up a level (none → basic and a shop counter; basic → grammar and a clerk's
   stool): free if you studied (`eduStudy` ≥ 3), half your money and `happiness
   −−` if not. "Leave without sitting it" puts you back at your old rung.
-- **Experience is held** (`keepExperience`), so a man who walks out or is ruined
+- **Experience is held** (`keepTenure`), so a man who walks out or is ruined
   goes back to his old job with his years intact.
 - **Ruin lands you in work, not idleness.** The rescue floors money at 1, and a
   spell out of work with rent still due would kill him the next year with the
@@ -808,7 +808,7 @@ your people".
 (`edu_university_leaver`) or being ruined out of it (`edu_university_ruin`)
 returns a grown man to the rung he held on the clerk ladder (solicitor / chief
 clerk / clerk), not its bottom, with his years: university holds experience
-(`keepExperience`) as adult school does. The grammar pupils' ruin does the same
+(`keepTenure`) as adult school does. The grammar pupils' ruin does the same
 on the shop ladder. A man coming back above the bottom rung gets his own line
 ("back to your old desk at your old standing"). `scripts/comedown.ts` checks it.
 
@@ -984,10 +984,10 @@ Three weighted one-shots went into `job_factory`, `job_shop`, `job_clerk` and
 **Then the entry rung, which is where it actually pays.** `job_labour` got the
 same three one-shots — and a BUG came out from under them. Coming of age is
 documented as "a rename, not a promotion", but the engine wipes `jobExperience`
-on any job change without `keepExperience`, and only `unemployed` had it. Measured
+on any job change without `keepTenure`, and only `unemployed` had it. Measured
 over 359 transitions, a boy arrived at eighteen with **1.25 years served before
 the rename and 0.00 after**, every time, and then needed three more for a
-promotion he had already earned twice over. `labourer` carries `keepExperience`
+promotion he had already earned twice over. `labourer` carries `keepTenure`
 now.
 
 | | mean exp | reached exp≥3 | promoted |

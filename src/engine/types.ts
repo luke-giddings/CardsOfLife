@@ -170,8 +170,9 @@ export interface Traits {
   // Work life. All `job*` so the debug panel groups them under a Jobs category.
   // Times you've switched jobs over the run (an epitaph/flavour counter).
   jobTimesChanged: number;
-  // Years served in the current job. Ticked by each work-event card; a
-  // promotion card gates on it and resets it to 0 on the step up.
+  // Years served in the current job: the job kind's `tenure` counter. Ticked by
+  // each work-event card; a promotion card gates on it and resets it to 0 on the
+  // step up.
   jobExperience: number;
   // Years out of work in the CURRENT stretch of it — ticked by the unemployed
   // status, as gaol ticks its own years, and zeroed by that status's
@@ -217,8 +218,8 @@ export interface Traits {
   flawYearsInGaol: number;
   // Standing with your current employer (0 = model worker). Rises when you shirk
   // and each time you grovel to keep your job; a high count means the foreman
-  // won't hear your pleading. Resets to 0 on any job change (a fresh reputation
-  // with a new employer).
+  // won't hear your pleading. Reset to 0 on any job change by the job kind's
+  // `enterTraits` (a fresh reputation with a new employer).
   jobStrikes: number;
   // Durable debt to the charity hospital that saved you as a small child (the
   // health rescue). Set when you take their care; the ledger comes due in young
@@ -557,10 +558,10 @@ export interface StatusStateDef {
   // Traits stamped when you ENTER this state, whatever route brought you there:
   // a fresh apprenticeship starts with no craftsmanship (`jobSkill: 0`).
   enterTraits?: Partial<Traits>;
-  // (job states) A "between jobs" state — entering it preserves the `experience`
-  // counter and the job it was earned in, so a sacking→re-hire into the SAME job
-  // doesn't wipe your progress. See changeStatus.
-  keepExperience?: boolean;
+  // A state "between" values of its kind — entering it preserves the kind's
+  // tenure counter (StatusDef.tenure) and the value it was earned in, so a
+  // sacking and a re-hire into the SAME job doesn't wipe the count.
+  keepTenure?: boolean;
   // A SETBACK: landing here is something that happens TO you, not a road you'd
   // take for its own sake — sacked, on the street, in the workhouse, in gaol.
   // Purely a display fact, and the engine never reads it: the card preview shows
@@ -587,6 +588,13 @@ export interface StatusDef {
   id: StatusKind;
   show: StatusShow;
   levels?: string[];                     // ordering for `atLeast`, low → high
+  // A counter of time in the current value: reset to 0 when the kind changes to
+  // a value other than the one it was earned in, kept through `keepTenure`
+  // states (see changeStatus). Something else must tick it.
+  tenure?: NumericTraitKey;
+  // Traits stamped on ANY change of this kind's value, before the new state's
+  // own `enterTraits` — e.g. a new employer wipes your strikes.
+  enterTraits?: Partial<Traits>;
   // This kind's drift applies only in turns where the condition holds (absent:
   // always). How a grace period is written — living costs suspended through
   // babyhood, while the life stage's own bonus still lands. Must not itself use
@@ -639,7 +647,8 @@ export interface GameState {
   // cares HOW often one played, only whether it has.
   playedFillers: string[];
   lastCardId?: string;                // to avoid drawing the same card twice in a row
-  experienceJob?: string;             // the job the current `jobExperience` was earned in (see changeStatus)
+  // Per kind with a tenure counter: the value its count was earned in (changeStatus).
+  tenureOf?: Partial<Record<StatusKind, string>>;
   // Status values stashed by a state that `suspends` them, handed back on leaving.
   suspendedStatuses?: Partial<Record<StatusKind, string>>;
   pendingRescues?: string[];          // rescue card ids to force on the next draws, in order

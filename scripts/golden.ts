@@ -13,8 +13,12 @@ import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 // Key order is not behaviour: hash a canonical form, so a refactor that builds
 // the state in a different order still matches. Undefined fields drop out too.
-const canon = (v: unknown): string => JSON.stringify(v, (_k, x) =>
-  x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).filter(([, y]) => y !== undefined).sort(([a], [b]) => (a < b ? -1 : 1))) : x);
+// GOLDEN_IGNORE=a,b leaves named state fields out of the hash, to compare across
+// a change that only renames or reshapes them.
+const IGNORE = new Set((process.env.GOLDEN_IGNORE ?? "").split(",").filter(Boolean));
+const canon = (v: unknown): string => JSON.stringify(v, (k, x) =>
+  IGNORE.has(k) ? undefined
+  : x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).filter(([, y]) => y !== undefined).sort(([a], [b]) => (a < b ? -1 : 1))) : x);
 const DIRS: Direction[] = ["left", "right", "up", "down"];
 const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
