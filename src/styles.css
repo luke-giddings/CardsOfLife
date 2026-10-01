@@ -615,6 +615,11 @@ body {
 .bio-detail li { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); }
 .bio-detail li > span:last-child { white-space: nowrap; letter-spacing: 0.5px; }
 .bio-none { color: var(--muted); }
+/* drift size in the Bio: a whole pip per 6 points a year, a half pip per 3;
+   coloured by the gain/loss class around it (currentColor) */
+.pips { display: inline-flex; gap: 3px; align-items: center; vertical-align: middle; margin-left: 4px; }
+.pip { width: 8px; height: 8px; border-radius: 50%; background: currentColor; border: 1.5px solid currentColor; box-sizing: border-box; }
+.pip.half { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
 .vital:focus-visible, .bio-head:focus-visible, .chip:focus-visible { outline: 2px solid var(--baize); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .gain, .chip, .bio-chev { transition: none; } }
 .dgood { color: var(--good); font-weight: 700; }
