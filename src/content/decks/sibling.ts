@@ -7,7 +7,7 @@
 //   — so which beats you catch, and when, varies run to run, and a missed beat bends
 //   the story rather than ending it. Three axes carry it: LOVE (bond warmth, from your
 //   choices), GRIT (his backbone, from your choices), and DISTANCE (how present you've
-//   been — the deck ticks it UP each year and every Tom card you engage pulls it DOWN).
+//   been — the deck ticks it UP each year and every Tom card you engage resets it to 0).
 //   Later beats read love AND distance, so "you drifted apart" is a distinct outcome
 //   from "you fell out". relBrotherStoryDone ends the arc (finale, or estrangement if
 //   love curdles); relBrotherReckoned de-dupes the adult reckoning's two housing forms.
@@ -39,29 +39,30 @@ export const siblingDecks = [
       // home_family_brother and never removed), and DRIFTS a year at a time too: distance
       // climbs unless you show up. Every card where you see him puts it back to 0
       // (setTraitsHidden, so no star), so it reads "years since you last saw him".
-      tick: { relBrotherAge: 1, relBrotherDistance: 1 },
-      // ...but only while his story is still running. Distance measures how
-      // PRESENT you have been, and once the arc has concluded there is nothing
-      // left to be present FOR — so letting it climb on just punished you for
-      // outliving him. It used to: a player who always chose the kindest option
-      // read CLOSE 98% of the time if they died before 40, and 0% of the time if
-      // they reached 75, purely because the counter never stopped.
-      tickWhile: { traits: { relBrotherStoryDone: false } },
-      // THE COOLDOWN: after one of this sibling's beats, the next waits
-      // 3 years, so their story is spread across a life rather than dealt
-      // in a burst — and so a `priority` phase (an apprenticeship, the
-      // workhouse) is not swamped by a never-suppressed deck. Each gated beat
-      // sets `relBrotherCooldown` to 4 with setTraitsHidden (ticks land after the card, so
-      // 4 blocks the next 3 years) and this counts it down, stopping at
-      // 0. Milestones and the childhood beats are exempt: they neither wait for
-      // it nor start it — the childhood ones share a window too narrow to
-      // space out without losing some of them.
-      ticks: [{ traits: { relBrotherCooldown: -1 }, while: { traits: { relBrotherCooldown: { min: 1 } } } }],
+      ticks: [
+        { traits: { relBrotherAge: 1, relBrotherDistance: 1 }, while: { traits: { relBrotherStoryDone: false } } },
+        // ...but only while his story is still running. Distance measures how
+        // PRESENT you have been, and once the arc has concluded there is nothing
+        // left to be present FOR — so letting it climb on just punished you for
+        // outliving him. It used to: a player who always chose the kindest option
+        // read CLOSE 98% of the time if they died before 40, and 0% of the time if
+        // they reached 75, purely because the counter never stopped.
+        // THE COOLDOWN: after one of this sibling's beats, the next waits
+        // 3 years, so their story is spread across a life rather than dealt
+        // in a burst — and so a `priority` phase (an apprenticeship, the
+        // workhouse) is not swamped by a never-suppressed deck. Each gated beat
+        // sets `relBrotherCooldown` to 4 with setTraitsHidden (ticks land after the card, so
+        // 4 blocks the next 3 years) and this counts it down, stopping at
+        // 0. Milestones and the childhood beats are exempt: they neither wait for
+        // it nor start it — the childhood ones share a window too narrow to
+        // space out without losing some of them.
+        { traits: { relBrotherCooldown: -1 }, while: { traits: { relBrotherCooldown: { min: 1 } } } },
+      ],
       cards: [
         // --- STAGE 0: little Tom. Warm childhood fillers while he's small (under 5,
         //     before his own school-or-work crossroads). Each shapes his Love (your
-        //     bond) AND his Grit (his backbone), and — like every Tom card — pulls
-        //     DISTANCE down (you were there). ---
+        //     bond) AND his Grit (his backbone), and — like every Tom card — resets
+        //     DISTANCE (you were there). ---
         {
           id: "rel_bro_play",
           kind: "one_time",
@@ -171,7 +172,7 @@ export const siblingDecks = [
         // fall in order by his age), drawn organically — you'll catch some and miss
         // others, differently each run. No cursor: a missed beat just means distance
         // kept climbing, so the beats you DO see (and the finale) read colder. Every
-        // beat pulls distance down (you showed up). relBrotherStoryDone gates them all
+        // beat resets distance to 0 (you showed up). relBrotherStoryDone gates them all
         // off once the arc concludes; relBrotherReckoned de-dupes the reckoning below.
 
         // --- BEAT 2: a rift in his adolescence (Tom 10–17). DISTANCE-branched: the

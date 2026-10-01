@@ -1128,7 +1128,7 @@ export class Game {
     // every line buried the changes worth reading under "relSisterAge=3,
     // relSisterDistance=3". They are left to the summary at the foot, where the
     // number is what matters anyway.
-    const clocks = new Set(content.decks.flatMap((d) => Object.keys(d.tick ?? {})));
+    const clocks = new Set(content.decks.flatMap((d) => (d.ticks ?? []).flatMap((r) => Object.keys(r.traits))));
     const lines: string[] = [];
     lines.push(`Cards of Life v${APP_VERSION} · build ${__BUILD__} · seed ${this.state.seed}`);
     lines.push(`${this.hard ? "HARD" : "easy"} · ${getLocale()} · ${this.history.length} cards played`);

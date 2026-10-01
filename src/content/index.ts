@@ -109,14 +109,14 @@ export const content = {
         // University keeps the tuition: it is the one credential that is supposed
         // to be bought as well as earned, and eduUniFund/savings gate entry to it
         // (see the grammar leaver). Income cards inside both decks offset fees.
-        grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
-        university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, keepExperience: true, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
+        grammar_school: { label: "status.job.grammar_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_grammar"] },
+        university: { label: "status.job.university", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], keepExperience: true, drift: { spirit: -5, finances: -5 }, driftShown: { spirit: "-", finances: "-" }, addDecks: ["edu_university"] },
         // Adult school — see the edu_adult deck. keepExperience: a man who walks
         // out goes back to his old rung with his years.
-        adult_school: { label: "status.job.adult_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, tick: { eduYearsEnrolled: 1 }, drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_adult"], keepExperience: true },
+        adult_school: { label: "status.job.adult_school", enterTraits: { eduStudy: 0, eduYearsEnrolled: 0 }, ticks: [{ traits: { eduYearsEnrolled: 1 } }], drift: { spirit: -10 }, driftShown: { spirit: "--" }, addDecks: ["edu_adult"], keepExperience: true },
         // Left school / lost a job, no work: a grim state with a heavy happiness/
         // spirit drain — you want out fast. Opens the job-offer deck.
-        unemployed: { label: "status.job.unemployed", enterTraits: { jobYearsIdle: 0 }, drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], tick: { jobYearsIdle: 1 }, keepExperience: true, grim: true },
+        unemployed: { label: "status.job.unemployed", enterTraits: { jobYearsIdle: 0 }, drift: { happiness: -5, spirit: -5 }, driftShown: { happiness: "-", spirit: "-" }, addDecks: ["job_unemployed"], ticks: [{ traits: { jobYearsIdle: 1 } }], keepExperience: true, grim: true },
         // A workhouse inmate — the institution IS your occupation now, so entering
         // the workhouse cancels any schooling/job (child_hunger sets this). No
         // drift and NO deck of its own: the home_workhouse housing deck already
@@ -244,7 +244,7 @@ export const content = {
         //   in) — but the prison deck's "do your time" card offers prison labour
         //   once you're skint, which out-earns this drain, so the drain is a slow
         //   squeeze rather than a death sentence for a long stretch.
-        prison: { label: "status.housing.prison", drift: { happiness: -4, health: -3, finances: -5 }, driftShown: { happiness: "-", health: "-", finances: "-" }, tick: { flawYearsInGaol: 1 }, suspends: { lifestyle: "default" }, addDecks: ["prison"], grim: true },
+        prison: { label: "status.housing.prison", drift: { happiness: -4, health: -3, finances: -5 }, driftShown: { happiness: "-", health: "-", finances: "-" }, ticks: [{ traits: { flawYearsInGaol: 1 } }], suspends: { lifestyle: "default" }, addDecks: ["prison"], grim: true },
         // — taken on by a master tradesman (housed and fed; see job=apprentice).
         apprentice: { label: "status.housing.apprentice" },
       },
@@ -308,14 +308,14 @@ export const content = {
           label: "status.pet.cat",
           drift: { happiness: 3, finances: -2 },
           driftShown: { happiness: "+", finances: "-" },
-          tick: { petCatAge: 1 },
+          ticks: [{ traits: { petCatAge: 1 } }],
           addDecks: ["pet_cat"],
         },
         dog: {
           label: "status.pet.dog",
           drift: { spirit: 3, finances: -3 },
           driftShown: { spirit: "+", finances: "-" },
-          tick: { petDogAge: 1 },
+          ticks: [{ traits: { petDogAge: 1 } }],
           addDecks: ["pet_dog"],
         },
       },

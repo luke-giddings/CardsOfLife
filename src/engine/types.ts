@@ -346,8 +346,14 @@ export type TraitConditions = {
   [K in keyof Traits]?: Traits[K] extends number ? NumberMatch : Traits[K];
 };
 
-// One conditional tick: add `traits` each turn, but only in turns where `while`
-// holds (evaluated before the tick). With no `while` it is an ordinary tick.
+// A per-turn TRAIT increment — drift's counterpart for counters: add `traits`
+// each turn, but only in turns where `while` holds. With no `while` it ticks
+// every turn its owner (a deck, or a status state) is active. Every rule's
+// `while` is read against the state before ANY of the turn's ticks land, so the
+// order rules are listed in never changes the result. Uses: a counter tied to a
+// deck's lifetime (Tom's age from the year he is born), one that must stop once
+// a story ends (a presence clock), a cooldown that counts down and stops at 0
+// (`while: { min: 1 }`), a pet's age while it is kept.
 export interface TickRule {
   traits: Partial<Record<NumericTraitKey, number>>;
   while?: Condition;
@@ -506,26 +512,8 @@ export interface Deck {
   title?: StringId;  // shown when this deck is unlocked for the first time
   unlock?: StringId; // blurb for the first-time unlock announcement
   noDrift?: boolean; // while active, status drift is suspended (unloseable grace, e.g. babyhood)
-  // Per-turn TRAIT increments while this deck is active — the deck-level counterpart
-  // of StatusStateDef.tick (see applyTick). Use to age something tied to a deck's
-  // lifetime rather than a status: the rel_bro deck ticks `relBrotherAge` from the
-  // year Tom is born (the deck is added then and never removed) so his beats can
-  // fire at his age. Runs every turn the deck is active, babyhood grace included.
-  tick?: Partial<Record<NumericTraitKey, number>>;
-  // Gate on `tick`: while this condition FAILS the deck's tick is suspended (the
-  // deck itself stays active). For a counter that only means something while a
-  // story is live — the sibling deck's `relBrotherDistance` measures how present
-  // you have been, so it must stop climbing once his arc has concluded and there
-  // is nothing left to show up for, or a long life drifts away from him no matter
-  // how devoted you were.
-  tickWhile?: Condition;
-  // Tick rules that each carry their OWN condition, for counters that must stop
-  // somewhere `tick` + `tickWhile` cannot express — `tickWhile` gates the WHOLE
-  // deck's `tick`, so it cannot hold one counter at zero while another keeps
-  // running. The canonical use is a cooldown: count down by 1 while the counter
-  // is at least 1, so it stops at 0 instead of going negative and swallowing the
-  // next time it is wound. Independent of `tick`/`tickWhile`; the deck must be
-  // active. See TickRule.
+  // Per-turn trait increments while this deck is active (see TickRule). Runs
+  // every turn the deck is active, babyhood grace included.
   ticks?: TickRule[];
   // An "urgent" deck: while it is active, its eligible cards OWN the draw pool —
   // incidental flavour from other active decks is suppressed so you can escape
@@ -552,13 +540,8 @@ export type DriftShown = "+" | "++" | "+++" | "++++" | "-" | "--" | "---" | "---
 export interface StatusStateDef {
   label?: StringId;                      // display name id (defaults to the key)
   drift?: Partial<Record<VitalKey, number>>;
-  // Per-turn TRAIT increments while in this state — drift's counterpart for
-  // counters (parallels `drift` for vitals, applied the same turns). Used to age
-  // a pet toward the end of its life (pet=cat ticks `petCatAge`), so a lifespan
-  // milestone can fire ~N years on. Runs even during the babyhood `noDrift`
-  // grace period (a pet isn't around then anyway).
-  tick?: Partial<Record<NumericTraitKey, number>>;
-  // As Deck.ticks: tick rules with their own conditions, while this state holds.
+  // Per-turn trait increments while in this state (see TickRule). Runs even
+  // during the babyhood `noDrift` grace period.
   ticks?: TickRule[];
   // Per-vital override for how `drift` READS on the chip (see DriftShown). When a
   // vital is listed here the chip shows exactly this, ignoring the number's size

@@ -44,24 +44,24 @@ export const lillyDecks = [
     // The presence clock. Frozen once her story concludes, as the siblings' is:
     // otherwise a long and happy marriage slowly drifts away from the person you
     // married.
-    tick: { relLillyDistance: 1 },
-    tickWhile: { traits: { relLillyStoryDone: false } },
-    // THE COOLDOWN, as on the sibling decks: after one of her beats the next
-    // waits three years, so a courtship is spread across a life rather than
-    // dealt in a burst (a playtest went from "tell her" to married in two
-    // years). Gated beats set `relLillyCooldown` to 4 with setTraitsHidden
-    // (ticks land after the card, so 4 blocks the next 3 years); this counts it
-    // down and stops at 0. EXEMPT: `rel_lilly_drift` and `rel_lilly_lost`,
-    // the consequences of neglect, which answer her distance clock rather than
-    // waiting their turn; and `rel_lilly_idle`, the one card built to reach you
-    // while you are out of work.
-    //
-    // IT HAS A COST, measured by a player trying to marry her: married 8.7% ->
-    // 4.2% of lives, median wedding age 39 -> 46, and drift/lost dealt about a
-    // third more often. (It was first assumed the cooldown could not make her
-    // drift, since each beat pulls distance back 6 against a clock of 1 a year;
-    // but in play her beats come further apart than four years, so it climbs.)
-    ticks: [{ traits: { relLillyCooldown: -1 }, while: { traits: { relLillyCooldown: { min: 1 } } } }],
+    ticks: [
+      { traits: { relLillyDistance: 1 }, while: { traits: { relLillyStoryDone: false } } },
+      // THE COOLDOWN, as on the sibling decks: after one of her beats the next
+      // waits three years, so a courtship is spread across a life rather than
+      // dealt in a burst (a playtest went from "tell her" to married in two
+      // years). Gated beats set `relLillyCooldown` to 4 with setTraitsHidden
+      // (ticks land after the card, so 4 blocks the next 3 years); this counts it
+      // down and stops at 0. EXEMPT: `rel_lilly_drift` and `rel_lilly_lost`,
+      // the consequences of neglect, which answer her distance clock rather than
+      // waiting their turn; and `rel_lilly_idle`, the one card built to reach you
+      // while you are out of work.
+      //
+      // IT HAS A COST, measured by a player trying to marry her: married 8.7% ->
+      // 4.2% of lives, median wedding age 39 -> 46, and drift/lost dealt about a
+      // third more often — her beats come further apart, so her distance clock
+      // climbs higher between them.
+      { traits: { relLillyCooldown: -1 }, while: { traits: { relLillyCooldown: { min: 1 } } } },
+    ],
     cards: [
       // === WHO SHE IS ====================================================
       {

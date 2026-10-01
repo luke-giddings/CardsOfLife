@@ -382,27 +382,17 @@ function clampVitals(state: GameState): void {
   for (const key of VITAL_KEYS) state.vitals[key] = clampVital(state.vitals[key]);
 }
 
-// Per-turn TRAIT increments from active status states (StatusStateDef.tick) AND
-// active decks (Deck.tick). Drift's counterpart for counters — e.g. a cat ages
-// `petCatAge` a year at a time (status), and Tom ages `relBrotherAge` a year at a
-// time while the rel_bro deck is active (deck).
+// Per-turn TRAIT increments (see TickRule) from the active status states and
+// the active decks. Every rule's condition is read against the state BEFORE any
+// of this turn's ticks land, so the order rules are listed in can never change
+// the result.
 function applyTick(state: GameState): void {
-  // Every rule's condition is read against the state BEFORE any of this turn's
-  // ticks land, so the order rules are listed in can never change the result.
   const rules: TickRule[] = [];
   for (const kind of Object.keys(state.statuses) as StatusKind[]) {
-    const st = currentState(state, kind);
-    if (st?.tick) addTraits(state.traits, st.tick);
-    if (st?.ticks) rules.push(...st.ticks);
+    rules.push(...(currentState(state, kind)?.ticks ?? []));
   }
   for (const { deck } of deckIndex().decks) {
-    if (!state.activeDecks.includes(deck.id)) continue;
-    if (deck.ticks) rules.push(...deck.ticks);
-    if (!deck.tick) continue;
-    // A deck may suspend its own tick once its story no longer needs it — see
-    // Deck.tickWhile. Content names the condition; the engine just honours it.
-    if (!meets(deck.tickWhile, state)) continue;
-    addTraits(state.traits, deck.tick);
+    if (state.activeDecks.includes(deck.id)) rules.push(...(deck.ticks ?? []));
   }
   const due = rules.filter((r) => meets(r.while, state));
   for (const r of due) addTraits(state.traits, r.traits);

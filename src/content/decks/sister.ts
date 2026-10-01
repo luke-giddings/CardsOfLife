@@ -43,20 +43,21 @@ export const sisterDecks = [
     unlock: "deck.rel_sis.blurb",
     // Presence clock: +1 a year, back to 0 on any card where you see her
     // (years since you last did), as on the brother's deck.
-    tick: { relSisterAge: 1, relSisterDistance: 1 },
-    // Frozen once her story concludes — see the brother deck for why (a long life
-    // would otherwise drift away from her however devoted you had been).
-    tickWhile: { traits: { relSisterStoryDone: false } },
-    // THE COOLDOWN: after one of this sibling's beats, the next waits
-    // 3 years, so their story is spread across a life rather than dealt
-    // in a burst — and so a `priority` phase (an apprenticeship, the
-    // workhouse) is not swamped by a never-suppressed deck. Each gated beat
-    // sets `relSisterCooldown` to 4 with setTraitsHidden (ticks land after the card, so
-    // 4 blocks the next 3 years) and this counts it down, stopping at
-    // 0. Milestones and the childhood beats are exempt: they neither wait for
-    // it nor start it — the childhood ones share a window too narrow to
-    // space out without losing some of them.
-    ticks: [{ traits: { relSisterCooldown: -1 }, while: { traits: { relSisterCooldown: { min: 1 } } } }],
+    ticks: [
+      { traits: { relSisterAge: 1, relSisterDistance: 1 }, while: { traits: { relSisterStoryDone: false } } },
+      // Frozen once her story concludes — see the brother deck for why (a long life
+      // would otherwise drift away from her however devoted you had been).
+      // THE COOLDOWN: after one of this sibling's beats, the next waits
+      // 3 years, so their story is spread across a life rather than dealt
+      // in a burst — and so a `priority` phase (an apprenticeship, the
+      // workhouse) is not swamped by a never-suppressed deck. Each gated beat
+      // sets `relSisterCooldown` to 4 with setTraitsHidden (ticks land after the card, so
+      // 4 blocks the next 3 years) and this counts it down, stopping at
+      // 0. Milestones and the childhood beats are exempt: they neither wait for
+      // it nor start it — the childhood ones share a window too narrow to
+      // space out without losing some of them.
+      { traits: { relSisterCooldown: -1 }, while: { traits: { relSisterCooldown: { min: 1 } } } },
+    ],
     cards: [
       // === CHILDHOOD (her ages 0–7) ======================================
       // Three one-shots, each with a cold third swipe, so shutting her out is

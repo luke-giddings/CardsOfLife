@@ -1457,16 +1457,21 @@ have done.
   short past-tense `log.<name>` string (EN+IT). It's stamped with the card's age
   and shown on the end-of-run "milestones". Durable facts (final trade/home,
   vaccinated, sold up…) are read from end-state — don't `remember` those.
-- **`tick` for time-based state:** a status STATE — or a whole DECK — may carry
-  `tick: { <trait>: n }`, which increments that counter every turn it's active
-  (drift's counterpart for traits). Status-tick ages a pet (`pet="cat"` ticks
-  `petCatAge`, `pet="dog"` ticks `petDogAge`); deck-tick ages something tied to a
-  deck's lifetime rather than a status — the `rel_bro` deck ticks `relBrotherAge`
-  from the year Tom is born (the deck is added then and never removed), so his beats
-  can fire at his age (the school-or-work crossroads at 5) instead of the player's.
-  Both run every turn the state/deck is active, babyhood grace included. Reach for it
-  whenever something needs to happen "so many years after X" — record the counter
-  with `tick`, gate the payoff card on it.
+- **`ticks` for time-based state:** a status STATE — or a whole DECK — may carry
+  `ticks: [{ traits: { <trait>: n }, while?: <condition> }]`: each rule adds to its
+  counters every turn its owner is active and its `while` holds (drift's
+  counterpart for traits). A pet's status ages it (`pet="cat"` ticks `petCatAge`);
+  a deck ages something tied to its lifetime rather than a status — the `rel_bro`
+  deck ticks `relBrotherAge` from the year Tom is born, so his beats fire at his
+  age instead of the player's, and stops his presence clock once his story ends
+  (`while: { traits: { relBrotherStoryDone: false } }`) — otherwise a long life
+  drifts away from him however devoted you were. A cooldown counts down and STOPS
+  at 0 (`traits: { x: -1 }, while: { traits: { x: { min: 1 } } }`). Every rule's
+  condition is read before any of the turn's ticks land, so listing order never
+  matters. Ticks, like drift, run after the card's effects and on quiet years too,
+  so a counter set to N at year Y reads N−1 at year Y+1: **to block the next N
+  years, set it to N+1.** Reach for it whenever something needs to happen "so many
+  years after X" — record the counter, gate the payoff card on it.
 - **`chance` for rare cards:** a card may carry `chance: 0..1` — even once its
   `conditions` hold, it only enters the draw pool on a fresh per-year roll. It sits
   at the very bottom of the draw order (milestones and `force` still jump ahead), so
@@ -2643,15 +2648,6 @@ Roughly in likely order. None of these are started.
   out. `rel_bro_fate`'s `weight: 25` is deliberately sized against the pool old
   age *will* have, not today's. Re-check any late-life weight, `chance` or gate
   when that content lands.
-- **`ticks` — tick rules with their own conditions** (on decks and on status
-  states): `ticks: [{ traits: { x: -1 }, while: { traits: { x: { min: 1 } } } }]`.
-  `tickWhile` gates a deck's WHOLE `tick`, so it cannot hold one counter at zero
-  while another keeps running. The canonical use is a cooldown that counts down
-  and STOPS at 0 — without that it runs negative and swallows the next time it is
-  wound. Every rule's condition is read before any of the turn's ticks land, so
-  listing order never matters. Ticks, like drift, run after the card's effects
-  and on quiet years too, so a counter set to N at year Y reads N−1 at year Y+1:
-  **to block the next N years, set it to N+1.**
 - **The sibling cooldown (per sibling, 3 years).** After one of a sibling's beats,
   that sibling's next beat waits three years: each gated beat sets
   `relBrotherCooldown` / `relSisterCooldown` to 4 with `setTraitsHidden` (no mark), and
@@ -2696,17 +2692,10 @@ Roughly in likely order. None of these are started.
   first knob if the courtship now feels too slow (a shorter cooldown for her, or
   exempting `propose` once you are courting). `scripts/lilly-cooldown.ts`.
 
-- **`Deck.tickWhile`** — a deck's `tick` can be gated on a condition, suspending it
-  while the condition fails (the deck stays active). Added because the sibling
-  deck's `relBrotherDistance` ticked up every year forever: once Tom's arc had
-  concluded there was nothing left to show up FOR, so a long life drifted away
-  from him however devoted you had been. A player always choosing the kindest
-  option read CLOSE 98% of the time if they died before 40 and **0%** if they
-  reached 75. With `tickWhile: { traits: { relBrotherStoryDone: false } }` the
-  counter freezes when the story ends. `rel_bro_fate` is also heavily **weighted**
-  (25) so the finale actually lands — unweighted it was missed in most lives that
-  reached it, leaving the arc open and the counter running. Weight rather than a
-  milestone, so it stays near-certain to happen without fixing exactly when. Distance measures PRESENCE, not lifespan.
+- **`rel_bro_fate` is heavily weighted** (25) so the finale actually lands —
+  unweighted it was missed in most lives that reached it, leaving the arc open and
+  the presence clock running. Weight rather than a milestone, so it stays
+  near-certain to happen without fixing exactly when.
 - **Two-choice vs three-choice sweep** — the game is currently **178 two-swipe
   cards to 18 three-swipe** ones, and the third swipe has been added ad hoc where a
   card needed it (the criminal "give up the life", the apprentice "beg for more
