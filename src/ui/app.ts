@@ -574,7 +574,7 @@ export class Game {
           `<div class="bio-detail"><div class="bio-detail-t">${t(STATUS_LABEL[r.kind])}: ${r.label}</div>` +
           (r.drift.length
             ? `<ul>${r.drift.map((d) => `<li><span>${t(VITAL_LABEL[d.vital])}</span><span>${mark(d.vital, d.good, d.sym)}</span></li>`).join("")}</ul>`
-            : `<span class="bio-none">${t("ui.bioKindNone")}</span>`) +
+            : "") +
           `</div>`;
       }
     }
