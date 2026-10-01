@@ -666,7 +666,7 @@ export interface GameState {
   experienceJob?: string;             // the job the current `jobExperience` was earned in (see changeStatus)
   // Status values stashed by a state that `suspends` them, handed back on leaving.
   suspendedStatuses?: Partial<Record<StatusKind, string>>;
-  pendingRescue?: string;             // a rescue card id to force on the next draw
+  pendingRescues?: string[];          // rescue card ids to force on the next draws, in order
   rng: number;                        // PRNG state, so resume is consistent
   // The seed this life STARTED from. `rng` overwrites itself on every draw, so
   // without this the only record of where a life began is gone by the first

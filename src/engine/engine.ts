@@ -153,12 +153,13 @@ export function drawCard(
   const content = CONTENT;
   const cards = allCards(content);
 
-  // A pending safety-net rescue jumps the queue (bypassing eligibility).
-  if (state.pendingRescue) {
-    const rescue = cards.find((c) => c.id === state.pendingRescue);
-    if (rescue) {
-      return { card: rescue, state: { ...state, pendingRescue: undefined, lastCardId: rescue.id } };
-    }
+  // A pending safety-net rescue jumps the queue (bypassing eligibility). Two
+  // vitals can be caught in the same year, so they queue and come one a turn.
+  const [next, ...rest] = state.pendingRescues ?? [];
+  if (next) {
+    const rescue = cards.find((c) => c.id === next);
+    const after = { ...state, pendingRescues: rest.length ? rest : undefined };
+    if (rescue) return { card: rescue, state: { ...after, lastCardId: rescue.id } };
   }
 
   const milestone = dueMilestone(cards, state, content);
@@ -339,8 +340,14 @@ function changeStatus(
 
 export function applyEffect(state: GameState, effect: Effect, content: Content): void {
   if (effect.setStatus) {
-    for (const [k, v] of Object.entries(effect.setStatus)) {
-      changeStatus(state, k as StatusKind, v, content);
+    const sets = Object.entries(effect.setStatus) as [StatusKind, string][];
+    for (const [k, v] of sets) changeStatus(state, k, v, content);
+    // A status this effect sets DIRECTLY wins over one handed back by a
+    // suspension ending in the same effect: "streets, and out of your
+    // apprenticeship" must not land you back in the family home the
+    // apprenticeship had stashed. A kind still suspended stays as forced.
+    for (const [k, v] of sets) {
+      if (state.statuses[k] !== v && !(k in (state.suspendedStatuses ?? {}))) changeStatus(state, k, v, content);
     }
   }
   if (effect.addDecks) {
@@ -491,9 +498,13 @@ function checkGameOver(state: GameState, content: Content): void {
     if (state.vitals[key] > VITAL_MIN) continue;
     const rescue = findRescue(state, content, key);
     if (rescue) {
-      // Caught by the safety net: floor the vital and force the rescue card.
+      // Caught by the safety net: floor the vital and queue the rescue card.
+      // A net already queued (its vital still waiting its turn, and drained
+      // again meanwhile) catches it again rather than queueing twice: it is not
+      // spent until it is answered.
       state.vitals[key] = RESCUE_FLOOR;
-      state.pendingRescue = rescue.id;
+      const queue = (state.pendingRescues ??= []);
+      if (!queue.includes(rescue.id)) queue.push(rescue.id);
       continue;
     }
     state.over = true;
