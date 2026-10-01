@@ -321,6 +321,9 @@ export class Game {
     this.vitalsEl = vitals;
     this.fills = {} as Record<VitalKey, HTMLElement>;
     this.flashes = {} as Record<VitalKey, HTMLElement>;
+    for (const ts of Object.values(this.barTimers)) for (const t of ts ?? []) window.clearTimeout(t);
+    this.barTimers = {};
+    this.barSeg = {};
     this.drains = {} as Record<VitalKey, HTMLElement>;
     this.gains = {} as Record<VitalKey, HTMLElement>;
     this.nets = {} as Record<VitalKey, HTMLElement>;
@@ -448,33 +451,7 @@ export class Game {
     // happens. Only losses (negative drift) are previewed.
     const drift = totalDrift(disp);
     for (const key of VITAL_KEYS) {
-      const nv = s.vitals[key];
-      const ov = this.prevVitals[key];
-      this.fills[key].style.width = `${nv}%`;
-      if (nv !== ov) this.flashDelta(key, ov, nv);
-      const d = drift[key] ?? 0;
-      const drain = this.drains[key];
-      const gain = this.gains[key];
-      // At least 3px either way, so a small drift is still seen.
-      if (d < 0 && nv > 0) {
-        const loss = Math.min(-d, nv); // can't strip more than the bar holds
-        drain.style.left = `${nv - loss}%`;
-        drain.style.width = `max(3px, ${loss}%)`;
-        drain.style.opacity = "1";
-      } else {
-        drain.style.opacity = "0";
-      }
-      if (d > 0 && nv < 100) {
-        const add = Math.min(d, 100 - nv); // can't fill past the top
-        gain.style.left = `${nv}%`;
-        gain.style.width = `max(3px, ${add}%)`;
-        gain.style.opacity = "1";
-      } else {
-        gain.style.opacity = "0";
-      }
-      const net = this.nets[key];
-      net.textContent = d > 0 ? "+" : d < 0 ? "−" : "";
-      net.className = `vnet ${d > 0 ? "dgood" : "dbad"}`;
+      this.updateBar(key, this.prevVitals[key], s.vitals[key], drift[key] ?? 0);
     }
     this.prevVitals = { ...s.vitals };
     // Spot arrivals for the Bio's "new" flags (see bioShown).
@@ -605,6 +582,102 @@ export class Game {
 
   // Flash the changed segment of a bar in a bright tint of its own colour; the
   // bar growing or shrinking conveys whether it was a gain or a loss.
+  // --- the bars' yearly change ------------------------------------------------
+  // Each bar previews next year's drift: a dark hatch over the tip a loss will
+  // take, a hollow outline past the fill a gain will add. When the value
+  // changes, it plays out in three steps, so the eye follows one thing at a time:
+  //   1. the preview RESCALES to where the value is actually going (skipped when
+  //      the card left this vital alone, and the preview was already right);
+  //   2. the bar FILLS into it (or drains through it);
+  //   3. it clears, and next year's preview FADES IN.
+  private barTimers: Partial<Record<VitalKey, number[]>> = {};
+  // Where each bar's preview sits now (which element, from/to in %), and the
+  // drift to preview once a running animation finishes.
+  private barSeg: Partial<Record<VitalKey, { up: boolean; lo: number; hi: number } | null>> = {};
+  private barNextDrift: Partial<Record<VitalKey, number>> = {};
+
+  private placeSeg(el: HTMLElement, lo: number, hi: number, opacity: number, ms: number): void {
+    el.style.transition = ms > 0 ? `left ${ms}ms ease, width ${ms}ms ease, opacity 300ms ease` : "none";
+    el.style.left = `${lo}%`;
+    el.style.width = `max(3px, ${hi - lo}%)`; // at least 3px, so a small drift is still seen
+    el.style.opacity = String(opacity);
+  }
+
+  // Show next year's drift `d` for a bar at value `v`. `fade`: appear from
+  // nothing (the end of an animation) rather than move from where it was.
+  private showPreview(key: VitalKey, v: number, d: number, fade: boolean): void {
+    const drain = this.drains[key];
+    const gain = this.gains[key];
+    let seg: { up: boolean; lo: number; hi: number } | null = null;
+    if (d < 0 && v > 0) seg = { up: false, lo: v - Math.min(-d, v), hi: v }; // can't strip more than the bar holds
+    else if (d > 0 && v < 100) seg = { up: true, lo: v, hi: v + Math.min(d, 100 - v) }; // can't fill past the top
+    const on = seg ? (seg.up ? gain : drain) : null;
+    for (const el of [drain, gain]) if (el !== on) this.placeSeg(el, Number.parseFloat(el.style.left) || 0, Number.parseFloat(el.style.left) || 0, 0, 0);
+    if (seg && on) {
+      if (fade) {
+        this.placeSeg(on, seg.lo, seg.hi, 0, 0);
+        void on.offsetWidth; // so the fade starts from nothing
+        on.style.transition = "opacity 400ms ease";
+        on.style.opacity = "1";
+      } else this.placeSeg(on, seg.lo, seg.hi, 1, 600);
+    }
+    this.barSeg[key] = seg;
+    const net = this.nets[key];
+    net.textContent = d > 0 ? "+" : d < 0 ? "−" : "";
+    net.className = `vnet ${d > 0 ? "dgood" : "dbad"}`;
+  }
+
+  private updateBar(key: VitalKey, ov: number, nv: number, d: number): void {
+    const running = (this.barTimers[key]?.length ?? 0) > 0;
+    if (nv === ov) {
+      // No change in value: just keep the preview current — unless a change is
+      // still playing out, which shows the newest preview when it ends.
+      if (running) this.barNextDrift[key] = d;
+      else this.showPreview(key, nv, d, false);
+      return;
+    }
+    for (const t of this.barTimers[key] ?? []) window.clearTimeout(t);
+    this.barTimers[key] = [];
+    const fill = this.fills[key];
+    if (reduceMotion) {
+      fill.style.width = `${nv}%`;
+      this.showPreview(key, nv, d, false);
+      return;
+    }
+    this.barNextDrift[key] = d;
+    const up = nv > ov;
+    const seg = up ? this.gains[key] : this.drains[key];
+    const other = up ? this.drains[key] : this.gains[key];
+    const lo = Math.min(ov, nv);
+    const hi = Math.max(ov, nv);
+    fill.style.width = `${ov}%`; // hold the bar where it was until step 2
+    // 1. Rescale the preview to the real change. Already there (the card left
+    //    this vital alone): no step. Not showing at all: grow it out from the
+    //    bar's current end.
+    const cur = this.barSeg[key];
+    const already = !!cur && cur.up === up && Math.abs(cur.lo - lo) < 0.5 && Math.abs(cur.hi - hi) < 0.5;
+    const rescale = already ? 0 : 450;
+    if (!already) {
+      if (!cur || cur.up !== up) this.placeSeg(seg, ov, ov, 1, 0);
+      this.placeSeg(other, Number.parseFloat(other.style.left) || 0, Number.parseFloat(other.style.left) || 0, 0, 0);
+      void seg.offsetWidth;
+      this.placeSeg(seg, lo, hi, 1, rescale);
+    }
+    this.barSeg[key] = { up, lo, hi };
+    // 2. Fill into it (the fill's own 1.5s transition), flashing the change.
+    const timers = this.barTimers[key]!;
+    timers.push(window.setTimeout(() => {
+      fill.style.width = `${nv}%`;
+      this.flashDelta(key, ov, nv);
+    }, rescale));
+    // 3. Clear it, and fade in next year's.
+    timers.push(window.setTimeout(() => {
+      this.barTimers[key] = [];
+      this.placeSeg(seg, lo, hi, 0, 0);
+      this.showPreview(key, nv, this.barNextDrift[key] ?? 0, true);
+    }, rescale + 1500));
+  }
+
   private flashDelta(key: VitalKey, oldV: number, newV: number): void {
     const flash = this.flashes[key];
     const lo = Math.min(oldV, newV);
