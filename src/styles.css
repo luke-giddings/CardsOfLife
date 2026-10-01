@@ -149,6 +149,8 @@ body {
    bars of the life you left are the whole point. */
 .intro-on .age,
 .intro-on .bio { display: none; }
+/* nor the bars' yearly previews: the opening cards are not a year of the life */
+.intro-on .vnet, .intro-on .gain, .intro-on .drain { visibility: hidden; }
 .intro-bare .vitals { display: none; }
 .dbg.on,
 .hard.on {
