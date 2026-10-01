@@ -490,14 +490,13 @@ export class Game {
       if (meets(def.driftWhile, disp)) {
         for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
           if (!dv) continue;
-          // Show the SIZE of the drift: one symbol per 5 points a year, rounded,
-          // at least one — so a list of them adds up the way the bar moves (a
-          // £++++ wage against a £−− house and a £− cat reads as gaining, which
-          // it is). Derived from the number, so it can never drift out of step
+          // Show the SIZE of the drift: one symbol per 5 points a year, rounded
+          // up — so a list of them adds up the way the bar moves (a £+++++ wage
+          // against a £−− house and a £− cat reads as gaining, which it is). Derived from the number, so it can never drift out of step
           // with it. (`driftShown`, the authored ladder-position symbols, is kept
           // in the content but not read here.)
           const good = dv > 0;
-          const sym = (good ? "+" : "−").repeat(Math.max(1, Math.round(Math.abs(dv) / 5)));
+          const sym = (good ? "+" : "−").repeat(Math.ceil(Math.abs(dv) / 5));
           drift.push({ vital: vk as VitalKey, good, sym });
         }
       }

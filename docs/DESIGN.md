@@ -138,9 +138,9 @@ nudges and drift use raw numbers (they're not player-facing bar moves).
 A Status does two jobs: **drift** (a fixed per-turn effect on Vitals) and
 **gating/deck-ownership** (a state can `addDecks`). Drift is shown to the player
 as **icon + a symbol count for its SIZE**: one `+`/`−` per 5 points a year,
-rounded, at least one, one tap away in the Bio (see *The Bio* below). Derived
+rounded up, one tap away in the Bio (see *The Bio* below). Derived
 from the number, so the symbols in a bar's breakdown add up the way the bar
-actually moves — a chief clerk's £++++ against a small house's £−− reads as
+actually moves — a chief clerk's £+++++ against a small house's £−− reads as
 gaining. Each state also carries an authored `driftShown` (its ladder position:
 renting *£−* → small *£−−* → large *£−−−* → estate *£−−−−*; wages *£+* / *£++* /
 *£+++* by tier), kept for later use but not currently displayed: shown in the
