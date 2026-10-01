@@ -493,13 +493,12 @@ export class Game {
   // display snapshot (so a status held for a chapter card doesn't show early).
   // `shown`: whether it has a place in the Bio, which is the CONTENT's opinion
   // (StatusDef.show), not a rule written here: see the doc on StatusShow.
-  // `drift` is empty while the drift is suspended (babyhood's noDrift), so the
+  // `drift` is empty while the kind's drift is suspended (its `driftWhile`), so the
   // breakdown always agrees with totalDrift and the bars.
   private bioRows(disp: GameState): {
     kind: StatusKind; value: string; label: string; shown: boolean;
     drift: { vital: VitalKey; good: boolean; sym: string }[];
   }[] {
-    const noDrift = content.decks.some((d) => d.noDrift && disp.activeDecks.includes(d.id));
     const shows = (kind: StatusKind, value: string): boolean => {
       const rule = content.statuses[kind].show;
       if (rule === "always") return true;
@@ -513,7 +512,7 @@ export class Game {
       const def = content.statuses[kind];
       const state = def.states[value];
       const drift: { vital: VitalKey; good: boolean; sym: string }[] = [];
-      if (!(noDrift && !def.ignoreNoDrift)) {
+      if (meets(def.driftWhile, disp)) {
         for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
           if (!dv) continue;
           // Show the STRENGTH of the drift, not just its sign: 1–3 symbols (a

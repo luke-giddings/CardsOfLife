@@ -1,5 +1,5 @@
-import type { Condition, GameState, NumberMatch, StatusKind, Traits, VitalKey } from "./types.ts";
-import { CONTENT, totalDrift } from "./content.ts";
+import type { Condition, GameState, NumberMatch, StatusKind, Traits, Vitals, VitalKey } from "./types.ts";
+import { CONTENT, currentState } from "./content.ts";
 
 function matchNumber(value: number, m: NumberMatch): boolean {
   if (typeof m === "number") return value === m;
@@ -75,4 +75,20 @@ export function meets(cond: Condition | undefined, state: GameState): boolean {
   if (cond.any && !cond.any.some((c) => meets(c, state))) return false;
 
   return true;
+}
+
+// Sum of every active status state's per-turn drift, counting only the kinds
+// whose `driftWhile` holds (the babyhood grace period suspends living costs).
+// The single source of truth for the turn, for `Condition.drift`, and for the
+// UI's previews.
+export function totalDrift(state: GameState): Partial<Vitals> {
+  const drift: Partial<Vitals> = {};
+  for (const kind of Object.keys(state.statuses) as StatusKind[]) {
+    if (!meets(CONTENT.statuses[kind]?.driftWhile, state)) continue;
+    for (const [k, v] of Object.entries(currentState(state, kind)?.drift ?? {})) {
+      const key = k as VitalKey;
+      drift[key] = (drift[key] ?? 0) + (v ?? 0);
+    }
+  }
+  return drift;
 }

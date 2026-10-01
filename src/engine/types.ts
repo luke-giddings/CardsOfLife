@@ -511,7 +511,6 @@ export interface Deck {
   cards: Card[];
   title?: StringId;  // shown when this deck is unlocked for the first time
   unlock?: StringId; // blurb for the first-time unlock announcement
-  noDrift?: boolean; // while active, status drift is suspended (unloseable grace, e.g. babyhood)
   // Per-turn trait increments while this deck is active (see TickRule). Runs
   // every turn the deck is active, babyhood grace included.
   ticks?: TickRule[];
@@ -540,8 +539,8 @@ export type DriftShown = "+" | "++" | "+++" | "++++" | "-" | "--" | "---" | "---
 export interface StatusStateDef {
   label?: StringId;                      // display name id (defaults to the key)
   drift?: Partial<Record<VitalKey, number>>;
-  // Per-turn trait increments while in this state (see TickRule). Runs even
-  // during the babyhood `noDrift` grace period.
+  // Per-turn trait increments while in this state (see TickRule). Not paused
+  // by the kind's `driftWhile`.
   ticks?: TickRule[];
   // Per-vital override for how `drift` READS on the chip (see DriftShown). When a
   // vital is listed here the chip shows exactly this, ignoring the number's size
@@ -588,11 +587,11 @@ export interface StatusDef {
   id: StatusKind;
   show: StatusShow;
   levels?: string[];                     // ordering for `atLeast`, low → high
-  // When true, this kind's drift applies even during a `noDrift` grace period
-  // (babyhood). Used by the `age` status so the life-stage bonus/penalty is
-  // always felt — the baby stage's small all-round bonus lands even while the
-  // baby deck otherwise suspends drift. Living-cost drains stay suspended.
-  ignoreNoDrift?: boolean;
+  // This kind's drift applies only in turns where the condition holds (absent:
+  // always). How a grace period is written — living costs suspended through
+  // babyhood, while the life stage's own bonus still lands. Must not itself use
+  // a `drift` clause (it is read while the drift is being summed).
+  driftWhile?: Condition;
   states: Record<string, StatusStateDef>;
 }
 

@@ -1,5 +1,5 @@
-import { meets } from "./conditions.ts";
-import { CONTENT, currentState, deckIndex, totalDrift } from "./content.ts";
+import { meets, totalDrift } from "./conditions.ts";
+import { CONTENT, currentState, deckIndex } from "./content.ts";
 import { nextRandom, randomSeed } from "./rng.ts";
 import {
   DEFAULT_TRAITS,
@@ -24,7 +24,8 @@ import {
 // The engine reads its content through one binding (content.ts), set once with
 // setContent before anything else runs. Re-exported here so callers have one
 // place to import the engine from.
-export { CONTENT, allCards, cardById, setContent, totalDrift } from "./content.ts";
+export { CONTENT, allCards, cardById, setContent } from "./content.ts";
+export { totalDrift } from "./conditions.ts";
 
 // --- setup -------------------------------------------------------------------
 

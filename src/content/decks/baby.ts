@@ -4,11 +4,11 @@
 import type { Deck } from "../../engine/types.ts";
 
 export const babyDecks = [
-    // --- Baby: ages 0–5. Tutorial + build-up; impossible to lose. noDrift
-    //     suspends status drift (e.g. family living costs) through babyhood. --
+    // --- Baby: ages 0–5. Tutorial + build-up; impossible to lose. Status drift
+    //     (e.g. family living costs) is suspended through babyhood by each
+    //     kind's `driftWhile` (content/index.ts). --
     {
       id: "age_baby",
-      noDrift: true,
       cards: [
         {
           id: "baby_birth",

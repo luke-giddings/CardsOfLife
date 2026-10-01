@@ -1,4 +1,4 @@
-import type { Content } from "../engine/types.ts";
+import type { Condition, Content } from "../engine/types.ts";
 import {
   babyDecks,
   familyDecks,
@@ -13,6 +13,10 @@ import {
   petDecks,
   prisonDecks,
 } from "./decks/index.ts";
+
+// The baby grace period: living costs and the like are suspended through
+// babyhood (an unloseable tutorial); only the life stage's own drift lands.
+const PAST_BABYHOOD: Condition = { status: { age: { atLeast: "child" } } };
 
 // ---------------------------------------------------------------------------
 // Content — BABY (ages 0–5) then CHILD (ages 5–17), ending at 18 for now.
@@ -70,14 +74,13 @@ export const content = {
     // (start = baby; baby_schooling → child; child_adult → young_adult; then two
     // age-gated milestones ya_adult → adult and adult_oldage → old_age). Its
     // drift is the passive tax/dividend of your age: babyhood a small all-round
-    // bonus (and `ignoreNoDrift` so it lands even inside the baby grace period),
+    // bonus (it has no `driftWhile`, so it lands even inside the baby grace period),
     // childhood a touch of happiness, young adulthood neutral, then a health
     // decline that starts in adulthood and steepens in old age. Ordered so cards
     // can gate on atLeast/atMost by stage. Balance: all values are starter knobs.
     age: {
       id: "age",
       show: "always", // the life stage means something from the first card
-      ignoreNoDrift: true,
       levels: ["baby", "child", "young_adult", "adult", "old_age"],
       states: {
         baby: { label: "status.age.baby", drift: { happiness: 2, health: 2, spirit: 2 }, driftShown: { happiness: "+", health: "+", spirit: "+" } },
@@ -89,6 +92,7 @@ export const content = {
     },
     job: {
       id: "job",
+      driftWhile: PAST_BABYHOOD,
       show: { ageMin: 5 }, // babyhood ends at the schooling milestone; nothing to show before it
       states: {
         infant: { label: "status.job.infant" }, // neutral start; no drain, no employment yet
@@ -200,6 +204,7 @@ export const content = {
     },
     housing: {
       id: "housing",
+      driftWhile: PAST_BABYHOOD,
       show: { ageMin: 5 }, // as job: the three core life statuses appear together
       states: {
         // Home life while living with the family. Costs money — your keep /
@@ -251,6 +256,7 @@ export const content = {
     },
     education: {
       id: "education",
+      driftWhile: PAST_BABYHOOD,
       show: { ageMin: 5 }, // as job: the three core life statuses appear together
       // The credential that separates the four career paths. Only the ACADEMIC
       // ladder is ordered (for `atLeast` gating of the educated path). The TRADE
@@ -281,6 +287,7 @@ export const content = {
     // — a lavish life genuinely wears you out.
     lifestyle: {
       id: "lifestyle",
+      driftWhile: PAST_BABYHOOD,
       show: "whenSet", // reserved: nothing to say until you have one
       levels: ["frugal", "modest", "comfortable", "lavish"],
       states: {
@@ -301,6 +308,7 @@ export const content = {
     // old age. Hidden chip while "none".
     pet: {
       id: "pet",
+      driftWhile: PAST_BABYHOOD,
       show: "whenSet", // reserved: nothing to say until you have one
       states: {
         none: {},
@@ -350,6 +358,7 @@ export const content = {
     // and in that one card, not in a dividend drawn for forty years.
     family: {
       id: "family",
+      driftWhile: PAST_BABYHOOD,
       show: { ageMin: 18 },
       states: {
         infant: { label: "status.family.infant" },
