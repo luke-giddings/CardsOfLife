@@ -269,7 +269,12 @@ function addTraits(traits: Traits, deltas: Partial<Record<NumericTraitKey, numbe
 // Changing a status hands over the decks it owns: remove the outgoing state's
 // decks, add the incoming state's decks. This is how "get fired" drops the
 // whole job deck without the card having to spell it out.
-function changeStatus(state: GameState, kind: StatusKind, value: string): void {
+//
+// `direct`: the kinds the effect being applied sets itself. A suspension ending
+// here never hands one of those back — "streets, and out of your
+// apprenticeship" must not land you in the family home the apprenticeship had
+// stashed — so the effect's own value is the only one ever applied.
+function changeStatus(state: GameState, kind: StatusKind, value: string, direct?: ReadonlySet<StatusKind>): void {
   const previous = state.statuses[kind];
   const states = CONTENT.statuses[kind]?.states;
   const oldState = states?.[previous];
@@ -307,25 +312,19 @@ function changeStatus(state: GameState, kind: StatusKind, value: string): void {
     const stashed = state.suspendedStatuses?.[k];
     if (stashed === undefined) continue;
     delete state.suspendedStatuses![k];
-    changeStatus(state, k, stashed);
+    if (!direct?.has(k)) changeStatus(state, k, stashed, direct);
   }
   for (const [k, forced] of Object.entries(newState?.suspends ?? {}) as [StatusKind, string][]) {
     (state.suspendedStatuses ??= {})[k] = state.statuses[k];
-    changeStatus(state, k, forced);
+    changeStatus(state, k, forced, direct);
   }
 }
 
 export function applyEffect(state: GameState, effect: Effect): void {
   if (effect.setStatus) {
     const sets = Object.entries(effect.setStatus) as [StatusKind, string][];
-    for (const [k, v] of sets) changeStatus(state, k, v);
-    // A status this effect sets DIRECTLY wins over one handed back by a
-    // suspension ending in the same effect: "streets, and out of your
-    // apprenticeship" must not land you back in the family home the
-    // apprenticeship had stashed. A kind still suspended stays as forced.
-    for (const [k, v] of sets) {
-      if (state.statuses[k] !== v && !(k in (state.suspendedStatuses ?? {}))) changeStatus(state, k, v);
-    }
+    const direct = new Set(sets.map(([k]) => k));
+    for (const [k, v] of sets) changeStatus(state, k, v, direct);
   }
   if (effect.addDecks) {
     for (const d of effect.addDecks) {
