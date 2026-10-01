@@ -8,7 +8,7 @@ import type { Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left", "right", "up", "down"];
 const RUNS = Number(process.argv[2]) || 20000;
-const avail = (card: any, s: GameState) => DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s, gameContent));
+const avail = (card: any, s: GameState) => DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s));
 
 let babyRight = 0, babyLeft = 0;                 // age-5 school-vs-work fork
 let everChild = 0, childReached13 = 0, childEverEligible = 0;
@@ -16,7 +16,7 @@ let apprOffered = 0, apprAccepted = 0;           // job_labour_apprenticeship mi
 let bornWorkerDied = 0, bornWorkerReached30 = 0; // among everChild
 
 for (let r = 0; r < RUNS; r++) {
-  let s = initGame(gameContent);
+  let s = initGame();
   let child = false, reached13 = false, eligible = false, offered = false, accepted = false;
   let guard = 0;
   while (!s.over && s.age < 30 && guard < 400) {

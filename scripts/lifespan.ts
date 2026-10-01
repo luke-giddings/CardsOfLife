@@ -30,12 +30,12 @@ setContent(gameContent);
 
 const DIRS: Direction[] = ["left", "right", "up", "down"];
 const dirsFor = (c: Card, s: GameState): Direction[] =>
-  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const probe = chooseDirection(structuredClone(s), c, d);
+    const probe = chooseDirection(s, c, d);
     const v = Object.values(probe.state.vitals) as number[];
     const k = probe.state.over ? -1e9 : Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
     if (k > key) { key = k; best = d; }
@@ -46,12 +46,12 @@ function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
 const N = Number(process.argv[2]) || 2500;
 const ages: number[] = [];
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent);
+  let s = initGame();
   for (let turn = 0; turn < 120 && !s.over; turn++) {
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;
   }
   ages.push(s.age);

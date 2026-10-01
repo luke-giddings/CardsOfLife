@@ -88,7 +88,7 @@ const GOALS: Goal[] = [
 
 const DIRS: Direction[] = ["left", "right", "up", "down"];
 const dirsFor = (c: Card, s: GameState) =>
-  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 
 // The furthest route entry currently satisfied, or -1. Route order is the
 // player's belief about the road, not something the engine knows.
@@ -130,16 +130,16 @@ function run(g: Goal, ambition: number, N: number) {
   let won = 0;
   const depth = new Array(g.route.length + 1).fill(0);
   for (let i = 0; i < N; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     let mark = -1, wantMark = 0;
     for (let t = 0; t < 120 && !s.over; t++) {
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       let best = ds[0], key = -Infinity;
       for (const dir of ds) {
-        const k = score(chooseDirection(structuredClone(s), d.card, dir).state, g, mark, wantMark, ambition);
+        const k = score(chooseDirection(s, d.card, dir).state, g, mark, wantMark, ambition);
         if (k > key) { key = k; best = dir; }
       }
       s = chooseDirection(s, d.card, best).state;

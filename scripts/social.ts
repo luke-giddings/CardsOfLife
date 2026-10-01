@@ -27,7 +27,7 @@ setContent(gameContent);
 
 const DIRS: Direction[] = ["left", "right", "up", "down"];
 const dirsFor = (c: Card, s: GameState): Direction[] =>
-  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 
 const vitalScore = (s: GameState): number => {
   const v = Object.values(s.vitals) as number[];
@@ -38,7 +38,7 @@ const vitalScore = (s: GameState): number => {
 function pick(c: Card, s: GameState, ds: Direction[], warm: number): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const probe = chooseDirection(structuredClone(s), c, d);
+    const probe = chooseDirection(s, c, d);
     const gained = probe.state.traits.socialWarmth - s.traits.socialWarmth;
     const k = probe.state.over ? -1e9 : vitalScore(probe.state) + warm * gained;
     if (k > key) { key = k; best = d; }
@@ -56,15 +56,15 @@ function run(warm: number) {
   const seen = new Map<string, number>();  // fam_single card -> lives it was drawn in
   let famDraws = 0, draws = 0;
   for (let i = 0; i < N; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     const mine = new Set<string>();
     for (let turn = 0; turn < 120 && !s.over; turn++) {
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       draws++;
       if (FAM.has(d.card.id)) { famDraws++; mine.add(d.card.id); }
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       s = chooseDirection(s, d.card, pick(d.card, s, ds, warm)).state;
     }
     for (const id of mine) seen.set(id, (seen.get(id) ?? 0) + 1);

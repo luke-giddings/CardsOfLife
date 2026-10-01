@@ -13,11 +13,11 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left", "right", "up", "down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const probe = chooseDirection(structuredClone(s), c, d);
+    const probe = chooseDirection(s, c, d);
     const v = Object.values(probe.state.vitals) as number[];
     const k = probe.state.over ? -1e9 : Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
     if (k > key) { key = k; best = d; }
@@ -27,13 +27,13 @@ function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
 const N = Number(process.argv[2]) || 3000;
 const lives = new Map<string, number>(), draws = new Map<string, number>();
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent); const mine = new Set<string>();
+  let s = initGame(); const mine = new Set<string>();
   for (let t = 0; t < 120 && !s.over; t++) {
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     mine.add(d.card.id); draws.set(d.card.id, (draws.get(d.card.id) ?? 0) + 1);
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;
   }
   for (const id of mine) lives.set(id, (lives.get(id) ?? 0) + 1);

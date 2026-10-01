@@ -34,7 +34,7 @@ export const VITAL_MAX = 100;
 // slash tokens as minus bars); the slashes are purely an authoring convenience.
 export type Magnitude = "//" | "/" | "---" | "--" | "-" | "+" | "++" | "+++" | "++++";
 // Flat point steps ("/" and "//" are proportional — handled in applyMagnitude).
-export const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "/" | "//">, number> = {
+const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "/" | "//">, number> = {
   "++++": 100,
   "+++": 50,
   "++": 25,
@@ -188,11 +188,6 @@ export interface Traits {
   // on skill, not health, so coasting through the years leaves you unready. Reset
   // to 0 when you (re-)enter the apprenticeship. See the job_apprentice deck.
   jobSkill: number;
-  // Durable "reached the factory" marker (unlike `jobExperience`, which resets on
-  // each job change). Lets the unemployed offer let a former factory worker
-  // return to the factory without re-grinding, while a green worker cannot skip
-  // straight there. (Stopgap: will fold into a per-path "highest tier reached"
-  // cache when adult job re-entry lands.)
   // The highest rung reached on each honest ladder: 1 = its entry rung, 2 the
   // next, 3 its top. Stamped by each job state's `enterTraits`, so every route
   // into a job records it. The out-of-work offer reads the ladder that matches
@@ -243,9 +238,6 @@ export interface Traits {
   // Read by home_family_sweets, _market, _fair, ya_thrift and old_grandchildren,
   // so it bites from childhood to the last chapter.
   flawSweetTooth: boolean;
-  // Pets. `pet*` so the debug panel groups them under a Pets category. There are
-  // two pets (one at a time): a cat (a HAPPINESS companion) and a dog (a SPIRIT
-  // companion), each with its own age/love pair. `pet<X>Age` ticks up each year
   // --- Making people, and what you make of them --------------------------
   // The social CURRENCY. Earned a couple of points at a time from options on
   // cards most lives already draw, and SPENT when you take someone up on their
@@ -271,6 +263,10 @@ export interface Traits {
   relLillyMet: "none" | "school" | "university" | "work" | "street";
   relLillyStoryDone: boolean;
   relLillyCooldown: number; // as relBrotherCooldown, for her beats (drift, lost and idle exempt)
+  // Pets. `pet*` so the debug panel groups them under a Pets category. There are
+  // two pets (one at a time): a cat (a HAPPINESS companion) and a dog (a SPIRIT
+  // companion), each with its own age/love pair. `pet<X>Age` ticks up each year
+  // the pet is kept (its status's tick); `pet<X>Love` is moved by its cards.
   petCatAge: number;
   petCatLove: number;
   petDogAge: number;
@@ -576,9 +572,8 @@ export interface StatusStateDef {
   // cell). Content names both the kind and the value it collapses to, so the
   // engine never has to know a status VALUE — see changeStatus.
   suspends?: Partial<Record<StatusKind, string>>;
-  // Traits stamped when you ENTER this state. The declarative counterpart of
-  // `keepExperience`: a fresh apprenticeship starts with no craftsmanship
-  // (`jobSkill: 0`), whatever route brought you to the bench.
+  // Traits stamped when you ENTER this state, whatever route brought you there:
+  // a fresh apprenticeship starts with no craftsmanship (`jobSkill: 0`).
   enterTraits?: Partial<Traits>;
   // (job states) A "between jobs" state — entering it preserves the `experience`
   // counter and the job it was earned in, so a sacking→re-hire into the SAME job
@@ -609,7 +604,6 @@ export type StatusShow = "always" | "whenSet" | { ageMin: number };
 export interface StatusDef {
   id: StatusKind;
   show: StatusShow;
-  ordered?: boolean;
   levels?: string[];                     // ordering for `atLeast`, low → high
   // When true, this kind's drift applies even during a `noDrift` grace period
   // (babyhood). Used by the `age` status so the life-stage bonus/penalty is

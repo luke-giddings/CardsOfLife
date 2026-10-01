@@ -46,7 +46,7 @@ function greedyDir(card: any, s: GameState, dirs: Direction[]): Direction {
   return best;
 }
 function availDirs(card: { options: any }, s: GameState): Direction[] {
-  return DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s, gameContent));
+  return DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s));
 }
 
 // cohort -> { n, succ, choice: Map<`${card}|${dir}`, [n,w]> }
@@ -59,7 +59,7 @@ const deathAges: number[] = [];
 const deathCards: Record<string, number> = {};
 
 for (let r = 0; r < RUNS; r++) {
-  let s = initGame(gameContent);
+  let s = initGame();
   const picks: string[] = [];
   const streams = new Set<string>();
   let guard = 0;

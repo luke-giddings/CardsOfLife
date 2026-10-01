@@ -3,18 +3,18 @@
 // schooling. How does it end, how long does it take, and does a man who walks
 // out go back to his old rung with his years? Played greedy (short-sighted),
 // and by a player who wants the education -- read them as a pair.
-import { chooseDirection, drawCard, initGame, quietYear, setContent } from "../src/engine/engine.ts";
+import { cardById, chooseDirection, drawCard, initGame, quietYear, setContent } from "../src/engine/engine.ts";
 import { meets } from "../src/engine/conditions.ts";
 import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
-const offer = gameContent.decks.flatMap((d) => d.cards).find((c) => c.id === "job_unemployed_offer") as Card;
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
+const offer = cardById("job_unemployed_offer") as Card;
 const EDU = ["illiterate", "basic", "grammar"];
 function pick(c: Card, s: GameState, ds: Direction[], keen: boolean): Direction {
   let best = ds[0], key = -Infinity;
-  for (const d of ds) { const p = chooseDirection(structuredClone(s), c, d).state; const v = Object.values(p.vitals) as number[];
+  for (const d of ds) { const p = chooseDirection(s, c, d).state; const v = Object.values(p.vitals) as number[];
     let k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0);
     if (keen && !p.over) k += 30000 * EDU.indexOf(p.statuses.education) + 3000 * (p.traits.eduStudy as number);
     if (k > key) { key = k; best = d; } }
@@ -22,7 +22,7 @@ function pick(c: Card, s: GameState, ds: Direction[], keen: boolean): Direction 
 }
 let MONEY = 60;
 function man(seed: number, education: string, job: string, rung: Record<string, number>, exp: number): GameState {
-  const s = initGame(gameContent, seed);
+  const s = initGame(seed);
   s.age = 30; s.statuses.age = "adult"; s.statuses.education = education; s.statuses.housing = "renting";
   s.statuses.family = "single"; s.vitals = { finances: MONEY, happiness: 50, health: 50, spirit: 50 };
   s.activeDecks = ["age_adult", "home_renting", "fam_single"];
@@ -45,8 +45,8 @@ for (const [label, edu, job, rung] of [["unlettered factory hand", "illiterate",
       const start = s.age;
       for (let t = 0; t < 30 && !s.over && s.statuses.job === "adult_school"; t++) {
         const d = drawCard(s); s = d.state;
-        if (!d.card) { s = quietYear(s); continue; }
-        const ds = dirsFor(d.card, s); if (!ds.length) { s = quietYear(s); continue; }
+        if (!d.card) { s = quietYear(s).state; continue; }
+        const ds = dirsFor(d.card, s); if (!ds.length) { s = quietYear(s).state; continue; }
         s = chooseDirection(s, d.card, pick(d.card, s, ds, keen)).state;
       }
       const how = s.over ? "died" : s.statuses.education !== edu ? `passed -> ${s.statuses.education}, ${s.statuses.job}` : `left -> ${s.statuses.job}${s.statuses.housing === "homeless" ? " (on the streets)" : ""}`;

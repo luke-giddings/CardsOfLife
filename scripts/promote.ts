@@ -4,16 +4,16 @@
 // many years the qualified wait took. Compared at the promotion card's current
 // weight and at 6, the weight job_labour_factory already carries for the
 // reason given in its comment (in memory only; content untouched).
-import { chooseDirection, drawCard, initGame, quietYear, setContent } from "../src/engine/engine.ts";
+import { cardById, chooseDirection, drawCard, initGame, quietYear, setContent } from "../src/engine/engine.ts";
 import { meets } from "../src/engine/conditions.ts";
 import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0);
     if (k > key) { key = k; best = d; }
@@ -25,14 +25,14 @@ const LADDERS: Record<string, [string, number]> = {
   factory: ["job_factory_promote", 3], labourer: ["job_labour_factory", 3],
   shophand: ["job_shop_promote", 3], clerk: ["job_clerk_promote", 3], journeyman: ["job_journeyman_promote", 4],
 };
-const card = (id: string) => gameContent.decks.flatMap((d) => d.cards).find((c) => c.id === id)!;
+const card = (id: string) => cardById(id)!;
 const med = (a: number[]) => a.length ? [...a].sort((x,y)=>x-y)[Math.floor(a.length/2)] : NaN;
 
 function run(N: number) {
   setContent(gameContent);
   const r: Record<string, { n: number; up: number; sacked: number; died: number; waiting: number; yrs: number[] }> = {};
   for (let i = 0; i < N; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     let job = "", since = -1; // since = age the gate was met in this job
     const close = (how: "up" | "sacked" | "died" | "waiting") => {
       if (since < 0) return; const x = (r[job] ??= { n: 0, up: 0, sacked: 0, died: 0, waiting: 0, yrs: [] });
@@ -40,9 +40,9 @@ function run(N: number) {
     };
     for (let t = 0; t < 120 && !s.over; t++) {
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       const before = s.statuses.job;
       s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;
       const now = s.statuses.job;

@@ -8,7 +8,7 @@ import { meets } from "../src/engine/conditions.ts";
 import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 // The player who WANTS the trade: ambition.ts's "Master craftsman" goal. Greedy
 // is the wrong instrument here -- it never qualifies, it walks out through
 // job_apprentice_end, so it measures time-until-quitting, not time-to-finish.
@@ -20,7 +20,7 @@ let mark = -1, wm = 0;
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0)
       + (Math.max(mark, reached(p))*AMB + Math.max(wm, wantOf(p))*(AMB/20))*1000;
@@ -38,12 +38,12 @@ function run(N: number, label: string) {
   const bySibs = new Map<number, { y: number[]; r: number[]; q: number }>();
   const how = new Map<string, number>();
   for (let i = 0; i < N; i++) {
-    let s = initGame(gameContent); let at = -1, rel = 0, trade = 0, startAge = 0, sibs = 0; mark = -1; wm = 0;
+    let s = initGame(); let at = -1, rel = 0, trade = 0, startAge = 0, sibs = 0; mark = -1; wm = 0;
     for (let t = 0; t < 120 && !s.over; t++) {
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       const inIt = s.statuses.job === "apprentice";
       if (inIt) { if (d.card.deck?.startsWith("rel_")) rel++; if (d.card.deck === "job_apprentice") trade++; }
       s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;

@@ -7,7 +7,7 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 const ROUTE: [string, string][] = [["family","courting"],["family","married"]];
 const reached = (s: GameState) => { let b = -1; ROUTE.forEach(([k,v],i) => { if ((s.statuses as any)[k] === v) b = i; }); return b; };
 const num = (v: unknown) => (typeof v === "number" ? v : 0);
@@ -15,7 +15,7 @@ const wantOf = (s: GameState) => 6 * num(s.traits.socialWarmth) + 4 * num(s.trai
 const AMB = 20; let mark = -1, wm = 0;
 function pick(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
-  for (const d of ds) { const p = chooseDirection(structuredClone(s), c, d).state; const v = Object.values(p.vitals) as number[];
+  for (const d of ds) { const p = chooseDirection(s, c, d).state; const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0) + (Math.max(mark, reached(p))*AMB + Math.max(wm, wantOf(p))*(AMB/20))*1000;
     if (k > key) { key = k; best = d; } }
   return best;
@@ -24,12 +24,12 @@ const EXEMPT = new Set(["rel_lilly_drift","rel_lilly_lost","rel_lilly_idle"]);
 const N = Number(process.argv[2]) || 2500;
 let met = 0, married = 0; const marriedAt: number[] = [], gaps: number[] = []; const exempt = new Map<string, number>();
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent); mark = -1; wm = 0; let last = -1, didMeet = false;
+  let s = initGame(); mark = -1; wm = 0; let last = -1, didMeet = false;
   for (let t = 0; t < 120 && !s.over; t++) {
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     if (d.card.deck === "rel_lilly") {
       if (EXEMPT.has(d.card.id)) exempt.set(d.card.id, (exempt.get(d.card.id) ?? 0) + 1);
       else { if (last >= 0) gaps.push(s.age - last); last = s.age; }

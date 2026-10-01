@@ -26,7 +26,7 @@ import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 
 const DIRS: Direction[] = ["left", "right", "up", "down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 // Worst-to-best, so "did this swipe move me up the ladder" is a comparison.
 const LADDER = ["prison", "homeless", "workhouse", "apprentice", "family", "renting", "owned_small", "owned_large", "owned_estate"];
 const rung = (s: GameState) => LADDER.indexOf(s.statuses.housing);
@@ -38,13 +38,13 @@ const score = (s: GameState) => {
 function pick(c: Card, s: GameState, ds: Direction[], settle: boolean): Direction {
   let best = ds[0], bestKey = -Infinity, bestUp = -Infinity;
   for (const d of ds) {
-    const probe = chooseDirection(structuredClone(s), c, d).state;
+    const probe = chooseDirection(s, c, d).state;
     const key = score(probe);
     if (settle && !probe.over) {
       // An upgrade you can afford to KEEP: the rung goes up and the new drift
       // does not bleed money. Ranked above anything greedy would rather do.
       const up = rung(probe) - rung(s);
-      const affordable = (totalDrift(probe, gameContent).finances ?? 0) >= 0;
+      const affordable = (totalDrift(probe).finances ?? 0) >= 0;
       if (up > 0 && affordable) {
         if (up > bestUp) { bestUp = up; best = d; bestKey = Infinity; }
         continue;
@@ -59,13 +59,13 @@ function run(settle: boolean, N: number) {
   const ages: number[] = [];
   let owned = 0, renting = 0, everMoved = 0;
   for (let i = 0; i < N; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     let wasOwner = false, wasRenter = false, left = false;
     for (let t = 0; t < 120 && !s.over; t++) {
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       s = chooseDirection(s, d.card, pick(d.card, s, ds, settle)).state;
       if (s.statuses.housing.startsWith("owned")) wasOwner = true;
       if (s.statuses.housing === "renting") wasRenter = true;

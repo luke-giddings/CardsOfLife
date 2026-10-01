@@ -2,7 +2,7 @@ import { eligibleDraw, initGame, setContent } from "../src/engine/engine.ts";
 import { gameContent } from "../src/content/index.ts";
 setContent(gameContent);
 for (const [job, decks] of [["unemployed", ["job_unemployed"]], ["pickpocket", ["job_criminal"]], ["shophand", ["job_shop"]]] as [string,string[]][]) {
-  const s = initGame(gameContent);
+  const s = initGame();
   s.age = 25; s.statuses.age = "young_adult"; s.statuses.job = job;
   s.statuses.housing = "homeless"; s.statuses.education = "basic"; s.statuses.family = "single";
   // Drop the babyhood decks: one of them is `noDrift`, which suspends ALL drift

@@ -22,12 +22,12 @@ const RUNS = Number(process.argv[2]) || 3000;
 const DIRS: Direction[] = ["left", "right", "up", "down"];
 
 function availDirs(card: any, s: GameState): Direction[] {
-  return DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s, gameContent));
+  return DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s));
 }
 function greedyDir(card: any, s: GameState, dirs: Direction[]): Direction {
   let best = dirs[0], bestKey = -Infinity;
   for (const d of dirs) {
-    const probe = chooseDirection(structuredClone(s), card, d);
+    const probe = chooseDirection(s, card, d);
     const v = probe.state.vitals;
     const key = probe.state.over ? -1e9 : Math.min(...Object.values(v)) * 1000 + Object.values(v).reduce((a, b) => a + b, 0);
     if (key > bestKey) { bestKey = key; best = d; }
@@ -40,7 +40,7 @@ function run(pile: boolean) {
               gapSum: 0, gapN: 0, reshuffles: 0, poolAtReshuffle: 0, firstReshuffleAge: 0,
               livesWithReshuffle: 0, distinctSum: 0, worst: new Map<string, number>() };
   for (let i = 0; i < RUNS; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     const seq: (string | null)[] = [];   // filler id per turn, null for anything else
     const lastAt = new Map<string, number>();
     const distinct = new Set<string>();
@@ -51,7 +51,7 @@ function run(pile: boolean) {
       // The eligible fillers at this draw, for the pool size at a reshuffle.
       const fillersHere = eligibleDraw(s).pool.filter((c) => c.kind === "filler").length;
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); seq.push(null); continue; }
+      if (!d.card) { s = quietYear(s).state; seq.push(null); continue; }
       const isFiller = d.card.kind === "filler";
       // A reshuffle is visible from out here: it is the only thing that REMOVES
       // an id from the pile. (Length alone would not do — the rescue, milestone
@@ -77,7 +77,7 @@ function run(pile: boolean) {
         lastAt.set(d.card.id, turn);
       }
       const dirs = availDirs(d.card, s);
-      if (!dirs.length) { s = quietYear(s); continue; }
+      if (!dirs.length) { s = quietYear(s).state; continue; }
       s = chooseDirection(s, d.card, greedyDir(d.card, s, dirs)).state;
     }
     t.lives++; t.age += s.age; t.distinctSum += distinct.size;

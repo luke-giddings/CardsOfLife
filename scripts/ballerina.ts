@@ -21,12 +21,12 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left", "right", "up", "down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 const prom = (s: GameState) => ((s.traits as any).relSisterPromise ?? 0) as number;
 function greedy(c: Card, s: GameState, ds: Direction[]) {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d);
+    const p = chooseDirection(s, c, d);
     const v = Object.values(p.state.vitals) as number[];
     const k = p.state.over ? -1e9 : Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
     if (k > key) { key = k; best = d; }
@@ -37,7 +37,7 @@ function greedy(c: Card, s: GameState, ds: Direction[]) {
 function devoted(c: Card, s: GameState, ds: Direction[]) {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const k = (prom(p) - prom(s)) * 100 + (((p.traits as any).relSisterLove ?? 0) - ((s.traits as any).relSisterLove ?? 0));
     if (k > key) { key = k; best = d; }
   }
@@ -49,16 +49,16 @@ const CHILDHOOD = new Set(["rel_sis_dance", "rel_sis_mend", "rel_sis_slippers"])
 let sisters = 0, auditions = 0, stage = 0;
 const atAudition: number[] = []; const childSeen = new Map<number, number>(); const seenCard = new Map<string, number>();
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent);
+  let s = initGame();
   let hasSis = false, kids = 0, sawAudition = false, gotStage = false, promiseThen = 0;
   const seenHere = new Set<string>();
   for (let t = 0; t < 120 && !s.over; t++) {
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     if (d.card.deck === "rel_sis") { seenHere.add(d.card.id); if (CHILDHOOD.has(d.card.id)) kids++; }
     if (d.card.id === "rel_sis_audition") { sawAudition = true; promiseThen = prom(s); }
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     const pick = (MODE === "devoted" && d.card.deck === "rel_sis") ? devoted(d.card, s, ds) : greedy(d.card, s, ds);
     const after = chooseDirection(s, d.card, pick);
     if (d.card.id === "rel_sis_audition" && /r0$/.test(after.result)) gotStage = true;

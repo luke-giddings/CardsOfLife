@@ -30,7 +30,7 @@ const DIRS: Direction[] = ["left", "right", "up", "down"];
 
 // Directions actually offered this turn (present AND not hidden by their `if`).
 function availDirs(card: { options: Record<string, unknown> }, s: GameState): Direction[] {
-  return DIRS.filter((d) => (card.options as any)[d] && meets((card.options as any)[d].if, s, gameContent));
+  return DIRS.filter((d) => (card.options as any)[d] && meets((card.options as any)[d].if, s));
 }
 
 // Greedy heuristic (mirrors scripts/heatmap.ts): take the swipe that leaves the
@@ -57,7 +57,7 @@ const histByStage: Record<string, number[]> = {};
 for (const st of STAGES) histByStage[st] = [];
 
 function playOne(sample: boolean): void {
-  let s = initGame(gameContent);
+  let s = initGame();
   let turns = 0;
   while (!s.over && turns < 500) {
     // Record the draw-pool size for the CURRENT year, bucketed by life stage.

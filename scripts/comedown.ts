@@ -1,16 +1,16 @@
 // Coming down early from university (quitting, or ruin): back to the rung you
 // held on the clerk ladder, with your years -- not the bottom of it.
-import { applyEffect, chooseDirection, initGame, setContent } from "../src/engine/engine.ts";
+import { cardById, applyEffect, chooseDirection, initGame, setContent } from "../src/engine/engine.ts";
 import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
-const card = (id: string) => gameContent.decks.flatMap((d) => d.cards).find((c) => c.id === id) as Card;
+const card = (id: string) => cardById(id) as Card;
 function student(age: number, fromJob: string | null, exp: number): GameState {
-  const s = initGame(gameContent, 1);
+  const s = initGame(1);
   s.age = age; s.statuses.age = age < 18 ? "child" : "adult"; s.statuses.education = "grammar"; s.statuses.housing = "renting";
   s.activeDecks = [];
-  if (fromJob) { applyEffect(s, { setStatus: { job: fromJob } } as any, gameContent); s.traits.jobExperience = exp; }
-  applyEffect(s, { setStatus: { job: "university" } } as any, gameContent);
+  if (fromJob) { applyEffect(s, { setStatus: { job: fromJob } } as any); s.traits.jobExperience = exp; }
+  applyEffect(s, { setStatus: { job: "university" } } as any);
   return s;
 }
 const cases: [string, number, string | null][] = [["young student, never worked", 19, null], ["grown man, was a clerk", 35, "clerk"], ["grown man, was chief clerk", 35, "chief_clerk"], ["grown man, was solicitor", 45, "solicitor"]];

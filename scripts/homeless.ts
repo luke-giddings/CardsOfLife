@@ -8,11 +8,11 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0);
     if (k > key) { key = k; best = d; }
@@ -29,14 +29,14 @@ const yrs: number[] = [];
 const byJob = new Map<string, {n:number; esc:number; yrs:number[]}>();
 let spells = 0, everHomeless = 0;
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent);
+  let s = initGame();
   let inS = false, since = 0, jobAt = "";
   let counted = false;
   for (let t = 0; t < 120 && !s.over; t++) {
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;
     const h = s.statuses.housing;
     if (!inS && h === "homeless") {

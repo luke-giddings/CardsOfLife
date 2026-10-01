@@ -9,11 +9,11 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0);
     if (k > key) { key = k; best = d; }
@@ -28,13 +28,13 @@ for (const [job, def] of Object.entries(gameContent.statuses.job.states as any))
 const N = Number(process.argv[2]) || 2000;
 const held = new Map<string, number>(), yrs = new Map<string, number>();
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent); const mine = new Set<string>();
+  let s = initGame(); const mine = new Set<string>();
   for (let t = 0; t < 120 && !s.over; t++) {
     mine.add(s.statuses.job); yrs.set(s.statuses.job, (yrs.get(s.statuses.job) ?? 0) + 1);
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;
   }
   for (const j of mine) held.set(j, (held.get(j) ?? 0) + 1);

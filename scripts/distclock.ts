@@ -9,14 +9,14 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 const num = (v: unknown) => (typeof v === "number" ? v : 0);
 const love = (s: GameState) => num(s.traits.relBrotherLove) + num(s.traits.relSisterLove) + num(s.traits.relLillyWarmth);
 function pick(c: Card, s: GameState, ds: Direction[]): Direction {
   const rel = (c.deck ?? "").startsWith("rel_") || c.id === "fam_single_lilly";
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state; const v = Object.values(p.vitals) as number[];
+    const p = chooseDirection(s, c, d).state; const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e12 : (rel ? love(p) * 1e6 : 0) + Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
     if (k > key) { key = k; best = d; }
   }
@@ -31,12 +31,12 @@ const N = Number(process.argv[2]) || 2000;
 const seen = new Map<string, number[]>(); const res = new Map<string, Map<string, number>>();
 let married = 0, metLilly = 0;
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent, i + 1);
+  let s = initGame(i + 1);
   for (let t = 0; t < 120 && !s.over; t++) {
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     const w = WATCH[d.card.id];
     if (w) { (seen.get(d.card.id) ?? seen.set(d.card.id, []).get(d.card.id)!).push(num(s.traits[w as keyof typeof s.traits])); }
     const r = chooseDirection(s, d.card, pick(d.card, s, ds));

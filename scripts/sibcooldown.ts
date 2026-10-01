@@ -16,11 +16,11 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0);
     if (k > key) { key = k; best = d; }
@@ -40,7 +40,7 @@ function run(N: number, cool: number, shared: boolean) {
   const pri = new Map<number, { draws: number; sib: number }>();
   const PRI = new Set(gameContent.decks.filter((d) => d.priority).map((d) => d.id));
   for (let i = 0; i < N; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     const last: Record<string, number> = {}; const seen = new Set<string>();
     let apAt = -1;
     for (let t = 0; t < 120 && !s.over; t++) {
@@ -60,9 +60,9 @@ function run(N: number, cool: number, shared: boolean) {
         dr = { ...dr, state: { ...dr.state, activeDecks: s.activeDecks } };
       }
       s = dr.state;
-      if (!dr.card) { s = quietYear(s); continue; }
+      if (!dr.card) { s = quietYear(s).state; continue; }
       const ds = dirsFor(dr.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       if (s.activeDecks.some((d) => PRI.has(d))) {
         const live = SIB.filter((d) => s.activeDecks.includes(d)).length;
         if (live > 0) {

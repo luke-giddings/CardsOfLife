@@ -16,7 +16,7 @@ setContent(gameContent);
 const canon = (v: unknown): string => JSON.stringify(v, (_k, x) =>
   x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).filter(([, y]) => y !== undefined).sort(([a], [b]) => (a < b ? -1 : 1))) : x);
 const DIRS: Direction[] = ["left", "right", "up", "down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
@@ -32,7 +32,7 @@ const t0 = performance.now();
 let turns = 0;
 for (const player of ["greedy", "spread"]) {
   for (let i = 1; i <= N; i++) {
-    let s = initGame(gameContent, i * 7919);
+    let s = initGame(i * 7919);
     for (let t = 0; t < 130 && !s.over; t++) {
       if (t % 5 === 0) {
         const e = eligibleDraw(s);

@@ -37,53 +37,64 @@ export interface HistoryEntry {
 // with the save, since the snapshots inside it ARE GameStates.
 const HISTORY_KEY = `cardsoflife.history.v${SAVE_VERSION}`;
 
-export function saveGame(state: GameState): void {
+// localStorage, guarded: private mode, disabled storage or a full quota must
+// never break the game, only lose what would have been kept. Shared with the
+// UI's own small settings.
+export function readStore(key: string): string | null {
   try {
-    localStorage.setItem(KEY, JSON.stringify(state));
+    return localStorage.getItem(key);
   } catch {
-    // Private mode / storage disabled — the game still plays, just no resume.
+    return null;
+  }
+}
+export function writeStore(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Storage disabled or over quota: the game still plays, it just isn't kept.
+  }
+}
+export function removeStore(...keys: string[]): void {
+  try {
+    for (const k of keys) localStorage.removeItem(k);
+  } catch {
+    // ignore
   }
 }
 
-export function loadGame(): GameState | null {
+function readJson(key: string): unknown {
+  const raw = readStore(key);
+  if (!raw) return null;
   try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as GameState;
+    return JSON.parse(raw);
   } catch {
     return null;
   }
 }
 
+export function saveGame(state: GameState): void {
+  writeStore(KEY, JSON.stringify(state));
+}
+
+export function loadGame(): GameState | null {
+  return (readJson(KEY) as GameState | null) ?? null;
+}
+
+// Storage disabled, or the history outgrew the quota: the run itself is saved
+// under its own key regardless — only the rewind list is lost.
 export function saveHistory(history: HistoryEntry[]): void {
-  try {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-  } catch {
-    // Storage disabled, or the history outgrew the quota. The run itself is
-    // saved under its own key regardless — only the rewind list is lost.
-  }
+  writeStore(HISTORY_KEY, JSON.stringify(history));
 }
 
 // Only meaningful next to a save that loaded: the entries hold GameStates from
 // THIS run, so the caller must drop them when it starts a fresh life instead.
 export function loadHistory(): HistoryEntry[] | null {
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY);
-    if (!raw) return null;
-    const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as HistoryEntry[]) : null;
-  } catch {
-    return null;
-  }
+  const parsed = readJson(HISTORY_KEY);
+  return Array.isArray(parsed) ? (parsed as HistoryEntry[]) : null;
 }
 
 // Drops the run AND its history: a new life must never inherit the old one's
 // rewind points, which would restore a state the current run never had.
 export function clearSave(): void {
-  try {
-    localStorage.removeItem(KEY);
-    localStorage.removeItem(HISTORY_KEY);
-  } catch {
-    // ignore
-  }
+  removeStore(KEY, HISTORY_KEY);
 }

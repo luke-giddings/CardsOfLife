@@ -8,11 +8,11 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0);
     if (k > key) { key = k; best = d; }
@@ -26,7 +26,7 @@ let everRich = 0, roofed = 0, died = 0, richThenDied = 0, sawRoom = 0;
 const toRich: number[] = [], richToRoof: number[] = [];
 const declined = new Map<string, number>();
 for (let i = 0; i < N; i++) {
-  const s0 = initGame(gameContent);
+  const s0 = initGame();
   s0.age = 17; s0.statuses.age = "young_adult"; s0.statuses.job = "pickpocket";
   s0.statuses.housing = "homeless"; s0.statuses.education = "basic"; s0.statuses.family = "single";
   s0.vitals = { finances: 1, happiness: 16, health: 26, spirit: 65 };
@@ -36,9 +36,9 @@ for (let i = 0; i < N; i++) {
   for (let t = 0; t < 40 && !s.over; t++) {
     if (s.statuses.housing !== "homeless") break;
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     if (d.card.id === "home_homeless_room") sawRoom++;
     const pick = greedy(d.card, s, ds);
     // did the player TURN DOWN a crime that would have paid?

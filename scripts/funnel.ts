@@ -14,7 +14,7 @@ const ROUTE: [StatusKind,string][] = [["job","studying"],["education","basic"],[
   ["job","university"],["education","university"],["job","physician_junior"],["job","physician"],["job","physician_eminent"]];
 const WANTS: [string,number][] = [["eduStudy",10],["eduUniFund",25],["jobExperience",6],["persBookish",8]];
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 const reached = (s: GameState) => { let b=-1; ROUTE.forEach(([k,v],i)=>{ if (s.statuses[k]===v) b=i; }); return b; };
 const num = (v: unknown) => (typeof v==="number"?v:v===true?1:0);
 const wantOf = (s: GameState) => WANTS.reduce((a,[k,w])=>a+w*num((s.traits as any)[k]),0);
@@ -32,16 +32,16 @@ function run(N:number, amb:number) {
   let streets=0, home=0;
   const afterStreets:number[]=[], afterHome:number[]=[];
   for (let i=0;i<N;i++) {
-    let s = initGame(gameContent); let m=-1, wm=0;
+    let s = initGame(); let m=-1, wm=0;
     const seen = new Set<string>(); const fin = new Set<string>();
     let ruinAt: {age:number; dir:Direction} | null = null;
     for (let t=0;t<120 && !s.over;t++) {
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       let best=ds[0], key=-Infinity;
-      for (const dir of ds) { const k = score(chooseDirection(structuredClone(s), d.card, dir).state, m, wm, amb); if (k>key){key=k;best=dir;} }
+      for (const dir of ds) { const k = score(chooseDirection(s, d.card, dir).state, m, wm, amb); if (k>key){key=k;best=dir;} }
       const wasJob = s.statuses.job;
       if (RUIN.has(d.card.id)) ruinAt = { age: s.age, dir: best };
       s = chooseDirection(s, d.card, best).state;

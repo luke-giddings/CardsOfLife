@@ -77,7 +77,6 @@ export const content = {
     age: {
       id: "age",
       show: "always", // the life stage means something from the first card
-      ordered: true,
       ignoreNoDrift: true,
       levels: ["baby", "child", "young_adult", "adult", "old_age"],
       states: {
@@ -253,7 +252,6 @@ export const content = {
     education: {
       id: "education",
       show: { ageMin: 5 }, // as job: the three core life statuses appear together
-      ordered: true,
       // The credential that separates the four career paths. Only the ACADEMIC
       // ladder is ordered (for `atLeast` gating of the educated path). The TRADE
       // credentials (journeyman, master) are deliberately NOT in `levels`: they
@@ -284,7 +282,6 @@ export const content = {
     lifestyle: {
       id: "lifestyle",
       show: "whenSet", // reserved: nothing to say until you have one
-      ordered: true,
       levels: ["frugal", "modest", "comfortable", "lavish"],
       states: {
         default: {},

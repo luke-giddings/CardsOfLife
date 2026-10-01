@@ -1,7 +1,9 @@
 import { gameContent as content } from "../content/index.ts";
 import {
   applyEffect,
+  cardById,
   chooseDirection,
+  clampVital,
   drawCard,
   eligibleDraw,
   findRescue,
@@ -12,7 +14,7 @@ import {
   totalDrift,
 } from "../engine/engine.ts";
 import { meets } from "../engine/conditions.ts";
-import { clearSave, loadGame, loadHistory, saveGame, saveHistory } from "../engine/save.ts";
+import { clearSave, loadGame, loadHistory, readStore, removeStore, saveGame, saveHistory, writeStore } from "../engine/save.ts";
 import type { HistoryEntry } from "../engine/save.ts";
 import { FIRST_RUN, PLAY, RETURNING, type IntroCard, type IntroOption } from "./intro.ts";
 import {
@@ -48,10 +50,6 @@ const uiSeed = (): number => 1 + Math.floor(Math.random() * UI_SEED_MAX);
 const INTRO_KEY = "cardsoflife.intro";
 const HARD_KEY = "cardsoflife.hard";
 const DECK_BY_ID = new Map(content.decks.map((d) => [d.id, d]));
-const ALL_CARDS: Card[] = content.decks.flatMap((d) =>
-  d.cards.map((c) => ({ ...c, deck: d.id }) as Card),
-);
-const CARD_BY_ID = new Map(ALL_CARDS.map((c) => [c.id, c]));
 const DIRECTIONS: Direction[] = ["left", "right", "up", "down"];
 
 const VITAL_LABEL: Record<VitalKey, StringId> = {
@@ -250,7 +248,7 @@ export class Game {
       this.state = saved;
       this.history = loadHistory() ?? [];
     } else {
-      this.state = initGame(content, uiSeed());
+      this.state = initGame(uiSeed());
       clearSave();
     }
     this.syncVersion();
@@ -266,6 +264,9 @@ export class Game {
     else if (this.state.over) this.showEnd();
     else this.startIntro(RETURNING, false);
     window.addEventListener("keydown", this.onKey);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden" && this.historyTimer !== undefined) this.flushHistory();
+    });
   }
 
   // --- shell (built once; updated in place so the bars can animate) -----------
@@ -447,7 +448,7 @@ export class Game {
     // Preview each active status's drain: the tip of the bar that next turn's
     // drift will strip off is marked, so a passive loss is visible before it
     // happens. Only losses (negative drift) are previewed.
-    const drift = totalDrift(disp, content);
+    const drift = totalDrift(disp);
     for (const key of VITAL_KEYS) {
       const nv = s.vitals[key];
       const ov = this.prevVitals[key];
@@ -689,7 +690,7 @@ export class Game {
   // The vital-symbol deltas of the outcome that would actually fire for a
   // choice given the current state (shown under each edge label unless hard mode is on).
   private vitalChips(opt: CardOption): string {
-    const outcome = resolveOutcome(opt, this.state, content);
+    const outcome = resolveOutcome(opt, this.state);
     // Simulate the choice's effects on a throwaway clone, so the fatal check uses
     // the drift of the status you'd be IN *after* the card — a choice that
     // changes your job/home/lifestyle changes the drains too, and previewing the
@@ -698,7 +699,7 @@ export class Game {
     // `drift` is the post-change per-turn drain. The lethal test below adds the two
     // raw and compares to 0, which matches the engine exactly (clamp(x)≤0 ⟺ x≤0).
     const projected = structuredClone(this.state);
-    if (outcome.effects) applyEffect(projected, outcome.effects, content);
+    if (outcome.effects) applyEffect(projected, outcome.effects);
     // Mirror chooseDirection: a non-filler card is consumed THIS turn, BEFORE the
     // game-over/rescue check runs — so the card you're answering can't be its own
     // safety net. Mark it used in the projection, or findRescue below would count
@@ -708,7 +709,7 @@ export class Game {
       projected.usedCards[cur.id] = (projected.usedCards[cur.id] ?? 0) + 1;
     }
     projected.age += 1; // the turn advances before drift + the game-over/rescue check
-    const drift = totalDrift(projected, content);
+    const drift = totalDrift(projected);
     let chips = "";
     for (const key of VITAL_KEYS) {
       const mag = outcome.effects?.vitals?.[key];
@@ -727,7 +728,7 @@ export class Game {
       // A vital hitting 0 is only really death if no safety net catches it. If a
       // one-shot rescue would fire (charity hospital, sell-up, eviction…), show a
       // skull-in-a-shield (RESCUE_ICON) — you'd be floored but survive, this once.
-      const rescued = lethal && !!findRescue(projected, content, key);
+      const rescued = lethal && !!findRescue(projected, key);
       // The player only ever sees +/− bars. Flat tokens map their dashes to −; the
       // proportional slash tokens (a scaling spend) render as minus bars by severity
       // ("/" ≈ −−, "//" ≈ −−−) rather than showing the authoring slashes. Guarded on
@@ -811,7 +812,7 @@ export class Game {
 
   private availOpt(card: Card, dir: Direction): CardOption | undefined {
     const o = card.options[dir];
-    return o && meets(o.if, this.state, content) ? o : undefined;
+    return o && meets(o.if, this.state) ? o : undefined;
   }
 
   private toggleHard(): void {
@@ -1018,7 +1019,7 @@ export class Game {
       .join("");
     // Card detail: the selected card (default = the current card), showing
     // EVERY option's EVERY outcome — including ones gated by conditions.
-    const sel = (this.debugSelectedId && CARD_BY_ID.get(this.debugSelectedId)) || this.card;
+    const sel = (this.debugSelectedId && cardById(this.debugSelectedId)) || this.card;
     let detail = "<div>(none)</div>";
     if (sel) {
       let opts = "";
@@ -1029,13 +1030,13 @@ export class Game {
         // turn (unlike the outcome-level `if`s below, which pick between results
         // once you've swiped). Surface it so a debug reader can see WHY a choice
         // like "Beg for more time" has vanished, not just guess.
-        const shown = meets(opt.if, this.state, content);
+        const shown = meets(opt.if, this.state);
         const vis = opt.if
           ? `<span class="dbg-optif ${shown ? "match" : "hidden"}">${shown ? "shown" : "HIDDEN"} if ${fmtCond(opt.if)}</span>`
           : "";
         let outs = "";
         for (const o of opt.outcomes) {
-          const matches = meets(o.if, this.state, content);
+          const matches = meets(o.if, this.state);
           const cond = o.if ? `if ${fmtCond(o.if)}` : "default";
           outs += `<div class="dbg-out ${matches ? "match" : ""}">
             <span class="dbg-cond">${cond}</span> → ${fmtEffect(o.effects)}
@@ -1224,7 +1225,7 @@ export class Game {
   // suit would gate out other cards and make them look consumed.
   private forceCard(id: string): void {
     if (this.busy) return;
-    const card = CARD_BY_ID.get(id);
+    const card = cardById(id);
     if (!card) return;
     if (this.holder) {
       this.holder.remove();
@@ -1238,7 +1239,7 @@ export class Game {
 
   // --- debug state edits -----------------------------------------------------
   private adjustVital(key: VitalKey, delta: number): void {
-    this.state.vitals[key] = Math.max(0, Math.min(100, this.state.vitals[key] + delta));
+    this.state.vitals[key] = clampVital(this.state.vitals[key] + delta);
     this.persist();
     this.syncTop();
     this.renderDebug();
@@ -1370,8 +1371,18 @@ export class Game {
   // Write the run and its rewind list as one step, so a refresh can never resume
   // a save whose history belongs to a different turn. Always paired — the history
   // is only read back when the save beside it loads.
+  // The run is saved at once; the rewind list, which rewrites every snapshot of
+  // the life each time, waits for a pause in play (and is flushed when the tab
+  // is hidden), so a long life doesn't pay for it on every swipe.
+  private historyTimer: number | undefined;
   private persist(): void {
     saveGame(this.state);
+    window.clearTimeout(this.historyTimer);
+    this.historyTimer = window.setTimeout(() => this.flushHistory(), 800);
+  }
+  private flushHistory(): void {
+    window.clearTimeout(this.historyTimer);
+    this.historyTimer = undefined;
     saveHistory(this.history);
   }
 
@@ -1668,7 +1679,7 @@ export class Game {
     this.holder = null;
     this.flip = null;
     this.scene.innerHTML = ""; // clear any current card / end screen / unlock
-    this.card = CARD_BY_ID.get(entry.cardId) ?? null;
+    this.card = cardById(entry.cardId) ?? null;
     this.syncTop();
     if (this.card) this.showFront(this.card, false);
     else this.beginTurn();
@@ -1872,8 +1883,10 @@ export class Game {
   // one: the cards after the title show the vital bars, and they have to be a new
   // life's bars, not the leftovers of the life this one replaced.
   private newLife(seed?: number): void {
+    window.clearTimeout(this.historyTimer); // the old life's rewind list is not to be written back
+    this.historyTimer = undefined;
     clearSave();
-    this.state = initGame(content, seed ?? uiSeed());
+    this.state = initGame(seed ?? uiSeed());
     this.syncVersion();
     this.hasSave = false;
     this.scene.innerHTML = "";
@@ -2172,33 +2185,17 @@ function fmtCond(c?: Condition): string {
 }
 
 function loadDebug(): boolean {
-  try {
-    return localStorage.getItem(DEBUG_KEY) === "1";
-  } catch {
-    return false;
-  }
+  return readStore(DEBUG_KEY) === "1";
 }
 function saveDebug(on: boolean): void {
-  try {
-    localStorage.setItem(DEBUG_KEY, on ? "1" : "0");
-  } catch {
-    // ignore
-  }
+  writeStore(DEBUG_KEY, on ? "1" : "0");
 }
 
 function loadHard(): boolean {
-  try {
-    return localStorage.getItem(HARD_KEY) === "1";
-  } catch {
-    return false;
-  }
+  return readStore(HARD_KEY) === "1";
 }
 function saveHard(on: boolean): void {
-  try {
-    localStorage.setItem(HARD_KEY, on ? "1" : "0");
-  } catch {
-    // ignore
-  }
+  writeStore(HARD_KEY, on ? "1" : "0");
 }
 
 // Has anyone ever finished the opening flow on this device? Storage being
@@ -2206,22 +2203,15 @@ function saveHard(on: boolean): void {
 // one that can never record itself as done.
 function loadIntroSeen(): boolean {
   try {
-    return localStorage.getItem(INTRO_KEY) === "1";
+    localStorage.length; // throws where storage is unavailable
   } catch {
     return true;
   }
+  return readStore(INTRO_KEY) === "1";
 }
 function saveIntroSeen(): void {
-  try {
-    localStorage.setItem(INTRO_KEY, "1");
-  } catch {
-    // ignore
-  }
+  writeStore(INTRO_KEY, "1");
 }
 function clearIntroSeen(): void {
-  try {
-    localStorage.removeItem(INTRO_KEY);
-  } catch {
-    // ignore
-  }
+  removeStore(INTRO_KEY);
 }

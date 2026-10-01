@@ -1,4 +1,5 @@
 import { meets } from "./conditions.ts";
+import { CONTENT, currentState, deckIndex, totalDrift } from "./content.ts";
 import { nextRandom, randomSeed } from "./rng.ts";
 import {
   DEFAULT_TRAITS,
@@ -9,16 +10,21 @@ import {
   type Card,
   type Magnitude,
   type CardOption,
-  type Content,
   type Direction,
   type Effect,
   type GameState,
+  type NumericTraitKey,
   type Outcome,
   type StatusKind,
   type TickRule,
-  type Vitals,
+  type Traits,
   type VitalKey,
 } from "./types.ts";
+
+// The engine reads its content through one binding (content.ts), set once with
+// setContent before anything else runs. Re-exported here so callers have one
+// place to import the engine from.
+export { CONTENT, allCards, cardById, setContent, totalDrift } from "./content.ts";
 
 // --- setup -------------------------------------------------------------------
 
@@ -26,15 +32,14 @@ import {
 // drawn — which is what the headless sims rely on: a caller that restricted
 // seeds to a small range here would quietly cap every measurement at that many
 // distinct lives. Any narrowing for human convenience belongs to the caller.
-export function initGame(content: Content, seed?: number): GameState {
+export function initGame(seed?: number): GameState {
   const start = seed ?? randomSeed();
-  // Gender starts at the default and is chosen on the birth card.
   return {
     age: 0,
-    vitals: { ...content.start.vitals },
-    statuses: { ...content.start.statuses },
-    traits: { ...DEFAULT_TRAITS, ...(content.start.traits ?? {}) },
-    activeDecks: [...content.start.decks],
+    vitals: { ...CONTENT.start.vitals },
+    statuses: { ...CONTENT.start.statuses },
+    traits: { ...DEFAULT_TRAITS, ...(CONTENT.start.traits ?? {}) },
+    activeDecks: [...CONTENT.start.decks],
     usedCards: {},
     playedFillers: [],
     rng: start,
@@ -46,43 +51,41 @@ export function initGame(content: Content, seed?: number): GameState {
 
 // --- card selection ----------------------------------------------------------
 
-function allCards(content: Content): Card[] {
-  const out: Card[] = [];
-  for (const deck of content.decks) {
-    for (const card of deck.cards) out.push({ ...card, deck: deck.id });
-  }
-  return out;
-}
-
 function exhausted(card: Card, state: GameState): boolean {
   if (card.kind === "filler") return false; // filler is inexhaustible
   const used = state.usedCards[card.id] ?? 0;
   return used >= (card.copies ?? 1);
 }
 
-function isEligible(card: Card, state: GameState, content: Content): boolean {
-  if (!card.deck || !state.activeDecks.includes(card.deck)) return false;
-  if (exhausted(card, state)) return false;
-  return meets(card.conditions, state, content);
+// The cards of the active decks that are not used up, in content order (which
+// is what breaks every tie below, so it must not become activeDecks order).
+function inPlay(state: GameState): Card[] {
+  const active = new Set(state.activeDecks);
+  const out: Card[] = [];
+  for (const { deck, cards } of deckIndex().decks) {
+    if (!active.has(deck.id)) continue;
+    for (const c of cards) if (!exhausted(c, state)) out.push(c);
+  }
+  return out;
 }
 
-// A milestone whose conditions are met is "due" and jumps the queue.
-function dueMilestone(cards: Card[], state: GameState, content: Content): Card | null {
+// The card that matches `pred` with the HIGHEST `priority`; ties go to the one
+// earlier in content. How a due milestone is chosen, and how a safety net is.
+function highestPriority(cards: Card[], pred: (c: Card) => boolean): Card | null {
   let best: Card | null = null;
   for (const card of cards) {
-    if (card.kind !== "milestone") continue;
-    if (!isEligible(card, state, content)) continue;
+    if (!pred(card)) continue;
     if (!best || (card.priority ?? 0) > (best.priority ?? 0)) best = card;
   }
   return best;
 }
 
 // Focus the draw on urgent states. When any eligible card belongs to a
-// `priority` deck (a state you should be escaping — unemployment, the workhouse),
-// restrict the pool to those cards, so the escape routes aren't drowned out by
-// incidental flavour from other still-active decks (e.g. childhood/home life).
-function focusPool(pool: Card[], content: Content): Card[] {
-  const priority = new Set(content.decks.filter((d) => d.priority).map((d) => d.id));
+// `priority` deck (a state you should be escaping), restrict the pool to those
+// cards, so the escape routes aren't drowned out by incidental flavour from
+// other still-active decks.
+function focusPool(pool: Card[]): Card[] {
+  const { priority, spared } = deckIndex();
   if (priority.size === 0) return pool;
   const urgent = pool.filter((c) => !!c.deck && priority.has(c.deck));
   if (urgent.length === 0) return pool;
@@ -90,7 +93,6 @@ function focusPool(pool: Card[], content: Content): Card[] {
   // the whole deck that says so or the single card. A Set, so anything that is
   // both urgent and spared does not end up in the pool twice and draw at double
   // weight.
-  const spared = new Set(content.decks.filter((d) => d.neverSuppressed).map((d) => d.id));
   return [
     ...new Set([
       ...urgent,
@@ -114,9 +116,7 @@ function focusPool(pool: Card[], content: Content): Card[] {
 //
 // ONE rule with two readers: `drawCard` takes `choices` and the (possibly
 // reshuffled) `played`, and `eligibleDraw` takes `held`, so the debug panel dims
-// exactly the cards the next draw cannot deal. They used to compute this
-// separately and had already drifted: the panel declared nothing held after a
-// reshuffle, while the draw was still holding one card back.
+// exactly the cards the next draw cannot deal.
 function fillerPile(
   pool: Card[],
   played: string[],
@@ -129,9 +129,9 @@ function fillerPile(
   if (here.size > 0 && mine.length === here.size) {
     // All seen, so shuffle them back in — MINUS the one dealt most recently,
     // which would otherwise be free to come straight back round, the very thing
-    // the pile exists to stop. `lastCardId` below does not cover this: a
-    // milestone or a forced card landing in between would leave the repeat one
-    // card away rather than adjacent, which is the sandwich itself.
+    // the pile exists to stop. `lastCardId` does not cover this: a milestone or
+    // a forced card landing in between would leave the repeat one card away
+    // rather than adjacent, which is the sandwich itself.
     const last = mine[mine.length - 1];
     kept = played.filter((id) => !here.has(id) || id === last);
   }
@@ -144,40 +144,36 @@ function fillerPile(
     : { choices: pool, held: [], played: kept };
 }
 
-// Draw the next card: a due milestone if there is one, otherwise a random
-// eligible non-milestone card. Returns null when nothing is eligible (the
-// caller then passes a "quiet year").
-export function drawCard(
-  state: GameState,
-): { card: Card | null; state: GameState } {
-  const content = CONTENT;
-  const cards = allCards(content);
-
+// Draw the next card: a pending rescue, else a due milestone, else a forced
+// card, else a weighted random pick from the eligible pool. Returns null when
+// nothing is eligible (the caller then passes a "quiet year").
+export function drawCard(state: GameState): { card: Card | null; state: GameState } {
   // A pending safety-net rescue jumps the queue (bypassing eligibility). Two
   // vitals can be caught in the same year, so they queue and come one a turn.
   const [next, ...rest] = state.pendingRescues ?? [];
   if (next) {
-    const rescue = cards.find((c) => c.id === next);
+    const rescue = deckIndex().byId.get(next);
     const after = { ...state, pendingRescues: rest.length ? rest : undefined };
     if (rescue) return { card: rescue, state: { ...after, lastCardId: rescue.id } };
   }
 
-  const milestone = dueMilestone(cards, state, content);
+  // One pass over the cards in play: each card's conditions are read once.
+  const live = inPlay(state).filter((c) => meets(c.conditions, state));
+
+  const milestone = highestPriority(live, (c) => c.kind === "milestone");
   if (milestone) return { card: milestone, state: { ...state, lastCardId: milestone.id } };
 
   // A "force" card jumps the queue when its vital is high enough and the card is
   // otherwise eligible, so a piled-up resource always surfaces its spend
-  // opportunity (e.g. move out once you're rich) instead of relying on the
-  // random draw. The bar is the vital's MAX unless the card names a lower one
-  // (Card.forceAt). Ranks below milestones, above the random pool. Skipped if it
-  // was the immediately-previous card, so declining it doesn't lock you into
-  // the same card every year while you stay rich — normal cards interleave.
-  const forced = cards.find(
+  // opportunity instead of relying on the random draw. The bar is the vital's
+  // MAX unless the card names a lower one (`force.at`). Ranks below milestones,
+  // above the random pool. Skipped if it was the immediately-previous card, so
+  // declining it doesn't lock you into the same card every year.
+  const forced = live.find(
     (c) =>
       c.force !== undefined &&
       c.id !== state.lastCardId &&
-      state.vitals[c.force.vital] >= (c.force.at ?? VITAL_MAX) &&
-      isEligible(c, state, content),
+      state.vitals[c.force.vital] >= (c.force.at ?? VITAL_MAX),
   );
   if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };
 
@@ -188,8 +184,8 @@ export function drawCard(
   // the same sequence.
   let rng = state.rng;
   const eligible: Card[] = [];
-  for (const c of cards) {
-    if (c.kind === "milestone" || c.rescue || !isEligible(c, state, content)) continue;
+  for (const c of live) {
+    if (c.kind === "milestone" || c.rescue) continue;
     if (c.chance !== undefined) {
       const r = nextRandom(rng);
       rng = r.state;
@@ -198,10 +194,9 @@ export function drawCard(
     eligible.push(c);
   }
   if (eligible.length === 0) return { card: null, state: { ...state, rng } };
-  const pool = focusPool(eligible, content);
 
   // Hold back the fillers already dealt (see fillerPile).
-  const pile = fillerPile(pool, state.playedFillers);
+  const pile = fillerPile(focusPool(eligible), state.playedFillers);
   let choices = pile.choices;
 
   // Avoid repeating the immediately-previous card when there's a choice. Still
@@ -212,9 +207,8 @@ export function drawCard(
   }
 
   // Weighted random pick: a card's `weight` (default 1) scales its share of the
-  // draw, so a few essential cards can surface often without excluding the rest
-  // of the pool. One rng value is consumed whatever the weights, so the sequence
-  // stays deterministic. With all weights 1 this is a plain uniform pick.
+  // draw. One rng value is consumed whatever the weights, so the sequence stays
+  // deterministic. With all weights 1 this is a plain uniform pick.
   const roll = nextRandom(rng);
   const totalWeight = choices.reduce((s, c) => s + (c.weight ?? 1), 0);
   let cursor = roll.value * totalWeight;
@@ -227,41 +221,29 @@ export function drawCard(
 }
 
 // Debug helper: the milestone that would fire, the random pool, the cards that
-// are in an active deck but gated out (conditions not yet met), and the fillers
-// the discard pile is holding back — which are IN the pool but cannot be drawn,
-// so the panel would otherwise show a card that has no chance of coming up.
+// are in an active deck but gated out (conditions not yet met, or pushed out by
+// a priority deck), and the fillers the discard pile is holding back — which
+// are IN the pool but cannot be drawn.
 export function eligibleDraw(
   state: GameState,
 ): { milestone: Card | null; pool: Card[]; gated: Card[]; held: Card[] } {
-  const content = CONTENT;
-  const cards = allCards(content);
-  const inDeck = cards.filter(
-    (c) => !!c.deck && !c.rescue && state.activeDecks.includes(c.deck) && !exhausted(c, state),
-  );
-  const milestone = dueMilestone(cards, state, content);
-  const eligible = inDeck.filter(
-    (c) => c.kind !== "milestone" && meets(c.conditions, state, content),
-  );
+  const inDeck = inPlay(state).filter((c) => !c.rescue);
+  const ok = new Set(inDeck.filter((c) => meets(c.conditions, state)));
+  const milestone = highestPriority(inDeck, (c) => c.kind === "milestone" && ok.has(c));
   // Mirror drawCard: while an urgent (priority) deck is active it owns the pool.
-  const pool = focusPool(eligible, content);
-  const gated = inDeck.filter(
-    (c) => c !== milestone && (!meets(c.conditions, state, content) || !pool.includes(c)),
-  );
-  // The same rule the draw will apply, reshuffle and all, rather than a second
-  // reading of it.
+  const pool = focusPool(inDeck.filter((c) => c.kind !== "milestone" && ok.has(c)));
+  const inPool = new Set(pool);
+  const gated = inDeck.filter((c) => c !== milestone && (!ok.has(c) || !inPool.has(c)));
+  // The same rule the draw will apply, reshuffle and all.
   const { held } = fillerPile(pool, state.playedFillers);
   return { milestone, pool, gated, held };
 }
 
 // --- outcome resolution ------------------------------------------------------
 
-export function resolveOutcome(
-  option: CardOption,
-  state: GameState,
-  content: Content,
-): Outcome {
+export function resolveOutcome(option: CardOption, state: GameState): Outcome {
   for (const outcome of option.outcomes) {
-    if (meets(outcome.if, state, content)) return outcome;
+    if (meets(outcome.if, state)) return outcome;
   }
   // Fallback: the last outcome (content should end with an unconditional one).
   return option.outcomes[option.outcomes.length - 1];
@@ -269,7 +251,7 @@ export function resolveOutcome(
 
 // --- applying effects --------------------------------------------------------
 
-function clampVital(n: number): number {
+export function clampVital(n: number): number {
   return Math.max(VITAL_MIN, Math.min(VITAL_MAX, n));
 }
 
@@ -278,33 +260,37 @@ function matchesDeck(deckId: string, pattern: string): boolean {
   return deckId === pattern;
 }
 
+function addTraits(traits: Traits, deltas: Partial<Record<NumericTraitKey, number>>): void {
+  for (const [k, v] of Object.entries(deltas)) {
+    const key = k as NumericTraitKey;
+    traits[key] = traits[key] + (v ?? 0);
+  }
+}
+
 // Changing a status hands over the decks it owns: remove the outgoing state's
 // decks, add the incoming state's decks. This is how "get fired" drops the
 // whole job deck without the card having to spell it out.
-function changeStatus(
-  state: GameState,
-  kind: StatusKind,
-  value: string,
-  content: Content,
-): void {
-  const def = content.statuses[kind];
+function changeStatus(state: GameState, kind: StatusKind, value: string): void {
   const previous = state.statuses[kind];
-  const oldState = def?.states[previous];
-  const newState = def?.states[value];
+  const states = CONTENT.statuses[kind]?.states;
+  const oldState = states?.[previous];
+  const newState = states?.[value];
   let decks = state.activeDecks;
   for (const d of oldState?.addDecks ?? []) decks = decks.filter((x) => x !== d);
   for (const d of newState?.addDecks ?? []) if (!decks.includes(d)) decks = [...decks, d];
   state.activeDecks = decks;
+  // Setting the value a status already has only re-asserts its decks (one a
+  // card removed comes back); nothing below fires without a real change.
+  if (value === previous) return;
   state.statuses[kind] = value;
   // `jobExperience` is time-in-the-current-job, tagged with the job it was earned
   // in (state.experienceJob). On a job change:
-  //  - entering a `keepExperience` state (unemployed — "between jobs") preserves
-  //    both the counter and its tag, so a sacking doesn't wipe your progress;
+  //  - entering a `keepExperience` state preserves both the counter and its tag,
+  //    so a sacking doesn't wipe your progress;
   //  - otherwise reset only when the new job differs from the tagged one, so a
   //    re-hire into the SAME job keeps its experience, while a promotion or a
   //    move to a different career starts the counter fresh.
-  // This is the single place jobExperience resets — content never does it.
-  if (kind === "job" && value !== previous && !newState?.keepExperience) {
+  if (kind === "job" && !newState?.keepExperience) {
     if (state.experienceJob !== value) {
       state.traits.jobExperience = 0;
       state.experienceJob = value;
@@ -312,42 +298,35 @@ function changeStatus(
   }
   // Standing with your employer is per-job: a new employer means a fresh start,
   // so any job change (including into unemployment) wipes the strike count.
-  if (kind === "job" && value !== previous) state.traits.jobStrikes = 0;
-  // Traits a state stamps on entry (StatusStateDef.enterTraits) — e.g. a fresh
-  // apprenticeship starts with no craftsmanship. Declared in content, so no trait
-  // is tied to a particular status VALUE here.
-  if (value !== previous && newState?.enterTraits) {
-    Object.assign(state.traits, newState.enterTraits);
-  }
+  if (kind === "job") state.traits.jobStrikes = 0;
+  // Traits a state stamps on entry (StatusStateDef.enterTraits).
+  if (newState?.enterTraits) Object.assign(state.traits, newState.enterTraits);
   // A state may SUSPEND other status kinds while you are in it (see
   // StatusStateDef.suspends): entering stashes what you had and forces the
-  // declared value, leaving hands it straight back. Content names the kinds and
-  // values, so no status VALUE is hardcoded here. Recursion is safe — a state
+  // declared value, leaving hands it straight back. Recursion is safe — a state
   // never suspends its own kind.
-  if (value !== previous) {
-    for (const k of Object.keys(oldState?.suspends ?? {}) as StatusKind[]) {
-      const stashed = state.suspendedStatuses?.[k];
-      if (stashed === undefined) continue;
-      delete state.suspendedStatuses![k];
-      changeStatus(state, k, stashed, content);
-    }
-    for (const [k, forced] of Object.entries(newState?.suspends ?? {}) as [StatusKind, string][]) {
-      (state.suspendedStatuses ??= {})[k] = state.statuses[k];
-      changeStatus(state, k, forced, content);
-    }
+  for (const k of Object.keys(oldState?.suspends ?? {}) as StatusKind[]) {
+    const stashed = state.suspendedStatuses?.[k];
+    if (stashed === undefined) continue;
+    delete state.suspendedStatuses![k];
+    changeStatus(state, k, stashed);
+  }
+  for (const [k, forced] of Object.entries(newState?.suspends ?? {}) as [StatusKind, string][]) {
+    (state.suspendedStatuses ??= {})[k] = state.statuses[k];
+    changeStatus(state, k, forced);
   }
 }
 
-export function applyEffect(state: GameState, effect: Effect, content: Content): void {
+export function applyEffect(state: GameState, effect: Effect): void {
   if (effect.setStatus) {
     const sets = Object.entries(effect.setStatus) as [StatusKind, string][];
-    for (const [k, v] of sets) changeStatus(state, k, v, content);
+    for (const [k, v] of sets) changeStatus(state, k, v);
     // A status this effect sets DIRECTLY wins over one handed back by a
     // suspension ending in the same effect: "streets, and out of your
     // apprenticeship" must not land you back in the family home the
     // apprenticeship had stashed. A kind still suspended stays as forced.
     for (const [k, v] of sets) {
-      if (state.statuses[k] !== v && !(k in (state.suspendedStatuses ?? {}))) changeStatus(state, k, v, content);
+      if (state.statuses[k] !== v && !(k in (state.suspendedStatuses ?? {}))) changeStatus(state, k, v);
     }
   }
   if (effect.addDecks) {
@@ -360,65 +339,34 @@ export function applyEffect(state: GameState, effect: Effect, content: Content):
       state.activeDecks = state.activeDecks.filter((d) => !matchesDeck(d, pattern));
     }
   }
-  if (effect.setTraits) {
-    Object.assign(state.traits, effect.setTraits);
-  }
-  if (effect.setTraitsFlaw) {
-    Object.assign(state.traits, effect.setTraitsFlaw); // same as setTraits; the star logic treats it differently
-  }
-  if (effect.setTraitsHidden) {
-    Object.assign(state.traits, effect.setTraitsHidden); // same as setTraits; never draws a mark
-  }
-  if (effect.incTraits) {
-    for (const [k, delta] of Object.entries(effect.incTraits)) {
-      const key = k as keyof typeof state.traits;
-      (state.traits[key] as number) = (state.traits[key] as number) + (delta ?? 0);
-    }
-  }
+  // Three setters with one effect on state; they differ only in the mark the UI
+  // derives for the card face (setTraitsFlaw wears ⚠, setTraitsHidden none).
+  if (effect.setTraits) Object.assign(state.traits, effect.setTraits);
+  if (effect.setTraitsFlaw) Object.assign(state.traits, effect.setTraitsFlaw);
+  if (effect.setTraitsHidden) Object.assign(state.traits, effect.setTraitsHidden);
+  if (effect.incTraits) addTraits(state.traits, effect.incTraits);
   if (effect.vitals) {
     for (const [k, mag] of Object.entries(effect.vitals)) {
       const key = k as VitalKey;
       // Apply RAW (unclamped) — the turn's single clamp happens after drift too
       // (see clampVitals). Clamping here would cap a card's gain to 100 before a
       // negative drift eats into it, which made every force-at-max spend card
-      // (move out / buy a house at a full purse) impossible to reach.
+      // impossible to reach.
       state.vitals[key] = applyMagnitude(state.vitals[key], mag as Magnitude);
     }
   }
   if (effect.remember) {
     // Stamp the memory at the CURRENT age — applyEffect runs before the turn's
     // age+1, so state.age is the age shown on the card being answered.
-    (state.log ??= []).push({ age: state.age, id: effect.remember });
+    state.log.push({ age: state.age, id: effect.remember });
   }
   // (No out-of-band "end the game" effect: death is always a vital hitting 0,
   // handled uniformly by checkGameOver + the rescue nets. A card that should be
-  // fatal deals the "----" mortal blow to a vital instead — see applyMagnitude.)
+  // fatal deals a heavy loss to a vital instead.)
 }
 
-// Sum of every active status state's per-turn drift.
-export function totalDrift(state: GameState, content: Content): Partial<Vitals> {
-  // While a `noDrift` deck is active (babyhood — the unloseable grace period),
-  // status drift is suspended, so living costs etc. don't bite before the game
-  // proper begins — EXCEPT kinds flagged `ignoreNoDrift` (the age status), whose
-  // life-stage drift is always felt (so the baby-stage bonus lands in babyhood).
-  // Keeps totalDrift the single source of truth for the UI's drain preview too.
-  const noDrift = content.decks.some((d) => d.noDrift && state.activeDecks.includes(d.id));
-  const drift: Partial<Vitals> = {};
-  for (const kind of Object.keys(state.statuses) as StatusKind[]) {
-    const def = content.statuses[kind];
-    if (noDrift && !def?.ignoreNoDrift) continue;
-    const st = def?.states[state.statuses[kind]];
-    if (!st?.drift) continue;
-    for (const [k, v] of Object.entries(st.drift)) {
-      const key = k as VitalKey;
-      drift[key] = (drift[key] ?? 0) + (v ?? 0);
-    }
-  }
-  return drift;
-}
-
-function applyDrift(state: GameState, content: Content): void {
-  const drift = totalDrift(state, content);
+function applyDrift(state: GameState): void {
+  const drift = totalDrift(state);
   for (const key of VITAL_KEYS) {
     if (drift[key]) state.vitals[key] = state.vitals[key] + drift[key]!; // raw; clamped once at end of turn
   }
@@ -438,65 +386,44 @@ function clampVitals(state: GameState): void {
 // active decks (Deck.tick). Drift's counterpart for counters — e.g. a cat ages
 // `petCatAge` a year at a time (status), and Tom ages `relBrotherAge` a year at a
 // time while the rel_bro deck is active (deck).
-function applyTick(state: GameState, content: Content): void {
-  const add = (tick: Partial<Record<string, number>>): void => {
-    for (const [k, v] of Object.entries(tick)) {
-      const key = k as keyof typeof state.traits;
-      (state.traits[key] as number) = (state.traits[key] as number) + (v ?? 0);
-    }
-  };
+function applyTick(state: GameState): void {
   // Every rule's condition is read against the state BEFORE any of this turn's
   // ticks land, so the order rules are listed in can never change the result.
   const rules: TickRule[] = [];
   for (const kind of Object.keys(state.statuses) as StatusKind[]) {
-    const st = content.statuses[kind]?.states[state.statuses[kind]];
-    if (st?.tick) add(st.tick);
+    const st = currentState(state, kind);
+    if (st?.tick) addTraits(state.traits, st.tick);
     if (st?.ticks) rules.push(...st.ticks);
   }
-  for (const deck of content.decks) {
+  for (const { deck } of deckIndex().decks) {
     if (!state.activeDecks.includes(deck.id)) continue;
     if (deck.ticks) rules.push(...deck.ticks);
     if (!deck.tick) continue;
     // A deck may suspend its own tick once its story no longer needs it — see
     // Deck.tickWhile. Content names the condition; the engine just honours it.
-    if (!meets(deck.tickWhile, state, content)) continue;
-    add(deck.tick);
+    if (!meets(deck.tickWhile, state)) continue;
+    addTraits(state.traits, deck.tick);
   }
-  const due = rules.filter((r) => meets(r.while, state, content));
-  for (const r of due) add(r.traits);
+  const due = rules.filter((r) => meets(r.while, state));
+  for (const r of due) addTraits(state.traits, r.traits);
 }
 
 const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
 
 // A one-shot safety-net card for a vital: `rescue === vital`, not yet used,
 // in an active deck, and whose `conditions` hold (so a rescue can be gated —
-// e.g. the charity hospital only catches young children). Mirrors how `force`
-// already checks eligibility. (Rescue cards are never drawn normally — see
-// drawCard.)
-//
-// When several nets could catch you, the one with the HIGHEST `priority` does,
-// exactly as `dueMilestone` picks between due milestones. Before that it was
-// whichever deck happened to be earlier in `content.decks`, which is not a thing
-// content should have to reason about: a schoolboy with an asset to sell was
-// caught by the childhood hunger card (the workhouse or the streets) purely
-// because the childhood deck is listed above the school ones. Order still breaks
-// ties, so every existing net keeps its behaviour.
-export function findRescue(state: GameState, content: Content, key: VitalKey): Card | null {
-  let best: Card | null = null;
-  for (const card of allCards(content)) {
-    if (card.rescue !== key) continue;
-    if (exhausted(card, state)) continue;
-    if (!card.deck || !state.activeDecks.includes(card.deck)) continue;
-    if (!meets(card.conditions, state, content)) continue;
-    if (!best || (card.priority ?? 0) > (best.priority ?? 0)) best = card;
-  }
-  return best;
+// e.g. the charity hospital only catches young children). When several nets
+// could catch you, the one with the HIGHEST `priority` does, exactly as a due
+// milestone is chosen; content order breaks ties. (Rescue cards are never drawn
+// normally — see drawCard.)
+export function findRescue(state: GameState, key: VitalKey): Card | null {
+  return highestPriority(inPlay(state), (c) => c.rescue === key && meets(c.conditions, state));
 }
 
-function checkGameOver(state: GameState, content: Content): void {
+function checkGameOver(state: GameState): void {
   for (const key of VITAL_KEYS) {
     if (state.vitals[key] > VITAL_MIN) continue;
-    const rescue = findRescue(state, content, key);
+    const rescue = findRescue(state, key);
     if (rescue) {
       // Caught by the safety net: floor the vital and queue the rescue card.
       // A net already queued (its vital still waiting its turn, and drained
@@ -515,6 +442,28 @@ function checkGameOver(state: GameState, content: Content): void {
 
 // --- the turn ----------------------------------------------------------------
 
+// A working copy of the state for one turn. Every nested field of GameState is
+// one level deep (records and arrays of plain values or never-mutated entries),
+// so copying each top-level field is a full copy at a fraction of the cost of
+// structuredClone, which the simulations pay on every turn.
+function cloneState(prev: GameState): GameState {
+  const out = { ...prev } as Record<string, unknown>;
+  for (const [k, v] of Object.entries(out)) {
+    if (Array.isArray(v)) out[k] = [...v];
+    else if (v && typeof v === "object") out[k] = { ...v };
+  }
+  return out as unknown as GameState;
+}
+
+// The part of a year every turn shares, played card or not: age a year, drift,
+// tick the counters, clamp. The game-over check follows it.
+function endYear(state: GameState): void {
+  state.age += 1;
+  applyDrift(state);
+  applyTick(state);
+  clampVitals(state);
+}
+
 // Resolve a swipe: pick the outcome, apply its effects, age a year, drift, then
 // check for game over. Returns a fresh state plus the result text to show.
 export function chooseDirection(
@@ -522,15 +471,14 @@ export function chooseDirection(
   card: Card,
   dir: Direction,
 ): { state: GameState; result: string } {
-  const content = CONTENT;
   const option = card.options[dir];
   // A missing option, or one hidden by its `if`, is a no-op (defensive — the UI
   // already refuses to swipe toward a hidden option).
-  if (!option || !meets(option.if, prev, content)) return { state: prev, result: "" };
+  if (!option || !meets(option.if, prev)) return { state: prev, result: "" };
 
-  const state = structuredClone(prev);
-  const outcome = resolveOutcome(option, state, content);
-  if (outcome.effects) applyEffect(state, outcome.effects, content);
+  const state = cloneState(prev);
+  const outcome = resolveOutcome(option, state);
+  if (outcome.effects) applyEffect(state, outcome.effects);
 
   if (card.kind !== "filler") {
     state.usedCards[card.id] = (state.usedCards[card.id] ?? 0) + 1;
@@ -544,18 +492,13 @@ export function chooseDirection(
     state.playedFillers = [...state.playedFillers.filter((id) => id !== card.id), card.id];
   }
 
-  state.age += 1;
-  applyDrift(state, content);
-  applyTick(state, content);
-  clampVitals(state);
+  endYear(state);
   // ANSWERING A SAFETY NET MUST NOT KILL YOU BY THE VITAL IT CAUGHT. The net
   // floors the vital and hands you the card NEXT turn, and that turn drifts like
   // any other — so every point of drain still on you was charged against a bar
   // holding RESCUE_FLOOR. A child caught by the hunger card with a dog at
   // `finances: -3` went out of the family home, kept the dog, and died on the
-  // spot with the net already spent: 1 − 3, and no second net. Measured over
-  // 8,000 lives of a player who keeps a pet, that was 19 deaths, every one of
-  // them with an animal to feed.
+  // spot with the net already spent: 1 − 3, and no second net.
   //
   // So the rescued vital is floored again here. That is one year of grace — the
   // year you spend answering — which is the whole of what a net promises: not
@@ -564,23 +507,14 @@ export function chooseDirection(
   if (card.rescue) {
     state.vitals[card.rescue] = Math.max(state.vitals[card.rescue], RESCUE_FLOOR);
   }
-  checkGameOver(state, content);
+  checkGameOver(state);
   return { state, result: outcome.result };
 }
 
 // A year with nothing eligible to draw — still ages and drifts.
 export function quietYear(prev: GameState): { state: GameState; result: string } {
-  const state = structuredClone(prev);
-  state.age += 1;
-  applyDrift(state, CONTENT);
-  applyTick(state, CONTENT);
-  clampVitals(state);
-  checkGameOver(state, CONTENT);
+  const state = cloneState(prev);
+  endYear(state);
+  checkGameOver(state);
   return { state, result: "A quiet, uneventful year passes." };
-}
-
-// The engine reads content through this single binding, set once at startup.
-export let CONTENT: Content;
-export function setContent(content: Content): void {
-  CONTENT = content;
 }

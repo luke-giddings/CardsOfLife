@@ -8,11 +8,11 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left","right","up","down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d).state;
+    const p = chooseDirection(s, c, d).state;
     const v = Object.values(p.vitals) as number[];
     const k = p.over ? -1e9 : Math.min(...v)*1000 + v.reduce((a,b)=>a+b,0);
     if (k > key) { key = k; best = d; }
@@ -24,7 +24,7 @@ const med = (a:number[]) => a.length ? [...a].sort((x,y)=>x-y)[Math.floor(a.leng
 // A pupil the ruin net has just put on the street: floored purse, ground-down
 // happiness, the vitals the measured median arrives with.
 function onThePavement(job: string, deck: string): GameState {
-  const s = initGame(gameContent);
+  const s = initGame();
   s.age = 17; s.statuses.age = "young_adult"; s.statuses.job = job;
   s.statuses.housing = "homeless"; s.statuses.education = "basic"; s.statuses.family = "single";
   s.vitals = { finances: 1, happiness: 16, health: 26, spirit: 65 };
@@ -44,9 +44,9 @@ for (const [job, deck] of [["shophand","job_shop"], ["clerk","job_clerk"], ["lab
     for (let t = 0; t < 40 && !s.over; t++) {
       if (s.statuses.housing !== "homeless") { roofed++; yrs.push(s.age - start); break; }
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;
     }
     if (s.over) died++;

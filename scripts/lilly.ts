@@ -17,7 +17,7 @@ setContent(gameContent);
 
 const DIRS: Direction[] = ["left", "right", "up", "down"];
 const dirsFor = (c: Card, s: GameState) =>
-  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+  DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 
 const score = (s: GameState, warm: number): number => {
   const v = Object.values(s.vitals) as number[];
@@ -29,7 +29,7 @@ const score = (s: GameState, warm: number): number => {
 function pick(c: Card, s: GameState, ds: Direction[], warm: number): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const k = score(chooseDirection(structuredClone(s), c, d).state, warm);
+    const k = score(chooseDirection(s, c, d).state, warm);
     if (k > key) { key = k; best = d; }
   }
   return best;
@@ -44,16 +44,16 @@ function run(label: string, warm: number) {
   const warmths: number[] = [], ages: number[] = [];
   let hers = 0, all = 0;
   for (let i = 0; i < N; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     let sawIntro = false;
     for (let t = 0; t < 120 && !s.over; t++) {
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       all++;
       if (HERS.has(d.card.id)) hers++;
       if (d.card.id === "fam_single_lilly") sawIntro = true;
       const ds = dirsFor(d.card, s);
-      if (!ds.length) { s = quietYear(s); continue; }
+      if (!ds.length) { s = quietYear(s).state; continue; }
       const before = s.traits.relLillyWarmth;
       const dir = pick(d.card, s, ds, warm);
       s = chooseDirection(s, d.card, dir).state;

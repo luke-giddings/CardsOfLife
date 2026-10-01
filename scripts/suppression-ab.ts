@@ -22,13 +22,13 @@ const REL = new Set(["rel_bro", "rel_sis"]);
 const PRIORITY = new Set(gameContent.decks.filter((d) => d.priority).map((d) => d.id));
 
 function availDirs(card: any, s: GameState): Direction[] {
-  return DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s, gameContent));
+  return DIRS.filter((d) => card.options[d] && meets(card.options[d].if, s));
 }
 // Greedy: lift the weakest vital, never willingly die. The realistic player.
 function greedyDir(card: any, s: GameState, dirs: Direction[]): Direction {
   let best = dirs[0], bestKey = -Infinity;
   for (const d of dirs) {
-    const probe = chooseDirection(structuredClone(s), card, d);
+    const probe = chooseDirection(s, card, d);
     const v = probe.state.vitals;
     const key = probe.state.over ? -1e9 : Math.min(...Object.values(v)) * 1000 + Object.values(v).reduce((a, b) => a + b, 0);
     if (key > bestKey) { bestKey = key; best = d; }
@@ -41,13 +41,13 @@ function run() {
               urgentYears: 0, relDrawsWhileUrgent: 0, drawsWhileUrgent: 0,
               urgentPool: 0, urgentPoolN: 0, yearsInPriority: 0, age: 0 };
   for (let i = 0; i < RUNS; i++) {
-    let s = initGame(gameContent);
+    let s = initGame();
     let broBeats = 0, sisBeats = 0;
     for (let turn = 0; turn < 120 && !s.over; turn++) {
       const { pool } = eligibleDraw(s);
       const urgentActive = pool.some((c) => c.deck && PRIORITY.has(c.deck));
       const d = drawCard(s); s = d.state;
-      if (!d.card) { s = quietYear(s); continue; }
+      if (!d.card) { s = quietYear(s).state; continue; }
       if (urgentActive) {
         t.drawsWhileUrgent++;
         t.urgentPool += pool.length; t.urgentPoolN++;
@@ -56,7 +56,7 @@ function run() {
       if (d.card.deck === "rel_bro") broBeats++;
       if (d.card.deck === "rel_sis") sisBeats++;
       const dirs = availDirs(d.card, s);
-      if (!dirs.length) { s = quietYear(s); continue; }
+      if (!dirs.length) { s = quietYear(s).state; continue; }
       s = chooseDirection(s, d.card, greedyDir(d.card, s, dirs)).state;
     }
     t.lives++; t.age += s.age;

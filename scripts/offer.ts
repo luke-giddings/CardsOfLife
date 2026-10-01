@@ -3,15 +3,15 @@
 // a lower rung than you have earned on your education's ladder; better-yourself
 // is offered exactly when it should be; experience survives going back to the
 // same job.
-import { applyEffect, chooseDirection, initGame, setContent } from "../src/engine/engine.ts";
+import { cardById, applyEffect, chooseDirection, initGame, setContent } from "../src/engine/engine.ts";
 import { meets } from "../src/engine/conditions.ts";
 import { gameContent } from "../src/content/index.ts";
 import type { Card, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
-const offer = gameContent.decks.flatMap((d) => d.cards).find((c) => c.id === "job_unemployed_offer") as Card;
+const offer = cardById("job_unemployed_offer") as Card;
 
 function out(age: number, education: string, rungs: Record<string, number>, finances = 30, fund = false): GameState {
-  const s = initGame(gameContent, 1);
+  const s = initGame(1);
   s.age = age; s.statuses.age = age < 18 ? "child" : "adult"; s.statuses.education = education; s.statuses.job = "unemployed";
   s.vitals.finances = finances; Object.assign(s.traits, rungs, { eduUniFund: fund });
   s.activeDecks = s.activeDecks.filter((d) => !d.startsWith("baby") && !d.startsWith("age_"));
@@ -41,14 +41,14 @@ const rows: [string, GameState][] = [
 ];
 console.log(`${"case".padEnd(32)} ${"WORK ->".padEnd(18)} BETTER YOURSELF ->`);
 for (const [name, s] of rows) {
-  const work = chooseDirection(structuredClone(s), offer, "left").state.statuses.job;
-  const offered = meets(offer.options.right!.if, s, gameContent);
-  const better = offered ? chooseDirection(structuredClone(s), offer, "right").state.statuses.job : "(not offered)";
+  const work = chooseDirection(s, offer, "left").state.statuses.job;
+  const offered = meets(offer.options.right!.if, s);
+  const better = offered ? chooseDirection(s, offer, "right").state.statuses.job : "(not offered)";
   console.log(`${name.padEnd(32)} ${work.padEnd(18)} ${better}`);
 }
 // experience: a gang-master with two years, sacked, then back to work
 const g = out(30, "illiterate", {});
-applyEffect(g, { setStatus: { job: "gang_master" } } as any, gameContent); g.traits.jobExperience = 2;
-applyEffect(g, { setStatus: { job: "unemployed" } } as any, gameContent);
-const back = chooseDirection(structuredClone(g), offer, "left").state;
+applyEffect(g, { setStatus: { job: "gang_master" } } as any); g.traits.jobExperience = 2;
+applyEffect(g, { setStatus: { job: "unemployed" } } as any);
+const back = chooseDirection(g, offer, "left").state;
 console.log(`\nsacked gang-master with 2 years' experience -> ${back.statuses.job}, experience ${back.traits.jobExperience}`);

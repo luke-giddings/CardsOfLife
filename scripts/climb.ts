@@ -21,11 +21,11 @@ import { gameContent } from "../src/content/index.ts";
 import type { Card, Direction, GameState } from "../src/engine/types.ts";
 setContent(gameContent);
 const DIRS: Direction[] = ["left", "right", "up", "down"];
-const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s, gameContent));
+const dirsFor = (c: Card, s: GameState) => DIRS.filter((d) => c.options[d] && meets(c.options[d]!.if, s));
 function greedy(c: Card, s: GameState, ds: Direction[]) {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
-    const p = chooseDirection(structuredClone(s), c, d);
+    const p = chooseDirection(s, c, d);
     const v = Object.values(p.state.vitals) as number[];
     const k = p.state.over ? -1e9 : Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
     if (k > key) { key = k; best = d; }
@@ -38,7 +38,7 @@ let rung = 0, gated = 0, drawn = 0, taken = 0;
 let windowYears = 0, windowDraws = 0, windowLabourDraws = 0;
 const leftFor = new Map<string, number>();     // why the window closed, for those who qualified but never saw it
 for (let i = 0; i < N; i++) {
-  let s = initGame(gameContent);
+  let s = initGame();
   let was = false, qualified = false, sawCard = false, took = false, yrs = 0, dr = 0, labDr = 0, exit = "";
   for (let t = 0; t < 120 && !s.over; t++) {
     const here = onRung(s);
@@ -48,11 +48,11 @@ for (let i = 0; i < N; i++) {
       if (qualified) yrs++;
     }
     const d = drawCard(s); s = d.state;
-    if (!d.card) { s = quietYear(s); continue; }
+    if (!d.card) { s = quietYear(s).state; continue; }
     if (here && qualified) { dr++; if (d.card.deck === "job_labour") labDr++; }
     if (here && qualified && d.card.id === "job_labour_factory") sawCard = true;
     const ds = dirsFor(d.card, s);
-    if (!ds.length) { s = quietYear(s); continue; }
+    if (!ds.length) { s = quietYear(s).state; continue; }
     const before = s.statuses.job;
     s = chooseDirection(s, d.card, greedy(d.card, s, ds)).state;
     if (s.statuses.job === "factory" && before !== "factory") took = true;
