@@ -1568,6 +1568,13 @@ export class Game {
     this.introFlow = [];
     this.introCard = null;
     this.syncTop();
+    // On the first run the Bio is NEW to the player, so everything in it wears
+    // "new" (the pill points at it beside the coach line). A returning player's
+    // new life starts with nothing flagged.
+    if (this.coachStatus) {
+      for (const kind of this.bioShown?.keys() ?? []) this.bioUnseen.add(kind);
+      this.renderBio();
+    }
     if (this.state.over) this.showEnd();
     else this.beginTurn();
   }
