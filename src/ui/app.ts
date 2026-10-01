@@ -633,7 +633,10 @@ export class Game {
       // No change in value: just keep the preview current — unless a change is
       // still playing out, which shows the newest preview when it ends.
       if (running) this.barNextDrift[key] = d;
-      else this.showPreview(key, nv, d, false);
+      else {
+        this.fills[key].style.width = `${nv}%`; // a new life, a resume, a rebuilt bar
+        this.showPreview(key, nv, d, false);
+      }
       return;
     }
     for (const t of this.barTimers[key] ?? []) window.clearTimeout(t);
