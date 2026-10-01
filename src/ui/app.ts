@@ -178,7 +178,23 @@ export class Game {
   private fills!: Record<VitalKey, HTMLElement>;
   private flashes!: Record<VitalKey, HTMLElement>;
   private drains!: Record<VitalKey, HTMLElement>;
+  private gains!: Record<VitalKey, HTMLElement>;
+  private nets!: Record<VitalKey, HTMLElement>;
+  private cells!: Record<VitalKey, HTMLElement>;
   private statusesEl!: HTMLElement;
+  // THE BIO: the statuses, folded into one row under the bars. Closed it shows
+  // them as a single line; open, as chips you can tap for their yearly effects.
+  // Tapping a bar opens it too, lighting the statuses that feed that bar.
+  private bioOpen = false;
+  private bioKind: StatusKind | null = null; // the chip whose effects are shown
+  private bioVital: VitalKey | null = null; // the bar whose sources are shown
+  // Statuses that arrived since you last looked: the closed row says how many,
+  // and each wears "new" until tapped (closing the Bio counts as seeing them).
+  private bioUnseen = new Set<StatusKind>();
+  // What the Bio showed last render, to spot arrivals. null = take the next
+  // render as the baseline without flagging anything (a new life, a resume, a
+  // rewind), so only changes during play read as new.
+  private bioShown: Map<StatusKind, string> | null = null;
   private vitalsEl!: HTMLElement;
   private dbgBtn!: HTMLButtonElement;
   private debugPanel!: HTMLElement;
@@ -240,6 +256,8 @@ export class Game {
     this.syncVersion();
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
+    this.closeBio();
+    this.bioShown = null;
     this.captureDisplay();
     this.syncTop();
     // What you see on opening: the first-time flow (once ever), else a choice
@@ -305,42 +323,67 @@ export class Game {
     this.fills = {} as Record<VitalKey, HTMLElement>;
     this.flashes = {} as Record<VitalKey, HTMLElement>;
     this.drains = {} as Record<VitalKey, HTMLElement>;
+    this.gains = {} as Record<VitalKey, HTMLElement>;
+    this.nets = {} as Record<VitalKey, HTMLElement>;
+    this.cells = {} as Record<VitalKey, HTMLElement>;
     for (const key of VITAL_KEYS) {
-      const cell = el("div", `vital vital-${key}`);
+      const cell = el("button", `vital vital-${key}`);
+      (cell as HTMLButtonElement).type = "button";
       const top = el("div", "vital-top");
       const label = el("span");
       label.innerHTML = `<span class="vicon">${VITAL_ICON[key]}</span> ${t(VITAL_LABEL[key])}`;
-      top.append(label);
+      const net = el("span", "vnet"); // the direction this bar moves each year
+      top.append(label, net);
       const track = el("div", "track");
       const fill = el("div", "fill");
       const drain = el("div", "drain"); // marks the tip a status drift will remove
+      const gain = el("div", "gain"); // outlines the stretch a status drift will add
       const flash = el("div", "flash"); // bright segment shown on change
-      track.append(fill, drain, flash);
+      track.append(fill, drain, gain, flash);
       cell.append(top, track);
       vitals.append(cell);
       this.fills[key] = fill;
       this.flashes[key] = flash;
       this.drains[key] = drain;
-      // Debug: tap a vital to +10, double-tap to +25.
-      let lastTap = 0;
-      let tapTimer: number | undefined;
+      this.gains[key] = gain;
+      this.nets[key] = net;
+      this.cells[key] = cell;
+      // Tap a bar for what feeds it. (Debug vital edits live in the debug panel.)
       cell.addEventListener("click", () => {
-        if (!this.debug) return;
-        const now = Date.now();
-        if (now - lastTap < 280) {
-          window.clearTimeout(tapTimer);
-          lastTap = 0;
-          this.adjustVital(key, 25);
-        } else {
-          lastTap = now;
-          tapTimer = window.setTimeout(() => {
-            this.adjustVital(key, 10);
-            lastTap = 0;
-          }, 280);
-        }
+        if (this.root.classList.contains("intro-on")) return; // no Bio in the opening flow
+        this.bioVital = this.bioVital === key ? null : key;
+        this.bioKind = null;
+        this.renderBio();
       });
     }
-    this.statusesEl = el("div", "statuses");
+    this.statusesEl = el("div", "bio");
+    this.statusesEl.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("[data-bio-head]")) {
+        const open = this.bioOpen || !!this.bioVital;
+        if (open) this.closeBio();
+        else this.bioOpen = true;
+        return this.renderBio();
+      }
+      const chip = target.closest<HTMLElement>("[data-bio-kind]");
+      if (chip) {
+        const kind = chip.dataset.bioKind as StatusKind;
+        this.bioUnseen.delete(kind);
+        this.bioVital = null;
+        this.bioOpen = true;
+        this.bioKind = this.bioKind === kind ? null : kind;
+        this.renderBio();
+      }
+    });
+    // A tap anywhere outside the bars and the Bio closes it. It only closes:
+    // the tap still reaches whatever it landed on (a swipe begins as usual).
+    document.addEventListener("pointerdown", (e) => {
+      if (!this.bioOpen && !this.bioVital) return;
+      const target = e.target as Node;
+      if (this.statusesEl.contains(target) || this.vitalsEl.contains(target)) return;
+      this.closeBio();
+      this.renderBio();
+    });
     this.topbar.append(headRow, vitals, this.statusesEl);
 
     const stage = el("main", "stage");
@@ -412,53 +455,156 @@ export class Game {
       if (nv !== ov) this.flashDelta(key, ov, nv);
       const d = drift[key] ?? 0;
       const drain = this.drains[key];
+      const gain = this.gains[key];
+      // At least 3px either way, so a small drift is still seen.
       if (d < 0 && nv > 0) {
         const loss = Math.min(-d, nv); // can't strip more than the bar holds
         drain.style.left = `${nv - loss}%`;
-        drain.style.width = `${loss}%`;
+        drain.style.width = `max(3px, ${loss}%)`;
         drain.style.opacity = "1";
       } else {
         drain.style.opacity = "0";
       }
+      if (d > 0 && nv < 100) {
+        const add = Math.min(d, 100 - nv); // can't fill past the top
+        gain.style.left = `${nv}%`;
+        gain.style.width = `max(3px, ${add}%)`;
+        gain.style.opacity = "1";
+      } else {
+        gain.style.opacity = "0";
+      }
+      const net = this.nets[key];
+      net.textContent = d > 0 ? "+" : d < 0 ? "−" : "";
+      net.className = `vnet ${d > 0 ? "dgood" : "dbad"}`;
     }
     this.prevVitals = { ...s.vitals };
-    let chips = "";
-    // Whether a chip shows is the CONTENT's opinion (StatusDef.show), not a rule
-    // written here: see the doc on StatusShow.
+    // Spot arrivals for the Bio's "new" flags (see bioShown).
+    const shown = new Map(this.bioRows(disp).filter((r) => r.shown).map((r) => [r.kind, r.value]));
+    if (this.bioShown) {
+      for (const [kind, value] of shown) if (this.bioShown.get(kind) !== value) this.bioUnseen.add(kind);
+    } else this.bioUnseen.clear();
+    for (const kind of this.bioUnseen) if (!shown.has(kind)) this.bioUnseen.delete(kind);
+    this.bioShown = shown;
+    this.renderBio();
+  }
+
+  // Every status with what it does to each vital per year, from the lagging
+  // display snapshot (so a status held for a chapter card doesn't show early).
+  // `shown`: whether it has a place in the Bio, which is the CONTENT's opinion
+  // (StatusDef.show), not a rule written here: see the doc on StatusShow.
+  // `drift` is empty while the drift is suspended (babyhood's noDrift), so the
+  // breakdown always agrees with totalDrift and the bars.
+  private bioRows(disp: GameState): {
+    kind: StatusKind; value: string; label: string; shown: boolean;
+    drift: { vital: VitalKey; good: boolean; sym: string }[];
+  }[] {
+    const noDrift = content.decks.some((d) => d.noDrift && disp.activeDecks.includes(d.id));
     const shows = (kind: StatusKind, value: string): boolean => {
       const rule = content.statuses[kind].show;
       if (rule === "always") return true;
       if (rule === "whenSet") return value !== content.start.statuses[kind];
-      return s.age >= rule.ageMin;
+      return disp.age >= rule.ageMin;
     };
+    const rows = [];
     for (const kind of STATUS_KINDS) {
       const value = disp.statuses[kind];
       if (!value) continue; // defensive: an old save without a newer status kind
-      if (!shows(kind, value)) continue;
-      const state = content.statuses[kind].states[value];
-      const label = state?.label ? t(state.label) : value;
-      let drift = "";
-      for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
-        if (!dv) continue;
-        // Show the STRENGTH of the drift, not just its sign: 1–3 symbols (a
-        // heavier drain reads heavier — e.g. old age ♥−− vs adulthood ♥−),
-        // mirroring the +/++/+++ vocabulary on the cards. The displayed strength
-        // is AUTHORED per state via `driftShown` (decoupled from the raw number,
-        // so tuning values never silently flips the visual). Where a vital has no
-        // override we fall back to deriving it from |drift|: |v| >= 16 → 3,
-        // >= 8 → 2, else 1 (the single band runs to 7 so the ubiquitous −5
-        // "baseline" cost reads as one −).
-        const shown = state?.driftShown?.[vk as VitalKey];
-        const good = shown ? shown.startsWith("+") : dv > 0;
-        const sym = shown
-          ? shown.split("-").join("−")
-          : (dv > 0 ? "+" : "−").repeat(Math.abs(dv) >= 16 ? 3 : Math.abs(dv) >= 8 ? 2 : 1);
-        drift += `<span class="chip-drift"><span class="vicon" style="color:var(--v-${vk})">${VITAL_ICON[vk as VitalKey]}</span><span class="${good ? "dgood" : "dbad"}">${sym}</span></span>`;
+      const def = content.statuses[kind];
+      const state = def.states[value];
+      const drift: { vital: VitalKey; good: boolean; sym: string }[] = [];
+      if (!(noDrift && !def.ignoreNoDrift)) {
+        for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
+          if (!dv) continue;
+          // Show the STRENGTH of the drift, not just its sign: 1–3 symbols (a
+          // heavier drain reads heavier — e.g. old age ♥−− vs adulthood ♥−),
+          // mirroring the +/++/+++ vocabulary on the cards. The displayed strength
+          // is AUTHORED per state via `driftShown` (decoupled from the raw number,
+          // so tuning values never silently flips the visual). Where a vital has no
+          // override we fall back to deriving it from |drift|: |v| >= 16 → 3,
+          // >= 8 → 2, else 1 (the single band runs to 7 so the ubiquitous −5
+          // "baseline" cost reads as one −).
+          const shownSym = state?.driftShown?.[vk as VitalKey];
+          const good = shownSym ? shownSym.startsWith("+") : dv > 0;
+          const sym = shownSym
+            ? shownSym.split("-").join("−")
+            : (dv > 0 ? "+" : "−").repeat(Math.abs(dv) >= 16 ? 3 : Math.abs(dv) >= 8 ? 2 : 1);
+          drift.push({ vital: vk as VitalKey, good, sym });
+        }
       }
-      chips += `<span class="chip"><b>${t(STATUS_LABEL[kind])}</b> ${label}${drift}</span>`;
+      rows.push({ kind, value, label: state?.label ? t(state.label) : value, shown: shows(kind, value), drift });
     }
-    this.statusesEl.innerHTML = chips;
+    return rows;
   }
+
+  private closeBio(): void {
+    this.bioOpen = false;
+    this.bioKind = null;
+    this.bioVital = null;
+    this.bioUnseen.clear(); // you have had the chance to see them all
+  }
+
+  // The Bio row, and the bars' selected state. Cheap enough to redraw whole on
+  // every tap; reads the same display snapshot as the chips always did.
+  private renderBio(): void {
+    const disp: GameState = { ...this.state, statuses: this.displayStatuses, activeDecks: this.displayDecks };
+    const rows = this.bioRows(disp);
+    const chipsRows = rows.filter((r) => r.shown);
+    const lit = this.bioVital;
+    const open = this.bioOpen || !!lit;
+    for (const key of VITAL_KEYS) {
+      this.cells[key].classList.toggle("on", lit === key);
+      this.cells[key].setAttribute("aria-expanded", String(lit === key));
+    }
+    const mark = (vital: VitalKey, good: boolean, sym: string): string =>
+      `<span class="vicon" style="color:var(--v-${vital})">${VITAL_ICON[vital]}</span><span class="${good ? "dgood" : "dbad"}">${sym}</span>`;
+    let detail = "";
+    if (lit) {
+      const src = rows.filter((r) => r.drift.some((d) => d.vital === lit));
+      detail =
+        `<div class="bio-detail"><div class="bio-detail-t">${tf("ui.bioVital", { vital: t(VITAL_LABEL[lit]) })}</div>` +
+        (src.length
+          ? `<ul>${src.map((r) => {
+              const d = r.drift.find((x) => x.vital === lit)!;
+              return `<li><span>${t(STATUS_LABEL[r.kind])} · ${r.label}</span><span>${mark(lit, d.good, d.sym)}</span></li>`;
+            }).join("")}</ul>`
+          : `<span class="bio-none">${t("ui.bioVitalNone")}</span>`) +
+        `</div>`;
+    } else if (this.bioKind) {
+      const r = rows.find((x) => x.kind === this.bioKind);
+      if (r) {
+        detail =
+          `<div class="bio-detail"><div class="bio-detail-t">${t(STATUS_LABEL[r.kind])}: ${r.label}</div>` +
+          (r.drift.length
+            ? `<ul>${r.drift.map((d) => `<li><span>${t(VITAL_LABEL[d.vital])}</span><span>${mark(d.vital, d.good, d.sym)}</span></li>`).join("")}</ul>`
+            : `<span class="bio-none">${t("ui.bioKindNone")}</span>`) +
+          `</div>`;
+      }
+    }
+    const chips = chipsRows.map((r) => {
+      // One dot per vital it moves: green for a gain, red for a loss, gains on top.
+      const dots = [...r.drift].sort((a, b) => Number(b.good) - Number(a.good))
+        .map((d) => `<span class="bio-dot ${d.good ? "up" : "down"}"></span>`).join("");
+      const cls = ["chip",
+        this.bioUnseen.has(r.kind) ? "new" : "",
+        lit ? (r.drift.some((d) => d.vital === lit) ? "on" : "dim") : this.bioKind === r.kind ? "on" : "",
+      ].filter(Boolean).join(" ");
+      return `<button type="button" class="${cls}" data-bio-kind="${r.kind}" aria-expanded="${this.bioKind === r.kind}">` +
+        (this.bioUnseen.has(r.kind) ? `<span class="bio-newtag">${t("ui.bioNewTag")}</span>` : "") +
+        `<b>${t(STATUS_LABEL[r.kind])}</b> ${r.label}` +
+        (dots ? `<span class="bio-dots" aria-hidden="true">${dots}</span>` : "") +
+        `</button>`;
+    }).join("");
+    const nNew = this.bioUnseen.size;
+    this.statusesEl.classList.toggle("open", open);
+    this.statusesEl.innerHTML =
+      `<button type="button" class="bio-head" data-bio-head aria-expanded="${open}">` +
+      `<span class="bio-title">${t("ui.bio")}</span>` +
+      `<span class="bio-sum">${open ? "" : chipsRows.map((r) => r.label).join(" · ")}</span>` +
+      (nNew ? `<span class="bio-new">${tf("ui.bioNew", { n: nNew })}</span>` : "") +
+      `<span class="bio-chev" aria-hidden="true">▾</span></button>` +
+      (open ? `<div class="bio-body">${detail}<div class="bio-chips">${chips}</div></div>` : "");
+  }
+
 
   // Flash the changed segment of a bar in a bright tint of its own colour; the
   // bar growing or shrinking conveys whether it was a gain or a loss.
@@ -1504,6 +1650,8 @@ export class Game {
     this.persist();
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
+    this.closeBio();
+    this.bioShown = null;
     this.captureDisplay();
     this.pendingUnlock = null;
     this.busy = false;
@@ -1726,6 +1874,8 @@ export class Game {
     this.history = [];
     this.prevVitals = { ...this.state.vitals };
     this.seenDecks = new Set(this.state.activeDecks);
+    this.closeBio();
+    this.bioShown = null;
     this.captureDisplay();
     this.syncTop();
   }

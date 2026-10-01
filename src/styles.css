@@ -84,8 +84,9 @@ body {
   padding: max(12px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
 }
 
-/* --- top bar: age, vitals, statuses --------------------------------------- */
-.topbar { flex: 0 0 auto; }
+/* --- top bar: age, vitals, bio --------------------------------------------- */
+/* Above the stage, so the open Bio lays over the card rather than pushing it. */
+.topbar { flex: 0 0 auto; position: relative; z-index: 20; }
 
 .head-row {
   display: flex;
@@ -147,7 +148,7 @@ body {
    the thing you notice. The resume card sets neither class: there, the age and
    bars of the life you left are the whole point. */
 .intro-on .age,
-.intro-on .statuses { display: none; }
+.intro-on .bio { display: none; }
 .intro-bare .vitals { display: none; }
 .dbg.on,
 .hard.on {
@@ -414,6 +415,13 @@ body {
   gap: 8px;
 }
 .vital {
+  /* a button (tap for what feeds it), dressed as the panel it always was */
+  display: block;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -480,29 +488,133 @@ body {
 .vital-health { --vc: var(--v-health); --vcf: var(--vf-health); }
 .vital-spirit { --vc: var(--v-spirit); --vcf: var(--vf-spirit); }
 
-.statuses {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-  min-height: 12px;
+.vital.on { border-color: var(--vc); }
+.vicon { font-weight: 700; }
+.vital .vicon { color: var(--vc); }
+.vnet { font-weight: 700; letter-spacing: 0; }
+/* the stretch a status drift will ADD next turn: hollow, in the bar's own
+   colour — so it can't be mistaken for the dark hatch of a loss */
+.gain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 0 4px 4px 0;
+  box-shadow: inset 0 0 0 1.5px var(--vc);
+  transition:
+    opacity 0.4s ease,
+    left 1.5s cubic-bezier(0.12, 0, 0.39, 0),
+    width 1.5s cubic-bezier(0.12, 0, 0.39, 0);
 }
+
+/* The Bio: one full-width row; open, a panel of chips laid over the card. */
+.bio {
+  position: relative;
+  margin-top: 8px;
+  min-width: 0;
+}
+.bio-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+}
+.bio.open .bio-head { border-radius: 10px 10px 0 0; }
+.bio-title { font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink); font-weight: 600; }
+/* the closed row's one-line summary: cut off at the edge, never widening the page */
+.bio-sum {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.72rem;
+  color: var(--faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bio-new {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--surface);
+  background: var(--gold);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.bio-chev { color: var(--faint); margin-left: auto; transition: transform 0.2s; }
+.bio.open .bio-chev { transform: rotate(180deg); }
+.bio-body {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  box-shadow: var(--shadow);
+}
+.bio-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip {
+  font: inherit;
   font-size: 0.72rem;
   padding: 3px 9px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--surface-2);
   color: var(--muted);
+  cursor: pointer;
+  transition: opacity 0.2s, border-color 0.2s;
 }
 .chip b {
   color: var(--gold);
   font-weight: 700;
   margin-right: 3px;
 }
-.vicon { font-weight: 700; }
-.vital .vicon { color: var(--vc); }
-.chip-drift { margin-left: 6px; letter-spacing: 0.5px; }
+.chip.new, .chip.on { border-color: var(--gold); }
+.chip.on { color: var(--ink); }
+.chip.dim { opacity: 0.35; }
+.bio-newtag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-right: 5px;
+}
+/* one dot per vital the status moves: green a gain, red a loss, stacked */
+.bio-dots { display: inline-flex; flex-direction: column; gap: 2px; margin-left: 6px; vertical-align: middle; }
+.bio-dot { width: 5px; height: 5px; border-radius: 50%; }
+.bio-dot.up { background: var(--good); }
+.bio-dot.down { background: var(--bad); }
+.bio-detail {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.bio-detail-t { font-weight: 700; margin-bottom: 2px; }
+.bio-detail ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.bio-detail li { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); }
+.bio-detail li > span:last-child { white-space: nowrap; letter-spacing: 0.5px; }
+.bio-none { color: var(--muted); }
+.vital:focus-visible, .bio-head:focus-visible, .chip:focus-visible { outline: 2px solid var(--baize); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .gain, .chip, .bio-chev { transition: none; } }
 .dgood { color: var(--good); font-weight: 700; }
 .dbad { color: var(--bad); font-weight: 700; }
 
@@ -680,9 +792,9 @@ body {
   50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--baize) 28%, transparent); border-color: var(--baize); color: var(--baize); }
 }
 .hard.pointed-at { animation: pointed-at 1500ms ease-in-out infinite; }
-/* The same attention-getter on the status chips, for the one card that explains
-   them. They have a border already, so the ring reads the same way. */
-.statuses.pointed-at .chip { animation: pointed-at 1500ms ease-in-out infinite; }
+/* The same attention-getter on the Bio row, for the one card that explains it.
+   It has a border already, so the ring reads the same way. */
+.bio.pointed-at .bio-head { animation: pointed-at 1500ms ease-in-out infinite; }
 
 /* --- the title card ------------------------------------------------------- */
 /* The game's NAME, so it is set as a title rather than as a line of the prose

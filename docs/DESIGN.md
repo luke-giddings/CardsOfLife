@@ -137,8 +137,8 @@ nudges and drift use raw numbers (they're not player-facing bar moves).
 
 A Status does two jobs: **drift** (a fixed per-turn effect on Vitals) and
 **gating/deck-ownership** (a state can `addDecks`). Drift is shown to the player
-on the status chip as **icon + a 1–4-symbol strength**, in the same `+/++/+++`
-vocabulary as the cards. **The displayed strength is authored, not computed** —
+as **icon + a 1–4-symbol strength**, in the same `+/++/+++` vocabulary as the
+cards, one tap away rather than on the face of the screen (see *The Bio* below). **The displayed strength is authored, not computed** —
 each state gives `driftShown` per vital, completely decoupled from the raw drift
 number, so tuning values never nudges a symbol count and silently flips the
 visual. The convention is **ladder position, not magnitude**: each rung up a
@@ -1316,9 +1316,22 @@ Mechanics worth knowing:
   a *comfortable* fabricated state: against the real starting vitals a sample
   "health −−" is fatal and the preview — rightly — draws a death's head on it,
   which is true of the live state but wrong as an example.
-- **The status coach.** The status chips first appear on the first GAME card of
-  a first run — they are hidden through the whole opening flow — so that card
-  carries one extra line saying what they are, and the chips pulse while it is
+- **The Bio.** The player-facing name for the statuses ("status" is our word,
+  not theirs). One full-width row under the bars: closed, it lists the statuses
+  as a single line cut off at the edge; open, a panel laid over the card holds
+  them as chips. A chip carries one dot per vital it moves (green a gain, red a
+  loss, stacked); tap it for its yearly effects. Tapping a bar opens the Bio
+  too, listing what feeds that bar and lighting those chips. A status that
+  arrives during play is flagged: the closed row says "N new", the chip wears
+  "new" until tapped, and closing the Bio counts as seeing them all (a new life,
+  a resume or a rewind takes what is showing as already seen). Each bar shows
+  its yearly direction as a green + or red −, and previews it: a loss as a dark
+  hatch over the tip, a gain as a hollow outline past the fill, both at least
+  3px so a small drift is still seen. This replaced chips that carried every
+  icon on the face of the screen, which playtesters found too busy.
+- **The status coach.** The Bio first appears on the first GAME card of
+  a first run — it is hidden through the whole opening flow — so that card
+  carries one extra line saying what it is, and its row pulses while it is
   up. It rides on the birth card rather than taking a shell card of its own,
   because the chips are only there to be pointed at once play has started. Set
   as the first-run flow latches, spent the moment that card is answered: once in
