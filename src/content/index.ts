@@ -104,7 +104,7 @@ export const content = {
       tenure: "jobExperience",
       enterTraits: { jobStrikes: 0 },
       driftWhile: PAST_BABYHOOD,
-      show: { ageMin: 5 }, // babyhood ends at the schooling milestone; nothing to show before it
+      show: "whenSet", // from the first card that gives you one (school or work); "None" is never shown
       states: {
         infant: { label: "status.job.infant" }, // neutral start; no drain, no employment yet
         // While at school your "occupation" is studying: no wages and a grind on
