@@ -147,13 +147,10 @@ function fillerPile(
 // card, else a weighted random pick from the eligible pool. Returns null when
 // nothing is eligible (the caller then passes a "quiet year").
 export function drawCard(state: GameState): { card: Card | null; state: GameState } {
-  // A pending safety-net rescue jumps the queue (bypassing eligibility). Two
-  // vitals can be caught in the same year, so they queue and come one a turn.
-  const [next, ...rest] = state.pendingRescues ?? [];
-  if (next) {
-    const rescue = cardById(next);
-    const after = { ...state, pendingRescues: rest.length ? rest : undefined };
-    if (rescue) return { card: rescue, state: { ...after, lastCardId: rescue.id } };
+  // A pending safety-net rescue jumps the queue (bypassing eligibility).
+  if (state.pendingRescue) {
+    const rescue = cardById(state.pendingRescue);
+    if (rescue) return { card: rescue, state: { ...state, pendingRescue: undefined, lastCardId: rescue.id } };
   }
 
   // One pass over the cards in play: each card's conditions are read once.
@@ -416,11 +413,6 @@ function applyTick(state: GameState): void {
   for (const r of due) addTraits(state.traits, r.traits);
 }
 
-// Where a rescued vital lands: destitute, but alive (Content.rescueFloor).
-function rescueFloor(): number {
-  return CONTENT.rescueFloor ?? VITAL_MIN + 1;
-}
-
 // A one-shot safety-net card for a vital: `rescue === vital`, not yet used,
 // in an active deck, and whose `conditions` hold (so a rescue can be gated —
 // e.g. the charity hospital only catches young children). When several nets
@@ -431,24 +423,21 @@ export function findRescue(state: GameState, key: VitalKey): Card | null {
   return highestPriority(inPlay(state), (c) => c.rescue === key && meets(c.conditions, state));
 }
 
+// A vital at the floor ends the life — unless it is the ONLY one, and a safety
+// net for it catches you: the vital is set to Content.rescueFloor and the net is
+// dealt next turn. A net catches one vital; two failing in the same year is
+// death, whatever nets you hold. (The first of them, in vital order, is named.)
 function checkGameOver(state: GameState): void {
-  for (const key of CONTENT.vitals) {
-    if (state.vitals[key] > VITAL_MIN) continue;
-    const rescue = findRescue(state, key);
-    if (rescue) {
-      // Caught by the safety net: floor the vital and queue the rescue card.
-      // A net already queued (its vital still waiting its turn, and drained
-      // again meanwhile) catches it again rather than queueing twice: it is not
-      // spent until it is answered.
-      state.vitals[key] = rescueFloor();
-      const queue = (state.pendingRescues ??= []);
-      if (!queue.includes(rescue.id)) queue.push(rescue.id);
-      continue;
-    }
-    state.over = true;
-    state.endReason = key;
+  const down = CONTENT.vitals.filter((key) => state.vitals[key] <= VITAL_MIN);
+  if (down.length === 0) return;
+  const rescue = down.length === 1 ? findRescue(state, down[0]) : null;
+  if (rescue) {
+    state.vitals[down[0]] = CONTENT.rescueFloor;
+    state.pendingRescue = rescue.id;
     return;
   }
+  state.over = true;
+  state.endReason = down[0];
 }
 
 // --- the turn ----------------------------------------------------------------
@@ -509,19 +498,10 @@ export function chooseDirection(
   }
 
   endYear(state);
-  // ANSWERING A SAFETY NET MUST NOT KILL YOU BY THE VITAL IT CAUGHT. The net
-  // floors the vital and hands you the card NEXT turn, and that turn drifts like
-  // any other — so every point of drain still on you was charged against a bar
-  // holding the rescue floor. A child caught by the hunger card with a dog at
-  // `finances: -3` went out of the family home, kept the dog, and died on the
-  // spot with the net already spent: 1 − 3, and no second net.
-  //
-  // So the rescued vital is floored again here. That is one year of grace — the
-  // year you spend answering — which is the whole of what a net promises: not
-  // that you will live, but that you get a turn to act. The year after is on you,
-  // and the card is one-shot, so this cannot repeat.
-  if (card.rescue) {
-    state.vitals[card.rescue] = Math.max(state.vitals[card.rescue], rescueFloor());
+  // The outcome's floors for the year (Effect.floor), after its drift.
+  for (const [k, f] of Object.entries(outcome.effects?.floor ?? {})) {
+    const key = k as VitalKey;
+    if (f !== undefined) state.vitals[key] = Math.max(state.vitals[key], f);
   }
   checkGameOver(state);
   return { state, result: outcome.result };

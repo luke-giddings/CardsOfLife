@@ -125,8 +125,8 @@ export const childhoodDecks = [
             // floors you to 1 (which would kill you again next turn, with the
             // one-shot net already spent). Also hands over the job_unemployed deck
             // as your way forward. Housing homeless keeps the streets harsh.
-            left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }] },
-            right: { label: "child_hunger.right", outcomes: [{ result: "child_hunger.right.r0", effects: { vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse", job: "pauper" }, remember: "log.workhouse" } }] },
+            left: { label: "child_hunger.left", outcomes: [{ result: "child_hunger.left.r0", effects: { floor: { finances: 1 }, vitals: { health: "-", spirit: "+" }, setStatus: { housing: "homeless", job: "unemployed" }, remember: "log.streets" } }] },
+            right: { label: "child_hunger.right", outcomes: [{ result: "child_hunger.right.r0", effects: { floor: { finances: 1 }, vitals: { health: "+", spirit: "-" }, setStatus: { housing: "workhouse", job: "pauper" }, remember: "log.workhouse" } }] },
           },
         },
         {
@@ -153,9 +153,9 @@ export const childhoodDecks = [
           conditions: { ageMax: 13 },
           prompt: "child_charity_hospital.prompt",
           options: {
-            left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { vitals: { health: "++", spirit: "+" }, setTraitsFlaw: { flawOwesCharity: true } } }] },
-            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { vitals: { health: "++", happiness: "+" }, setTraitsFlaw: { flawOwesCharity: true } } }] },
-            up: { label: "child_charity_hospital.up", outcomes: [{ result: "child_charity_hospital.up.r0", effects: { vitals: { health: "++", finances: "+" }, setTraitsFlaw: { flawOwesCharity: true } } }] },
+            left: { label: "child_charity_hospital.left", outcomes: [{ result: "child_charity_hospital.left.r0", effects: { floor: { health: 1 }, vitals: { health: "++", spirit: "+" }, setTraitsFlaw: { flawOwesCharity: true } } }] },
+            right: { label: "child_charity_hospital.right", outcomes: [{ result: "child_charity_hospital.right.r0", effects: { floor: { health: 1 }, vitals: { health: "++", happiness: "+" }, setTraitsFlaw: { flawOwesCharity: true } } }] },
+            up: { label: "child_charity_hospital.up", outcomes: [{ result: "child_charity_hospital.up.r0", effects: { floor: { health: 1 }, vitals: { health: "++", finances: "+" }, setTraitsFlaw: { flawOwesCharity: true } } }] },
           },
         },
 

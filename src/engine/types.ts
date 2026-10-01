@@ -93,6 +93,13 @@ export interface Condition {
 // --- Effects -----------------------------------------------------------------
 export interface Effect {
   vitals?: Partial<Record<VitalKey, Magnitude>>; // "+"/"++"/"-"/"--", applied then clamped
+  // A floor for THIS year: after the year's drift, the vital is raised to at
+  // least this, so neither the card nor the year's drain can take it lower. A
+  // safety net uses it so answering it cannot kill you by the vital it caught
+  // (the net floors the vital and hands you the card NEXT turn, and that turn
+  // drifts like any other). Not lethal-proofing beyond the year: the year
+  // after is on you.
+  floor?: Partial<Record<VitalKey, number>>;
   setStatus?: Partial<Record<StatusKind, string>>;
   addDecks?: string[];
   removeDecks?: string[]; // ids, or a trailing wildcard like "job_*"
@@ -337,11 +344,10 @@ export interface Content {
   // end-of-run epilogue names the siblings too (ui.proseBrother*) and belongs to
   // no deck, so deck-scoping would leave those unresolvable.
   vars?: Record<string, string>;
-  // Where a vital caught by a safety net (Card.rescue) is set: it is floored
-  // there when caught, and again after the year spent answering the net, so
-  // drain that year cannot kill you through the net you are answering.
-  // Default: one above the minimum.
-  rescueFloor?: number;
+  // Where a vital caught by a safety net (Card.rescue) is set when it catches
+  // you. (The net's own outcomes keep it there through the year spent
+  // answering, with Effect.floor.)
+  rescueFloor: number;
   // Where saves live, and their version. Raising the version drops every save
   // written before it (you get a fresh life) — deliberately not migration. When
   // to raise it is the game's call.
@@ -374,7 +380,7 @@ export interface GameState {
   tenureOf?: Partial<Record<StatusKind, string>>;
   // Status values stashed by a state that `suspends` them, handed back on leaving.
   suspendedStatuses?: Partial<Record<StatusKind, string>>;
-  pendingRescues?: string[];          // rescue card ids to force on the next draws, in order
+  pendingRescue?: string;             // a rescue card id to force on the next draw
   rng: number;                        // PRNG state, so resume is consistent
   // The seed this life STARTED from. `rng` overwrites itself on every draw, so
   // without this the only record of where a life began is gone by the first

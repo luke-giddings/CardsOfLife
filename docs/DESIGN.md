@@ -1094,7 +1094,7 @@ time; careless/random play dies far more. The **work path** is a deliberate
 high-risk/high-reward gamble (money via drift, but a real chance it kills you);
 **school** is the safer route.
 
-**A SAFETY NET MUST NOT KILL YOU.** `RESCUE_FLOOR` is 1 — destitute but alive —
+**A SAFETY NET MUST NOT KILL YOU.** `Content.rescueFloor` is 1 — destitute but alive —
 and the net hands you its card on the NEXT turn, which drifts like any other. So
 every point of drain still on you is charged against a bar holding 1, and if
 anything survives the card's own status change you die answering the net, with the
@@ -1103,11 +1103,12 @@ net already spent. Reported from play: a child of eleven with a dog
 but not away from the animal. 1 − 3, and no second net. Both swipes showed the
 skull and both were fatal.
 
-`chooseDirection` now floors the rescued vital AGAIN after the year's drift, so
-answering a net cannot kill you by the thing it caught. That is one year of grace
-— the year you spend answering — which is the whole of what a net promises: not
-that you will live, but that you get a turn to act. The card is one-shot, so it
-cannot repeat.
+So every outcome of a net carries `floor: { <its vital>: 1 }` (`Effect.floor`, a
+floor for the year applied after its drift), and answering a net cannot kill you
+by the thing it caught. That is one year of grace — the year you spend answering —
+which is the whole of what a net promises: not that you will live, but that you
+get a turn to act. The card is one-shot, so it cannot repeat. **A net catches ONE
+vital:** if two hit the floor in the same year you die, whatever nets you hold.
 
 Measured over 8,000 lives of a player who keeps a pet: deaths caused by the net
 that caught you go **19 → 0**, every one of the nineteen having had an animal to

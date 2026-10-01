@@ -707,6 +707,12 @@ export class Game {
     }
     projected.age += 1; // the turn advances before drift + the game-over/rescue check
     const drift = totalDrift(projected);
+    // Which vitals end the year at the floor: the post-card value plus the
+    // year's drift, unless the outcome floors it for the year (Effect.floor —
+    // a safety net does, so answering it cannot kill you by what it caught).
+    const floor = outcome.effects?.floor ?? {};
+    const lethalKeys = new Set(VITAL_KEYS.filter((key) =>
+      Math.max(projected.vitals[key] + (drift[key] ?? 0), floor[key] ?? -Infinity) <= VITAL_MIN));
     let chips = "";
     for (const key of VITAL_KEYS) {
       const mag = outcome.effects?.vitals?.[key];
@@ -715,17 +721,13 @@ export class Game {
       // touch that vital — otherwise a drain the card leaves untouched kills you
       // with no warning. Vitals the card doesn't move and won't kill you: shown
       // as nothing (no bare "—").
-      // ...unless this IS the net for that vital. `chooseDirection` floors the
-      // rescued vital again after the year's drift, so answering a net cannot
-      // kill you by the thing it caught — and the face must say so, or it shows a
-      // skull over a swipe you survive, which is the same lie the other way up.
-      const lethal =
-        projected.vitals[key] + (drift[key] ?? 0) <= VITAL_MIN && cur?.rescue !== key;
+      const lethal = lethalKeys.has(key);
       if (!mag && !lethal) continue;
       // A vital hitting 0 is only really death if no safety net catches it. If a
       // one-shot rescue would fire (charity hospital, sell-up, eviction…), show a
       // skull-in-a-shield (RESCUE_ICON) — you'd be floored but survive, this once.
-      const rescued = lethal && !!findRescue(projected, key);
+      // A net catches ONE vital: two failing together is death (checkGameOver).
+      const rescued = lethal && lethalKeys.size === 1 && !!findRescue(projected, key);
       // The player only ever sees +/− bars. Flat tokens map their dashes to −; the
       // proportional slash tokens (a scaling spend) render as minus bars by severity
       // ("/" ≈ −−, "//" ≈ −−−) rather than showing the authoring slashes. Guarded on
