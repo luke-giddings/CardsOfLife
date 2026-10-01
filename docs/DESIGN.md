@@ -137,19 +137,14 @@ nudges and drift use raw numbers (they're not player-facing bar moves).
 
 A Status does two jobs: **drift** (a fixed per-turn effect on Vitals) and
 **gating/deck-ownership** (a state can `addDecks`). Drift is shown to the player
-as **icon + a 1–4-symbol strength**, in the same `+/++/+++` vocabulary as the
-cards, one tap away rather than on the face of the screen (see *The Bio* below). **The displayed strength is authored, not computed** —
-each state gives `driftShown` per vital, completely decoupled from the raw drift
-number, so tuning values never nudges a symbol count and silently flips the
-visual. The convention is **ladder position, not magnitude**: each rung up a
-progression shows one more symbol, so a ladder reads as clean single steps —
-housing finances renting *£−* → small *£−−* → large *£−−−* → estate *£−−−−* (and
-the owned-home comforts step up the same way); each career's wage *£+* / *£++* /
-*£+++* by tier; old age *♥−−* one step past adulthood *♥−*. A vital whose value
-is constant across a ladder's tiers (e.g. the factory/gang health drain) stays a
-single pip; the escalation is in the number. A vital with no `driftShown`
-override falls back to deriving the strength from the magnitude (|v| ≥ 16 → 3,
-≥ 8 → 2, else 1).
+as **icon + a symbol count for its SIZE**: one `+`/`−` per 5 points a year,
+rounded, at least one, one tap away in the Bio (see *The Bio* below). Derived
+from the number, so the symbols in a bar's breakdown add up the way the bar
+actually moves — a chief clerk's £++++ against a small house's £−− reads as
+gaining. Each state also carries an authored `driftShown` (its ladder position:
+renting *£−* → small *£−−* → large *£−−−* → estate *£−−−−*; wages *£+* / *£++* /
+*£+++* by tier), kept for later use but not currently displayed: shown in the
+Bio it made a £+22 wage (++) look smaller than a £−10 house (−−).
 
 | Status | States (so far) | Notes |
 |---|---|---|

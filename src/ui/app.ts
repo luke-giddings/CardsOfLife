@@ -490,19 +490,14 @@ export class Game {
       if (meets(def.driftWhile, disp)) {
         for (const [vk, dv] of Object.entries(state?.drift ?? {})) {
           if (!dv) continue;
-          // Show the STRENGTH of the drift, not just its sign: 1–3 symbols (a
-          // heavier drain reads heavier — e.g. old age ♥−− vs adulthood ♥−),
-          // mirroring the +/++/+++ vocabulary on the cards. The displayed strength
-          // is AUTHORED per state via `driftShown` (decoupled from the raw number,
-          // so tuning values never silently flips the visual). Where a vital has no
-          // override we fall back to deriving it from |drift|: |v| >= 16 → 3,
-          // >= 8 → 2, else 1 (the single band runs to 7 so the ubiquitous −5
-          // "baseline" cost reads as one −).
-          const shownSym = state?.driftShown?.[vk as VitalKey];
-          const good = shownSym ? shownSym.startsWith("+") : dv > 0;
-          const sym = shownSym
-            ? shownSym.split("-").join("−")
-            : (dv > 0 ? "+" : "−").repeat(Math.abs(dv) >= 16 ? 3 : Math.abs(dv) >= 8 ? 2 : 1);
+          // Show the SIZE of the drift: one symbol per 5 points a year, rounded,
+          // at least one — so a list of them adds up the way the bar moves (a
+          // £++++ wage against a £−− house and a £− cat reads as gaining, which
+          // it is). Derived from the number, so it can never drift out of step
+          // with it. (`driftShown`, the authored ladder-position symbols, is kept
+          // in the content but not read here.)
+          const good = dv > 0;
+          const sym = (good ? "+" : "−").repeat(Math.max(1, Math.round(Math.abs(dv) / 5)));
           drift.push({ vital: vk as VitalKey, good, sym });
         }
       }
