@@ -143,7 +143,11 @@ next 3; green for a gain, red for a loss. Derived from the number, so the pips
 in a bar's breakdown add up the way the bar actually moves — a chief clerk's
 £●●●● (+22) against a small house's £●● (−10), a modest life's ◐ and a cat's ◐
 reads as gaining. (Display only: the drift values themselves are not multiples
-of 3, so a pip row can overstate by up to 2 points.) Each state also carries an authored `driftShown` (its ladder position:
+of 3, so a pip row can overstate by up to 2 points.) **Pips, not `+`/`−`, on purpose:** the
+`+`/`−` vocabulary belongs to the CARDS, where a `+` is a one-off 10 points;
+a pip is 6 points EVERY YEAR. A different mark keeps the two scales from being
+read as one. (The bars' own green +/red − beside each name is a direction, not
+an amount, so it stays a sign.) Each state also carries an authored `driftShown` (its ladder position:
 renting *£−* → small *£−−* → large *£−−−* → estate *£−−−−*; wages *£+* / *£++* /
 *£+++* by tier), kept for later use but not currently displayed: shown in the
 Bio it made a £+22 wage (++) look smaller than a £−10 house (−−).
