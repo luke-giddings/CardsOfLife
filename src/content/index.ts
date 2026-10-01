@@ -111,7 +111,7 @@ export const content = {
         // the spirit. (The money side lives on the housing status — living with
         // family costs money; the labourer's wage offsets it, the pupil's
         // doesn't.) Owns the school-events deck; education records the level.
-        studying: { label: "status.job.studying", enterTraits: { eduStudy: 0 }, drift: { spirit: -5 }, driftShown: { spirit: "-" }, addDecks: ["edu_basicschool"] },
+        studying: { label: "status.job.studying", enterTraits: { eduStudy: 3 }, drift: { spirit: -5 }, driftShown: { spirit: "-" }, addDecks: ["edu_basicschool"] },
         // Fee-paying academia above the free board school. Grammar school takes
         // the SAME total toll as before (10 a year) but takes all of it out of
         // the SPIRIT rather than half out of the purse: a hard grind on a boy who

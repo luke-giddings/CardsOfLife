@@ -35,13 +35,13 @@ export interface Traits {
   // savings). Distinguishes a former undergraduate — who can RETURN to finish,
   // e.g. off the streets — from a fresh grammar-leaver who never went.
   eduWasUndergraduate: boolean;
-  // How hard you have applied yourself at the school you are AT. The exact twin
-  // of `jobSkill` at the bench: it rises only when you choose the work over the
-  // easier thing, the leaver card reads it to decide whether you may go up, and
-  // each schooling state stamps it back to 0 on entry (`enterTraits`), so every
-  // tier is its own test and a hard-won board school does not carry a lazy
-  // grammar school. `persBookish` earns MORE from the same choice rather than
-  // lowering the bar — the bookish child is quicker, not excused.
+  // How hard you have applied yourself at the school you are AT; the leaver card
+  // reads it to decide whether you may go up. Each schooling state stamps it on
+  // entry (`enterTraits`), so every tier is its own test. Grammar school,
+  // university and adult school count UP from 0 — it rises only when you choose
+  // the work, the twin of `jobSkill` at the bench. Board school counts DOWN from
+  // 3: working keeps it, slacking costs it, so an untested pupil passes. A
+  // bookish child earns more from work, or loses less to slacking.
   eduStudy: number;
   // Years enrolled at the school you are AT — zeroed on entry and ticked by the
   // schooling status, so a leaver can fire after N years of school rather than

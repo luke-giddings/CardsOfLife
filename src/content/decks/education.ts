@@ -10,14 +10,19 @@ export const educationDecks = [
       id: "edu_basicschool",
       cards: [
         {
-          // Examinations, from 9 rather than 11. Nine years of board school were
-          // delivering exactly one study card to most pupils — the prize — so the
-          // study banked at the leaver piled up at 2 and nowhere else, and any bar
-          // above it failed four pupils in five for want of a card to earn it on.
-          // Five years of exams instead of three is the cheapest way to make the
-          // trial a test of effort rather than of the shuffle.
+          // Examinations, from 9: five years in which they can come.
+          // STUDY AT BOARD SCHOOL RUNS BACKWARDS: you start with 3 (the
+          // studying state's enterTraits) and the leaver asks only that you end
+          // above 0. Working on a study card keeps what you have; slacking costs
+          // what the work would have been worth — exams and the prize 2, errands
+          // 1 — one less for a bookish child. So a pupil the draw never tests
+          // passes by default, and only slacking fails you: board school is
+          // easy to complete, as long as you do the work. Measured by
+          // scripts/schoolstudy-inverted.ts: a pupil who always works goes up on
+          // merit 100% of the time, one who works half the time ~60%, one who
+          // never does ~15% (when the draw happens not to test him).
           id: "edu_basicschool_exams",
-          weight: 3,
+          weight: 6,
           kind: "one_time",
           conditions: { ageMin: 9 },
           prompt: "edu_basicschool_exams.prompt",
@@ -29,11 +34,14 @@ export const educationDecks = [
               // the prize.) A bookish child finds it a pleasure, not a grind.
               label: "edu_basicschool_exams.left",
               outcomes: [
-                { if: { traits: { persBookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, incTraits: { eduStudy: 3 }, setStatus: { education: "basic" } } },
-                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, incTraits: { eduStudy: 2 }, setStatus: { education: "basic" } } },
+                { if: { traits: { persBookish: true } }, result: "edu_basicschool_exams.left.r0", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
+                { result: "edu_basicschool_exams.left.r1", effects: { vitals: { spirit: "++", happiness: "-", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
-            right: { label: "edu_basicschool_exams.right", outcomes: [{ result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
+            right: { label: "edu_basicschool_exams.right", outcomes: [
+              { if: { traits: { persBookish: true } }, result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" }, incTraits: { eduStudy: -1 } } },
+              { result: "edu_basicschool_exams.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" }, incTraits: { eduStudy: -2 } } },
+            ] },
           },
         },
         {
@@ -59,7 +67,7 @@ export const educationDecks = [
         },
         {
           id: "edu_basicschool_prize",
-          weight: 3,
+          weight: 6,
           kind: "one_time",
           prompt: "edu_basicschool_prize.prompt",
           options: {
@@ -68,23 +76,29 @@ export const educationDecks = [
               // already half-read the syllabus for fun — an easy win.
               label: "edu_basicschool_prize.left",
               outcomes: [
-                { if: { traits: { persBookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, incTraits: { eduStudy: 3 }, setStatus: { education: "basic" } } },
-                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, incTraits: { eduStudy: 2 }, setStatus: { education: "basic" } } },
+                { if: { traits: { persBookish: true } }, result: "edu_basicschool_prize.left.r0", effects: { vitals: { spirit: "++", happiness: "+" }, setStatus: { education: "basic" } } },
+                { result: "edu_basicschool_prize.left.r1", effects: { vitals: { spirit: "++", happiness: "+", health: "-" }, setStatus: { education: "basic" } } },
               ],
             },
-            right: { label: "edu_basicschool_prize.right", outcomes: [{ result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" } } }] },
+            right: { label: "edu_basicschool_prize.right", outcomes: [
+              { if: { traits: { persBookish: true } }, result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" }, incTraits: { eduStudy: -1 } } },
+              { result: "edu_basicschool_prize.right.r0", effects: { vitals: { happiness: "+", health: "+", spirit: "-" }, incTraits: { eduStudy: -2 } } },
+            ] },
           },
         },
         {
           // A money route for the school path (no wages otherwise), so the
           // family living cost is survivable while studying.
           id: "edu_basicschool_errands",
-          weight: 3,
+          weight: 6,
           kind: "filler",
           prompt: "edu_basicschool_errands.prompt",
           options: {
-            left: { label: "edu_basicschool_errands.left", outcomes: [{ result: "edu_basicschool_errands.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } }] },
-            right: { label: "edu_basicschool_errands.right", outcomes: [{ result: "edu_basicschool_errands.right.r0", effects: { vitals: { spirit: "+", health: "+", finances: "-" }, incTraits: { eduStudy: 1 } } }] },
+            left: { label: "edu_basicschool_errands.left", outcomes: [
+              { if: { traits: { persBookish: true } }, result: "edu_basicschool_errands.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" } } },
+              { result: "edu_basicschool_errands.left.r0", effects: { vitals: { finances: "++", health: "-", happiness: "-" }, incTraits: { eduStudy: -1 } } },
+            ] },
+            right: { label: "edu_basicschool_errands.right", outcomes: [{ result: "edu_basicschool_errands.right.r0", effects: { vitals: { spirit: "+", health: "+", finances: "-" } } }] },
           },
         },
         {
@@ -126,8 +140,9 @@ export const educationDecks = [
           // educated-path entry the `basic` credential unlocks) rather than the
           // punishing scramble through unemployment.
           //
-          // GOING UP IS A PRICE, NOT A GATE. `eduStudy >= 3` wins the place on
-          // merit and costs nothing; short of that you still go up, but your
+          // GOING UP IS A PRICE, NOT A GATE. Study left above 0 wins the place on
+          // merit and costs nothing (board school starts you at 3 and only
+          // slacking takes it away — see the study cards above); short of that you still go up, but your
           // people buy you in and it takes half of everything they have.
           //
           // It was a gate first, and that was wrong in a way worth remembering:
@@ -155,7 +170,7 @@ export const educationDecks = [
             left: {
               label: "edu_basicschool_leaver.left",
               outcomes: [
-                { if: { traits: { eduStudy: { min: 3 } } }, result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "grammar_school" } } },
+                { if: { traits: { eduStudy: { min: 1 } } }, result: "edu_basicschool_leaver.left.r0", effects: { vitals: { spirit: "+" }, setStatus: { education: "basic", job: "grammar_school" } } },
                 // Not a scholar — but the place can still be had, and your people
                 // buy it. The proportional spend takes HALF of everything they
                 // have, so it costs a comfortable family a pang and a poor one

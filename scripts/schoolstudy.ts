@@ -1,5 +1,5 @@
 // Can a board-school pupil who ALWAYS studies reach the leaver with the study
-// it asks for (eduStudy >= 3)? Plays greedy on vitals, except on a school card,
+// it asks for (eduStudy above 0, counting down from 3)? Plays greedy on vitals, except on a school card,
 // where it takes whichever option raises eduStudy most. Counts, per life that
 // reaches the leaver, the study banked and the school cards dealt on the way.
 import { chooseDirection, drawCard, initGame, quietYear, setContent } from "../src/engine/engine.ts";
@@ -13,7 +13,8 @@ const card = (id: string) => school.cards.find((c) => c.id === id)!;
 const V = process.env.VARIANT ?? "";
 if (V.includes("copies")) card("edu_basicschool_exams").copies = 3;
 if (V.includes("weights")) for (const id of ["edu_basicschool_exams", "edu_basicschool_prize", "edu_basicschool_errands"]) card(id).weight = 6;
-const BAR = V.includes("bar2") ? 2 : 3;
+// The leaver goes up on merit with study above 0 (board school counts down from 3).
+const BAR = V.includes("bar2") ? 2 : 1;
 const LAZY = !!process.env.LAZY; // LAZY=1: a pupil who never takes the study option
 setContent(content);
 const DIRS: Direction[] = ["left", "right", "up", "down"];
@@ -23,7 +24,10 @@ function pick(c: Card, s: GameState, ds: Direction[]): Direction {
   let best = ds[0], key = -Infinity;
   for (const d of ds) {
     const p = chooseDirection(s, c, d).state; const v = Object.values(p.vitals) as number[];
-    const study = school && LAZY ? -p.traits.eduStudy * 1e7 : school ? (p.statuses.job === "studying" || p.statuses.job === "grammar_school" ? 1e6 : 0) + p.traits.eduStudy * 1e7 : 0;
+    // Everyone goes to school (the schooling card); on a school card the
+    // studious pupil maximises study and the lazy one (LAZY=1) minimises it.
+    const toSchool = c.id === "baby_schooling" && p.statuses.job === "studying" ? 1e9 : 0;
+    const study = toSchool + (c.deck === "edu_basicschool" ? (LAZY ? -1 : 1) * p.traits.eduStudy * 1e7 : 0);
     const k = p.over ? -1e12 : study + Math.min(...v) * 1000 + v.reduce((a, b) => a + b, 0);
     if (k > key) { key = k; best = d; }
   }
@@ -47,5 +51,5 @@ for (let i = 1; i <= N; i++) {
   }
 }
 console.log(`${N} lives; ${reached} reached the board-school leaver. Study banked there: ` + studyAt.map((n, k) => `${k}${k === 6 ? "+" : ""}:${n}`).join(" "));
-console.log(`PASS (>=3): ${(100 * passed / reached).toFixed(0)}%   school cards dealt before the leaver: mean ${(schoolCards / reached).toFixed(1)}`);
+console.log(`PASS (merit): ${(100 * passed / reached).toFixed(0)}%   school cards dealt before the leaver: mean ${(schoolCards / reached).toFixed(1)}`);
 console.log("per leaver-reaching life: " + [...dealt].map(([k, v]) => `${k.replace("edu_basicschool_", "")} ${(v / reached).toFixed(2)}`).join("  "));
