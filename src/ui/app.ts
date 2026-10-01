@@ -1,4 +1,5 @@
 import { gameContent as content } from "../content/index.ts";
+import { DEFAULT_TRAITS, ENDINGS, STATUS_KINDS, VITAL_KEYS } from "../content/schema.ts";
 import {
   applyEffect,
   cardById,
@@ -14,14 +15,10 @@ import {
   totalDrift,
 } from "../engine/engine.ts";
 import { meets } from "../engine/conditions.ts";
-import { clearSave, loadGame, loadHistory, readStore, removeStore, saveGame, saveHistory, writeStore } from "../engine/save.ts";
+import { clearSave, loadGame, loadHistory, readStore, removeStore, saveGame, saveHistory, setSavePrefix, writeStore } from "../engine/save.ts";
 import type { HistoryEntry } from "../engine/save.ts";
 import { FIRST_RUN, PLAY, RETURNING, type IntroCard, type IntroOption } from "./intro.ts";
 import {
-  DEFAULT_TRAITS,
-  ENDINGS,
-  STATUS_KINDS,
-  VITAL_KEYS,
   VITAL_MIN,
   type Card,
   type CardOption,
@@ -236,6 +233,7 @@ export class Game {
   constructor(root: HTMLElement) {
     this.root = root;
     setContent(content);
+    setSavePrefix("cardsoflife");
     this.debug = loadDebug();
     this.hard = loadHard();
     this.buildShell();

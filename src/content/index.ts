@@ -1,4 +1,5 @@
 import type { Condition, Content } from "../engine/types.ts";
+import { DEFAULT_TRAITS, VITAL_KEYS } from "./schema.ts";
 import {
   babyDecks,
   familyDecks,
@@ -58,6 +59,7 @@ export const content = {
   // The cast's names. Any player-facing string may write {brother} / {sister};
   // renaming a sibling is this one line rather than ~60 string edits.
   vars: { brother: "Tom", sister: "Sarah", lilly: "Lilly" },
+  vitals: VITAL_KEYS,
   // A vital caught by a safety net lands at 1: destitute, but alive.
   rescueFloor: 1,
 
@@ -67,7 +69,7 @@ export const content = {
     vitals: { finances: 20, happiness: 20, health: 20, spirit: 20 },
     statuses: { age: "baby", job: "infant", housing: "family", education: "illiterate", lifestyle: "default", pet: "none", family: "infant" },
     decks: ["age_baby"],
-    traits: {},
+    traits: DEFAULT_TRAITS,
   },
 
   statuses: {

@@ -2,11 +2,9 @@ import { meets, totalDrift } from "./conditions.ts";
 import { CONTENT, currentState, deckIndex } from "./content.ts";
 import { nextRandom, randomSeed } from "./rng.ts";
 import {
-  DEFAULT_TRAITS,
   applyMagnitude,
   VITAL_MAX,
   VITAL_MIN,
-  VITAL_KEYS,
   type Card,
   type Magnitude,
   type CardOption,
@@ -39,7 +37,7 @@ export function initGame(seed?: number): GameState {
     age: 0,
     vitals: { ...CONTENT.start.vitals },
     statuses: { ...CONTENT.start.statuses },
-    traits: { ...DEFAULT_TRAITS, ...(CONTENT.start.traits ?? {}) },
+    traits: { ...CONTENT.start.traits },
     activeDecks: [...CONTENT.start.decks],
     usedCards: {},
     playedFillers: [],
@@ -367,7 +365,7 @@ export function applyEffect(state: GameState, effect: Effect): void {
 
 function applyDrift(state: GameState): void {
   const drift = totalDrift(state);
-  for (const key of VITAL_KEYS) {
+  for (const key of CONTENT.vitals) {
     if (drift[key]) state.vitals[key] = state.vitals[key] + drift[key]!; // raw; clamped once at end of turn
   }
 }
@@ -379,7 +377,7 @@ function applyDrift(state: GameState): void {
 // being capped mid-turn and then knocked below 100 by rent; symmetrically, a mortal
 // blow isn't floored to 0 and then quietly undone by positive drift.
 function clampVitals(state: GameState): void {
-  for (const key of VITAL_KEYS) state.vitals[key] = clampVital(state.vitals[key]);
+  for (const key of CONTENT.vitals) state.vitals[key] = clampVital(state.vitals[key]);
 }
 
 // Per-turn TRAIT increments (see TickRule) from the active status states and
@@ -415,7 +413,7 @@ export function findRescue(state: GameState, key: VitalKey): Card | null {
 }
 
 function checkGameOver(state: GameState): void {
-  for (const key of VITAL_KEYS) {
+  for (const key of CONTENT.vitals) {
     if (state.vitals[key] > VITAL_MIN) continue;
     const rescue = findRescue(state, key);
     if (rescue) {

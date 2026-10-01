@@ -9,7 +9,12 @@ import type { GameState } from "./types.ts";
 // One number, two keys: the history holds whole GameStates, so it can never be
 // read against a save of a different shape.
 const SAVE_VERSION = 9;
-const KEY = `cardsoflife.save.v${SAVE_VERSION}`;
+// The game names its own storage: every key is `<prefix>.save.v<N>` etc.
+let PREFIX = "game";
+export function setSavePrefix(prefix: string): void {
+  PREFIX = prefix;
+}
+const key = (): string => `${PREFIX}.save.v${SAVE_VERSION}`;
 
 // The debug rewind list: the pre-choice snapshot at each card played, so the
 // debug panel can list what was drawn and chosen, and jump back to retry one.
@@ -25,7 +30,7 @@ export interface HistoryEntry {
 // (a long life is ~100 of them); separating them means a quota failure or a
 // corrupt history costs you the rewind list and never the run itself. Versioned
 // with the save, since the snapshots inside it ARE GameStates.
-const HISTORY_KEY = `cardsoflife.history.v${SAVE_VERSION}`;
+const historyKey = (): string => `${PREFIX}.history.v${SAVE_VERSION}`;
 
 // localStorage, guarded: private mode, disabled storage or a full quota must
 // never break the game, only lose what would have been kept. Shared with the
@@ -63,28 +68,28 @@ function readJson(key: string): unknown {
 }
 
 export function saveGame(state: GameState): void {
-  writeStore(KEY, JSON.stringify(state));
+  writeStore(key(), JSON.stringify(state));
 }
 
 export function loadGame(): GameState | null {
-  return (readJson(KEY) as GameState | null) ?? null;
+  return (readJson(key()) as GameState | null) ?? null;
 }
 
 // Storage disabled, or the history outgrew the quota: the run itself is saved
 // under its own key regardless — only the rewind list is lost.
 export function saveHistory(history: HistoryEntry[]): void {
-  writeStore(HISTORY_KEY, JSON.stringify(history));
+  writeStore(historyKey(), JSON.stringify(history));
 }
 
 // Only meaningful next to a save that loaded: the entries hold GameStates from
 // THIS run, so the caller must drop them when it starts a fresh life instead.
 export function loadHistory(): HistoryEntry[] | null {
-  const parsed = readJson(HISTORY_KEY);
+  const parsed = readJson(historyKey());
   return Array.isArray(parsed) ? (parsed as HistoryEntry[]) : null;
 }
 
 // Drops the run AND its history: a new life must never inherit the old one's
 // rewind points, which would restore a state the current run never had.
 export function clearSave(): void {
-  removeStore(KEY, HISTORY_KEY);
+  removeStore(key(), historyKey());
 }

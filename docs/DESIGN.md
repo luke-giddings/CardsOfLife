@@ -1545,6 +1545,14 @@ playable on a phone.
   `StatusShow`: the same thing is said by `{ ageMin: 5 }`, and the 5 is content's
   to know.) This is why `StatusDef.show` is required rather than defaulted — a
   default would be the engine holding a view about which statuses matter when.
+  The game's NAMES live outside it too: `src/content/schema.ts` declares the
+  vitals, status kinds, every trait with its default, and the endings, and fills
+  in the engine's empty `Register` interface (declaration merging), so every
+  engine type is this game's and content is still checked at compile time. The
+  engine imports nothing from `src/content` or `src/i18n`; the game hands it the
+  content (`setContent`) and a storage prefix (`setSavePrefix`). The rules that
+  were special cases now live in content as data: a kind's `tenure` counter and
+  `enterTraits`, `driftWhile` grace periods, `ticks` rules, `rescueFloor`.
 - Four Vitals; any at 0 = game over; only Health's ending is "death".
 - Victorian setting; childhood mortality, earned by preparation (~70% careful).
 - Magnitude steps (`+`/`++`) with a single tunable point table.
