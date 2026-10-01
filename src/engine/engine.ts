@@ -398,7 +398,11 @@ function applyTick(state: GameState): void {
   for (const r of due) addTraits(state.traits, r.traits);
 }
 
-const RESCUE_FLOOR = 1; // where a rescued vital lands (destitute, but alive)
+
+// Where a rescued vital lands: destitute, but alive (Content.rescueFloor).
+function rescueFloor(): number {
+  return CONTENT.rescueFloor ?? VITAL_MIN + 1;
+}
 
 // A one-shot safety-net card for a vital: `rescue === vital`, not yet used,
 // in an active deck, and whose `conditions` hold (so a rescue can be gated —
@@ -419,7 +423,7 @@ function checkGameOver(state: GameState): void {
       // A net already queued (its vital still waiting its turn, and drained
       // again meanwhile) catches it again rather than queueing twice: it is not
       // spent until it is answered.
-      state.vitals[key] = RESCUE_FLOOR;
+      state.vitals[key] = rescueFloor();
       const queue = (state.pendingRescues ??= []);
       if (!queue.includes(rescue.id)) queue.push(rescue.id);
       continue;
@@ -486,7 +490,7 @@ export function chooseDirection(
   // ANSWERING A SAFETY NET MUST NOT KILL YOU BY THE VITAL IT CAUGHT. The net
   // floors the vital and hands you the card NEXT turn, and that turn drifts like
   // any other — so every point of drain still on you was charged against a bar
-  // holding RESCUE_FLOOR. A child caught by the hunger card with a dog at
+  // holding the rescue floor. A child caught by the hunger card with a dog at
   // `finances: -3` went out of the family home, kept the dog, and died on the
   // spot with the net already spent: 1 − 3, and no second net.
   //
@@ -495,16 +499,17 @@ export function chooseDirection(
   // that you will live, but that you get a turn to act. The year after is on you,
   // and the card is one-shot, so this cannot repeat.
   if (card.rescue) {
-    state.vitals[card.rescue] = Math.max(state.vitals[card.rescue], RESCUE_FLOOR);
+    state.vitals[card.rescue] = Math.max(state.vitals[card.rescue], rescueFloor());
   }
   checkGameOver(state);
   return { state, result: outcome.result };
 }
 
-// A year with nothing eligible to draw — still ages and drifts.
-export function quietYear(prev: GameState): { state: GameState; result: string } {
+// A year with nothing eligible to draw — still ages and drifts. No card, so no
+// result text: what (if anything) a quiet year says is the caller's to choose.
+export function quietYear(prev: GameState): { state: GameState } {
   const state = cloneState(prev);
   endYear(state);
   checkGameOver(state);
-  return { state, result: "A quiet, uneventful year passes." };
+  return { state };
 }

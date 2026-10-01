@@ -623,6 +623,11 @@ export interface Content {
   // end-of-run epilogue names the siblings too (ui.proseBrother*) and belongs to
   // no deck, so deck-scoping would leave those unresolvable.
   vars?: Record<string, string>;
+  // Where a vital caught by a safety net (Card.rescue) is set: it is floored
+  // there when caught, and again after the year spent answering the net, so
+  // drain that year cannot kill you through the net you are answering.
+  // Default: one above the minimum.
+  rescueFloor?: number;
 }
 
 // --- Runtime game state (this is what gets saved) ----------------------------

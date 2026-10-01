@@ -1,24 +1,13 @@
 import type { GameState } from "./types.ts";
 
-// Bump this whenever GameState's SHAPE changes, so saves written by an older
-// build simply do not load (you get a fresh life) instead of loading silently
-// into an inconsistent state. This is deliberately NOT migration — there is no
-// attempt to carry an old save forward, which is the point: during development a
-// restart is cheap, a half-converted state is confusing. (v1 -> v2:
-// `housingBeforeApprentice` became the general `suspendedStatuses`, so a v1 save
-// mid-apprenticeship had no stash to restore and left you housed "With Master".
-// v2 -> v3: `playedFillers` arrived, and a save without it crashes the draw.
-// v3 -> v4: `seed` arrived, the life's starting seed, shown in the footer.
-// v4 -> v5: the sibling cooldown traits. loadGame does not back-fill traits from
-// DEFAULT_TRAITS, and a missing counter fails its `max: 0` gate — so an old save
-// would have silently stopped every sibling beat.
-// v5 -> v6: relLillyCooldown, for the same reason.
-// v6 -> v7: the per-ladder job rungs and eduYearsEnrolled.
-// v7 -> v8: `pendingRescue` became the queue `pendingRescues`.
-// v8 -> v9: `experienceJob` became the general `tenureOf`.)
+// Bump this whenever GameState's SHAPE changes — a field added, renamed or
+// reshaped, or a trait added (loadGame does not back-fill traits from their
+// defaults, and a missing counter silently fails its gates) — so saves written
+// by an older build simply do not load (you get a fresh life) instead of
+// loading into an inconsistent state. Deliberately NOT migration: during
+// development a restart is cheap, a half-converted state is confusing.
 // One number, two keys: the history holds whole GameStates, so it can never be
-// read against a save of a different shape. Bumping them separately is the one
-// way this scheme breaks, so there is only one place to bump.
+// read against a save of a different shape.
 const SAVE_VERSION = 9;
 const KEY = `cardsoflife.save.v${SAVE_VERSION}`;
 

@@ -58,6 +58,8 @@ export const content = {
   // The cast's names. Any player-facing string may write {brother} / {sister};
   // renaming a sibling is this one line rather than ~60 string edits.
   vars: { brother: "Tom", sister: "Sarah", lilly: "Lilly" },
+  // A vital caught by a safety net lands at 1: destitute, but alive.
+  rescueFloor: 1,
 
   start: {
     // Start low and even — babyhood is where the meters get built up (unevenly,
