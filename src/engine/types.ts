@@ -43,24 +43,6 @@ export const VITAL_MAX = 100;
 // The PLAYER only ever sees +/− bars (the card preview and status chips render the
 // slash tokens as minus bars); the slashes are purely an authoring convenience.
 export type Magnitude = "//" | "/" | "---" | "--" | "-" | "+" | "++" | "+++" | "++++";
-// Flat point steps ("/" and "//" are proportional — handled in applyMagnitude).
-const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "/" | "//">, number> = {
-  "++++": 100,
-  "+++": 50,
-  "++": 25,
-  "+": 10,
-  "-": -10,
-  "--": -25,
-  "---": -40,
-};
-// Apply a magnitude to a value (unclamped). Flat steps add their points; the
-// proportional slashes keep a fraction of the current value, floored at 1 so they
-// can never reach 0 from a positive value.
-export function applyMagnitude(value: number, mag: Magnitude): number {
-  if (mag === "//") return Math.max(1, Math.round(value / 3)); // keep a third
-  if (mag === "/") return Math.max(1, Math.round(value / 2));  // keep a half
-  return value + MAGNITUDE_POINTS[mag];
-}
 
 // Keys of Traits whose value is a number — the only ones you can `inc`.
 export type NumericTraitKey = {
@@ -343,7 +325,7 @@ export interface StartConfig {
 export interface Content {
   // The vitals, in the order the turn walks them (drift, clamp, the game-over
   // check, which catches the first to hit the floor).
-  vitals: VitalKey[];
+  vitals: readonly VitalKey[];
   decks: Deck[];
   statuses: Record<StatusKind, StatusDef>;
   start: StartConfig;
@@ -396,6 +378,6 @@ export interface GameState {
   // the swipes taken reproduces a life exactly.
   seed: number;
   over: boolean;
-  endReason?: string;                 // ENDINGS id (vital key, or a named ending)
+  endReason?: VitalKey;               // the vital that hit the floor
   log: LifeEvent[];                   // dated memorable events, for the end recap
 }

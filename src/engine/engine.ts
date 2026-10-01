@@ -1,8 +1,7 @@
 import { meets, totalDrift } from "./conditions.ts";
-import { CONTENT, currentState, deckIndex } from "./content.ts";
+import { CONTENT, cardById, currentState, deckIndex } from "./content.ts";
 import { nextRandom, randomSeed } from "./rng.ts";
 import {
-  applyMagnitude,
   VITAL_MAX,
   VITAL_MIN,
   type Card,
@@ -22,7 +21,7 @@ import {
 // The engine reads its content through one binding (content.ts), set once with
 // setContent before anything else runs. Re-exported here so callers have one
 // place to import the engine from.
-export { CONTENT, allCards, cardById, setContent } from "./content.ts";
+export { CONTENT, cardById, setContent } from "./content.ts";
 export { totalDrift } from "./conditions.ts";
 
 // --- setup -------------------------------------------------------------------
@@ -50,7 +49,8 @@ export function initGame(seed?: number): GameState {
 
 // --- card selection ----------------------------------------------------------
 
-function exhausted(card: Card, state: GameState): boolean {
+// Whether a card is used up (fillers never are). Exported for the debug panel.
+export function exhausted(card: Card, state: GameState): boolean {
   if (card.kind === "filler") return false; // filler is inexhaustible
   const used = state.usedCards[card.id] ?? 0;
   return used >= (card.copies ?? 1);
@@ -151,13 +151,14 @@ export function drawCard(state: GameState): { card: Card | null; state: GameStat
   // vitals can be caught in the same year, so they queue and come one a turn.
   const [next, ...rest] = state.pendingRescues ?? [];
   if (next) {
-    const rescue = deckIndex().byId.get(next);
+    const rescue = cardById(next);
     const after = { ...state, pendingRescues: rest.length ? rest : undefined };
     if (rescue) return { card: rescue, state: { ...after, lastCardId: rescue.id } };
   }
 
   // One pass over the cards in play: each card's conditions are read once.
-  const live = inPlay(state).filter((c) => meets(c.conditions, state));
+  // Rescue cards never come this way (only through the pending rescue above).
+  const live = inPlay(state).filter((c) => !c.rescue && meets(c.conditions, state));
 
   const milestone = highestPriority(live, (c) => c.kind === "milestone");
   if (milestone) return { card: milestone, state: { ...state, lastCardId: milestone.id } };
@@ -184,7 +185,7 @@ export function drawCard(state: GameState): { card: Card | null; state: GameStat
   let rng = state.rng;
   const eligible: Card[] = [];
   for (const c of live) {
-    if (c.kind === "milestone" || c.rescue) continue;
+    if (c.kind === "milestone") continue;
     if (c.chance !== undefined) {
       const r = nextRandom(rng);
       rng = r.state;
@@ -249,6 +250,25 @@ export function resolveOutcome(option: CardOption, state: GameState): Outcome {
 }
 
 // --- applying effects --------------------------------------------------------
+
+// Flat point steps ("/" and "//" are proportional — handled in applyMagnitude).
+const MAGNITUDE_POINTS: Record<Exclude<Magnitude, "/" | "//">, number> = {
+  "++++": 100,
+  "+++": 50,
+  "++": 25,
+  "+": 10,
+  "-": -10,
+  "--": -25,
+  "---": -40,
+};
+// Apply a magnitude to a value (unclamped). Flat steps add their points; the
+// proportional slashes keep a fraction of the current value, floored at 1 so they
+// can never reach 0 from a positive value.
+function applyMagnitude(value: number, mag: Magnitude): number {
+  if (mag === "//") return Math.max(1, Math.round(value / 3)); // keep a third
+  if (mag === "/") return Math.max(1, Math.round(value / 2));  // keep a half
+  return value + MAGNITUDE_POINTS[mag];
+}
 
 export function clampVital(n: number): number {
   return Math.max(VITAL_MIN, Math.min(VITAL_MAX, n));
@@ -355,7 +375,7 @@ export function applyEffect(state: GameState, effect: Effect): void {
   if (effect.remember) {
     // Stamp the memory at the CURRENT age — applyEffect runs before the turn's
     // age+1, so state.age is the age shown on the card being answered.
-    state.log.push({ age: state.age, id: effect.remember });
+    state.log = [...state.log, { age: state.age, id: effect.remember }]; // replaced, never mutated (see cloneState)
   }
   // (No out-of-band "end the game" effect: death is always a vital hitting 0,
   // handled uniformly by checkGameOver + the rescue nets. A card that should be
@@ -388,13 +408,13 @@ function applyTick(state: GameState): void {
   for (const kind of Object.keys(state.statuses) as StatusKind[]) {
     rules.push(...(currentState(state, kind)?.ticks ?? []));
   }
+  const active = new Set(state.activeDecks);
   for (const { deck } of deckIndex().decks) {
-    if (state.activeDecks.includes(deck.id)) rules.push(...(deck.ticks ?? []));
+    if (active.has(deck.id)) rules.push(...(deck.ticks ?? []));
   }
   const due = rules.filter((r) => meets(r.while, state));
   for (const r of due) addTraits(state.traits, r.traits);
 }
-
 
 // Where a rescued vital lands: destitute, but alive (Content.rescueFloor).
 function rescueFloor(): number {
@@ -436,10 +456,15 @@ function checkGameOver(state: GameState): void {
 // A working copy of the state for one turn. Every nested field of GameState is
 // one level deep (records and arrays of plain values or never-mutated entries),
 // so copying each top-level field is a full copy at a fraction of the cost of
-// structuredClone, which the simulations pay on every turn.
+// structuredClone, which the simulations pay on every turn. The fields that
+// only GROW over a life are not copied at all: the turn REPLACES them when it
+// writes (copy-on-write), so a long life doesn't pay to copy them every year.
+const GROW_ONLY = new Set<string>(["usedCards", "playedFillers", "log"]);
 function cloneState(prev: GameState): GameState {
   const out = { ...prev } as Record<string, unknown>;
-  for (const [k, v] of Object.entries(out)) {
+  for (const k in out) {
+    if (GROW_ONLY.has(k)) continue;
+    const v = out[k];
     if (Array.isArray(v)) out[k] = [...v];
     else if (v && typeof v === "object") out[k] = { ...v };
   }
@@ -472,7 +497,7 @@ export function chooseDirection(
   if (outcome.effects) applyEffect(state, outcome.effects);
 
   if (card.kind !== "filler") {
-    state.usedCards[card.id] = (state.usedCards[card.id] ?? 0) + 1;
+    state.usedCards = { ...state.usedCards, [card.id]: (state.usedCards[card.id] ?? 0) + 1 }; // replaced (see cloneState)
   } else {
     // Fillers are never used up, so they are not counted — the discard pile only
     // records WHICH have played, in play order, and drawCard reads its tail to

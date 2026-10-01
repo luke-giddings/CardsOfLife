@@ -35,6 +35,14 @@ const historyKey = (): string => `${PREFIX}.history.v${SAVE_VERSION}`;
 // localStorage, guarded: private mode, disabled storage or a full quota must
 // never break the game, only lose what would have been kept. Shared with the
 // UI's own small settings.
+export function storageAvailable(): boolean {
+  try {
+    void localStorage.length; // throws where storage is unavailable
+    return true;
+  } catch {
+    return false;
+  }
+}
 export function readStore(key: string): string | null {
   try {
     return localStorage.getItem(key);
@@ -72,7 +80,7 @@ export function saveGame(state: GameState): void {
 }
 
 export function loadGame(): GameState | null {
-  return (readJson(key()) as GameState | null) ?? null;
+  return readJson(key()) as GameState | null;
 }
 
 // Storage disabled, or the history outgrew the quota: the run itself is saved

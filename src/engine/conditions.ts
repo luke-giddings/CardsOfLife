@@ -8,9 +8,15 @@ function matchNumber(value: number, m: NumberMatch): boolean {
   return true;
 }
 
-// Every {min,max} in a record of ranges holds for the matching value.
+// Every {min,max} in a record of ranges holds for the matching value. (Loops
+// here use for…in rather than Object.entries: `meets` runs for every card in
+// play on every draw, and the simulations make millions of draws.)
 function matchRanges(values: Partial<Record<string, number>>, ranges: Partial<Record<string, NumberMatch>>): boolean {
-  return Object.entries(ranges).every(([k, m]) => m === undefined || matchNumber(values[k] ?? 0, m));
+  for (const k in ranges) {
+    const m = ranges[k];
+    if (m !== undefined && !matchNumber(values[k] ?? 0, m)) return false;
+  }
+  return true;
 }
 
 function statusRank(kind: StatusKind, value: string): number {
@@ -32,11 +38,13 @@ export function meets(cond: Condition | undefined, state: GameState): boolean {
   // What is coming IN each year, rather than what you have. `totalDrift` is the
   // same sum the turn applies and the UI previews, so a gate written here cannot
   // drift out of step with the number the player is shown.
-  if (cond.drift && !matchRanges(totalDrift(state) as Partial<Record<VitalKey, number>>, cond.drift)) return false;
+  if (cond.drift && !matchRanges(totalDrift(state), cond.drift)) return false;
 
   if (cond.status) {
-    for (const [k, match] of Object.entries(cond.status)) {
+    for (const k in cond.status) {
       const kind = k as StatusKind;
+      const match = cond.status[kind];
+      if (match === undefined) continue;
       const current = state.statuses[kind];
       if (typeof match === "string") {
         if (current !== match) return false;
@@ -60,8 +68,9 @@ export function meets(cond: Condition | undefined, state: GameState): boolean {
   }
 
   if (cond.traits) {
-    for (const [k, expected] of Object.entries(cond.traits)) {
+    for (const k in cond.traits) {
       const key = k as keyof Traits;
+      const expected = cond.traits[key];
       const actual = state.traits[key];
       if (typeof actual === "number") {
         if (!matchNumber(actual, expected as NumberMatch)) return false;

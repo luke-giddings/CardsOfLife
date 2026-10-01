@@ -18,7 +18,7 @@ import type { CardOptions, Deck } from "../../engine/types.ts";
 // Every swipe serves the year (jobCriminality -1). On the LAST year (jobCriminality <= 1)
 // each instead releases you to the streets with the counter cleared; the labour
 // swipe still pays out then, so you don't walk free penniless for having worked it.
-// Years served are counted ONLY by the prison state's `tick`, never here. The turn
+// Years served are counted ONLY by the prison state's `ticks`, never here. The turn
 // you are ARRESTED already ticks (applyEffect puts you in gaol before applyTick
 // runs), and the turn you are RELEASED does not (it moves you out first) — so the
 // ticks alone total exactly the years you spent inside. An extra +1 here used to

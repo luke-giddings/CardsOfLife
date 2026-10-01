@@ -6,6 +6,7 @@ import {
   chooseDirection,
   clampVital,
   drawCard,
+  exhausted,
   eligibleDraw,
   findRescue,
   initGame,
@@ -15,7 +16,7 @@ import {
   totalDrift,
 } from "../engine/engine.ts";
 import { meets } from "../engine/conditions.ts";
-import { clearSave, loadGame, loadHistory, readStore, removeStore, saveGame, saveHistory, setSavePrefix, writeStore } from "../engine/save.ts";
+import { clearSave, loadGame, loadHistory, readStore, removeStore, saveGame, saveHistory, setSavePrefix, storageAvailable, writeStore } from "../engine/save.ts";
 import type { HistoryEntry } from "../engine/save.ts";
 import { FIRST_RUN, PLAY, RETURNING, type IntroCard, type IntroOption } from "./intro.ts";
 import {
@@ -983,13 +984,13 @@ export class Game {
     // whether they're eligible THIS turn. Filler is inexhaustible (∞); one_time /
     // milestone count copies left.
     const deckRemaining = (id: string): string => {
-      const deck = content.decks.find((d) => d.id === id);
+      const deck = DECK_BY_ID.get(id);
       if (!deck) return "0";
       let finite = 0;
       let hasFiller = false;
       for (const c of deck.cards) {
-        if (c.kind === "filler") { hasFiller = true; continue; }
-        if ((this.state.usedCards[c.id] ?? 0) < (c.copies ?? 1)) finite++;
+        if (c.kind === "filler") hasFiller = true;
+        else if (!exhausted(c, this.state)) finite++;
       }
       return hasFiller ? `${finite}+` : `${finite}`;
     };
@@ -1858,9 +1859,7 @@ export class Game {
 
     const wrap = document.createElement("div");
     wrap.className = "end";
-    const ageLine = ending.survived
-      ? ""
-      : `<p class="end-line">${tf("ui.reachedYears", { n: this.state.age })}</p>`;
+    const ageLine = `<p class="end-line">${tf("ui.reachedYears", { n: this.state.age })}</p>`;
     wrap.innerHTML = `
       <div class="end-title">${this.txt(ending.title)}</div>
       <p class="end-blurb">${this.txt(ending.blurb)}</p>
@@ -2199,12 +2198,7 @@ function saveHard(on: boolean): void {
 // unavailable reads as "yes": better to skip a tutorial than to trap someone in
 // one that can never record itself as done.
 function loadIntroSeen(): boolean {
-  try {
-    localStorage.length; // throws where storage is unavailable
-  } catch {
-    return true;
-  }
-  return readStore(INTRO_KEY) === "1";
+  return !storageAvailable() || readStore(INTRO_KEY) === "1";
 }
 function saveIntroSeen(): void {
   writeStore(INTRO_KEY, "1");

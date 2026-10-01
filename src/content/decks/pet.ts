@@ -8,7 +8,7 @@ export const petDecks = [
     // --- A cat: active while pet = "cat" (set by the stray-cat / pet-shop cards).
     //     A small POSITIVE deck leaning on HAPPINESS — steady comfort for a little
     //     cost (the pet status drift), plus a lifespan. `petCatAge` ticks up a year
-    //     each turn (the status `tick`); the passing milestone fires at old age.
+    //     each turn (the status's `ticks`); the passing milestone fires at old age.
     //     `petCatLove` tracks how you treat it — neglect (chiefly refusing the vet)
     //     drives it down until the cat runs off, which removes the pet BEFORE old
     //     age (so a mistreated cat never reaches the passing card). A rare mid-life

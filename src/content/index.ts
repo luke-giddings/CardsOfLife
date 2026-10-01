@@ -23,7 +23,7 @@ const PAST_BABYHOOD: Condition = { status: { age: { atLeast: "child" } } };
 // Content — BABY (ages 0–5) then CHILD (ages 5–17), ending at 18 for now.
 //
 // Vital changes use readable magnitude steps: "+" (small) / "++" (large), and
-// "-" / "--" for losses. The point values live in MAGNITUDE_POINTS (types.ts),
+// "-" / "--" for losses. The point values live in MAGNITUDE_POINTS (engine.ts),
 // so balancing is one place and every move is a clearly-perceptible size.
 // Baby is a tutorial + build-up and is impossible to lose (positive only).
 //
@@ -312,7 +312,7 @@ export const content = {
     // DOG into SPIRIT (a touch dearer to keep, devoted). Acquired by a card (the
     // childhood stray cat, or the pet shop, where you pick either), which sets the
     // pet state and seeds its love; each state owns its own small positive deck and
-    // `tick`s its age a year at a time so the deck's passing milestone can fire in
+    // ticks its age a year at a time so the deck's passing milestone can fire in
     // old age. Hidden chip while "none".
     pet: {
       id: "pet",

@@ -10,12 +10,12 @@
 import type { StringId } from "../i18n/index.ts";
 
 // --- Vitals: the four lethal bars (0..100). Any at 0 = game over. ------------
-export type VitalKey = "finances" | "happiness" | "health" | "spirit";
-export const VITAL_KEYS: VitalKey[] = ["finances", "happiness", "health", "spirit"];
+export const VITAL_KEYS = ["finances", "happiness", "health", "spirit"] as const;
+export type VitalKey = (typeof VITAL_KEYS)[number];
 
 // --- Statuses: persistent side-states that drift Vitals and gate content. ----
-export type StatusKind = "age" | "job" | "housing" | "education" | "lifestyle" | "pet" | "family";
-export const STATUS_KINDS: StatusKind[] = ["age", "job", "housing", "education", "lifestyle", "pet", "family"];
+export const STATUS_KINDS = ["age", "job", "housing", "education", "lifestyle", "pet", "family"] as const;
+export type StatusKind = (typeof STATUS_KINDS)[number];
 
 // --- Traits: hidden state. Booleans, enums, counters. ------------------------
 // Add a field here and it is instantly usable (and type-checked) in content.
@@ -50,20 +50,9 @@ export interface Traits {
   eduYearsEnrolled: number;
   // Personality / disposition. `pers*` so the debug panel groups them under a
   // Personality category. PLAIN BOOLEANS: you are the sort of person who does
-  // this, or you are not.
-  //
-  // Two of them were 0..3 counters, capped and gated at `{ min: 3 }`, on the idea
-  // that a baby who leaned into it started at the cap and everyone else built up
-  // to it. Nothing ever built up to it. `persBookish` had ONE writer, which set it
-  // straight to 3, so the threshold was decoration on a boolean. `persSporty` had
-  // a second writer worth +1, which could not reach 3 from 0 however it fell:
-  // measured over 6,000 lives it ended on 0 or 1 and never on 3, and the football
-  // card's +1 failed to carry anyone across the gate 1,399 times out of 1,399.
-  //
-  // A level would need a stream of sources to climb and a way for the player to
-  // see where they stood on it, and there is neither. A boolean has one card that
-  // makes you it, and that card wears a ★, which is the whole of what a threshold
-  // crossing was trying to say.
+  // this, or you are not. (A level would need a stream of sources to climb and a
+  // way for the player to see where they stood on it, and there is neither; a
+  // boolean has one card that makes you it, and that card wears a ★.)
   persBookish: boolean;
   persSporty: boolean;
   persSociable: boolean;
@@ -78,7 +67,7 @@ export interface Traits {
   relBrotherActive: boolean; // whether you have a brother at all (set at the baby deck)
   relBrotherLove: number;    // bond quality: warm (+) ↔ bitter (−), shaped by your choices
   relBrotherGrit: number;    // his backbone/independence, shaped by your choices
-  relBrotherAge: number;     // his age, ticked up each year by the rel_bro deck (Deck.tick)
+  relBrotherAge: number;     // his age, ticked up each year by the rel_bro deck (Deck.ticks)
   // How PRESENT you've been in his life: 0 = close at hand, rising = drifting apart.
   // The rel_bro deck ticks it UP every year (you drift just by living your own life);
   // every Tom card you engage pulls it back DOWN (you showed up). Distinct from love:
@@ -106,7 +95,7 @@ export interface Traits {
   // it, and it decides whether she rises to the stage or settles for the chorus.
   relSisterPromise: number;
   relSisterSchooled: boolean;   // her crossroads branch: true = school, false = the needle
-  relSisterStoryDone: boolean;  // arc concluded (finale or estrangement) — freezes the tick
+  relSisterStoryDone: boolean;  // arc concluded (finale or estrangement) — stops her deck's clocks
   relSisterCooldown: number;    // as relBrotherCooldown, for her beats
   // Where her life landed. Read by the epilogue; set by the audition (school road)
   // or the dressmaker (work road).
@@ -120,10 +109,7 @@ export interface Traits {
   jobExperience: number;
   // Years out of work in the CURRENT stretch of it — ticked by the unemployed
   // status, as gaol ticks its own years, and zeroed by that status's
-  // `enterTraits` each time a new stretch begins. (For a long while nothing
-  // zeroed it, so it was a LIFETIME total that never came down: four idle years
-  // at thirty kept `rel_lilly_idle` live at forty-six, back in work, telling you
-  // there had been "years now with no work in them".) Cards about a long spell
+  // `enterTraits` each time a new stretch begins. Cards about a long spell
   // should also gate on `job: "unemployed"`, so they are dealt DURING it —
   // reachable despite the `priority` focus via card-level `neverSuppressed`.
   jobYearsIdle: number;
@@ -141,7 +127,7 @@ export interface Traits {
   // a rung earned on one cannot leak onto another when your education changes
   // (a gang-master who gains his letters is a shop assistant, not a merchant).
   // The trade ladder needs none: its rung IS your education (journeyman/master).
-  // Crime is deliberately not a ladder here. (Replaces `jobReachedFactory`.)
+  // Crime is deliberately not a ladder here.
   jobRungLabour: number;
   jobRungShop: number;
   jobRungClerk: number;
@@ -211,7 +197,7 @@ export interface Traits {
   // Pets. `pet*` so the debug panel groups them under a Pets category. There are
   // two pets (one at a time): a cat (a HAPPINESS companion) and a dog (a SPIRIT
   // companion), each with its own age/love pair. `pet<X>Age` ticks up each year
-  // the pet is kept (its status's tick); `pet<X>Love` is moved by its cards.
+  // the pet is kept (its status's `ticks`); `pet<X>Love` is moved by its cards.
   petCatAge: number;
   petCatLove: number;
   petDogAge: number;
@@ -277,21 +263,18 @@ export const DEFAULT_TRAITS: Traits = {
   petDogLove: 0,
 };
 
-// End-screen framing. The four vital endings (only Health's is "death"), plus
-// named endings triggered by an effect (e.g. reaching adulthood). title/blurb
-// are string ids, looked up per-locale by the UI.
+// End-screen framing: one ending per vital, for the one that hit 0 (only
+// Health's is "death"). title/blurb are string ids, looked up per-locale by the UI.
 export interface Ending {
   title: StringId;
   blurb: StringId;
-  survived?: boolean; // true = not a game-over-by-collapse ending
 }
 
-export const ENDINGS: Record<string, Ending> = {
+export const ENDINGS: Record<VitalKey, Ending> = {
   finances: { title: "ending.finances.title", blurb: "ending.finances.blurb" },
   happiness: { title: "ending.happiness.title", blurb: "ending.happiness.blurb" },
   health: { title: "ending.health.title", blurb: "ending.health.blurb" },
   spirit: { title: "ending.spirit.title", blurb: "ending.spirit.blurb" },
-  grown_up: { title: "ending.grown_up.title", blurb: "ending.grown_up.blurb", survived: true },
 };
 
 // Inside the block below, names resolve in the ENGINE's scope (where VitalKey

@@ -129,7 +129,7 @@ game-over:
 yet.) **The player only ever sees `+`/`−` bars** — the slash tokens render as minus
 bars in the card preview, and status chips use `+`/`−` (`driftShown`) directly.
 
-Point values live in one place (`MAGNITUDE_POINTS`, `types.ts`) — balancing is a
+Point values live in one place (`MAGNITUDE_POINTS`, `engine.ts`) — balancing is a
 single table, and more levels can be added later. Relationship
 nudges and drift use raw numbers (they're not player-facing bar moves).
 

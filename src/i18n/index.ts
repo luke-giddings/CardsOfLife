@@ -1544,8 +1544,6 @@ export const EN = {
   "ending.health.blurb": "Your body gave out. A life reached its end.",
   "ending.spirit.title": "Emptiness",
   "ending.spirit.blurb": "The spark went out. You were still here, but not really.",
-  "ending.grown_up.title": "You Survived Childhood",
-  "ending.grown_up.blurb": "Half your street didn't see eighteen — but you did. The rest of your story is still to be written…",
 
   // ---- Opening flow (src/ui/intro.ts) -----------------------------------
   "intro_welcome.title": "Cards of Life",
@@ -3284,8 +3282,6 @@ export const IT: Record<StringId, string> = {
   "ending.health.blurb": "Il tuo corpo ha ceduto. Una vita è giunta alla fine.",
   "ending.spirit.title": "Vuoto",
   "ending.spirit.blurb": "La scintilla si è spenta. Eri ancora qui, ma non davvero.",
-  "ending.grown_up.title": "Sei sopravvissuto all'infanzia",
-  "ending.grown_up.blurb": "Metà della tua strada non ha visto i diciott'anni — ma tu sì. Il resto della tua storia è ancora da scrivere…",
 
   // ---- Opening flow (src/ui/intro.ts) -----------------------------------
   "intro_welcome.title": "Cards of Life",
