@@ -602,7 +602,17 @@ export class Game {
       `<span class="bio-sum">${open ? "" : chipsRows.map((r) => r.label).join(" · ")}</span>` +
       (nNew ? `<span class="bio-new">${tf("ui.bioNew", { n: nNew })}</span>` : "") +
       `<span class="bio-chev" aria-hidden="true">▾</span></button>` +
-      (open ? `<div class="bio-body">${detail}<div class="bio-chips">${chips}</div></div>` : "");
+      (open ? `<div class="bio-body">${lit ? detail : ""}<div class="bio-chips">${chips}</div></div>` : "");
+    // A chip's effects open UNDER its own row of chips, not at the top of the
+    // panel: after the last chip sharing the tapped one's line, full width.
+    if (open && !lit && this.bioKind && detail) {
+      const chipEls = [...this.statusesEl.querySelectorAll<HTMLElement>("[data-bio-kind]")];
+      const tapped = chipEls.find((c) => c.dataset.bioKind === this.bioKind);
+      if (tapped) {
+        const rowEnd = chipEls.filter((c) => c.offsetTop === tapped.offsetTop).pop()!;
+        rowEnd.insertAdjacentHTML("afterend", detail);
+      }
+    }
   }
 
 
