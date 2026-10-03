@@ -851,7 +851,7 @@ eligibility (deck membership + optional conditions + not exhausted) into the
 adding/removing decks and gating are trivial filters.
 
 - **Milestones** that are due jump the queue (highest priority first).
-- **Force-at-max** (`Card.force`) then jumps the queue when its vital is capped.
+- **Forced cards** (`Card.forceAbove` / `forceBelow`) then jump the queue when a vital crosses its threshold.
 - **Priority (urgent) decks own the pool:** if any eligible card belongs to a
   deck flagged `priority` (an escape-me state — `job_unemployed`, `home_workhouse`),
   the draw is **restricted to those cards**, so the escape routes aren't drowned
@@ -2563,8 +2563,9 @@ Roughly in likely order. None of these are started.
   by spending the trait economy. **In a small deck with a short stage, weight is
   not a free lever — it is a transfer.** Move the card to a bigger pool first,
   then weight it there.
-- **A `force` bar at the vital's MAX is a bar most lives never touch.** `Card.force`
-  is now `{ vital, at? }`, and all six force cards sit at **90** rather than 100.
+- **A `force` bar at the vital's MAX is a bar most lives never touch.** A forced
+  card names its thresholds (`Card.forceAbove: { finances: 90 }`, and `forceBelow`
+  for a low vital), and all six money-forced cards sit at **90** rather than 100.
   The top of a bar is not where a life rests: drift nibbles at it every turn, so
   the state the card exists to answer is "in the nineties", not "capped". Measured
   over 3,000–4,000 lives: of those still at home past 14, **75.3% reach 90+

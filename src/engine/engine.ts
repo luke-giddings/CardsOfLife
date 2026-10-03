@@ -160,17 +160,14 @@ export function drawCard(state: GameState): { card: Card | null; state: GameStat
   const milestone = highestPriority(live, (c) => c.kind === "milestone");
   if (milestone) return { card: milestone, state: { ...state, lastCardId: milestone.id } };
 
-  // A "force" card jumps the queue when its vital is high enough and the card is
-  // otherwise eligible, so a piled-up resource always surfaces its spend
-  // opportunity instead of relying on the random draw. The bar is the vital's
-  // MAX unless the card names a lower one (`force.at`). Ranks below milestones,
-  // above the random pool. Skipped if it was the immediately-previous card, so
-  // declining it doesn't lock you into the same card every year.
+  // A forced card (Card.forceAbove / forceBelow) jumps the queue when any vital
+  // it names has crossed its threshold. Ranks below milestones, above the random
+  // pool. Skipped if it was the immediately-previous card, so declining it
+  // doesn't lock you into the same card every year.
+  const crossed = (limits: Card["forceAbove"], above: boolean): boolean =>
+    !!limits && Object.entries(limits).some(([k, at]) => at !== undefined && (above ? state.vitals[k as VitalKey] >= at : state.vitals[k as VitalKey] <= at));
   const forced = live.find(
-    (c) =>
-      c.force !== undefined &&
-      c.id !== state.lastCardId &&
-      state.vitals[c.force.vital] >= (c.force.at ?? VITAL_MAX),
+    (c) => c.id !== state.lastCardId && (crossed(c.forceAbove, true) || crossed(c.forceBelow, false)),
   );
   if (forced) return { card: forced, state: { ...state, lastCardId: forced.id } };
 
