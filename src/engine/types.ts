@@ -184,18 +184,17 @@ export interface Card {
   // would hit 0 — the engine floors the vital and forces this card next (a
   // one-shot rescue; once played it's used up, so a second collapse is fatal).
   rescue?: VitalKey;
-  // FORCED cards: when the card is otherwise eligible and ANY listed vital has
-  // crossed its threshold, it jumps the queue (below milestones, above the pool)
-  // — so a state that calls for it always surfaces it rather than waiting on the
-  // draw. The card still appears normally in the pool otherwise.
-  //   forceAbove: { finances: 90 }  — fires at 90 or more: a piled-up resource
-  //     always surfaces the chance to spend it. Worth setting below the max:
-  //     drift nibbles at the top of the bar every turn, so a card forced only
-  //     at 100 sat out three years in four of the very state it answers.
-  //   forceBelow: { happiness: 30, spirit: 30 } — fires at 30 or less: a low
-  //     mood surfaces what would lift it.
-  forceAbove?: Partial<Record<VitalKey, number>>;
-  forceBelow?: Partial<Record<VitalKey, number>>;
+  // FORCED: when the card is otherwise eligible and this condition holds, it
+  // jumps the queue (below milestones, above the pool) — so a state that calls
+  // for it always surfaces it rather than waiting on the draw. The card still
+  // appears normally in the pool otherwise. Any Condition will do:
+  //   force: { vitals: { finances: { min: 90 } } } — a piled-up resource always
+  //     surfaces the chance to spend it. Worth setting below the max: drift
+  //     nibbles at the top of the bar every turn, so a card forced only at 100
+  //     sat out three years in four of the very state it answers.
+  //   force: { any: [{ vitals: { happiness: { max: 30 } } }, { vitals: { spirit: { max: 30 } } }] }
+  //     — a low mood surfaces what would lift it.
+  force?: Condition;
   // Keep this card in the pool even while a `priority` deck is focusing the draw
   // — the card-sized version of a deck's `neverSuppressed`.
   //

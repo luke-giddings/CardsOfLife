@@ -338,7 +338,7 @@ export const jobDecks = [
           // the slot (favour seen 10.0% / 9.8% / 7.7% at 100 / 95 / 90).
           id: "job_labour_apprenticeship_grit",
           kind: "filler",
-          forceAbove: { spirit: 95 },
+          force: { vitals: { spirit: { min: 95 } } },
           // Age-capped at 18: apprentices were bound as minors, and the copy
           // ("the luckiest break of your YOUNG life") only rings true for the
           // young. Past coming-of-age the unskilled adult escapes via the
@@ -357,7 +357,7 @@ export const jobDecks = [
           // Same shape on happiness.
           id: "job_labour_apprenticeship_favour",
           kind: "filler",
-          forceAbove: { happiness: 95 },
+          force: { vitals: { happiness: { min: 95 } } },
           conditions: { ageMin: 13, ageMax: 18, vitals: { happiness: { min: 70 } } },
           prompt: "job_labour_apprenticeship_favour.prompt",
           options: {
